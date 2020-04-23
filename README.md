@@ -1,4 +1,11 @@
-# Powerful JavaScript library for interacting with the Clash of Clans API
+<div align="center">
+	<h1>Powerful JavaScript library for interacting with the Clash of Clans API</h1>
+	<p>
+		<a href="https://www.npmjs.com/package/clashofclans.js/">
+			<img src="https://nodei.co/npm/clashofclans.js.png" alt="NPM Info" />
+		</a>
+	</p>
+</div>
 
 ## Client
 Represents Clash of Clans API

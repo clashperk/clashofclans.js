@@ -6,13 +6,9 @@
   "license": "MIT",
   "main": "src/index.js",
   "scripts": {
-    "test": "eslint --ext .js --ignore-path .gitignore .",
-    "start": "jsdoc2md src/client.js"
+    "test": "eslint --ext .js --ignore-path .gitignore ."
   },
   "dependencies": {
-    "docma": "^3.2.2",
-    "jsdoc": "^3.6.4",
-    "jsdoc-to-markdown": "^5.0.3",
     "node-fetch": "^2.6.0"
   },
   "devDependencies": {
@@ -23,7 +19,10 @@
     "type": "git",
     "url": "git+https://github.com/clashperk/clashofclans.js.git"
   },
-  "keywords": [],
+  "keywords": [
+    "clashofclans",
+    "clash-api"
+  ],
   "bugs": {
     "url": "https://github.com/clashperk/clashofclans.js/issues"
   },
