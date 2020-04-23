@@ -1,0 +1,31 @@
+{
+  "name": "clashofclans.js",
+  "version": "1.0.1",
+  "description": "Powerful JavaScript library for interacting with the Clash of Clans API",
+  "author": "SUVAJIT (suvajit.me@gmail.com)",
+  "license": "MIT",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "eslint --ext .js --ignore-path .gitignore .",
+    "start": "jsdoc2md src/client.js"
+  },
+  "dependencies": {
+    "docma": "^3.2.2",
+    "jsdoc": "^3.6.4",
+    "jsdoc-to-markdown": "^5.0.3",
+    "node-fetch": "^2.6.0"
+  },
+  "devDependencies": {
+    "eslint": "^6.8.0",
+    "eslint-config-mars": "^1.0.5"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/clashperk/clashofclans.js.git"
+  },
+  "keywords": [],
+  "bugs": {
+    "url": "https://github.com/clashperk/clashofclans.js/issues"
+  },
+  "homepage": "https://github.com/clashperk/clashofclans.js#readme"
+}

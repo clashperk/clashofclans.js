@@ -1,0 +1,22 @@
+{
+    "extends": "mars/node",
+    "rules": {
+        "max-len": "off",
+        "no-confusing-arrow": "off",
+        "no-eq-null": "off",
+        "no-negated-condition": "off",
+        "no-undefined": "off",
+        "linebreak-style": "off",
+        "camelcase": "off",
+        "no-shadow": "off",
+        "no-unused-vars": "off",
+        "prefer-destructuring": [
+            "off"
+        ],
+        "quotes": [
+            "error",
+            "single"
+        ],
+        "quote-props": "off"
+    }
+}
