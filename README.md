@@ -22,16 +22,16 @@ Represents Clash of Clans API
     * [.player(playerTag)](#Client+player) ⇒ <code>Promise.&lt;Object&gt;</code>
     * [.leagues()](#Client+leagues) ⇒ <code>Promise.&lt;Object&gt;</code>
     * [.leagueId(leagueId)](#Client+leagueId) ⇒ <code>Promise.&lt;Object&gt;</code>
-    * [.leagueSeason(leagueId, option)](#Client+leagueSeason) ⇒ <code>Promise.&lt;Object&gt;</code>
+    * [.leagueSeasons(leagueId, option)](#Client+leagueSeasons) ⇒ <code>Promise.&lt;Object&gt;</code>
     * [.leagueRanking(leagueId, seasonId, option)](#Client+leagueRanking) ⇒ <code>Promise.&lt;Object&gt;</code>
     * [.warLeagues()](#Client+warLeagues) ⇒ <code>Promise.&lt;Object&gt;</code>
     * [.warLeagueId(leagueId)](#Client+warLeagueId) ⇒ <code>Promise.&lt;Object&gt;</code>
     * [.locations()](#Client+locations) ⇒ <code>Promise.&lt;Object&gt;</code>
     * [.locationId(locationId)](#Client+locationId) ⇒ <code>Promise.&lt;Object&gt;</code>
-    * [.clanRanksByLoaction(locationId, option)](#Client+clanRanksByLoaction) ⇒ <code>Promise.&lt;Object&gt;</code>
-    * [.playerRanksByLocation(locationId, option)](#Client+playerRanksByLocation) ⇒ <code>Promise.&lt;Object&gt;</code>
-    * [.versusClanRanksByLocation(locationId, option)](#Client+versusClanRanksByLocation) ⇒ <code>Promise.&lt;Object&gt;</code>
-    * [.versusPlayerRanksByLocation(locationId, option)](#Client+versusPlayerRanksByLocation) ⇒ <code>Promise.&lt;Object&gt;</code>
+    * [.clanRanks(locationId, option)](#Client+clanRanks) ⇒ <code>Promise.&lt;Object&gt;</code>
+    * [.playerRanks(locationId, option)](#Client+playerRanks) ⇒ <code>Promise.&lt;Object&gt;</code>
+    * [.versusClanRanks(locationId, option)](#Client+versusClanRanks) ⇒ <code>Promise.&lt;Object&gt;</code>
+    * [.versusPlayerRanks(locationId, option)](#Client+versusPlayerRanks) ⇒ <code>Promise.&lt;Object&gt;</code>
     * [.clanLabels()](#Client+clanLabels) ⇒ <code>Promise.&lt;Object&gt;</code>
     * [.playerLabels()](#Client+playerLabels) ⇒ <code>Promise.&lt;Object&gt;</code>
 
@@ -178,9 +178,9 @@ Get league information
 ```js
 client.leagueId('29000022');
 ```
-<a name="Client+leagueSeason"></a>
+<a name="Client+leagueSeasons"></a>
 
-### client.leagueSeason(leagueId, option) ⇒ <code>Promise.&lt;Object&gt;</code>
+### client.leagueSeasons(leagueId, option) ⇒ <code>Promise.&lt;Object&gt;</code>
 Get league seasons. Note that league season information is available only for Legend League.
 
 | Param | Type | Description |
@@ -249,11 +249,11 @@ Get information about specific location
 
 **Example**
 ```js
-client.loactionId('32000107')
+client.locationId('32000107')
 ```
-<a name="Client+clanRanksByLoaction"></a>
+<a name="Client+clanRanks"></a>
 
-### client.clanRanksByLoaction(locationId, option) ⇒ <code>Promise.&lt;Object&gt;</code>
+### client.clanRanks(locationId, option) ⇒ <code>Promise.&lt;Object&gt;</code>
 Get clan rankings for a specific location
 
 | Param | Type | Description |
@@ -263,11 +263,11 @@ Get clan rankings for a specific location
 
 **Example**
 ```js
-client.clanRanksByLoaction('32000107', { limit: 10 });
+client.clanRanks('32000107', { limit: 10 });
 ```
-<a name="Client+playerRanksByLocation"></a>
+<a name="Client+playerRanks"></a>
 
-### client.playerRanksByLocation(locationId, option) ⇒ <code>Promise.&lt;Object&gt;</code>
+### client.playerRanks(locationId, option) ⇒ <code>Promise.&lt;Object&gt;</code>
 Get player rankings for a specific location
 
 | Param | Type | Description |
@@ -277,11 +277,11 @@ Get player rankings for a specific location
 
 **Example**
 ```js
-client.playerRanksByLocation('32000107', { limit: 10 });
+client.playerRanks('32000107', { limit: 10 });
 ```
-<a name="Client+versusClanRanksByLocation"></a>
+<a name="Client+versusClanRanks"></a>
 
-### client.versusClanRanksByLocation(locationId, option) ⇒ <code>Promise.&lt;Object&gt;</code>
+### client.versusClanRanks(locationId, option) ⇒ <code>Promise.&lt;Object&gt;</code>
 Get clan versus rankings for a specific location
 
 | Param | Type | Description |
@@ -291,11 +291,11 @@ Get clan versus rankings for a specific location
 
 **Example**
 ```js
-client.versusClanRanksByLocation('32000107', { limit: 10 });
+client.versusClanRanks('32000107', { limit: 10 });
 ```
-<a name="Client+versusPlayerRanksByLocation"></a>
+<a name="Client+versusPlayerRanks"></a>
 
-### client.versusPlayerRanksByLocation(locationId, option) ⇒ <code>Promise.&lt;Object&gt;</code>
+### client.versusPlayerRanks(locationId, option) ⇒ <code>Promise.&lt;Object&gt;</code>
 Get player versus rankings for a specific location
 
 | Param | Type | Description |
@@ -305,7 +305,7 @@ Get player versus rankings for a specific location
 
 **Example**
 ```js
-client.versusPlayerRanksByLocation('32000107', { limit: 10 });
+client.versusPlayerRanks('32000107', { limit: 10 });
 ```
 <a name="Client+clanLabels"></a>
 

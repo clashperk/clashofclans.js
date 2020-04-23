@@ -115,10 +115,10 @@ class Client {
 	 * Retrieve information about individual clan war league war
 	 * @param {string} clanTag - Tag of the clan.
 	 * @example
-	 * client.warTags('#8QU8J9LP')
+	 * client.clanWarLeagueWarTags('#8QU8J9LP');
 	 * @returns {Promise<Object>}
 	 */
-	async warTags(clanTag) {
+	async clanWarLeagueWarTags(clanTag) {
 		return this._fetch(`clanwarleagues/wars/${this._tag(clanTag)}`);
 	}
 
@@ -163,7 +163,7 @@ class Client {
 	 * client.leagueSeasons('29000022', { limit: 10 });
 	 * @returns {Promise<Object>}
 	 */
-	async leagueSeason(leagueId, option) {
+	async leagueSeasons(leagueId, option) {
 		const query = qs.stringify(option);
 		return this._fetch(`leagues/${leagueId}/seasons?${query}`);
 	}
@@ -217,7 +217,7 @@ class Client {
 	 * Get information about specific location
 	 * @param {string} locationId - Identifier of the location to retrieve.
 	 * @example
-	 * client.loactionId('32000107')
+	 * client.locationId('32000107')
 	 * @returns {Promise<Object>}
 	 */
 	async locationId(locationId) {
@@ -229,10 +229,10 @@ class Client {
 	 * @param {string} locationId - Identifier of the location to retrieve.
 	 * @param {SearchOption} option - Optional options
 	 * @example
-	 * client.clanRanksByLoaction('32000107', { limit: 10 });
+	 * client.clanRanks('32000107', { limit: 10 });
 	 * @returns {Promise<Object>}
 	 */
-	async clanRanksByLoaction(locationId, option) {
+	async clanRanks(locationId, option) {
 		const query = qs.stringify(option);
 		return this._fetch(`locations/${locationId}/rankings/clans?${query}`);
 	}
@@ -242,10 +242,10 @@ class Client {
 	 * @param {string} locationId - Identifier of the location to retrieve.
 	 * @param {SearchOption} option - Optional options
 	 * @example
-	 * client.playerRanksByLocation('32000107', { limit: 10 });
+	 * client.playerRanks('32000107', { limit: 10 });
 	 * @returns {Promise<Object>}
 	 */
-	async playerRanksByLocation(locationId, option) {
+	async playerRanks(locationId, option) {
 		const query = qs.stringify(option);
 		return this._fetch(`locations/${locationId}/rankings/players?${query}`);
 	}
@@ -255,10 +255,10 @@ class Client {
 	 * @param {string} locationId - Identifier of the location to retrieve.
 	 * @param {SearchOption} option - Optional options
 	 * @example
-	 * client.versusClanRanksByLocation('32000107', { limit: 10 });
+	 * client.versusClanRanks('32000107', { limit: 10 });
 	 * @returns {Promise<Object>}
 	 */
-	async versusClanRanksByLocation(locationId, option) {
+	async versusClanRanks(locationId, option) {
 		const query = qs.stringify(option);
 		return this._fetch(`locations/${locationId}/rankings/clans-versus?${query}`);
 	}
@@ -268,10 +268,10 @@ class Client {
 	 * @param {string} locationId - Identifier of the location to retrieve.
 	 * @param {SearchOption} option - Optional options
 	 * @example
-	 * client.versusPlayerRanksByLocation('32000107', { limit: 10 });
+	 * client.versusPlayerRanks('32000107', { limit: 10 });
 	 * @returns {Promise<Object>}
 	 */
-	async versusPlayerRanksByLocation(locationId, option) {
+	async versusPlayerRanks(locationId, option) {
 		const query = qs.stringify(option);
 		return this._fetch(`locations/${locationId}/rankings/players-versus?${query}`);
 	}
