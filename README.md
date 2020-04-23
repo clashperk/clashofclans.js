@@ -327,6 +327,8 @@ client.playerLabels();
 ```
 <a name="ClientOption"></a>
 
+<hr>
+
 ## ClientOption : <code>Object</code>
 
 | Param | Type | Description |
