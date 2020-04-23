@@ -13,10 +13,11 @@ class Client {
 	constructor(option) {
 		this.token = option.token;
 		this.timeout = option.timeout;
+		this.uri = option.uri || 'https://api.clashofclans.com';
 	}
 
 	async _fetch(path) {
-		const res = await fetch(`https://api.clashofclans.com/v1/${path}`, {
+		const res = await fetch(`${this.uri}/v1/${path}`, {
 			method: 'GET',
 			timeout: this.timeout,
 			headers: {
