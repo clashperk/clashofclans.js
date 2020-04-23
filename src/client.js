@@ -92,7 +92,7 @@ class Client {
 	 * @param {string} clanTag - Tag of the clan.
 	 * @param {SearchOption} option - Optional options
 	 * @example
-	 * client.currentWar('#8QU8J9LP')
+	 * client.currentWar('#8QU8J9LP');
 	 * @returns {Promise<Object>}
 	 */
 	async currentWar(clanTag, option) {
@@ -104,7 +104,7 @@ class Client {
 	 * Retrieve information about clan's current clan war league group
 	 * @param {string} clanTag - Tag of the clan.
 	 * @example
-	 * client.clanWarLeague('#8QU8J9LP')
+	 * client.clanWarLeague('#8QU8J9LP');
 	 * @returns {Promise<Object>}
 	 */
 	async clanWarLeague(clanTag) {
@@ -200,7 +200,7 @@ class Client {
 	 * Get war league information
 	 * @param {string} leagueId - Identifier of the league.
 	 * @example
-	 * client.warLeagueId('48000018')
+	 * client.warLeagueId('48000018');
 	 * @returns {Promise<Object>}
 	 */
 	async warLeagueId(leagueId) {
@@ -225,7 +225,7 @@ class Client {
 	 * Get information about specific location
 	 * @param {string} locationId - Identifier of the location to retrieve.
 	 * @example
-	 * client.locationId('32000107')
+	 * client.locationId('32000107');
 	 * @returns {Promise<Object>}
 	 */
 	async locationId(locationId) {

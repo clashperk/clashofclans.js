@@ -117,7 +117,7 @@ Retrieve information about clan's current clan war
 
 **Example**
 ```js
-client.currentWar('#8QU8J9LP')
+client.currentWar('#8QU8J9LP');
 ```
 <a name="Client+clanWarLeague"></a>
 
@@ -130,7 +130,7 @@ Retrieve information about clan's current clan war league group
 
 **Example**
 ```js
-client.clanWarLeague('#8QU8J9LP')
+client.clanWarLeague('#8QU8J9LP');
 ```
 <a name="Client+clanWarLeagueWarTags"></a>
 
@@ -237,7 +237,7 @@ Get war league information
 
 **Example**
 ```js
-client.warLeagueId('48000018')
+client.warLeagueId('48000018');
 ```
 <a name="Client+locations"></a>
 
@@ -265,7 +265,7 @@ Get information about specific location
 
 **Example**
 ```js
-client.locationId('32000107')
+client.locationId('32000107');
 ```
 <a name="Client+clanRanks"></a>
 

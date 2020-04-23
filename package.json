@@ -20,7 +20,8 @@
     "url": "git+https://github.com/clashperk/clashofclans.js.git"
   },
   "keywords": [
-    "clashofclans",
+    "clash-of-clans",
+    "clash-of-clans-api",
     "clash-api"
   ],
   "bugs": {
