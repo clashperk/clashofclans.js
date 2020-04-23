@@ -10,8 +10,6 @@
 ## Client
 Represents Clash of Clans API
 
-**Kind**: global class
-
 * [Client](#Client)
     * [new Client(option)](#new_Client_new)
     * [.clans(name, option)](#Client+clans) ⇒ <code>Promise.&lt;Object&gt;</code>
