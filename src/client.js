@@ -136,12 +136,14 @@ class Client {
 
 	/**
 	 * List Leagues
+	 * @param {SearchOption} option - Optional options
 	 * @example
 	 * client.leagues();
 	 * @returns {Promise<Object>}
 	 */
-	async leagues() {
-		return this._fetch('leagues');
+	async leagues(option) {
+		const query = qs.stringify(option);
+		return this._fetch(`leagues?${query}`);
 	}
 
 	/**
@@ -184,12 +186,14 @@ class Client {
 
 	/**
 	 * List war leagues
+	 * @param {SearchOption} option - Optional options
 	 * @example
 	 * client.warLeagues();
 	 * @returns {Promise<Object>}
 	 */
-	async warLeagues() {
-		return this._fetch('warleagues');
+	async warLeagues(option) {
+		const query = qs.stringify(option);
+		return this._fetch(`warleagues?${query}`);
 	}
 
 	/**
@@ -205,12 +209,16 @@ class Client {
 
 	/**
 	 * List locations
+	 * @param {SearchOption} option - Optional options
 	 * @example
 	 * client.locations();
+	 * // OR
+	 * client.locations({ limit: 10 });
 	 * @returns {Promise<Object>}
 	 */
-	async locations() {
-		return this._fetch('locations');
+	async locations(option) {
+		const query = qs.stringify(option);
+		return this._fetch(`locations?${query}`);
 	}
 
 	/**
@@ -278,22 +286,26 @@ class Client {
 
 	/**
 	 * List clan labels
+	 * @param {SearchOption} option - Optional options
 	 * @example
 	 * client.clanLabels();
 	 * @returns {Promise<Object>}
 	 */
-	async clanLabels() {
-		return this._fetch('labels/clans');
+	async clanLabels(option) {
+		const query = qs.stringify(option);
+		return this._fetch(`labels/clans?${query}`);
 	}
 
 	/**
 	 * List player labels
+	 * @param {SearchOption} option - Optional options
 	 * @example
 	 * client.playerLabels();
 	 * @returns {Promise<Object>}
 	 */
-	async playerLabels() {
-		return this._fetch('labels/players');
+	async playerLabels(option) {
+		const query = qs.stringify(option);
+		return this._fetch(`labels/players?${query}`);
 	}
 }
 
@@ -324,5 +336,4 @@ module.exports = Client;
  * @param {number} limit - Limit the number of items returned in the response.
  * @param {string} after - Return only items that occur after this marker. Before marker can be found from the response, inside the 'paging' property. Note that only after or before can be specified for a request, not both.
  * @param {string} before - Return only items that occur before this marker. Before marker can be found from the response, inside the 'paging' property. Note that only after or before can be specified for a request, not both.
- * @param {string} labelIds - Comma separatered list of label IDs to use for filter
  */

@@ -10,6 +10,8 @@
 ## Client
 Represents Clash of Clans API
 
+**Kind**: global class
+
 * [Client](#Client)
     * [new Client(option)](#new_Client_new)
     * [.clans(name, option)](#Client+clans) ⇒ <code>Promise.&lt;Object&gt;</code>
@@ -18,22 +20,22 @@ Represents Clash of Clans API
     * [.clanWarlog(clanTag, option)](#Client+clanWarlog) ⇒ <code>Promise.&lt;Object&gt;</code>
     * [.currentWar(clanTag, option)](#Client+currentWar) ⇒ <code>Promise.&lt;Object&gt;</code>
     * [.clanWarLeague(clanTag)](#Client+clanWarLeague) ⇒ <code>Promise.&lt;Object&gt;</code>
-    * [.warTags(clanTag)](#Client+warTags) ⇒ <code>Promise.&lt;Object&gt;</code>
+    * [.clanWarLeagueWarTags(clanTag)](#Client+clanWarLeagueWarTags) ⇒ <code>Promise.&lt;Object&gt;</code>
     * [.player(playerTag)](#Client+player) ⇒ <code>Promise.&lt;Object&gt;</code>
-    * [.leagues()](#Client+leagues) ⇒ <code>Promise.&lt;Object&gt;</code>
+    * [.leagues(option)](#Client+leagues) ⇒ <code>Promise.&lt;Object&gt;</code>
     * [.leagueId(leagueId)](#Client+leagueId) ⇒ <code>Promise.&lt;Object&gt;</code>
     * [.leagueSeasons(leagueId, option)](#Client+leagueSeasons) ⇒ <code>Promise.&lt;Object&gt;</code>
     * [.leagueRanking(leagueId, seasonId, option)](#Client+leagueRanking) ⇒ <code>Promise.&lt;Object&gt;</code>
-    * [.warLeagues()](#Client+warLeagues) ⇒ <code>Promise.&lt;Object&gt;</code>
+    * [.warLeagues(option)](#Client+warLeagues) ⇒ <code>Promise.&lt;Object&gt;</code>
     * [.warLeagueId(leagueId)](#Client+warLeagueId) ⇒ <code>Promise.&lt;Object&gt;</code>
-    * [.locations()](#Client+locations) ⇒ <code>Promise.&lt;Object&gt;</code>
+    * [.locations(option)](#Client+locations) ⇒ <code>Promise.&lt;Object&gt;</code>
     * [.locationId(locationId)](#Client+locationId) ⇒ <code>Promise.&lt;Object&gt;</code>
     * [.clanRanks(locationId, option)](#Client+clanRanks) ⇒ <code>Promise.&lt;Object&gt;</code>
     * [.playerRanks(locationId, option)](#Client+playerRanks) ⇒ <code>Promise.&lt;Object&gt;</code>
     * [.versusClanRanks(locationId, option)](#Client+versusClanRanks) ⇒ <code>Promise.&lt;Object&gt;</code>
     * [.versusPlayerRanks(locationId, option)](#Client+versusPlayerRanks) ⇒ <code>Promise.&lt;Object&gt;</code>
-    * [.clanLabels()](#Client+clanLabels) ⇒ <code>Promise.&lt;Object&gt;</code>
-    * [.playerLabels()](#Client+playerLabels) ⇒ <code>Promise.&lt;Object&gt;</code>
+    * [.clanLabels(option)](#Client+clanLabels) ⇒ <code>Promise.&lt;Object&gt;</code>
+    * [.playerLabels(option)](#Client+playerLabels) ⇒ <code>Promise.&lt;Object&gt;</code>
 
 <a name="new_Client_new"></a>
 
@@ -130,9 +132,9 @@ Retrieve information about clan's current clan war league group
 ```js
 client.clanWarLeague('#8QU8J9LP')
 ```
-<a name="Client+warTags"></a>
+<a name="Client+clanWarLeagueWarTags"></a>
 
-### client.warTags(clanTag) ⇒ <code>Promise.&lt;Object&gt;</code>
+### client.clanWarLeagueWarTags(clanTag) ⇒ <code>Promise.&lt;Object&gt;</code>
 Retrieve information about individual clan war league war
 
 | Param | Type | Description |
@@ -141,7 +143,7 @@ Retrieve information about individual clan war league war
 
 **Example**
 ```js
-client.warTags('#8QU8J9LP')
+client.clanWarLeagueWarTags('#8QU8J9LP');
 ```
 <a name="Client+player"></a>
 
@@ -158,8 +160,12 @@ client.player('#8QU8J9LP');
 ```
 <a name="Client+leagues"></a>
 
-### client.leagues() ⇒ <code>Promise.&lt;Object&gt;</code>
+### client.leagues(option) ⇒ <code>Promise.&lt;Object&gt;</code>
 List Leagues
+
+| Param | Type | Description |
+| --- | --- | --- |
+| option | [<code>SearchOption</code>](#SearchOption) | Optional options |
 
 **Example**
 ```js
@@ -209,8 +215,12 @@ client.leagueRanking('29000022', '2020-03', { limit: 10 });
 ```
 <a name="Client+warLeagues"></a>
 
-### client.warLeagues() ⇒ <code>Promise.&lt;Object&gt;</code>
+### client.warLeagues(option) ⇒ <code>Promise.&lt;Object&gt;</code>
 List war leagues
+
+| Param | Type | Description |
+| --- | --- | --- |
+| option | [<code>SearchOption</code>](#SearchOption) | Optional options |
 
 **Example**
 ```js
@@ -231,12 +241,18 @@ client.warLeagueId('48000018')
 ```
 <a name="Client+locations"></a>
 
-### client.locations() ⇒ <code>Promise.&lt;Object&gt;</code>
+### client.locations(option) ⇒ <code>Promise.&lt;Object&gt;</code>
 List locations
+
+| Param | Type | Description |
+| --- | --- | --- |
+| option | [<code>SearchOption</code>](#SearchOption) | Optional options |
 
 **Example**
 ```js
 client.locations();
+// OR
+client.locations({ limit: 10 });
 ```
 <a name="Client+locationId"></a>
 
@@ -309,8 +325,12 @@ client.versusPlayerRanks('32000107', { limit: 10 });
 ```
 <a name="Client+clanLabels"></a>
 
-### client.clanLabels() ⇒ <code>Promise.&lt;Object&gt;</code>
+### client.clanLabels(option) ⇒ <code>Promise.&lt;Object&gt;</code>
 List clan labels
+
+| Param | Type | Description |
+| --- | --- | --- |
+| option | [<code>SearchOption</code>](#SearchOption) | Optional options |
 
 **Example**
 ```js
@@ -318,16 +338,21 @@ client.clanLabels();
 ```
 <a name="Client+playerLabels"></a>
 
-### client.playerLabels() ⇒ <code>Promise.&lt;Object&gt;</code>
+### client.playerLabels(option) ⇒ <code>Promise.&lt;Object&gt;</code>
 List player labels
+
+| Param | Type | Description |
+| --- | --- | --- |
+| option | [<code>SearchOption</code>](#SearchOption) | Optional options |
 
 **Example**
 ```js
 client.playerLabels();
 ```
-<a name="ClientOption"></a>
 
 <hr>
+
+<a name="ClientOption"></a>
 
 ## ClientOption : <code>Object</code>
 
@@ -362,4 +387,3 @@ client.playerLabels();
 | limit | <code>number</code> | Limit the number of items returned in the response. |
 | after | <code>string</code> | Return only items that occur after this marker. Before marker can be found from the response, inside the 'paging' property. Note that only after or before can be specified for a request, not both. |
 | before | <code>string</code> | Return only items that occur before this marker. Before marker can be found from the response, inside the 'paging' property. Note that only after or before can be specified for a request, not both. |
-| labelIds | <code>string</code> | Comma separatered list of label IDs to use for filter 
