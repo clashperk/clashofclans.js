@@ -132,7 +132,7 @@ class Client {
 	 * @returns {Promise<Object>}
 	 */
 	async player(playerTag) {
-		return this._fetch(`clanwarleagues/wars/${this._tag(playerTag)}`);
+		return this._fetch(`players/${this._tag(playerTag)}`);
 	}
 
 	/**
