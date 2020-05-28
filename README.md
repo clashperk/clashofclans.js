@@ -45,8 +45,20 @@ Represents Clash of Clans API
 
 **Example**
 ```js
-const { Client } = require('clashofclans.js');
-const client = new Client({ token: '', timeout: 5000 });
+const { Client: ClashAPI } = require('clashofclans.js');
+const client = new ClashAPI({ token: '', timeout: 5000 });
+
+async function get() {
+    // get clan by tag
+    const clan = await client.clan('#8QU8J9LP')
+        .catch(error => console.log(error));
+    console.log(clan);
+
+    // get player by tag
+    const player = await client.player('#9Q92C8R20')
+        .catch(error => console.log(error));
+    console.log(player);
+}
 ```
 <a name="Client+clans"></a>
 
@@ -60,7 +72,9 @@ Search clans
 
 **Example**
 ```js
-client.clans('air hounds', { limit: 10 });
+client.clans('air hounds', { limit: 10 })
+    .then(data => console.log(data))
+    .catch(error => console.error(error));
 ```
 <a name="Client+clan"></a>
 
@@ -73,7 +87,9 @@ Get clan information
 
 **Example**
 ```js
-client.clan('#8QU8J9LP');
+client.clan('#8QU8J9LP')
+    .then(data => console.log(data))
+    .catch(error => console.error(error));
 ```
 <a name="Client+clanMembers"></a>
 
@@ -87,7 +103,9 @@ List clan members
 
 **Example**
 ```js
-client.clanMembers('#8QU8J9LP', { limit: 10 });
+client.clanMembers('#8QU8J9LP', { limit: 10 })
+    .then(data => console.log(data))
+    .catch(error => console.error(error));
 ```
 <a name="Client+clanWarlog"></a>
 
@@ -101,7 +119,9 @@ Retrieve clan's clan war log
 
 **Example**
 ```js
-client.clanWarlog('#8QU8J9LP', { limit: 10 });
+client.clanWarlog('#8QU8J9LP', { limit: 10 })
+    .then(data => console.log(data))
+    .catch(error => console.error(error));
 ```
 <a name="Client+currentWar"></a>
 
@@ -115,7 +135,9 @@ Retrieve information about clan's current clan war
 
 **Example**
 ```js
-client.currentWar('#8QU8J9LP');
+client.currentWar('#8QU8J9LP')
+    .then(data => console.log(data))
+    .catch(error => console.error(error));
 ```
 <a name="Client+clanWarLeague"></a>
 
@@ -128,7 +150,9 @@ Retrieve information about clan's current clan war league group
 
 **Example**
 ```js
-client.clanWarLeague('#8QU8J9LP');
+client.clanWarLeague('#8QU8J9LP')
+    .then(data => console.log(data))
+    .catch(error => console.error(error));
 ```
 <a name="Client+clanWarLeagueWarTags"></a>
 
@@ -141,7 +165,9 @@ Retrieve information about individual clan war league war
 
 **Example**
 ```js
-client.clanWarLeagueWarTags('#8QU8J9LP');
+client.clanWarLeagueWarTags('#8QU8J9LP')
+    .then(data => console.log(data))
+    .catch(error => console.error(error));
 ```
 <a name="Client+player"></a>
 
@@ -154,7 +180,9 @@ Get player information.
 
 **Example**
 ```js
-client.player('#8QU8J9LP');
+client.player('#8QU8J9LP')
+    .then(data => console.log(data))
+    .catch(error => console.error(error));
 ```
 <a name="Client+leagues"></a>
 
@@ -167,7 +195,9 @@ List Leagues
 
 **Example**
 ```js
-client.leagues();
+client.leagues()
+    .then(data => console.log(data))
+    .catch(error => console.error(error));
 ```
 <a name="Client+leagueId"></a>
 
@@ -180,7 +210,9 @@ Get league information
 
 **Example**
 ```js
-client.leagueId('29000022');
+client.leagueId('29000022')
+    .then(data => console.log(data))
+    .catch(error => console.error(error));
 ```
 <a name="Client+leagueSeasons"></a>
 
@@ -194,7 +226,9 @@ Get league seasons. Note that league season information is available only for Le
 
 **Example**
 ```js
-client.leagueSeasons('29000022', { limit: 10 });
+client.leagueSeasons('29000022', { limit: 10 })
+    .then(data => console.log(data))
+    .catch(error => console.error(error));
 ```
 <a name="Client+leagueRanking"></a>
 
@@ -209,7 +243,9 @@ Get league season rankings. Note that league season information is available onl
 
 **Example**
 ```js
-client.leagueRanking('29000022', '2020-03', { limit: 10 });
+client.leagueRanking('29000022', '2020-03', { limit: 10 })
+    .then(data => console.log(data))
+    .catch(error => console.error(error));
 ```
 <a name="Client+warLeagues"></a>
 
@@ -222,7 +258,9 @@ List war leagues
 
 **Example**
 ```js
-client.warLeagues();
+client.warLeagues()
+    .then(data => console.log(data))
+    .catch(error => console.error(error));
 ```
 <a name="Client+warLeagueId"></a>
 
@@ -235,7 +273,9 @@ Get war league information
 
 **Example**
 ```js
-client.warLeagueId('48000018');
+client.warLeagueId('48000018')
+    .then(data => console.log(data))
+    .catch(error => console.error(error));
 ```
 <a name="Client+locations"></a>
 
@@ -248,9 +288,13 @@ List locations
 
 **Example**
 ```js
-client.locations();
+client.locations()
+    .then(data => console.log(data))
+    .catch(error => console.error(error));
 // OR
-client.locations({ limit: 10 });
+client.locations({ limit: 10 })
+    .then(data => console.log(data))
+    .catch(error => console.error(error));
 ```
 <a name="Client+locationId"></a>
 
@@ -263,7 +307,9 @@ Get information about specific location
 
 **Example**
 ```js
-client.locationId('32000107');
+client.locationId('32000107')
+    .then(data => console.log(data))
+    .catch(error => console.error(error));
 ```
 <a name="Client+clanRanks"></a>
 
@@ -277,7 +323,9 @@ Get clan rankings for a specific location
 
 **Example**
 ```js
-client.clanRanks('32000107', { limit: 10 });
+client.clanRanks('32000107', { limit: 10 })
+    .then(data => console.log(data))
+    .catch(error => console.error(error));
 ```
 <a name="Client+playerRanks"></a>
 
@@ -291,7 +339,9 @@ Get player rankings for a specific location
 
 **Example**
 ```js
-client.playerRanks('32000107', { limit: 10 });
+client.playerRanks('32000107', { limit: 10 })
+    .then(data => console.log(data))
+    .catch(error => console.error(error));
 ```
 <a name="Client+versusClanRanks"></a>
 
@@ -305,7 +355,9 @@ Get clan versus rankings for a specific location
 
 **Example**
 ```js
-client.versusClanRanks('32000107', { limit: 10 });
+client.versusClanRanks('32000107', { limit: 10 })
+    .then(data => console.log(data))
+    .catch(error => console.error(error));
 ```
 <a name="Client+versusPlayerRanks"></a>
 
@@ -319,7 +371,9 @@ Get player versus rankings for a specific location
 
 **Example**
 ```js
-client.versusPlayerRanks('32000107', { limit: 10 });
+client.versusPlayerRanks('32000107', { limit: 10 })
+    .then(data => console.log(data))
+    .catch(error => console.error(error));
 ```
 <a name="Client+clanLabels"></a>
 
@@ -332,7 +386,9 @@ List clan labels
 
 **Example**
 ```js
-client.clanLabels();
+client.clanLabels()
+    .then(data => console.log(data))
+    .catch(error => console.error(error));
 ```
 <a name="Client+playerLabels"></a>
 
@@ -345,7 +401,9 @@ List player labels
 
 **Example**
 ```js
-client.playerLabels();
+client.playerLabels()
+    .then(data => console.log(data))
+    .catch(error => console.error(error));
 ```
 
 <hr>
