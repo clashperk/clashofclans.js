@@ -1,4 +1,4 @@
-const messages = {
+const errors = {
 	504: '504 Request Timeout.',
 	400: 'Client provided incorrect parameters for the request.',
 	403: 'Access denied, either because of missing/incorrect credentials or used API token does not grant access to the requested resource.',
@@ -15,23 +15,16 @@ const messages = {
  * @extends {Error}
  */
 class APIError extends Error {
-	constructor(status, ...args) {
-		if (messages[status] == null) throw new TypeError(`ERROR STATUS '${status}' DOES NOT EXIST`);
-		const message = typeof messages[status] === 'function'
-			? messages[status](...args)
-			: messages[status];
-
+	constructor(code, args) {
+		const message = args && args.message ? args.message : errors[code];
 		super(message);
-		this.code = status;
+		this.code = code;
 		this.message = message;
+		if (args && args.reason) this.reason = args.reason;
 	}
 
 	get name() {
 		return `APIError [${this.code}]`;
-	}
-
-	get status() {
-		return this.status;
 	}
 
 	get message() {

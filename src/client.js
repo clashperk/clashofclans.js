@@ -1,6 +1,6 @@
 const APIError = require('./util/error');
-const fetch = require('node-fetch');
 const qs = require('querystring');
+const https = require('https');
 
 /**
  * Represents Clash of Clans API
@@ -13,24 +13,57 @@ class Client {
 	constructor(option) {
 		this.token = option.token;
 		this.timeout = option.timeout;
-		this.uri = option.uri || 'https://api.clashofclans.com';
+		this.uri = option.uri || 'api.clashofclans.com';
 	}
 
 	async _fetch(path) {
-		const res = await fetch(`${this.uri}/v1/${path}`, {
-			method: 'GET',
-			timeout: this.timeout,
-			headers: {
-				accept: 'application/json',
-				authorization: `Bearer ${this.token}`
-			}
-		}).catch(() => null);
+		return new Promise((resolve, reject) => {
+			const response = {
+				raw: '',
+				status: null,
+				headers: null
+			};
 
-		if (!res) throw new APIError(504);
-		if (!res.ok) throw new APIError(res.status);
-		const data = await res.json().catch(() => null);
-		if (!data) throw new APIError(500);
-		return data;
+			const options = {
+				hostname: this.uri,
+				path: `/v1/${path}`,
+				method: 'GET',
+				headers: {
+					Authorization: `Bearer ${this.token}`,
+					'Content-Type': 'application/json'
+				},
+				timeout: !isNaN(this.timeout) ? this.timeout : 0
+			};
+
+			const request = https.request(options, res => {
+				response.status = res.statusCode;
+				response.headers = res.headers;
+				response.ok = res.statusCode === 200;
+
+				res.on('data', chunk => {
+					response.raw += chunk;
+				});
+
+				res.on('end', () => {
+					if (res.headers['content-type'].includes('application/json') && response.ok) {
+						resolve(JSON.parse(response.raw));
+					} else if (res.headers['content-type'].includes('application/json')) {
+						reject(new APIError(response.status, JSON.parse(response.raw)));
+					}
+				});
+			});
+
+			request.on('error', err => {
+				reject(new APIError(500));
+			});
+
+			request.on('timeout', () => {
+				reject(new APIError(504));
+				request.destroy();
+			});
+
+			request.end();
+		});
 	}
 
 	_tag(tag) {
