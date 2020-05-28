@@ -12,28 +12,28 @@ Represents Clash of Clans API
 
 * [Client](#Client)
     * [new Client(option)](#new_Client_new)
-    * [.clans(name, option)](#Client+clans) ⇒ <code>Promise.&lt;Object&gt;</code>
-    * [.clan(clanTag)](#Client+clan) ⇒ <code>Promise.&lt;Object&gt;</code>
-    * [.clanMembers(clanTag, option)](#Client+clanMembers) ⇒ <code>Promise.&lt;Object&gt;</code>
-    * [.clanWarlog(clanTag, option)](#Client+clanWarlog) ⇒ <code>Promise.&lt;Object&gt;</code>
-    * [.currentWar(clanTag, option)](#Client+currentWar) ⇒ <code>Promise.&lt;Object&gt;</code>
-    * [.clanWarLeague(clanTag)](#Client+clanWarLeague) ⇒ <code>Promise.&lt;Object&gt;</code>
-    * [.clanWarLeagueWarTags(clanTag)](#Client+clanWarLeagueWarTags) ⇒ <code>Promise.&lt;Object&gt;</code>
-    * [.player(playerTag)](#Client+player) ⇒ <code>Promise.&lt;Object&gt;</code>
-    * [.leagues(option)](#Client+leagues) ⇒ <code>Promise.&lt;Object&gt;</code>
-    * [.leagueId(leagueId)](#Client+leagueId) ⇒ <code>Promise.&lt;Object&gt;</code>
-    * [.leagueSeasons(leagueId, option)](#Client+leagueSeasons) ⇒ <code>Promise.&lt;Object&gt;</code>
-    * [.leagueRanking(leagueId, seasonId, option)](#Client+leagueRanking) ⇒ <code>Promise.&lt;Object&gt;</code>
-    * [.warLeagues(option)](#Client+warLeagues) ⇒ <code>Promise.&lt;Object&gt;</code>
-    * [.warLeagueId(leagueId)](#Client+warLeagueId) ⇒ <code>Promise.&lt;Object&gt;</code>
-    * [.locations(option)](#Client+locations) ⇒ <code>Promise.&lt;Object&gt;</code>
-    * [.locationId(locationId)](#Client+locationId) ⇒ <code>Promise.&lt;Object&gt;</code>
-    * [.clanRanks(locationId, option)](#Client+clanRanks) ⇒ <code>Promise.&lt;Object&gt;</code>
-    * [.playerRanks(locationId, option)](#Client+playerRanks) ⇒ <code>Promise.&lt;Object&gt;</code>
-    * [.versusClanRanks(locationId, option)](#Client+versusClanRanks) ⇒ <code>Promise.&lt;Object&gt;</code>
-    * [.versusPlayerRanks(locationId, option)](#Client+versusPlayerRanks) ⇒ <code>Promise.&lt;Object&gt;</code>
-    * [.clanLabels(option)](#Client+clanLabels) ⇒ <code>Promise.&lt;Object&gt;</code>
-    * [.playerLabels(option)](#Client+playerLabels) ⇒ <code>Promise.&lt;Object&gt;</code>
+    * [.clans(name, option)](#Client+clans)
+    * [.clan(clanTag)](#Client+clan)
+    * [.clanMembers(clanTag, option)](#Client+clanMembers)
+    * [.clanWarlog(clanTag, option)](#Client+clanWarlog)
+    * [.currentWar(clanTag, option)](#Client+currentWar)
+    * [.clanWarLeague(clanTag)](#Client+clanWarLeague)
+    * [.clanWarLeagueWarTags(clanTag)](#Client+clanWarLeagueWarTags)
+    * [.player(playerTag)](#Client+player)
+    * [.leagues(option)](#Client+leagues)
+    * [.leagueId(leagueId)](#Client+leagueId)
+    * [.leagueSeasons(leagueId, option)](#Client+leagueSeasons)
+    * [.leagueRanking(leagueId, seasonId, option)](#Client+leagueRanking)
+    * [.warLeagues(option)](#Client+warLeagues)
+    * [.warLeagueId(leagueId)](#Client+warLeagueId)
+    * [.locations(option)](#Client+locations)
+    * [.locationId(locationId)](#Client+locationId)
+    * [.clanRanks(locationId, option)](#Client+clanRanks)
+    * [.playerRanks(locationId, option)](#Client+playerRanks)
+    * [.versusClanRanks(locationId, option)](#Client+versusClanRanks)
+    * [.versusPlayerRanks(locationId, option)](#Client+versusPlayerRanks)
+    * [.clanLabels(option)](#Client+clanLabels)
+    * [.playerLabels(option)](#Client+playerLabels)
 
 <a name="new_Client_new"></a>
 
@@ -62,7 +62,7 @@ async function get() {
 ```
 <a name="Client+clans"></a>
 
-### client.clans(name, option) ⇒ <code>Promise.&lt;Object&gt;</code>
+### client.clans(name, option)
 Search clans
 
 | Param | Type | Description |
@@ -78,7 +78,7 @@ client.clans('air hounds', { limit: 10 })
 ```
 <a name="Client+clan"></a>
 
-### client.clan(clanTag) ⇒ <code>Promise.&lt;Object&gt;</code>
+### client.clan(clanTag)
 Get clan information
 
 | Param | Type | Description |
@@ -93,7 +93,7 @@ client.clan('#8QU8J9LP')
 ```
 <a name="Client+clanMembers"></a>
 
-### client.clanMembers(clanTag, option) ⇒ <code>Promise.&lt;Object&gt;</code>
+### client.clanMembers(clanTag, option)
 List clan members
 
 | Param | Type | Description |
@@ -109,7 +109,7 @@ client.clanMembers('#8QU8J9LP', { limit: 10 })
 ```
 <a name="Client+clanWarlog"></a>
 
-### client.clanWarlog(clanTag, option) ⇒ <code>Promise.&lt;Object&gt;</code>
+### client.clanWarlog(clanTag, option)
 Retrieve clan's clan war log
 
 | Param | Type | Description |
@@ -125,7 +125,7 @@ client.clanWarlog('#8QU8J9LP', { limit: 10 })
 ```
 <a name="Client+currentWar"></a>
 
-### client.currentWar(clanTag, option) ⇒ <code>Promise.&lt;Object&gt;</code>
+### client.currentWar(clanTag, option)
 Retrieve information about clan's current clan war
 
 | Param | Type | Description |
@@ -141,7 +141,7 @@ client.currentWar('#8QU8J9LP')
 ```
 <a name="Client+clanWarLeague"></a>
 
-### client.clanWarLeague(clanTag) ⇒ <code>Promise.&lt;Object&gt;</code>
+### client.clanWarLeague(clanTag)
 Retrieve information about clan's current clan war league group
 
 | Param | Type | Description |
@@ -156,7 +156,7 @@ client.clanWarLeague('#8QU8J9LP')
 ```
 <a name="Client+clanWarLeagueWarTags"></a>
 
-### client.clanWarLeagueWarTags(clanTag) ⇒ <code>Promise.&lt;Object&gt;</code>
+### client.clanWarLeagueWarTags(clanTag)
 Retrieve information about individual clan war league war
 
 | Param | Type | Description |
@@ -171,7 +171,7 @@ client.clanWarLeagueWarTags('#8QU8J9LP')
 ```
 <a name="Client+player"></a>
 
-### client.player(playerTag) ⇒ <code>Promise.&lt;Object&gt;</code>
+### client.player(playerTag)
 Get player information.
 
 | Param | Type | Description |
@@ -186,7 +186,7 @@ client.player('#9Q92C8R20')
 ```
 <a name="Client+leagues"></a>
 
-### client.leagues(option) ⇒ <code>Promise.&lt;Object&gt;</code>
+### client.leagues(option)
 List Leagues
 
 | Param | Type | Description |
@@ -201,7 +201,7 @@ client.leagues()
 ```
 <a name="Client+leagueId"></a>
 
-### client.leagueId(leagueId) ⇒ <code>Promise.&lt;Object&gt;</code>
+### client.leagueId(leagueId)
 Get league information
 
 | Param | Type | Description |
@@ -216,7 +216,7 @@ client.leagueId('29000022')
 ```
 <a name="Client+leagueSeasons"></a>
 
-### client.leagueSeasons(leagueId, option) ⇒ <code>Promise.&lt;Object&gt;</code>
+### client.leagueSeasons(leagueId, option)
 Get league seasons. Note that league season information is available only for Legend League.
 
 | Param | Type | Description |
@@ -232,7 +232,7 @@ client.leagueSeasons('29000022', { limit: 10 })
 ```
 <a name="Client+leagueRanking"></a>
 
-### client.leagueRanking(leagueId, seasonId, option) ⇒ <code>Promise.&lt;Object&gt;</code>
+### client.leagueRanking(leagueId, seasonId, option)
 Get league season rankings. Note that league season information is available only for Legend League.
 
 | Param | Type | Description |
@@ -249,7 +249,7 @@ client.leagueRanking('29000022', '2020-03', { limit: 10 })
 ```
 <a name="Client+warLeagues"></a>
 
-### client.warLeagues(option) ⇒ <code>Promise.&lt;Object&gt;</code>
+### client.warLeagues(option)
 List war leagues
 
 | Param | Type | Description |
@@ -264,7 +264,7 @@ client.warLeagues()
 ```
 <a name="Client+warLeagueId"></a>
 
-### client.warLeagueId(leagueId) ⇒ <code>Promise.&lt;Object&gt;</code>
+### client.warLeagueId(leagueId)
 Get war league information
 
 | Param | Type | Description |
@@ -279,7 +279,7 @@ client.warLeagueId('48000018')
 ```
 <a name="Client+locations"></a>
 
-### client.locations(option) ⇒ <code>Promise.&lt;Object&gt;</code>
+### client.locations(option)
 List locations
 
 | Param | Type | Description |
@@ -298,7 +298,7 @@ client.locations({ limit: 10 })
 ```
 <a name="Client+locationId"></a>
 
-### client.locationId(locationId) ⇒ <code>Promise.&lt;Object&gt;</code>
+### client.locationId(locationId)
 Get information about specific location
 
 | Param | Type | Description |
@@ -313,7 +313,7 @@ client.locationId('32000107')
 ```
 <a name="Client+clanRanks"></a>
 
-### client.clanRanks(locationId, option) ⇒ <code>Promise.&lt;Object&gt;</code>
+### client.clanRanks(locationId, option)
 Get clan rankings for a specific location
 
 | Param | Type | Description |
@@ -329,7 +329,7 @@ client.clanRanks('32000107', { limit: 10 })
 ```
 <a name="Client+playerRanks"></a>
 
-### client.playerRanks(locationId, option) ⇒ <code>Promise.&lt;Object&gt;</code>
+### client.playerRanks(locationId, option)
 Get player rankings for a specific location
 
 | Param | Type | Description |
@@ -345,7 +345,7 @@ client.playerRanks('32000107', { limit: 10 })
 ```
 <a name="Client+versusClanRanks"></a>
 
-### client.versusClanRanks(locationId, option) ⇒ <code>Promise.&lt;Object&gt;</code>
+### client.versusClanRanks(locationId, option)
 Get clan versus rankings for a specific location
 
 | Param | Type | Description |
@@ -361,7 +361,7 @@ client.versusClanRanks('32000107', { limit: 10 })
 ```
 <a name="Client+versusPlayerRanks"></a>
 
-### client.versusPlayerRanks(locationId, option) ⇒ <code>Promise.&lt;Object&gt;</code>
+### client.versusPlayerRanks(locationId, option)
 Get player versus rankings for a specific location
 
 | Param | Type | Description |
@@ -377,7 +377,7 @@ client.versusPlayerRanks('32000107', { limit: 10 })
 ```
 <a name="Client+clanLabels"></a>
 
-### client.clanLabels(option) ⇒ <code>Promise.&lt;Object&gt;</code>
+### client.clanLabels(option)
 List clan labels
 
 | Param | Type | Description |
@@ -392,7 +392,7 @@ client.clanLabels()
 ```
 <a name="Client+playerLabels"></a>
 
-### client.playerLabels(option) ⇒ <code>Promise.&lt;Object&gt;</code>
+### client.playerLabels(option)
 List player labels
 
 | Param | Type | Description |
