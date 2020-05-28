@@ -180,7 +180,7 @@ Get player information.
 
 **Example**
 ```js
-client.player('#8QU8J9LP')
+client.player('#9Q92C8R20')
     .then(data => console.log(data))
     .catch(error => console.error(error));
 ```
