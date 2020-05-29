@@ -10,7 +10,7 @@ const https = require('https');
  * const client = new Client({ token: '', timeout: 5000 });
  */
 class Client {
-	constructor(option) {
+	constructor(option = {}) {
 		this.token = option.token;
 		this.timeout = option.timeout;
 		this.uri = option.uri || 'api.clashofclans.com';
@@ -29,7 +29,7 @@ class Client {
 				path: `/v1/${path}`,
 				method: 'GET',
 				headers: {
-					Authorization: `Bearer ${this.token}`,
+					Authorization: `Bearer ${this.token || process.env.CLASHOFCLANS_JS_TOKEN}`,
 					'Content-Type': 'application/json'
 				},
 				timeout: !isNaN(this.timeout) ? this.timeout : 0
