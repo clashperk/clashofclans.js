@@ -34,6 +34,9 @@ Represents Clash of Clans API
     * [.versusPlayerRanks(locationId, option)](#Client+versusPlayerRanks)
     * [.clanLabels(option)](#Client+clanLabels)
     * [.playerLabels(option)](#Client+playerLabels)
+    * [.generateToken(option)](#Client+generateToken)
+
+* [createToken()](#createToken)
 
 <a name="new_Client_new"></a>
 
@@ -45,8 +48,8 @@ Represents Clash of Clans API
 
 **Example**
 ```js
-const { Client: ClashAPI } = require('clashofclans.js');
-const client = new ClashAPI({ token: '', timeout: 5000 });
+const { Client } = require('clashofclans.js');
+const client = new Client({ token: '' });
 
 async function get() {
     // get clan by tag
@@ -60,6 +63,30 @@ async function get() {
     console.log(player);
 }
 ```
+
+<a name="createToken"></a>
+
+### createToken(option)
+Creates a token according to your IP
+
+| Param | Type | Description |
+| --- | --- | --- |
+| email | <code>string</code> | Developer email |
+| password | <code>string</code> | Developer password |
+| name | <code>string</code> | Name of the token |
+| autoRevoke | <code>Boolean</code> | Whether to revoke old token(s) |
+
+**Example**
+```js
+const { createToken } = require('clashofclans.js');
+
+async function get() {
+    const token = await createToken({ email: '', password: '' });
+        .catch(error => console.log(error));
+    console.log(token);
+}
+```
+
 <a name="Client+clans"></a>
 
 ### client.clans(name, option)
