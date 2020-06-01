@@ -436,6 +436,8 @@ async function getToken() {
 > Make sure you don't run it too much!
 
 ```js
+const { Client, createToken } = require('clashofclans.js');
+const client = new Client({ token: process.env.DEVELOPER_TOKEN });
 const fs = require('fs');
 async function isValid() {
 	// Set the interval
