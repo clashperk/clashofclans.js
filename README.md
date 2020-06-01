@@ -64,29 +64,6 @@ async function get() {
 }
 ```
 
-<a name="createToken"></a>
-
-### createToken(option)
-Creates a token according to your IP
-
-| Param | Type | Description |
-| --- | --- | --- |
-| email | <code>string</code> | Developer email |
-| password | <code>string</code> | Developer password |
-| name | <code>string</code> | Name of the token |
-| autoRevoke | <code>Boolean</code> | Whether to revoke old token(s) |
-
-**Example**
-```js
-const { createToken } = require('clashofclans.js');
-
-async function get() {
-    const token = await createToken({ email: '', password: '' });
-        .catch(error => console.log(error));
-    console.log(token);
-}
-```
-
 <a name="Client+clans"></a>
 
 ### client.clans(name, option)
@@ -431,6 +408,70 @@ List player labels
 client.playerLabels()
     .then(data => console.log(data))
     .catch(error => console.error(error));
+```
+
+<a name="createToken"></a>
+
+### createToken(option)
+Creates a token according to your IP
+
+| Param | Type | Description |
+| --- | --- | --- |
+| email | <code>string</code> | Developer email |
+| password | <code>string</code> | Developer password |
+| name | <code>string</code> | Name of the token |
+| autoRevoke | <code>Boolean</code> | Whether to revoke old token(s) |
+
+**Example**
+```js
+const { createToken } = require('clashofclans.js');
+
+async function getToken() {
+    const token = await createToken({ email: '', password: '' });
+        .catch(error => console.log(error));
+    console.log(token);
+}
+```
+> Handle IP changes and create new token automatically..<br>
+> Make sure you don't run it too much!
+
+```js
+const { Client, createToken } = require('clashofclans.js');
+const client = new Client({ token: process.env.DEVELOPER_TOKEN });
+
+const fs = require('fs');
+async function isValid() {
+	try {
+		await client.locations({ limit: 1 });
+	} catch (error) {
+		console.error(error.message);
+		if (error.code === 403) {
+			createToken({ email: '', password: '' })
+				.then(token => {
+					console.log('New Token Created!');
+
+					// You can use any of the following methods.
+
+					// Method 1 (Recommended)
+					// Set the token and save it..
+					client.token = token;
+                    fs.writeFileSync('./token.json', JSON.stringify({ token }));
+                    // Now you can use this token everytime you run your app..
+                    // const client = new Client({ token: require('./token.json').token });
+                    // So you don't have to create new token everytime..
+
+					// Method 2
+					// Set the token and update ENV..
+					client.token = token;
+					process.env.DEVELOPER_TOKEN = token;
+				}).catch(console.log);
+		}
+	}
+
+	// Set the interval
+	setTimeout(isValid.bind(null), 30 * 1000);
+}
+isValid();
 ```
 
 <hr>

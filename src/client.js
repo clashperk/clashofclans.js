@@ -29,7 +29,7 @@ class Client {
 				path: `/v1/${path}`,
 				method: 'GET',
 				headers: {
-					Authorization: `Bearer ${this.token || process.env.CLASHOFCLANS_JS_TOKEN}`,
+					Authorization: `Bearer ${this.token}`,
 					'Content-Type': 'application/json'
 				},
 				timeout: !isNaN(this.timeout) ? this.timeout : 0
