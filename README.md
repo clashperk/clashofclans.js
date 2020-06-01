@@ -436,40 +436,36 @@ async function getToken() {
 > Make sure you don't run it too much!
 
 ```js
-const { Client, createToken } = require('clashofclans.js');
-const client = new Client({ token: process.env.DEVELOPER_TOKEN });
-
 const fs = require('fs');
 async function isValid() {
-	try {
-		await client.locations({ limit: 1 });
-	} catch (error) {
-		console.error(error.message);
-		if (error.code === 403) {
-			createToken({ email: '', password: '' })
-				.then(token => {
-					console.log('New Token Created!');
-
-					// You can use any of the following methods.
-
-					// Method 1 (Recommended)
-					// Set the token and save it..
-					client.token = token;
-                    fs.writeFileSync('./token.json', JSON.stringify({ token }));
-                    // Now you can use this token everytime you run your app..
-                    // const client = new Client({ token: require('./token.json').token });
-                    // So you don't have to create new token everytime..
-
-					// Method 2
-					// Set the token and update ENV..
-					client.token = token;
-					process.env.DEVELOPER_TOKEN = token;
-				}).catch(console.log);
-		}
-	}
-
 	// Set the interval
 	setTimeout(isValid.bind(null), 30 * 1000);
+
+	try {
+		return client.locations({ limit: 1 });
+	} catch (error) {
+		console.error(error.message);
+		if (error.code !== 403) return;
+		return createToken({ email: '', password: '' })
+			.then(token => {
+				console.log('New Token Created!');
+
+				// You can use any of the following methods.
+
+				// Method 1 (Recommended)
+				// Set the token and save it..
+				client.token = token;
+				fs.writeFileSync('./token.json', JSON.stringify({ token }));
+				// Now you can use this token everytime you run your app..
+				// const client = new Client({ token: require('./token.json').token });
+				// So you don't have to create new token everytime..
+
+				// Method 2
+				// Set the token and update ENV..
+				client.token = token;
+				process.env.DEVELOPER_TOKEN = token;
+			}).catch(console.log);
+	}
 }
 isValid();
 ```
