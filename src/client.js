@@ -46,7 +46,7 @@ class Client {
 
 				res.on('end', () => {
 					if (res.headers['content-type'].includes('application/json') && response.ok) {
-						resolve(JSON.parse(response.raw));
+						resolve(Object.assign(JSON.parse(response.raw), { ok: true, status: response.status }));
 					} else if (res.headers['content-type'].includes('application/json')) {
 						reject(new APIError(response.status, JSON.parse(response.raw)));
 					}
