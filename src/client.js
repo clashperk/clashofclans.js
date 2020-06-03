@@ -79,8 +79,8 @@ class Client {
 	 * @returns {Promise<Object>}
 	 */
 	async clans(name, option) {
-		const query = qs.stringify(option);
-		return this._fetch(`clans?name=${name}&${query}`);
+		const query = qs.stringify({ name, option });
+		return this._fetch(`clans?${query}`);
 	}
 
 	/**
