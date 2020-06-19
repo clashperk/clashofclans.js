@@ -24,7 +24,7 @@ class APIError extends Error {
 	}
 
 	get name() {
-		return `APIError [${this.code}]`;
+		return `Error [${this.code}]`;
 	}
 
 	get message() {

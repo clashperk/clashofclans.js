@@ -120,7 +120,6 @@ class Client {
 		return this._fetch(`clans/${this._tag(clanTag)}/warlog?${query}`);
 	}
 
-
 	/**
 	 * Retrieve information about clan's current clan war
 	 * @param {string} clanTag - Tag of the clan.
