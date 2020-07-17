@@ -95,11 +95,12 @@ class Util {
 		return this.create(cookie, ips);
 	}
 
-	async revoke(key, cookie) {
-		return new Promise((resolve, reject) => {
+	async revoke(key, cookies) {
+		return new Promise(() => {
 			https.request('https://developer.clashofclans.com/api/apikey/revoke', {
 				method: 'POST', headers: {
-					'Content-Type': 'application/json', cookie
+					'Content-Type': 'application/json',
+					cookie: cookies
 				}
 			}, res => {
 				if (res.statusCode !== 200) {
@@ -109,12 +110,12 @@ class Util {
 		});
 	}
 
-	async create(cookie, ips) {
+	async create(cookies, ips) {
 		return new Promise((resolve, reject) => {
 			https.request('https://developer.clashofclans.com/api/apikey/create', {
 				method: 'POST', headers: {
 					'Content-Type': 'application/json',
-					cookie
+					cookie: cookies
 				}
 			}, res => {
 				let raw = '';
@@ -131,7 +132,7 @@ class Util {
 				});
 			}).end(JSON.stringify({
 				name: this.name,
-				description: `Creator: clashofclans.js | Date: ${new Date().toUTCString()}`,
+				description: `CLASH-OF-CLANS-JS | ${new Date().toUTCString()}`,
 				cidrRanges: ips
 			}));
 		});
