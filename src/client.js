@@ -1,4 +1,4 @@
-const APIError = require('./util/error');
+const Error = require('./util/error');
 const qs = require('querystring');
 const https = require('https');
 
@@ -46,19 +46,23 @@ class Client {
 
 				res.on('end', () => {
 					if (res.headers['content-type'].includes('application/json') && response.ok) {
-						resolve(Object.assign(JSON.parse(response.raw), { ok: true, status: response.status }));
+						resolve(Object.assign(JSON.parse(response.raw), {
+							ok: response.ok,
+							status: response.status,
+							headers: response.headers
+						}));
 					} else if (res.headers['content-type'].includes('application/json')) {
-						reject(new APIError(response.status, JSON.parse(response.raw)));
+						reject(new Error(response.status, JSON.parse(response.raw)));
 					}
 				});
 			});
 
-			request.on('error', err => {
-				reject(new APIError(500));
+			request.on('error', () => {
+				reject(new Error(500));
 			});
 
 			request.on('timeout', () => {
-				reject(new APIError(504));
+				reject(new Error(504));
 				request.destroy();
 			});
 

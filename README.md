@@ -426,44 +426,12 @@ Creates a token according to your IP
 ```js
 const { createToken } = require('clashofclans.js');
 
-async function getToken() {
+(async function() {
     const token = await createToken({ email: '', password: '' });
         .catch(error => console.log(error));
     console.log(token);
-}
+})();
 ```
-> Handle IP changes and create new token automatically..<br>
-> Make sure you don't run it too much!
-
-```js
-const fs = require('fs');
-const { Client, createToken } = require('clashofclans.js');
-const { token } = require('./token.json'); 
-const client = new Client({ token });
-
-async function isValid() {
-	// Set the interval..
-	setTimeout(isValid.bind(null), 30 * 1000);
-
-	try {
-		await client.locations({ limit: 1 });
-	} catch (error) {
-		console.log(error.message);
-		if (error.code !== 403) return;
-
-		return createToken({ email: '', password: '' })
-			.then(token => {
-				console.log('New Token Created!');
-
-				// Set the new token and save it..
-				client.token = token;
-				fs.writeFileSync('./token.json', JSON.stringify({ token }));
-			}).catch(console.log);
-	}
-}
-isValid();
-```
-
 <hr>
 
 <a name="ClientOption"></a>
