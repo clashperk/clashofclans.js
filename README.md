@@ -51,17 +51,19 @@ Represents Clash of Clans API
 const { Client } = require('clashofclans.js');
 const client = new Client({ token: '' });
 
-async function get() {
-    // get clan by tag
-    const clan = await client.clan('#8QU8J9LP')
-        .catch(error => console.log(error));
-    console.log(clan);
+// get clan by tag
+(async function get() {
+	const data = await client.clan('#8QU8J9LP')
+		.catch(error => console.log(error));
+	console.log(data);
+})();
 
-    // get player by tag
-    const player = await client.player('#9Q92C8R20')
-        .catch(error => console.log(error));
-    console.log(player);
-}
+// get player by tag
+(async function () {
+	const data = await client.player('#9Q92C8R20')
+		.catch(error => console.log(error));
+	console.log(data);
+})();
 ```
 
 <a name="Client+clans"></a>
