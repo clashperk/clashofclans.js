@@ -1,6 +1,7 @@
-const Error = require('./util/error');
+const Error = require('./Error');
 const qs = require('querystring');
 const https = require('https');
+const { parse } = require('url');
 
 /**
  * Represents Clash of Clans API
@@ -13,10 +14,17 @@ class Client {
 	constructor(option = {}) {
 		this.token = option.token;
 		this.timeout = option.timeout;
-		this.uri = option.uri || 'api.clashofclans.com';
+		this.baseURL = 'https://api.clashofclans.com/v1';
 	}
 
-	async _fetch(path) {
+	/**
+	 * Fetch URL
+	 * @param {string} reqURL - Request URL
+	 * @param {Object} options - Optional options
+	 * @example
+	 * fetch(reqURL, { token, timeout }).then(res => res.json());
+	 */
+	async fetch(reqURL, { token = this.token, timeout = this.timeout } = {}) {
 		return new Promise((resolve, reject) => {
 			const response = {
 				raw: '',
@@ -24,15 +32,16 @@ class Client {
 				headers: null
 			};
 
+			const { hostname, path } = parse(reqURL);
 			const options = {
-				hostname: this.uri,
-				path: `/v1/${path}`,
+				hostname,
+				path,
 				method: 'GET',
 				headers: {
-					Authorization: `Bearer ${this.token}`,
+					Authorization: `Bearer ${token}`,
 					'Content-Type': 'application/json'
 				},
-				timeout: !isNaN(this.timeout) ? this.timeout : 0
+				timeout: !isNaN(timeout) ? timeout : 0
 			};
 
 			const request = https.request(options, res => {
@@ -47,8 +56,8 @@ class Client {
 				res.on('end', () => {
 					if (res.headers['content-type'].includes('application/json')) {
 						resolve(Object.assign(JSON.parse(response.raw), {
-							ok: response.ok,
 							status: response.status,
+							ok: response.ok,
 							maxAge: Math.floor(response.headers['cache-control'].split('=')[1])
 						}));
 					} else {
@@ -74,7 +83,7 @@ class Client {
 		});
 	}
 
-	_tag(tag = '') {
+	static tag(tag = '') {
 		return encodeURIComponent(tag.toUpperCase().replace(/O|o/g, '0'));
 	}
 
@@ -88,7 +97,7 @@ class Client {
 	 */
 	async clans(name, option) {
 		const query = qs.stringify(option);
-		return this._fetch(`clans?name=${encodeURIComponent(name)}&${query}`);
+		return this.fetch(`${this.baseURL}/clans?name=${encodeURIComponent(name)}&${query}`);
 	}
 
 	/**
@@ -99,7 +108,7 @@ class Client {
 	 * @returns {Promise<Object>}
 	 */
 	async clan(clanTag) {
-		return this._fetch(`clans/${this._tag(clanTag)}`);
+		return this.fetch(`${this.baseURL}/clans/${this.constructor.tag(clanTag)}`);
 	}
 
 	/**
@@ -112,7 +121,7 @@ class Client {
 	 */
 	async clanMembers(clanTag, option) {
 		const query = qs.stringify(option);
-		return this._fetch(`clans/${this._tag(clanTag)}/members?${query}`);
+		return this.fetch(`${this.baseURL}/clans/${this.constructor.tag(clanTag)}/members?${query}`);
 	}
 
 	/**
@@ -125,7 +134,7 @@ class Client {
 	 */
 	async clanWarlog(clanTag, option) {
 		const query = qs.stringify(option);
-		return this._fetch(`clans/${this._tag(clanTag)}/warlog?${query}`);
+		return this.fetch(`${this.baseURL}/clans/${this.constructor.tag(clanTag)}/warlog?${query}`);
 	}
 
 	/**
@@ -138,7 +147,7 @@ class Client {
 	 */
 	async currentWar(clanTag, option) {
 		const query = qs.stringify(option);
-		return this._fetch(`clans/${this._tag(clanTag)}/currentwar?${query}`);
+		return this.fetch(`${this.baseURL}/clans/${this.constructor.tag(clanTag)}/currentwar?${query}`);
 	}
 
 	/**
@@ -149,7 +158,7 @@ class Client {
 	 * @returns {Promise<Object>}
 	 */
 	async clanWarLeague(clanTag) {
-		return this._fetch(`clans/${this._tag(clanTag)}/currentwar/leaguegroup`);
+		return this.fetch(`${this.baseURL}/clans/${this.constructor.tag(clanTag)}/currentwar/leaguegroup`);
 	}
 
 	/**
@@ -160,7 +169,7 @@ class Client {
 	 * @returns {Promise<Object>}
 	 */
 	async clanWarLeagueWarTags(clanTag) {
-		return this._fetch(`clanwarleagues/wars/${this._tag(clanTag)}`);
+		return this.fetch(`${this.baseURL}/clanwarleagues/wars/${this.constructor.tag(clanTag)}`);
 	}
 
 
@@ -172,7 +181,11 @@ class Client {
 	 * @returns {Promise<Object>}
 	 */
 	async player(playerTag) {
-		return this._fetch(`players/${this._tag(playerTag)}`);
+		return this.fetch(`${this.baseURL}/players/${this.constructor.tag(playerTag)}`);
+	}
+
+	async players(tags = [], tokens = []) {
+		return Promise.all(tags.map((tag, i) => this.fetch(`${this.baseURL}/players/${this.constructor.tag(tag)}`, tokens[i % tokens.length])));
 	}
 
 	/**
@@ -184,7 +197,7 @@ class Client {
 	 */
 	async leagues(option) {
 		const query = qs.stringify(option);
-		return this._fetch(`leagues?${query}`);
+		return this.fetch(`${this.baseURL}/leagues?${query}`);
 	}
 
 	/**
@@ -195,7 +208,7 @@ class Client {
 	 * @returns {Promise<Object>}
 	 */
 	async leagueId(leagueId) {
-		return this._fetch(`leagues/${leagueId}`);
+		return this.fetch(`${this.baseURL}/leagues/${leagueId}`);
 	}
 
 	/**
@@ -208,7 +221,7 @@ class Client {
 	 */
 	async leagueSeasons(leagueId, option) {
 		const query = qs.stringify(option);
-		return this._fetch(`leagues/${leagueId}/seasons?${query}`);
+		return this.fetch(`${this.baseURL}/leagues/${leagueId}/seasons?${query}`);
 	}
 
 	/**
@@ -222,7 +235,7 @@ class Client {
 	 */
 	async leagueRanking(leagueId, seasonId, option) {
 		const query = qs.stringify(option);
-		return this._fetch(`leagues/${leagueId}/seasons/${seasonId}?${query}`);
+		return this.fetch(`${this.baseURL}/leagues/${leagueId}/seasons/${seasonId}?${query}`);
 	}
 
 	/**
@@ -234,7 +247,7 @@ class Client {
 	 */
 	async warLeagues(option) {
 		const query = qs.stringify(option);
-		return this._fetch(`warleagues?${query}`);
+		return this.fetch(`${this.baseURL}/warleagues?${query}`);
 	}
 
 	/**
@@ -245,7 +258,7 @@ class Client {
 	 * @returns {Promise<Object>}
 	 */
 	async warLeagueId(leagueId) {
-		return this._fetch(`warleagues/${leagueId}`);
+		return this.fetch(`${this.baseURL}/warleagues/${leagueId}`);
 	}
 
 	/**
@@ -259,7 +272,7 @@ class Client {
 	 */
 	async locations(option) {
 		const query = qs.stringify(option);
-		return this._fetch(`locations?${query}`);
+		return this.fetch(`${this.baseURL}/locations?${query}`);
 	}
 
 	/**
@@ -270,7 +283,7 @@ class Client {
 	 * @returns {Promise<Object>}
 	 */
 	async locationId(locationId) {
-		return this._fetch(`locations/${locationId}`);
+		return this.fetch(`${this.baseURL}/locations/${locationId}`);
 	}
 
 	/**
@@ -283,7 +296,7 @@ class Client {
 	 */
 	async clanRanks(locationId, option) {
 		const query = qs.stringify(option);
-		return this._fetch(`locations/${locationId}/rankings/clans?${query}`);
+		return this.fetch(`${this.baseURL}/locations/${locationId}/rankings/clans?${query}`);
 	}
 
 	/**
@@ -296,7 +309,7 @@ class Client {
 	 */
 	async playerRanks(locationId, option) {
 		const query = qs.stringify(option);
-		return this._fetch(`locations/${locationId}/rankings/players?${query}`);
+		return this.fetch(`${this.baseURL}/locations/${locationId}/rankings/players?${query}`);
 	}
 
 	/**
@@ -309,7 +322,7 @@ class Client {
 	 */
 	async versusClanRanks(locationId, option) {
 		const query = qs.stringify(option);
-		return this._fetch(`locations/${locationId}/rankings/clans-versus?${query}`);
+		return this.fetch(`${this.baseURL}/locations/${locationId}/rankings/clans-versus?${query}`);
 	}
 
 	/**
@@ -322,7 +335,7 @@ class Client {
 	 */
 	async versusPlayerRanks(locationId, option) {
 		const query = qs.stringify(option);
-		return this._fetch(`locations/${locationId}/rankings/players-versus?${query}`);
+		return this.fetch(`${this.baseURL}/locations/${locationId}/rankings/players-versus?${query}`);
 	}
 
 	/**
@@ -334,7 +347,7 @@ class Client {
 	 */
 	async clanLabels(option) {
 		const query = qs.stringify(option);
-		return this._fetch(`labels/clans?${query}`);
+		return this.fetch(`${this.baseURL}/labels/clans?${query}`);
 	}
 
 	/**
@@ -346,7 +359,7 @@ class Client {
 	 */
 	async playerLabels(option) {
 		const query = qs.stringify(option);
-		return this._fetch(`labels/players?${query}`);
+		return this.fetch(`${this.baseURL}/labels/players?${query}`);
 	}
 }
 

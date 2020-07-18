@@ -10,11 +10,11 @@ const errors = {
 
 /**
  * Represents an error for Clash of Clans API
- * @param {string} status - Error status.
+ * @param {string} code - Status code.
  * @param {...any} args - Arguments.
  * @extends {Error}
  */
-class APIError extends Error {
+module.exports = class extends Error {
 	constructor(code, args) {
 		const message = args && args.message ? args.message : errors[code];
 		super(message);
@@ -27,9 +27,11 @@ class APIError extends Error {
 		return `Error [${this.code}]`;
 	}
 
+	get status() {
+		return this.code;
+	}
+
 	get message() {
 		return this.message;
 	}
-}
-
-module.exports = APIError;
+};
