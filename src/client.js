@@ -45,14 +45,18 @@ class Client {
 				});
 
 				res.on('end', () => {
-					if (res.headers['content-type'].includes('application/json') && response.ok) {
+					if (res.headers['content-type'].includes('application/json')) {
 						resolve(Object.assign(JSON.parse(response.raw), {
 							ok: response.ok,
 							status: response.status,
-							headers: response.headers
+							maxAge: Math.floor(response.headers['cache-control'].split('=')[1])
 						}));
-					} else if (res.headers['content-type'].includes('application/json')) {
-						reject(new Error(response.status, JSON.parse(response.raw)));
+					} else {
+						try {
+							reject(new Error(response.status, JSON.parse(response.raw)));
+						} catch {
+							reject(new Error(response.status, response.raw));
+						}
 					}
 				});
 			});
@@ -70,7 +74,7 @@ class Client {
 		});
 	}
 
-	_tag(tag) {
+	_tag(tag = '') {
 		return encodeURIComponent(tag.toUpperCase().replace(/O|o/g, '0'));
 	}
 
