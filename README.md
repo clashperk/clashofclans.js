@@ -48,10 +48,9 @@ Represents Clash of Clans API
 const { Client } = require('clashofclans.js');
 const client = new Client({ token: '' });
 
-// get clan by tag
 (async function() {
 	const data = await client.clan('#8QU8J9LP')
-    if (!data.ok && data.status === 404) return console.log('Invalid Tag Provided');
+	if (!data.ok && data.status === 404) return console.log('Invalid Tag Provided');
 	console.log(data);
 })();
 ```
@@ -62,7 +61,7 @@ const client = new Client({ token: '' });
 ```js
 (async function() {
 	const data = await client.locations({ limit: 1 })
-    if (!data.ok) return;
+	if (!data.ok) return;
 	console.log(data);
 })();
 ```
