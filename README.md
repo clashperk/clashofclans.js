@@ -34,9 +34,6 @@ Represents Clash of Clans API
     * [.versusPlayerRanks(locationId, option)](#Client+versusPlayerRanks)
     * [.clanLabels(option)](#Client+clanLabels)
     * [.playerLabels(option)](#Client+playerLabels)
-    * [.generateToken(option)](#Client+generateToken)
-
-* [createToken()](#createToken)
 
 <a name="new_Client_new"></a>
 
@@ -52,18 +49,42 @@ const { Client } = require('clashofclans.js');
 const client = new Client({ token: '' });
 
 // get clan by tag
-(async function get() {
+(async function() {
 	const data = await client.clan('#8QU8J9LP')
-		.catch(error => console.log(error));
+    if (!data.ok && data.status === 404) return console.log('Invalid Tag Provided');
 	console.log(data);
 })();
+```
 
-// get player by tag
-(async function () {
-	const data = await client.player('#9Q92C8R20')
-		.catch(error => console.log(error));
+**Response**
+> With some additional properties (`.status`, `.ok` and `.maxAge`)
+
+```js
+(async function() {
+	const data = await client.locations({ limit: 1 })
+    if (!data.ok) return;
 	console.log(data);
 })();
+```
+
+```json
+{
+    "items": [
+        {
+            "id": 32000000,
+            "name": "Europe",
+            "isCountry": false
+        }
+    ],
+    "paging": {
+        "cursors": {
+            "after": "eyJwb3MiOjF9"
+        }
+    },
+    "status": 200,
+    "ok": true,
+    "maxAge": 245
+}
 ```
 
 <a name="Client+clans"></a>
@@ -412,28 +433,6 @@ client.playerLabels()
     .catch(error => console.error(error));
 ```
 
-<a name="createToken"></a>
-
-### createToken(option)
-Creates a token according to your IP
-
-| Param | Type | Description |
-| --- | --- | --- |
-| email | <code>string</code> | Developer email |
-| password | <code>string</code> | Developer password |
-| name | <code>string</code> | Name of the token |
-| autoRevoke | <code>Boolean</code> | Whether to revoke old token(s) |
-
-**Example**
-```js
-const { createToken } = require('clashofclans.js');
-
-(async function() {
-    const token = await createToken({ email: '', password: '' });
-        .catch(error => console.log(error));
-    console.log(token);
-})();
-```
 <hr>
 
 <a name="ClientOption"></a>
