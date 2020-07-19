@@ -22,7 +22,7 @@ class Client {
 	 * @param {string} reqURL - Request URL
 	 * @param {Object} options - Optional options
 	 * @example
-	 * fetch(reqURL, { token, timeout }).then(res => res.json());
+	 * fetch(reqURL, { token, timeout }).then(data => console.log(data)));
 	 */
 	async fetch(reqURL, { token = this.token, timeout = this.timeout } = {}) {
 		return new Promise((resolve, reject) => {
