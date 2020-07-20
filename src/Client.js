@@ -18,11 +18,12 @@ class Client {
 	}
 
 	/**
-	 * Fetch URL
+	 * Fetch any URL
 	 * @param {string} reqURL - Request URL
 	 * @param {Object} options - Optional options
 	 * @example
-	 * fetch(reqURL, { token, timeout }).then(data => console.log(data)));
+	 * client.fetch(reqURL, { token, timeout }).then(data => console.log(data)));
+	 * @returns {Promise<Object>} Object
 	 */
 	async fetch(reqURL, { token = this.token, timeout = this.timeout } = {}) {
 		return new Promise((resolve, reject) => {
@@ -93,7 +94,7 @@ class Client {
 	 * @param {ClanSearchOption} option - Optional options
 	 * @example
 	 * client.clans('air hounds', { limit: 10 });
-	 * @returns {Promise<Object>}
+	 * @returns {Promise<Object>} Object
 	 */
 	async clans(name, option) {
 		const query = qs.stringify(option);
@@ -105,7 +106,7 @@ class Client {
 	 * @param {string} clanTag - Tag of the clan.
 	 * @example
 	 * client.clan('#8QU8J9LP');
-	 * @returns {Promise<Object>}
+	 * @returns {Promise<Object>} Object
 	 */
 	async clan(clanTag) {
 		return this.fetch(`${this.baseURL}/clans/${this.constructor.tag(clanTag)}`);
@@ -117,7 +118,7 @@ class Client {
 	 * @param {SearchOption} option - Optional options
 	 * @example
 	 * client.clanMembers('#8QU8J9LP', { limit: 10 });
-	 * @returns {Promise<Object>}
+	 * @returns {Promise<Object>} Object
 	 */
 	async clanMembers(clanTag, option) {
 		const query = qs.stringify(option);
@@ -130,7 +131,7 @@ class Client {
 	 * @param {SearchOption} option - Optional options
 	 * @example
 	 * client.clanWarlog('#8QU8J9LP', { limit: 10 });
-	 * @returns {Promise<Object>}
+	 * @returns {Promise<Object>} Object
 	 */
 	async clanWarlog(clanTag, option) {
 		const query = qs.stringify(option);
@@ -143,7 +144,7 @@ class Client {
 	 * @param {SearchOption} option - Optional options
 	 * @example
 	 * client.currentWar('#8QU8J9LP');
-	 * @returns {Promise<Object>}
+	 * @returns {Promise<Object>} Object
 	 */
 	async currentWar(clanTag, option) {
 		const query = qs.stringify(option);
@@ -155,7 +156,7 @@ class Client {
 	 * @param {string} clanTag - Tag of the clan.
 	 * @example
 	 * client.clanWarLeague('#8QU8J9LP');
-	 * @returns {Promise<Object>}
+	 * @returns {Promise<Object>} Object
 	 */
 	async clanWarLeague(clanTag) {
 		return this.fetch(`${this.baseURL}/clans/${this.constructor.tag(clanTag)}/currentwar/leaguegroup`);
@@ -166,7 +167,7 @@ class Client {
 	 * @param {string} clanTag - Tag of the clan.
 	 * @example
 	 * client.clanWarLeagueWarTags('#8QU8J9LP');
-	 * @returns {Promise<Object>}
+	 * @returns {Promise<Object>} Object
 	 */
 	async clanWarLeagueWarTags(clanTag) {
 		return this.fetch(`${this.baseURL}/clanwarleagues/wars/${this.constructor.tag(clanTag)}`);
@@ -178,14 +179,10 @@ class Client {
 	 * @param {string} playerTag - Tag of the player.
 	 * @example
 	 * client.player('#8QU8J9LP');
-	 * @returns {Promise<Object>}
+	 * @returns {Promise<Object>} Object
 	 */
 	async player(playerTag) {
 		return this.fetch(`${this.baseURL}/players/${this.constructor.tag(playerTag)}`);
-	}
-
-	async players(tags = [], tokens = []) {
-		return Promise.all(tags.map((tag, i) => this.fetch(`${this.baseURL}/players/${this.constructor.tag(tag)}`, tokens[i % tokens.length])));
 	}
 
 	/**
@@ -193,7 +190,7 @@ class Client {
 	 * @param {SearchOption} option - Optional options
 	 * @example
 	 * client.leagues();
-	 * @returns {Promise<Object>}
+	 * @returns {Promise<Object>} Object
 	 */
 	async leagues(option) {
 		const query = qs.stringify(option);
@@ -205,7 +202,7 @@ class Client {
 	 * @param {string} leagueId - Identifier of the league.
 	 * @example
 	 * client.leagueId('29000022');
-	 * @returns {Promise<Object>}
+	 * @returns {Promise<Object>} Object
 	 */
 	async leagueId(leagueId) {
 		return this.fetch(`${this.baseURL}/leagues/${leagueId}`);
@@ -217,7 +214,7 @@ class Client {
 	 * @param {SearchOption} option - Optional options
 	 * @example
 	 * client.leagueSeasons('29000022', { limit: 10 });
-	 * @returns {Promise<Object>}
+	 * @returns {Promise<Object>} Object
 	 */
 	async leagueSeasons(leagueId, option) {
 		const query = qs.stringify(option);
@@ -231,7 +228,7 @@ class Client {
 	 * @param {SearchOption} option - Optional options
 	 * @example
 	 * client.leagueRanking('29000022', '2020-03', { limit: 10 });
-	 * @returns {Promise<Object>}
+	 * @returns {Promise<Object>} Object
 	 */
 	async leagueRanking(leagueId, seasonId, option) {
 		const query = qs.stringify(option);
@@ -243,7 +240,7 @@ class Client {
 	 * @param {SearchOption} option - Optional options
 	 * @example
 	 * client.warLeagues();
-	 * @returns {Promise<Object>}
+	 * @returns {Promise<Object>} Object
 	 */
 	async warLeagues(option) {
 		const query = qs.stringify(option);
@@ -255,7 +252,7 @@ class Client {
 	 * @param {string} leagueId - Identifier of the league.
 	 * @example
 	 * client.warLeagueId('48000018');
-	 * @returns {Promise<Object>}
+	 * @returns {Promise<Object>} Object
 	 */
 	async warLeagueId(leagueId) {
 		return this.fetch(`${this.baseURL}/warleagues/${leagueId}`);
@@ -268,7 +265,7 @@ class Client {
 	 * client.locations();
 	 * // OR
 	 * client.locations({ limit: 10 });
-	 * @returns {Promise<Object>}
+	 * @returns {Promise<Object>} Object
 	 */
 	async locations(option) {
 		const query = qs.stringify(option);
@@ -280,7 +277,7 @@ class Client {
 	 * @param {string} locationId - Identifier of the location to retrieve.
 	 * @example
 	 * client.locationId('32000107');
-	 * @returns {Promise<Object>}
+	 * @returns {Promise<Object>} Object
 	 */
 	async locationId(locationId) {
 		return this.fetch(`${this.baseURL}/locations/${locationId}`);
@@ -292,7 +289,7 @@ class Client {
 	 * @param {SearchOption} option - Optional options
 	 * @example
 	 * client.clanRanks('32000107', { limit: 10 });
-	 * @returns {Promise<Object>}
+	 * @returns {Promise<Object>} Object
 	 */
 	async clanRanks(locationId, option) {
 		const query = qs.stringify(option);
@@ -305,7 +302,7 @@ class Client {
 	 * @param {SearchOption} option - Optional options
 	 * @example
 	 * client.playerRanks('32000107', { limit: 10 });
-	 * @returns {Promise<Object>}
+	 * @returns {Promise<Object>} Object
 	 */
 	async playerRanks(locationId, option) {
 		const query = qs.stringify(option);
@@ -318,7 +315,7 @@ class Client {
 	 * @param {SearchOption} option - Optional options
 	 * @example
 	 * client.versusClanRanks('32000107', { limit: 10 });
-	 * @returns {Promise<Object>}
+	 * @returns {Promise<Object>} Object
 	 */
 	async versusClanRanks(locationId, option) {
 		const query = qs.stringify(option);
@@ -331,7 +328,7 @@ class Client {
 	 * @param {SearchOption} option - Optional options
 	 * @example
 	 * client.versusPlayerRanks('32000107', { limit: 10 });
-	 * @returns {Promise<Object>}
+	 * @returns {Promise<Object>} Object
 	 */
 	async versusPlayerRanks(locationId, option) {
 		const query = qs.stringify(option);
@@ -343,7 +340,7 @@ class Client {
 	 * @param {SearchOption} option - Optional options
 	 * @example
 	 * client.clanLabels();
-	 * @returns {Promise<Object>}
+	 * @returns {Promise<Object>} Object
 	 */
 	async clanLabels(option) {
 		const query = qs.stringify(option);
@@ -355,7 +352,7 @@ class Client {
 	 * @param {SearchOption} option - Optional options
 	 * @example
 	 * client.playerLabels();
-	 * @returns {Promise<Object>}
+	 * @returns {Promise<Object>} Object
 	 */
 	async playerLabels(option) {
 		const query = qs.stringify(option);
