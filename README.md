@@ -47,21 +47,16 @@ Represents Clash of Clans API
 ```js
 const { Client } = require('clashofclans.js');
 const client = new Client({ token: '' });
-
-(async function() {
-	const data = await client.clan('#8QU8J9LP')
-	if (!data.ok && data.status === 404) return console.log('Invalid Tag Provided');
-	console.log(data);
-})();
 ```
 
-**Response**
-> With some additional properties (`.status`, `.ok` and `.maxAge`)
+**What's new?**
+
+**Some additional properties have beed addded.**<br>
+**`.ok` | `.status` | `.maxAge`**
 
 ```js
 (async function() {
 	const data = await client.locations({ limit: 1 })
-	if (!data.ok) return;
 	console.log(data);
 })();
 ```
@@ -82,7 +77,26 @@ const client = new Client({ token: '' });
     },
     "status": 200,
     "ok": true,
-    "maxAge": 245
+    "maxAge": 600
+}
+```
+
+#### The `maxAge` ([Cache-Control](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cache-Control)) is the minimum time in seconds which shows how long until a fresh object is available.
+
+```js
+(async function() {
+	const data = await client.clan('WRONG_TAG');
+	console.log(data);
+	// if (!data.ok) return console.log('INVALID TAG');
+})();
+```
+
+```json
+{
+    "reason": "notFound",
+    "status": 404,
+    "ok": false,
+    "maxAge": 600
 }
 ```
 
