@@ -81,7 +81,7 @@ const client = new Client({ token: '' });
 }
 ```
 
-#### The `maxAge` ([Cache-Control](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cache-Control)) is the maximum amount of time in seconds which shows how long until a fresh object is available.
+#### The `maxAge` ([Cache-Control](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cache-Control)) is the maximum amount of time in seconds which shows how long until a fresh data is available.
 
 ```js
 (async function() {
