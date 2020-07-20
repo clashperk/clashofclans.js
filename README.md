@@ -51,7 +51,7 @@ const client = new Client({ token: '' });
 
 **What's new?**
 
-**Some additional properties have beed addded.**<br>
+**Some additional properties have been addded.**<br>
 **`.ok` | `.status` | `.maxAge`**
 
 ```js
