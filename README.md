@@ -18,7 +18,7 @@ Represents Clash of Clans API
     * [.clanWarlog(clanTag, option)](#Client+clanWarlog)
     * [.currentWar(clanTag, option)](#Client+currentWar)
     * [.clanWarLeague(clanTag)](#Client+clanWarLeague)
-    * [.clanWarLeagueWarTags(clanTag)](#Client+clanWarLeagueWarTags)
+    * [.clanWarLeagueWarTags(warTag)](#Client+clanWarLeagueWarTags)
     * [.player(playerTag)](#Client+player)
     * [.leagues(option)](#Client+leagues)
     * [.leagueId(leagueId)](#Client+leagueId)
