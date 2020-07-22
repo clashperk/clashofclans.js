@@ -164,13 +164,13 @@ class Client {
 
 	/**
 	 * Retrieve information about individual clan war league war
-	 * @param {string} clanTag - Tag of the clan.
+	 * @param {string} warTag - WarTag of the a CWL round.
 	 * @example
-	 * client.clanWarLeagueWarTags('#8QU8J9LP');
+	 * client.clanWarLeagueWarTags('#2QJQPYLJU');
 	 * @returns {Promise<Object>} Object
 	 */
-	async clanWarLeagueWarTags(clanTag) {
-		return this.fetch(`${this.baseURL}/clanwarleagues/wars/${this.constructor.tag(clanTag)}`);
+	async clanWarLeagueWarTags(warTag) {
+		return this.fetch(`${this.baseURL}/clanwarleagues/wars/${this.constructor.tag(warTag)}`);
 	}
 
 
@@ -178,7 +178,7 @@ class Client {
 	 * Get player information.
 	 * @param {string} playerTag - Tag of the player.
 	 * @example
-	 * client.player('#8QU8J9LP');
+	 * client.player('#9Q92C8R20');
 	 * @returns {Promise<Object>} Object
 	 */
 	async player(playerTag) {

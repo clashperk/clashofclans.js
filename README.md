@@ -201,11 +201,11 @@ Retrieve information about individual clan war league war
 
 | Param | Type | Description |
 | --- | --- | --- |
-| clanTag | <code>string</code> | Tag of the clan. |
+| warTag | <code>string</code> | WarTag of a CWL round. |
 
 **Example**
 ```js
-client.clanWarLeagueWarTags('#8QU8J9LP')
+client.clanWarLeagueWarTags('#2QJQPYLJU')
     .then(data => console.log(data))
     .catch(error => console.error(error));
 ```
