@@ -164,7 +164,7 @@ class Client {
 
 	/**
 	 * Retrieve information about individual clan war league war
-	 * @param {string} warTag - WarTag of the a CWL round.
+	 * @param {string} warTag - WarTag of a CWL round.
 	 * @example
 	 * client.clanWarLeagueWarTags('#2QJQPYLJU');
 	 * @returns {Promise<Object>} Object
