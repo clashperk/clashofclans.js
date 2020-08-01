@@ -39,7 +39,7 @@ class Client {
 				path,
 				method: 'GET',
 				headers: {
-					Authorization: `Bearer ${token}`,
+					'Authorization': `Bearer ${token}`,
 					'Content-Type': 'application/json'
 				},
 				timeout: !isNaN(timeout) ? timeout : 0
@@ -56,17 +56,18 @@ class Client {
 
 				res.on('end', () => {
 					if (res.headers['content-type'].includes('application/json')) {
-						resolve(Object.assign(JSON.parse(response.raw), {
-							status: response.status,
-							ok: response.ok,
-							maxAge: Math.floor(response.headers['cache-control'].split('=')[1])
-						}));
-					} else {
 						try {
-							reject(new Error(response.status, JSON.parse(response.raw)));
+							const parsed = JSON.parse(response.raw);
+							resolve(Object.assign(parsed, {
+								status: response.status,
+								ok: response.ok,
+								maxAge: Math.floor(response.headers['cache-control'].split('=')[1])
+							}));
 						} catch {
-							reject(new Error(response.status, response.raw));
+							reject(new Error(500));
 						}
+					} else {
+						reject(new Error(500));
 					}
 				});
 			});
