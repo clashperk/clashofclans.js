@@ -55,7 +55,7 @@ class Client {
 				});
 
 				res.on('end', () => {
-					if (res.headers['content-type'].includes('application/json')) {
+					if (res.headers['content-type'] && res.headers['content-type'].includes('application/json')) {
 						try {
 							const parsed = JSON.parse(response.raw);
 							resolve(Object.assign(parsed, {
