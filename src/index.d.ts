@@ -120,7 +120,7 @@ declare module 'clashofclans.js' {
 		/**
 		 * Fetch any URL
 		 * @param {string} reqURL Request URL
-		 * @param {FetchOption} option Fetch Options (Optional)
+		 * @param {FetchOption} option Fetch options (optional)
 		 * @example
 		 * client.fetch(reqURL, { token, timeout });
 		 * @returns {Promise<Object>} Object
@@ -130,7 +130,7 @@ declare module 'clashofclans.js' {
 		/**
 		 * Search clans
 		 * @param {string} name Search clans by name. If name is used as part of search query, it needs to be at least three characters long. Name search parameter is interpreted as wild card search, so it may appear anywhere in the clan name.
-		 * @param {ClanSearchOption} option Clan Search Options (Optional)
+		 * @param {ClanSearchOption} option Clan search options (optional)
 		 * @example
 		 * client.clans('air hounds', { limit: 10 });
 		 * @returns {Promise<Object>} Object
@@ -149,7 +149,7 @@ declare module 'clashofclans.js' {
 		/**
 		 * List clan members
 		 * @param {string} clanTag Tag of the clan.
-		 * @param {SearchOption} option Search Options (Optional)
+		 * @param {SearchOption} option Search options (optional)
 		 * @example
 		 * client.clanMembers('#8QU8J9LP', { limit: 10 });
 		 * @returns {Promise<Object>} Object
@@ -159,7 +159,7 @@ declare module 'clashofclans.js' {
 		/**
 		 * Retrieve clan's clan war log
 		 * @param {string} clanTag Tag of the clan.
-		 * @param {SearchOption} option Search Options (Optional)
+		 * @param {SearchOption} option Search options (optional)
 		 * @example
 		 * client.clanWarlog('#8QU8J9LP', { limit: 10 });
 		 * @returns {Promise<Object>} Object
@@ -169,7 +169,7 @@ declare module 'clashofclans.js' {
 		/**
 		 * Retrieve information about clan's current clan war
 		 * @param {string} clanTag Tag of the clan.
-		 * @param {SearchOption} option Search Options (Optional)
+		 * @param {SearchOption} option Search options (optional)
 		 * @example
 		 * client.currentWar('#8QU8J9LP');
 		 * @returns {Promise<Object>} Object
@@ -205,7 +205,7 @@ declare module 'clashofclans.js' {
 
 		/**
 		 * List Leagues
-		 * @param {SearchOption} option Search Options (Optional)
+		 * @param {SearchOption} option Search options (optional)
 		 * @example
 		 * client.leagues();
 		 * @returns {Promise<Object>} Object
@@ -224,7 +224,7 @@ declare module 'clashofclans.js' {
 		/**
 		 * Get league seasons. Note that league season information is available only for Legend League.
 		 * @param {string} leagueId Identifier of the league.
-		 * @param {SearchOption} option Search Options (Optional)
+		 * @param {SearchOption} option Search options (optional)
 		 * @example
 		 * client.leagueSeasons('29000022', { limit: 10 });
 		 * @returns {Promise<Object>} Object
@@ -235,7 +235,7 @@ declare module 'clashofclans.js' {
 		 * Get league season rankings. Note that league season information is available only for Legend League.
 		 * @param {string} leagueId Identifier of the league.
 		 * @param {string} seasonId Identifier of the season.
-		 * @param {SearchOption} option Search Options (Optional)
+		 * @param {SearchOption} option Search options (optional)
 		 * @example
 		 * client.leagueRanking('29000022', '2020-03', { limit: 10 });
 		 * @returns {Promise<Object>} Object
@@ -244,7 +244,7 @@ declare module 'clashofclans.js' {
 
 		/**
 		 * List war leagues
-		 * @param {SearchOption} option Search Options (Optional)
+		 * @param {SearchOption} option Search options (optional)
 		 * @example
 		 * client.warLeagues();
 		 * @returns {Promise<Object>} Object
@@ -262,7 +262,7 @@ declare module 'clashofclans.js' {
 
 		/**
 		 * List locations
-		 * @param {SearchOption} option Search Options (Optional)
+		 * @param {SearchOption} option Search options (optional)
 		 * @example
 		 * client.locations();
 		 * // OR
@@ -283,7 +283,7 @@ declare module 'clashofclans.js' {
 		/**
 		 * Get clan rankings for a specific location
 		 * @param {string} locationId Identifier of the location to retrieve.
-		 * @param {SearchOption} option Search Options (Optional)
+		 * @param {SearchOption} option Search options (optional)
 		 * @example
 		 * client.clanRanks('32000107', { limit: 10 });
 		 * @returns {Promise<Object>} Object
@@ -293,7 +293,7 @@ declare module 'clashofclans.js' {
 		/**
 		 * Get player rankings for a specific location
 		 * @param {string} locationId Identifier of the location to retrieve.
-		 * @param {SearchOption} option Search Options (Optional)
+		 * @param {SearchOption} option Search options (optional)
 		 * @example
 		 * client.playerRanks('32000107', { limit: 10 });
 		 * @returns {Promise<Object>} Object
@@ -303,7 +303,7 @@ declare module 'clashofclans.js' {
 		/**
 		 * Get clan versus rankings for a specific location
 		 * @param {string} locationId Identifier of the location to retrieve.
-		 * @param {SearchOption} option Search Options (Optional)
+		 * @param {SearchOption} option Search options (optional)
 		 * @example
 		 * client.versusClanRanks('32000107', { limit: 10 });
 		 * @returns {Promise<Object>} Object
@@ -313,7 +313,7 @@ declare module 'clashofclans.js' {
 		/**
 		 * Get player versus rankings for a specific location
 		 * @param {string} locationId Identifier of the location to retrieve.
-		 * @param {SearchOption} option Search Options (Optional)
+		 * @param {SearchOption} option Search options (optional)
 		 * @example
 		 * client.versusPlayerRanks('32000107', { limit: 10 });
 		 * @returns {Promise<Object>} Object
@@ -322,7 +322,7 @@ declare module 'clashofclans.js' {
 
 		/**
 		 * List clan labels
-		 * @param {SearchOption} option Search Options (Optional)
+		 * @param {SearchOption} option Search options (optional)
 		 * @example
 		 * client.clanLabels();
 		 * @returns {Promise<Object>} Object
@@ -331,7 +331,7 @@ declare module 'clashofclans.js' {
 
 		/**
 		 * List player labels
-		 * @param {SearchOption} option Search Options (Optional)
+		 * @param {SearchOption} option Search options (optional)
 		 * @example
 		 * client.playerLabels();
 		 * @returns {Promise<Object>} Object
