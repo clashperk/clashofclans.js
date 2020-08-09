@@ -5,6 +5,7 @@
   "author": "SUVAJIT (suvajit.me@gmail.com)",
   "license": "MIT",
   "main": "src/index.js",
+  "types": "src/index.d.ts",
   "scripts": {
     "test": "eslint --ext .js --ignore-path .gitignore ."
   },
