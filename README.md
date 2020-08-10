@@ -49,11 +49,6 @@ const { Client } = require('clashofclans.js');
 const client = new Client({ token: '' });
 ```
 
-**What's new?**
-
-**Some additional properties have been added.**<br>
-**`.ok` | `.status` | `.maxAge`**
-
 ```js
 (async function() {
 	const data = await client.locations({ limit: 1 })
@@ -81,7 +76,9 @@ const client = new Client({ token: '' });
 }
 ```
 
-#### The `maxAge` ([Cache-Control](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cache-Control)) is the maximum amount of time in seconds which shows how long until a fresh data is available.
+<a name="maxAge"></a>
+
+### The `maxAge` ([Cache-Control](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cache-Control)) is the maximum amount of time in seconds which shows how long until a fresh data is available.
 
 ```js
 (async function() {
@@ -99,6 +96,17 @@ const client = new Client({ token: '' });
     "maxAge": 600
 }
 ```
+<a name="Status+Codes"></a>
+
+### Status Codes
+- **200:** Successful Response.
+- **400:** Client provided incorrect parameters for the request.
+- **403:** Access denied, either because of missing/incorrect credentials or used API token does not grant access to the requested resource.
+- **404:** Resource was not found.
+- **429:** Request was throttled, because amount of requests was above the threshold defined for the used API token.
+- **500:** Unknown error happened when handling the request.
+- **503:** Service is temprorarily unavailable because of maintenance.
+- **504:** 504 Request Timeout.
 
 <a name="Client+clans"></a>
 
