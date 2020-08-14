@@ -42,7 +42,7 @@ class Client {
 					'Authorization': `Bearer ${token}`,
 					'Content-Type': 'application/json'
 				},
-				timeout: !isNaN(timeout) ? timeout : 0
+				timeout: typeof timeout === 'number' ? timeout : 0
 			};
 
 			const request = https.request(options, res => {
