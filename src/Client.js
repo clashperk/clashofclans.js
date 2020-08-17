@@ -86,8 +86,10 @@ class Client {
 	}
 
 	static tag(tag) {
-		if (typeof tag === 'string') return encodeURIComponent(tag.toUpperCase().replace(/O|o/g, '0'));
-		throw TypeError(`The "tag" argument must be of type string. Received type ${typeof tag}`);
+		if (tag && typeof tag === 'string') {
+			return encodeURIComponent(`#${tag.toUpperCase().replace(/O|o/g, '0').replace(/^#/g, '')}`);
+		}
+		throw TypeError(`The "tag" argument must be of type string. Received type ${typeof tag === 'string' ? 'empty string' : typeof tag}.`);
 	}
 
 	/**
