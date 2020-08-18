@@ -186,6 +186,13 @@ class Client {
 	 * @returns {Promise<Object>} Object
 	 */
 	async player(playerTag) {
+		if (typeof playerTag === 'object') {
+			const res = [];
+			for (const tags of playerTag) {
+				res.push(await this.fetch(`${this.baseURL}/players/${this.constructor.tag(tags)}`));
+			}
+			return res;
+		}
 		return this.fetch(`${this.baseURL}/players/${this.constructor.tag(playerTag)}`);
 	}
 
