@@ -107,7 +107,7 @@ The `maxAge` ([Cache-Control](https://developer.mozilla.org/en-US/docs/Web/HTTP/
 - **429:** Request was throttled, because amount of requests was above the threshold defined for the used API token.
 - **500:** Unknown error happened when handling the request.
 - **503:** Service is temprorarily unavailable because of maintenance.
-- **504:** 504 Request Timeout.
+- **504:** Request Timeout.
 
 <a name="Client+clans"></a>
 
