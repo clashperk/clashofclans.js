@@ -116,7 +116,7 @@ Search clans
 
 | Param | Type | Description |
 | --- | --- | --- |
-| clan | <code>string</code> or [<code>ClanSearchOption</code>](#ClanSearchOption) | Search clans by name or filtering parameters.. If name is used as part of search query, it needs to be at least three characters long. Name search parameter is interpreted as wild card search, so it may appear anywhere in the clan name. |
+| clan | <code>string</code> or [<code>ClanSearchOption</code>](#ClanSearchOption) | Search clans by name or filtering parameters. If name is used as part of search query, it needs to be at least three characters long. Name search parameter is interpreted as wild card search, so it may appear anywhere in the clan name. |
 
 **Example**
 ```js
