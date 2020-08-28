@@ -12,7 +12,7 @@ Represents Clash of Clans API
 
 * [Client](#Client)
     * [new Client(option)](#new_Client_new)
-    * [.clans(name, option)](#Client+clans)
+    * [.clans(clan)](#Client+clans)
     * [.clan(clanTag)](#Client+clan)
     * [.clanMembers(clanTag, option)](#Client+clanMembers)
     * [.clanWarlog(clanTag, option)](#Client+clanWarlog)
@@ -116,14 +116,15 @@ Search clans
 
 | Param | Type | Description |
 | --- | --- | --- |
-| name | <code>string</code> | Search clans by name. If name is used as part of search query, it needs to be at least three characters long. Name search parameter is interpreted as wild card search, so it may appear anywhere in the clan name. |
-| option | [<code>ClanSearchOption</code>](#ClanSearchOption) | Optional options |
+| clan | <code>string</code> or [<code>ClanSearchOption</code>](#ClanSearchOption) | Search clans by name or filtering parameters.. If name is used as part of search query, it needs to be at least three characters long. Name search parameter is interpreted as wild card search, so it may appear anywhere in the clan name. |
 
 **Example**
 ```js
-client.clans('air hounds', { limit: 10 })
-    .then(data => console.log(data))
-    .catch(error => console.error(error));
+client.clans('air hounds');
+// or
+client.clans({ name: 'air hounds', limit: 10 });
+// or
+client.clans({ minMembers: 40, maxMembers: 50 });
 ```
 <a name="Client+clan"></a>
 

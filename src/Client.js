@@ -94,15 +94,19 @@ class Client {
 
 	/**
 	 * Search clans
-	 * @param {string} name - Search clans by name. If name is used as part of search query, it needs to be at least three characters long. Name search parameter is interpreted as wild card search, so it may appear anywhere in the clan name.
-	 * @param {ClanSearchOption} option - Optional options
+	 * @param {string | ClanSearchOption} clan - Search clans by name or filtering parameters. If name is used as part of search query, it needs to be at least three characters long. Name search parameter is interpreted as wild card search, so it may appear anywhere in the clan name.
 	 * @example
 	 * client.clans('air hounds', { limit: 10 });
+	 * // or
+	 * client.clans({ name: 'air hounds', limit: 10 });
+	 * // or
+	 * client.clans({ minMembers: 40, maxMembers: 50 });
 	 * @returns {Promise<Object>} Object
 	 */
-	async clans(name, option) {
-		const query = qs.stringify(option);
-		return this.fetch(`${this.baseURL}/clans?name=${encodeURIComponent(name)}&${query}`);
+	async clans(clan) {
+		if (typeof clan === 'string') return this.fetch(`${this.baseURL}/clans?name=${encodeURIComponent(clan)}`);
+		const query = qs.stringify(clan);
+		return this.fetch(`${this.baseURL}/clans?${query}`);
 	}
 
 	/**
