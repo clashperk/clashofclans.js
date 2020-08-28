@@ -473,6 +473,7 @@ client.playerLabels()
 
 | Param | Type | Description |
 | --- | --- | --- |
+| name | <code>string</code> | Search clans by name. If name is used as part of search query, it needs to be at least three characters long. Name search parameter is interpreted as wild card search, so it may appear anywhere in the clan name. |
 | warFrequency | <code>string</code> | Filter by clan war frequency |
 | locationId | <code>string</code> | Filter by clan location identifier. For list of available locations, refer to getLocations operation |
 | minMembers | <code>number</code> | Filter by minimum number of clan members |
