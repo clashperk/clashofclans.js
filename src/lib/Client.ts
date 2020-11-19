@@ -123,8 +123,8 @@ export class Client {
 }
 
 interface ClientOptions {
-	baseUrl: string;
-	timeout: number;
+	baseUrl?: string;
+	timeout?: number;
 	token: string;
 }
 
