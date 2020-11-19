@@ -4,6 +4,7 @@ export class Events extends EventEmitter {
 
 	private clans: string[] = [];
 	private players: string[] = [];
+	private wars: string[] = [];
 
 	private tokens: string[];
 	private events: string[];
@@ -47,6 +48,21 @@ export class Events extends EventEmitter {
 		list.forEach(tag => {
 			const index = this.clans.indexOf(tag);
 			if (index > -1) this.clans.splice(index, 1);
+		});
+	}
+
+	public addWars(tags: string | string[]) {
+		const list = Array.isArray(tags) ? tags : [tags];
+		list.forEach(tag => {
+			if (!this.wars.includes(tag)) this.wars.push(tag);
+		});
+	}
+
+	public removeWars(tags: string | string[]) {
+		const list = Array.isArray(tags) ? tags : [];
+		list.forEach(tag => {
+			const index = this.wars.indexOf(tag);
+			if (index > -1) this.wars.splice(index, 1);
 		});
 	}
 
