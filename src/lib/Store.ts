@@ -26,4 +26,8 @@ export class Store {
 		return this.list.keys();
 	}
 
+	public get size() {
+		return this.list.size;
+	}
+
 }
