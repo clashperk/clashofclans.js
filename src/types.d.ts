@@ -32,6 +32,12 @@ interface Clans {
 			};
 		}] | [];
 	}];
+	paging: {
+		cursors: {
+			after?: string;
+			before?: string;
+		};
+	};
 }
 
 interface Clan {
@@ -77,7 +83,7 @@ interface Clan {
 	memberList: [{
 		name: string;
 		tag: string;
-		role: string;
+		role: 'member' | 'admin' | 'coLeader' | 'leader';
 		expLevel: number;
 		league: {
 			id: number;
