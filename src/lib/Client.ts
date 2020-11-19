@@ -119,7 +119,6 @@ export class Client {
 	private query(opts: any) {
 		return opts ? `?${qs.stringify(opts)}` : '';
 	}
-
 }
 
 interface ClientOptions {
@@ -143,7 +142,7 @@ interface ClanSearchOptions {
 	minClanPoints?: number;
 	minClanLevel?: number;
 	limit?: number;
-	after?: number;
-	before?: number;
+	after?: string;
+	before?: string;
 	labelIds?: string;
 }

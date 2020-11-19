@@ -65,7 +65,6 @@ export class Events extends EventEmitter {
 			if (index > -1) this.wars.splice(index, 1);
 		});
 	}
-
 }
 
 interface EventsOption {
