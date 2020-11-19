@@ -119,6 +119,7 @@ export class Client {
 	private query(opts: any) {
 		return opts ? `?${qs.stringify(opts)}` : '';
 	}
+
 }
 
 interface ClientOptions {

@@ -1,7 +1,7 @@
 export class Throttler {
 
-    private sleepTime: number;
-    private lastRun: number;
+	private sleepTime: number;
+	private lastRun: number;
 
 	public constructor(rateLimit = 10) {
 		this.sleepTime = 1000 / rateLimit;
@@ -23,4 +23,5 @@ export class Throttler {
 		this.lastRun = Date.now();
 		return Promise.resolve();
 	}
+
 }
