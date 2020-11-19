@@ -8,7 +8,7 @@ export class Throttler {
 		this.lastRun = Date.now();
 	}
 
-	public async wait(ms: number) {
+	public wait(ms: number) {
 		return new Promise(res => setTimeout(res, ms));
 	}
 
@@ -16,9 +16,7 @@ export class Throttler {
 		const difference = Date.now() - this.lastRun;
 		const needToSleep = this.sleepTime - difference;
 
-		if (needToSleep > 0) {
-			await this.wait(needToSleep);
-		}
+		if (needToSleep > 0) await this.wait(needToSleep);
 
 		this.lastRun = Date.now();
 		return Promise.resolve();
