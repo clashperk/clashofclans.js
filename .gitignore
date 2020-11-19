@@ -1,4 +1,5 @@
 node_modules/
+dist/
 .vs/
 .vscode
 yarn.lock

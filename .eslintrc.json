@@ -1,22 +1,9 @@
 {
-    "extends": "mars/node",
-    "rules": {
-        "max-len": "off",
-        "no-confusing-arrow": "off",
-        "no-eq-null": "off",
-        "no-negated-condition": "off",
-        "no-undefined": "off",
-        "linebreak-style": "off",
-        "camelcase": "off",
-        "no-shadow": "off",
-        "no-unused-vars": "off",
-        "prefer-destructuring": [
-            "off"
-        ],
-        "quotes": [
-            "error",
-            "single"
-        ],
-        "quote-props": "off"
-    }
+  "extends": "@skyra/eslint-config",
+  "rules": {
+    "no-warning-comments": 0,
+    "no-process-env": 0,
+    "no-inline-comments": 0,
+    "@typescript-eslint/naming-convention": 0
+  }
 }
