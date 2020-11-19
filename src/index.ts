@@ -1,3 +1,1 @@
-const info = 'Hello world';
-
-console.log(info);
+export * from './lib/Client';
