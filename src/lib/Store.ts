@@ -27,7 +27,7 @@ export class Store {
 	}
 
 	public keys() {
-		return this.list.keys();
+		return Array.from(this.list.keys()) as string[];
 	}
 
 	public get size() {
