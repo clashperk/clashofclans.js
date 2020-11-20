@@ -170,13 +170,13 @@ interface Player {
 		level: number;
 		maxLevel: number;
 		village: 'home' | 'builderBase';
-	}];
+	}] | [];
 	spells: [{
 		name: string;
 		level: number;
 		maxLevel: number;
 		village: 'home' | 'builderBase';
-	}];
+	}] | [];
 }
 
 interface WarBody {

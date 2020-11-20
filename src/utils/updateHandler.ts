@@ -39,7 +39,7 @@ export function handleClanUpdate(client: Events, clan: Clan) {
 		|| (clan.isWarLogPublic && oldClan.isWarLogPublic && clan.warLosses !== oldClan.warLosses)
 		|| (clan.isWarLogPublic && oldClan.isWarLogPublic && clan.warTies !== oldClan.warTies)
 	) {
-		client.emit('clanUpdate', clan, oldClan);
+		client.emit('clanUpdate', oldClan, clan);
 	}
 
 	for (const member of newMembers) {
@@ -65,6 +65,55 @@ export function handleClanUpdate(client: Events, clan: Clan) {
 }
 
 export function handlePlayerUpdate(client: Events, player: Player) {
-	// TODO
-	return { client, player };
+	const oldPlayer: Player | true = client.players.get(player.tag);
+	if (oldPlayer === true) {
+		client.players.set(player.tag, player);
+		return;
+	}
+
+	const oldTroops = oldPlayer.troops;
+	for (const hero of oldPlayer.heroes) oldTroops.push(hero);
+	for (const spell of oldPlayer.spells) oldTroops.push(spell);
+
+	const newTroops = player.troops;
+	for (const hero of player.heroes) newTroops.push(hero);
+	for (const spell of player.spells) newTroops.push(spell);
+
+	newTroops.forEach(troop => {
+		const oldData = oldTroops.find(trp => trp.name === troop.name);
+		if (!oldData || oldData.level !== troop.level) client.emit('playerTroopUpdate', player, oldData, troop);
+	});
+
+	const oldAchievements = oldPlayer.achievements;
+	const newAchievements = player.achievements;
+	for (const achieve of newAchievements) {
+		const oldData = oldAchievements.find(ach => ach.name === achieve.name);
+		if (oldData && oldData.stars !== achieve.stars) client.emit('playerAchievementUpdate', player, oldData, achieve);
+	}
+
+	if (
+		oldPlayer.name !== player.name
+		|| oldPlayer.townHallLevel !== player.townHallLevel
+		|| oldPlayer.townHallLevel !== player.townHallWeaponLevel
+		|| oldPlayer.builderHallLevel !== player.builderHallLevel
+		|| oldPlayer.expLevel !== player.expLevel
+		|| oldPlayer.trophies !== player.trophies
+		|| oldPlayer.bestTrophies !== player.bestTrophies
+		|| oldPlayer.versusTrophies !== player.versusTrophies
+		|| oldPlayer.bestVersusTrophies !== player.bestVersusTrophies
+		|| oldPlayer.warStars !== player.warStars
+		|| oldPlayer.attackWins !== player.attackWins
+		|| oldPlayer.defenseWins !== player.defenseWins
+		|| oldPlayer.versusBattleWins !== player.versusBattleWins
+		|| oldPlayer.role !== player.role
+		|| oldPlayer.donations !== player.donations
+		|| oldPlayer.donationsReceived !== player.donationsReceived
+		|| (oldPlayer.clan ? player.clan ? oldPlayer.clan.tag === player.clan.tag : false : player.clan ? true : false)
+		|| oldPlayer.league !== player.league
+		|| oldPlayer.labels !== player.labels
+	) {
+		client.emit('playerUpdate', oldPlayer, player);
+	}
+
+	client.players.set(player.tag, player);
 }
