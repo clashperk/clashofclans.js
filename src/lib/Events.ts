@@ -1,12 +1,15 @@
 import { EventEmitter } from 'events';
+import fetch from 'node-fetch';
 import { Store } from './Store';
-// import { ClanEvent } from './ClanEvent';
+import { Throttler } from '../utils/Throttler';
+import { handleClanUpdate } from '../utils/updateHandler';
 
 export class Events extends EventEmitter {
 
 	public clans: Store = new Store();
 	public players: Store = new Store();
 	public wars: Store = new Store();
+
 	public rateLimit: number;
 	public refreshRate: number;
 
@@ -15,6 +18,9 @@ export class Events extends EventEmitter {
 
 	private baseUrl: string;
 	private timeout: number;
+
+	private throttler: Throttler;
+	private activeToken = 0;
 
 	public constructor(options: EventsOption) {
 		super();
@@ -25,6 +31,7 @@ export class Events extends EventEmitter {
 		this.events = options.events;
 		this.rateLimit = options.rateLimit || 10;
 		this.refreshRate = options.refreshRate || 2 * 60 * 1000;
+		this.throttler = new Throttler(this.rateLimit * this.tokens.length);
 	}
 
 	public addPlayers(tags: string | string[]) {
@@ -81,10 +88,56 @@ export class Events extends EventEmitter {
 		this.wars.clear();
 	}
 
-	public init() {
-		const events = ['clanUpdate', 'clanMemberUpdate', 'clanMemberAdd', 'clanMemberRemove']
-			.reduce((prev, curr) => this.listenerCount(curr) + prev, 0);
-		if (events > 0 && this.clans.size > 0) { }
+	public async init() {
+		const clanEvents = ['clanUpdate', 'clanMemberUpdate', 'clanMemberAdd', 'clanMemberRemove'];
+		if (clanEvents.some(itm => this.events.includes(itm))) await this.initClanEvents();
+	}
+
+	/* ----------------------------------------------------------------------------- */
+	/* ------------------------------ PRIVATE METHODS ------------------------------ */
+	/* ----------------------------------------------------------------------------- */
+
+	private async initClanEvents() {
+		const startTime = Date.now();
+		for (const tag of this.clans.keys()) {
+			const data: Clan = await this.fetch(`/clans/${this.parseTag(tag)}`);
+			await this.throttler.throttle();
+			handleClanUpdate(this, data);
+		}
+		const timeTaken = Date.now() - startTime;
+		const waitFor = (timeTaken >= this.refreshRate ? 0 : this.refreshRate - timeTaken);
+		setTimeout(this.initClanEvents.bind(this), waitFor);
+	}
+
+	private get token() {
+		const token = this.tokens[this.activeToken];
+		this.activeToken = (this.activeToken + 1) >= this.token.length ? 0 : (this.activeToken + 1);
+		return token;
+	}
+
+	private parseTag(tag: string): string {
+		return encodeURIComponent(`#${tag.toUpperCase().replace(/O/g, '0').replace('#', '')}`);
+	}
+
+	private async fetch(url: string) {
+		const res = await fetch(`${this.baseUrl}${url}`, {
+			headers: {
+				Authorization: `Bearer ${this.token}`,
+				Accept: 'application/json'
+			},
+			timeout: this.timeout
+		}).catch(() => null);
+
+		if (!res) return { ok: false, status: 504 };
+		const parsed = await res.json().catch(() => null);
+		if (!parsed) return { ok: false, status: res.status };
+
+		const MAX_AGE = Number(res.headers.get('cache-control')!.split('=')[1]);
+		return Object.assign(parsed, {
+			maxAge: MAX_AGE,
+			status: res.status,
+			ok: res.status === 200
+		});
 	}
 
 }
