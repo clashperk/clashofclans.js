@@ -94,8 +94,7 @@ export class Events extends EventEmitter {
 	}
 
 	public async init() {
-		const clanEvents = ['clanUpdate', 'clanMemberUpdate', 'clanMemberAdd', 'clanMemberRemove'];
-		if (clanEvents.some(itm => this.events.includes(itm))) await this.initClanEvents();
+		await this.initClanEvents();
 	}
 
 	/* ----------------------------------------------------------------------------- */
