@@ -1,11 +1,14 @@
 import { EventEmitter } from 'events';
 import { Store } from './Store';
+// import { ClanEvent } from './ClanEvent';
 
 export class Events extends EventEmitter {
 
 	public clans: Store = new Store();
 	public players: Store = new Store();
 	public wars: Store = new Store();
+	public rateLimit: number;
+	public refreshRate: number;
 
 	private tokens: string[];
 	private events: string[];
@@ -20,6 +23,8 @@ export class Events extends EventEmitter {
 		this.timeout = options.timeout || 0;
 		this.tokens = options.tokens;
 		this.events = options.events;
+		this.rateLimit = options.rateLimit || 10;
+		this.refreshRate = options.refreshRate || 2 * 60 * 1000;
 	}
 
 	public addPlayers(tags: string | string[]) {
@@ -76,6 +81,12 @@ export class Events extends EventEmitter {
 		this.wars.clear();
 	}
 
+	public init() {
+		const events = ['clanUpdate', 'clanMemberUpdate', 'clanMemberAdd', 'clanMemberRemove']
+			.reduce((prev, curr) => this.listenerCount(curr) + prev, 0);
+		if (events > 0 && this.clans.size > 0) { }
+	}
+
 }
 
 interface EventsOption {
@@ -83,4 +94,6 @@ interface EventsOption {
 	events: string[];
 	baseUrl?: string;
 	timeout?: number;
+	rateLimit?: number;
+	refreshRate?: number;
 }

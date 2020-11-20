@@ -40,6 +40,28 @@ interface Clans {
 	};
 }
 
+interface Member {
+	name: string;
+	tag: string;
+	role: 'member' | 'admin' | 'coLeader' | 'leader';
+	expLevel: number;
+	league: {
+		id: number;
+		name: string;
+		iconUrls: {
+			small: string;
+			tiny: string;
+			medium: string;
+		};
+	};
+	trophies: number;
+	versusTrophies: number;
+	clanRank: number;
+	previousClanRank: number;
+	dontaions: number;
+	donationsReceived: number;
+}
+
 interface Clan {
 	tag: string;
 	name: string;
@@ -80,27 +102,7 @@ interface Clan {
 			medium: string;
 		};
 	}] | [];
-	memberList: [{
-		name: string;
-		tag: string;
-		role: 'member' | 'admin' | 'coLeader' | 'leader';
-		expLevel: number;
-		league: {
-			id: number;
-			name: string;
-			iconUrls: {
-				small: string;
-				tiny: string;
-				medium: string;
-			};
-		};
-		trophies: number;
-		versusTrophies: number;
-		clanRank: number;
-		previousClanRank: number;
-		dontaions: number;
-		donationsReceived: number;
-	}] | [];
+	memberList: [Member] | [];
 }
 
 interface Player {
