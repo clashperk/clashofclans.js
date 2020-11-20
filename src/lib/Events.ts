@@ -37,7 +37,7 @@ export class Events extends EventEmitter {
 		const list = Array.isArray(tags) ? tags : [tags];
 		list.forEach(_tag => {
 			const tag = validateTag(_tag);
-			if (tag && !this.players.has(tag)) this.players.set(tag, true);
+			if (tag && !this.players.has(tag)) this.players.set(tag, {});
 		});
 	}
 
@@ -57,7 +57,7 @@ export class Events extends EventEmitter {
 		const list = Array.isArray(tags) ? tags : [tags];
 		list.forEach(_tag => {
 			const tag = validateTag(_tag);
-			if (tag && !this.clans.has(tag)) this.clans.set(tag, true);
+			if (tag && !this.clans.has(tag)) this.clans.set(tag, {});
 		});
 	}
 
@@ -77,7 +77,7 @@ export class Events extends EventEmitter {
 		const list = Array.isArray(tags) ? tags : [tags];
 		list.forEach(_tag => {
 			const tag = validateTag(_tag);
-			if (tag && !this.wars.has(tag)) this.wars.set(tag, true);
+			if (tag && !this.wars.has(tag)) this.wars.set(tag, {});
 		});
 	}
 

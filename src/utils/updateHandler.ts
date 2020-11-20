@@ -3,11 +3,9 @@ import { Events } from '../lib/Events';
 export function handleClanUpdate(client: Events, clan: Clan) {
 	if (clan.members < 1) return;
 
-	const oldClan: Clan | true = client.clans.get(clan.tag);
-	if (oldClan === true) {
-		client.clans.set(clan.tag, clan);
-		return;
-	}
+	const oldClan: Clan = client.clans.get(clan.tag);
+	client.clans.set(clan.tag, clan);
+	if (!oldClan.hasOwnProperty('tag')) return;
 
 	const oldMembers = oldClan.memberList && oldClan.memberList.length ? oldClan.memberList : [];
 	const newMembers = clan.memberList && clan.memberList.length ? clan.memberList : [];
@@ -60,16 +58,12 @@ export function handleClanUpdate(client: Events, clan: Clan) {
 			client.emit('clanMemberUpdate', clan, oldMem, member);
 		}
 	}
-
-	client.clans.set(clan.tag, clan);
 }
 
 export function handlePlayerUpdate(client: Events, player: Player) {
-	const oldPlayer: Player | true = client.players.get(player.tag);
-	if (oldPlayer === true) {
-		client.players.set(player.tag, player);
-		return;
-	}
+	const oldPlayer: Player = client.players.get(player.tag);
+	client.players.set(player.tag, player);
+	if (oldPlayer.hasOwnProperty('tag')) return;
 
 	const oldTroops = oldPlayer.troops;
 	for (const hero of oldPlayer.heroes) oldTroops.push(hero);
@@ -114,6 +108,4 @@ export function handlePlayerUpdate(client: Events, player: Player) {
 	) {
 		client.emit('playerUpdate', oldPlayer, player);
 	}
-
-	client.players.set(player.tag, player);
 }
