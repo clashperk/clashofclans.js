@@ -120,28 +120,6 @@ export class Client {
 		return opts ? `?${qs.stringify(opts)}` : '';
 	}
 
-	public static async fetch(url: string, { token, timeout }: { token: string; timeout: number }) {
-		const res = await fetch(url, {
-			method: 'GET',
-			timeout,
-			headers: {
-				accept: 'application/json',
-				authorization: `Bearer ${token}`
-			}
-		}).catch(() => null);
-
-		if (!res) return { ok: false, status: 504 };
-		const parsed = await res.json().catch(() => null);
-		if (!parsed) return { ok: false, status: res.status };
-
-		const MAX_AGE = Number(res.headers.get('cache-control')!.split('=')[1]);
-		return Object.assign(parsed, {
-			maxAge: MAX_AGE,
-			status: res.status,
-			ok: res.status === 200
-		});
-	}
-
 }
 
 interface ClientOptions {
