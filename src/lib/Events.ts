@@ -2,7 +2,7 @@ import { EventEmitter } from 'events';
 import fetch from 'node-fetch';
 import { Store } from './Store';
 import { Throttler } from '../utils/Throttler';
-import { handleClanUpdate } from '../utils/updateHandler';
+import { handleClanUpdate, handlePlayerUpdate } from '../utils/updateHandler';
 import { validateTag } from '../utils/utils';
 
 export class Events extends EventEmitter {
@@ -95,6 +95,7 @@ export class Events extends EventEmitter {
 
 	public async init() {
 		await this.initClanEvents();
+		await this.initPlayerEvents();
 	}
 
 	/* ----------------------------------------------------------------------------- */
@@ -111,6 +112,18 @@ export class Events extends EventEmitter {
 		const timeTaken = Date.now() - startTime;
 		const waitFor = (timeTaken >= this.refreshRate ? 0 : this.refreshRate - timeTaken);
 		setTimeout(this.initClanEvents.bind(this), waitFor);
+	}
+
+	private async initPlayerEvents() {
+		const startTime = Date.now();
+		for (const tag of this.players.keys()) {
+			const data: Player = await this.fetch(`/players/${encodeURIComponent(tag)}`);
+			await this.throttler.throttle();
+			handlePlayerUpdate(this, data);
+		}
+		const timeTaken = Date.now() - startTime;
+		const waitFor = (timeTaken >= this.refreshRate ? 0 : this.refreshRate - timeTaken);
+		setTimeout(this.initPlayerEvents.bind(this), waitFor);
 	}
 
 	private get token() {

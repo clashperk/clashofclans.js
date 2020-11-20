@@ -63,3 +63,8 @@ export function handleClanUpdate(client: Events, clan: Clan) {
 
 	client.clans.set(clan.tag, clan);
 }
+
+export function handlePlayerUpdate(client: Events, player: Player) {
+	// TODO
+	return { client, player };
+}
