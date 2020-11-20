@@ -3,6 +3,7 @@ import fetch from 'node-fetch';
 import { Store } from './Store';
 import { Throttler } from '../utils/Throttler';
 import { handleClanUpdate } from '../utils/updateHandler';
+import { validateTag } from '../utils/utils';
 
 export class Events extends EventEmitter {
 
@@ -36,15 +37,17 @@ export class Events extends EventEmitter {
 
 	public addPlayers(tags: string | string[]) {
 		const list = Array.isArray(tags) ? tags : [tags];
-		list.forEach(tag => {
-			if (!this.players.has(tag)) this.players.set(tag, true);
+		list.forEach(_tag => {
+			const tag = validateTag(_tag);
+			if (tag && !this.players.has(tag)) this.players.set(tag, true);
 		});
 	}
 
 	public removePlayers(tags: string | string[]) {
 		const list = Array.isArray(tags) ? tags : [];
-		list.forEach(tag => {
-			if (this.players.has(tag)) this.players.delete(tag);
+		list.forEach(_tag => {
+			const tag = validateTag(_tag);
+			if (tag && this.players.has(tag)) this.players.delete(tag);
 		});
 	}
 
@@ -54,15 +57,17 @@ export class Events extends EventEmitter {
 
 	public addClans(tags: string | string[]) {
 		const list = Array.isArray(tags) ? tags : [tags];
-		list.forEach(tag => {
-			if (!this.clans.has(tag)) this.clans.set(tag, true);
+		list.forEach(_tag => {
+			const tag = validateTag(_tag);
+			if (tag && !this.clans.has(tag)) this.clans.set(tag, true);
 		});
 	}
 
 	public removeClans(tags: string | string[]) {
 		const list = Array.isArray(tags) ? tags : [];
-		list.forEach(tag => {
-			if (this.clans.has(tag)) this.clans.delete(tag);
+		list.forEach(_tag => {
+			const tag = validateTag(_tag);
+			if (tag && this.clans.has(tag)) this.clans.delete(tag);
 		});
 	}
 
@@ -72,15 +77,17 @@ export class Events extends EventEmitter {
 
 	public addWars(tags: string | string[]) {
 		const list = Array.isArray(tags) ? tags : [tags];
-		list.forEach(tag => {
-			if (!this.wars.has(tag)) this.wars.delete(tag);
+		list.forEach(_tag => {
+			const tag = validateTag(_tag);
+			if (tag && !this.wars.has(tag)) this.wars.set(tag, true);
 		});
 	}
 
 	public removeWars(tags: string | string[]) {
 		const list = Array.isArray(tags) ? tags : [];
-		list.forEach(tag => {
-			if (this.wars.has(tag)) this.wars.delete(tag);
+		list.forEach(_tag => {
+			const tag = validateTag(_tag);
+			if (tag && this.wars.has(tag)) this.wars.delete(tag);
 		});
 	}
 
@@ -100,7 +107,7 @@ export class Events extends EventEmitter {
 	private async initClanEvents() {
 		const startTime = Date.now();
 		for (const tag of this.clans.keys()) {
-			const data: Clan = await this.fetch(`/clans/${this.parseTag(tag)}`);
+			const data: Clan = await this.fetch(`/clans/${encodeURIComponent(tag)}`);
 			await this.throttler.throttle();
 			handleClanUpdate(this, data);
 		}
@@ -113,10 +120,6 @@ export class Events extends EventEmitter {
 		const token = this.tokens[this.activeToken];
 		this.activeToken = (this.activeToken + 1) >= this.token.length ? 0 : (this.activeToken + 1);
 		return token;
-	}
-
-	private parseTag(tag: string): string {
-		return encodeURIComponent(`#${tag.toUpperCase().replace(/O/g, '0').replace('#', '')}`);
 	}
 
 	private async fetch(url: string) {
