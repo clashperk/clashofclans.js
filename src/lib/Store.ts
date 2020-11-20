@@ -1,6 +1,10 @@
 export class Store {
 
-	private list: Map<string, any> = new Map();
+	private list: any = null;
+
+	public constructor() {
+		this.list = new Map();
+	}
 
 	public get(key: string) {
 		return this.list.get(key);
