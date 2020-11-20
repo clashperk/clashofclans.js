@@ -15,7 +15,6 @@ export class Events extends EventEmitter {
 	public refreshRate: number;
 
 	private tokens: string[];
-	private events: string[];
 
 	private baseUrl: string;
 	private timeout: number;
@@ -29,7 +28,6 @@ export class Events extends EventEmitter {
 		this.baseUrl = options.baseUrl || 'https://api.clashofclans.com/v1';
 		this.timeout = options.timeout || 0;
 		this.tokens = options.tokens;
-		this.events = options.events;
 		this.rateLimit = options.rateLimit || 10;
 		this.refreshRate = options.refreshRate || 2 * 60 * 1000;
 		this.throttler = new Throttler(this.rateLimit * this.tokens.length);
@@ -147,7 +145,6 @@ export class Events extends EventEmitter {
 
 interface EventsOption {
 	tokens: string[];
-	events: string[];
 	baseUrl?: string;
 	timeout?: number;
 	rateLimit?: number;
