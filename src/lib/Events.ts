@@ -41,7 +41,7 @@ export class Events extends EventEmitter {
 	}
 
 	public removePlayers(tags: string | string[]) {
-		const list = Array.isArray(tags) ? tags : [];
+		const list = Array.isArray(tags) ? tags : [tags];
 		list.forEach(_tag => {
 			const tag = validateTag(_tag);
 			if (tag && this.players.has(tag)) this.players.delete(tag);
@@ -61,7 +61,7 @@ export class Events extends EventEmitter {
 	}
 
 	public removeClans(tags: string | string[]) {
-		const list = Array.isArray(tags) ? tags : [];
+		const list = Array.isArray(tags) ? tags : [tags];
 		list.forEach(_tag => {
 			const tag = validateTag(_tag);
 			if (tag && this.clans.has(tag)) this.clans.delete(tag);
@@ -81,7 +81,7 @@ export class Events extends EventEmitter {
 	}
 
 	public removeWars(tags: string | string[]) {
-		const list = Array.isArray(tags) ? tags : [];
+		const list = Array.isArray(tags) ? tags : [tags];
 		list.forEach(_tag => {
 			const tag = validateTag(_tag);
 			if (tag && this.wars.has(tag)) this.wars.delete(tag);
