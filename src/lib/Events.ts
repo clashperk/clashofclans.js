@@ -1,9 +1,8 @@
 import { EventEmitter } from 'events';
-import fetch from 'node-fetch';
 import { Store } from './Store';
 import { Throttler } from '../utils/Throttler';
 import { handleClanUpdate, handlePlayerUpdate } from '../utils/updateHandler';
-import { validateTag } from '../utils/utils';
+import { validateTag, fetchURL } from '../utils/utils';
 
 export class Events extends EventEmitter {
 
@@ -132,25 +131,8 @@ export class Events extends EventEmitter {
 		return token;
 	}
 
-	private async fetch(url: string) {
-		const res = await fetch(`${this.baseUrl}${url}`, {
-			headers: {
-				Authorization: `Bearer ${this.token}`,
-				Accept: 'application/json'
-			},
-			timeout: this.timeout
-		}).catch(() => null);
-
-		if (!res) return { ok: false, status: 504 };
-		const parsed = await res.json().catch(() => null);
-		if (!parsed) return { ok: false, status: res.status };
-
-		const MAX_AGE = Number(res.headers.get('cache-control')!.split('=')[1]);
-		return Object.assign(parsed, {
-			maxAge: MAX_AGE,
-			status: res.status,
-			ok: res.status === 200
-		});
+	private fetch(url: string) {
+		return fetchURL(`${this.baseUrl}${url}`, this.token, this.timeout);
 	}
 
 }

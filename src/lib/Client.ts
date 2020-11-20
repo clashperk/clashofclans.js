@@ -1,4 +1,4 @@
-import fetch from 'node-fetch';
+import { fetchURL } from '../utils/utils';
 import qs from 'querystring';
 
 export class Client {
@@ -103,13 +103,7 @@ export class Client {
 	}
 
 	public get(url: string, options?: any) {
-		return fetch(`${this.baseUrl}/${url}${this.query(options)}`, {
-			headers: {
-				'Authorization': `Bearer ${this.token}`,
-				'Content-Type': 'application/json'
-			},
-			timeout: this.timeout
-		}).then(res => res.json());
+		return fetchURL(`${this.baseUrl}/${url}${this.query(options)}`, this.token, this.timeout);
 	}
 
 	public parseTag(tag: string): string {
