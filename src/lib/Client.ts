@@ -31,16 +31,11 @@ export class Client {
 	}
 
 	public async detailedClanMembers(clanTag: string, filters?: FilterOptions) {
-		const members = await this.clanMembers(clanTag, filters);
-		const list = [];
-		for (const member of members.items) {
-			const data = await this.player(member.tag);
-			list.push(data);
-		}
-		return list;
+		const members: Members = await this.clanMembers(clanTag, filters);
+		return Promise.allSettled(members.items.map(mem => this.player(mem.tag)));
 	}
 
-	public clanWar(clanTag: string) {
+	public currentWar(clanTag: string) {
 		return this.get(`clans/${this.parseTag(clanTag)}/currentwar`);
 	}
 
@@ -112,8 +107,8 @@ export class Client {
 		return this.get(`warleagues/${leagueId}`, filters);
 	}
 
-	public get(url: string, options?: any) {
-		return fetchURL(`${this.baseUrl}/${url}${this.query(options)}`, this.token, this.timeout);
+	public get(path: string, options?: any) {
+		return fetchURL(`${this.baseUrl}/${path}?${this.query(options)}`, this.token, this.timeout);
 	}
 
 	public parseTag(tag: string): string {
@@ -121,7 +116,7 @@ export class Client {
 	}
 
 	private query(opts: any) {
-		return opts ? `?${qs.stringify(opts)}` : '';
+		return opts ? `${qs.stringify(opts)}` : '';
 	}
 
 }

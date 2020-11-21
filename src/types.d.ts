@@ -62,6 +62,16 @@ interface Member {
 	donationsReceived: number;
 }
 
+interface Members {
+	items: [Member];
+	paging: {
+		cursors: {
+			after?: string;
+			before?: string;
+		};
+	};
+}
+
 interface Clan {
 	tag: string;
 	name: string;

@@ -121,7 +121,7 @@ function isFreshAttack(clan: WarBody, defenderTag: string, order: number) {
 
 export function handleWarUpadte(client: Events, tag: string, war: ClanWar) {
 	const oldWar: ClanWar = client.wars.get(tag);
-	client.players.set(tag, war);
+	client.wars.set(tag, war);
 	if (oldWar.hasOwnProperty('state')) return;
 	if (war.state === 'notInWar') return;
 
