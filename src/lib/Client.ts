@@ -35,7 +35,7 @@ export class Client {
 		return Promise.allSettled(members.items.map(mem => this.player(mem.tag)));
 	}
 
-	public currentWar(clanTag: string) {
+	public currentClanWar(clanTag: string) {
 		return this.get(`clans/${this.parseTag(clanTag)}/currentwar`);
 	}
 
@@ -116,7 +116,7 @@ export class Client {
 	}
 
 	private query(opts: any) {
-		return opts ? `${qs.stringify(opts)}` : '';
+		return opts ? qs.stringify(opts) : '';
 	}
 
 }
