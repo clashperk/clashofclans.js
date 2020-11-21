@@ -33,7 +33,7 @@ export class Client {
 	public async detailedClanMembers(clanTag: string, filters?: FilterOptions) {
 		const members = await this.clanMembers(clanTag, filters);
 		const list = [];
-		for (const member of members) {
+		for (const member of members.items) {
 			const data = await this.player(member.tag);
 			list.push(data);
 		}
