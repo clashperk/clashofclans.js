@@ -41,7 +41,7 @@ export class Client {
 	}
 
 	public clanWar(clanTag: string) {
-		return this.get(`clans/${this.parseTag(clanTag)}/currentWar`);
+		return this.get(`clans/${this.parseTag(clanTag)}/currentwar`);
 	}
 
 	public clanWarLog(clanTag: string, filters?: FilterOptions) {

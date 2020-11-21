@@ -109,3 +109,59 @@ export function handlePlayerUpdate(client: Events, player: Player) {
 		client.emit('playerUpdate', oldPlayer, player);
 	}
 }
+
+function isFreshAttack(clan: WarBody, defenderTag: string, order: number) {
+	const attacks = clan.members.filter(mem => mem.attacks && mem.attacks.length)
+		.map(mem => mem.attacks)
+		.flat()
+		.filter(atk => atk!.defenderTag === defenderTag)
+		.sort((a, b) => a!.order - b!.order);
+	return attacks.length === 1 || attacks[0]!.order === order;
+}
+
+export function handleWarUpadte(client: Events, tag: string, war: ClanWar) {
+	const oldWar: ClanWar = client.wars.get(tag);
+	client.players.set(tag, war);
+	if (oldWar.hasOwnProperty('state')) return;
+	if (war.state === 'notInWar') return;
+
+	if (war.state !== oldWar.state) client.emit('warStateUpdate', oldWar, war);
+
+	for (const member of war.clan.members) {
+		const oldMem = oldWar.clan.members.find(mem => mem.tag === member.tag);
+		if (!oldMem) continue;
+		if (!member.attacks) continue;
+
+		if (!oldMem.attacks && member.attacks.length) {
+			for (const attack of member.attacks) {
+				const freshAttack = isFreshAttack(war.clan, attack.defenderTag, attack.order);
+				client.emit('warAttack', war, Object.assign(attack, { freshAttack }));
+			}
+		}
+
+		if (oldMem.attacks && oldMem.attacks.length < member.attacks.length) {
+			const attack = member.attacks.pop()!;
+			const freshAttack = isFreshAttack(war.clan, attack.defenderTag, attack.order);
+			client.emit('warAttack', war, Object.assign(attack, { freshAttack }));
+		}
+	}
+
+	for (const member of war.opponent.members) {
+		const oldMem = oldWar.opponent.members.find(mem => mem.tag === member.tag);
+		if (!oldMem) continue;
+		if (!member.attacks) continue;
+
+		if (!oldMem.attacks && member.attacks.length) {
+			for (const attack of member.attacks) {
+				const freshAttack = isFreshAttack(war.opponent, attack.defenderTag, attack.order);
+				client.emit('warAttack', war, Object.assign(attack, { freshAttack }));
+			}
+		}
+
+		if (oldMem.attacks && oldMem.attacks.length < member.attacks.length) {
+			const attack = member.attacks.pop()!;
+			const freshAttack = isFreshAttack(war.opponent, attack.defenderTag, attack.order);
+			client.emit('warAttack', war, Object.assign(attack, { freshAttack }));
+		}
+	}
+}
