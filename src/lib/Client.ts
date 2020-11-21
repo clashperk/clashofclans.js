@@ -30,6 +30,16 @@ export class Client {
 		return this.get(`clans/${this.parseTag(clanTag)}/members`, filters);
 	}
 
+	public async detailedClanMembers(clanTag: string, filters?: FilterOptions) {
+		const members = await this.clanMembers(clanTag, filters);
+		const list = [];
+		for (const member of members) {
+			const data = await this.player(member.tag);
+			list.push(data);
+		}
+		return list;
+	}
+
 	public clanWar(clanTag: string) {
 		return this.get(`clans/${this.parseTag(clanTag)}/currentWar`);
 	}
