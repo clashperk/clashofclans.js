@@ -127,7 +127,7 @@ export class Events extends EventEmitter {
 
 	private get token() {
 		const token = this.tokens[this.activeToken];
-		this.activeToken = (this.activeToken + 1) >= this.token.length ? 0 : (this.activeToken + 1);
+		this.activeToken = (this.activeToken + 1) >= this.tokens.length ? 0 : (this.activeToken + 1);
 		return token;
 	}
 
