@@ -21,6 +21,9 @@ export class Events extends EventEmitter {
 	private throttler: Throttler;
 	private activeToken = 0;
 
+	private isInMaintenance = false;
+	private isChecking = false;
+
 	public constructor(options: EventsOption) {
 		super();
 
@@ -102,10 +105,16 @@ export class Events extends EventEmitter {
 	/* ----------------------------------------------------------------------------- */
 
 	private async initClanEvents() {
+		const isOver = await this.checkMaintenanceOver();
+		if (!isOver) return;
 		const startTime = Date.now();
 		for (const tag of this.clans.keys()) {
-			const data: Clan = await this.fetch(`/clans/${encodeURIComponent(tag)}`);
+			const data = await this.fetch(`/clans/${encodeURIComponent(tag)}`);
 			await this.throttler.throttle();
+			if (data.status === 503) {
+				this.startMaintenance();
+				break;
+			}
 			handleClanUpdate(this, data);
 		}
 		const timeTaken = Date.now() - startTime;
@@ -114,15 +123,42 @@ export class Events extends EventEmitter {
 	}
 
 	private async initPlayerEvents() {
+		const isOver = await this.checkMaintenanceOver();
+		if (!isOver) return;
 		const startTime = Date.now();
 		for (const tag of this.players.keys()) {
-			const data: Player = await this.fetch(`/players/${encodeURIComponent(tag)}`);
+			const data = await this.fetch(`/players/${encodeURIComponent(tag)}`);
 			await this.throttler.throttle();
+			if (data.status === 503) {
+				this.startMaintenance();
+				break;
+			}
 			handlePlayerUpdate(this, data);
 		}
 		const timeTaken = Date.now() - startTime;
 		const waitFor = (timeTaken >= this.refreshRate ? 0 : this.refreshRate - timeTaken);
 		setTimeout(this.initPlayerEvents.bind(this), waitFor);
+	}
+
+	private async checkMaintenanceOver(): Promise<boolean> {
+		if (!this.isInMaintenance) return true;
+		if (this.isChecking) return false;
+		this.isChecking = true;
+
+		const data = await this.fetch('/clans?limit=1&minMembers=10');
+		if (data.status === 200) {
+			this.isInMaintenance = false;
+			this.emit('maintenanceEnd');
+			return true;
+		}
+
+		this.isChecking = false;
+		return false;
+	}
+
+	private startMaintenance() {
+		this.isInMaintenance = true;
+		this.emit('maintenanceStart');
 	}
 
 	private get token() {
