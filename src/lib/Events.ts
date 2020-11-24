@@ -1,7 +1,7 @@
 import { EventEmitter } from 'events';
 import { Store } from './Store';
 import { Throttler } from '../utils/Throttler';
-import { handleClanUpdate, handlePlayerUpdate } from '../utils/updateHandler';
+import { handleClanUpdate, handlePlayerUpdate, handleWarUpadte } from '../utils/updateHandler';
 import { validateTag, fetchURL } from '../utils/utils';
 
 export class Events extends EventEmitter {
@@ -94,10 +94,13 @@ export class Events extends EventEmitter {
 		this.wars.clear();
 	}
 
-	public async init() {
-		await this.checkMaintenace();
-		await this.initClanEvents();
-		await this.initPlayerEvents();
+	public init() {
+		return Promise.allSettled([
+			this.checkMaintenace(),
+			this.initPlayerEvents(),
+			this.initClanEvents(),
+			this.initWarEvents()
+		]);
 	}
 
 	/* ----------------------------------------------------------------------------- */
@@ -128,6 +131,19 @@ export class Events extends EventEmitter {
 		const timeTaken = Date.now() - startTime;
 		const waitFor = (timeTaken >= this.refreshRate ? 0 : this.refreshRate - timeTaken);
 		setTimeout(this.initPlayerEvents.bind(this), waitFor);
+	}
+
+	private async initWarEvents() {
+		if (this.isInMaintenance) return;
+		const startTime = Date.now();
+		for (const tag of this.wars.keys()) {
+			const data = await this.fetch(`/clans/${encodeURIComponent(tag)}/currentwar`);
+			await this.throttler.throttle();
+			handleWarUpadte(this, tag, data);
+		}
+		const timeTaken = Date.now() - startTime;
+		const waitFor = (timeTaken >= this.refreshRate ? 0 : this.refreshRate - timeTaken);
+		setTimeout(this.initWarEvents.bind(this), waitFor);
 	}
 
 	private async checkMaintenace() {
