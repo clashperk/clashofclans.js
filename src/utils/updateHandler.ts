@@ -119,7 +119,7 @@ function isFreshAttack(clan: WarBody, defenderTag: string, order: number) {
 	return attacks.length === 1 || attacks[0]!.order === order;
 }
 
-export function handleWarUpadte(client: Events, tag: string, war: ClanWar) {
+export function handleWarUpdate(client: Events, tag: string, war: ClanWar) {
 	const oldWar: ClanWar = client.wars.get(tag);
 	client.wars.set(tag, war);
 	if (oldWar.hasOwnProperty('state')) return;
