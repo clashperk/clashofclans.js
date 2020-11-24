@@ -22,7 +22,6 @@ export class Events extends EventEmitter {
 	private activeToken = 0;
 
 	private isInMaintenance = false;
-	private isChecking = false;
 
 	public constructor(options: EventsOption) {
 		super();
@@ -96,6 +95,7 @@ export class Events extends EventEmitter {
 	}
 
 	public async init() {
+		await this.checkMaintenace();
 		await this.initClanEvents();
 		await this.initPlayerEvents();
 	}
@@ -105,16 +105,11 @@ export class Events extends EventEmitter {
 	/* ----------------------------------------------------------------------------- */
 
 	private async initClanEvents() {
-		const isOver = await this.checkMaintenanceOver();
-		if (!isOver) return;
+		if (this.isInMaintenance) return;
 		const startTime = Date.now();
 		for (const tag of this.clans.keys()) {
 			const data = await this.fetch(`/clans/${encodeURIComponent(tag)}`);
 			await this.throttler.throttle();
-			if (data.status === 503) {
-				this.startMaintenance();
-				break;
-			}
 			handleClanUpdate(this, data);
 		}
 		const timeTaken = Date.now() - startTime;
@@ -123,16 +118,11 @@ export class Events extends EventEmitter {
 	}
 
 	private async initPlayerEvents() {
-		const isOver = await this.checkMaintenanceOver();
-		if (!isOver) return;
+		if (this.isInMaintenance) return;
 		const startTime = Date.now();
 		for (const tag of this.players.keys()) {
 			const data = await this.fetch(`/players/${encodeURIComponent(tag)}`);
 			await this.throttler.throttle();
-			if (data.status === 503) {
-				this.startMaintenance();
-				break;
-			}
 			handlePlayerUpdate(this, data);
 		}
 		const timeTaken = Date.now() - startTime;
@@ -140,25 +130,17 @@ export class Events extends EventEmitter {
 		setTimeout(this.initPlayerEvents.bind(this), waitFor);
 	}
 
-	private async checkMaintenanceOver(): Promise<boolean> {
-		if (!this.isInMaintenance) return true;
-		if (this.isChecking) return false;
-		this.isChecking = true;
-
-		const data = await this.fetch('/clans?limit=1&minMembers=10');
-		if (data.status === 200) {
+	private async checkMaintenace() {
+		const data = await this.fetch(`/clans?limit=1&minMembers=${Math.floor(Math.random() * 40) + 10}`);
+		await this.throttler.throttle();
+		if (data.status === 503 && !this.isInMaintenance) {
+			this.isInMaintenance = true;
+			this.emit('maintenanceStart');
+		} else if (data.status === 200 && this.isInMaintenance) {
 			this.isInMaintenance = false;
 			this.emit('maintenanceEnd');
-			return true;
 		}
-
-		this.isChecking = false;
-		return false;
-	}
-
-	private startMaintenance() {
-		this.isInMaintenance = true;
-		this.emit('maintenanceStart');
+		setTimeout(this.checkMaintenace.bind(this), 0.5 * 60 * 1000);
 	}
 
 	private get token() {
