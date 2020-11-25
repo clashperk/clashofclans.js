@@ -168,7 +168,8 @@ export class Events extends EventEmitter {
 		try {
 			return await fetchURL(`${this.baseUrl}${path}`, this.token, this.timeout);
 		} finally {
-			await this.throttler.throttle().then(() => this.queue.shift());
+			await this.throttler.throttle();
+			this.queue.shift();
 		}
 	}
 
