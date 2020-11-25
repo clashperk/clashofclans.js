@@ -3,6 +3,7 @@ import { Store } from './Store';
 import { Throttler } from '../utils/Throttler';
 import { handleClanUpdate, handlePlayerUpdate, handleWarUpdate } from '../utils/updateHandler';
 import { validateTag, fetchURL } from '../utils/utils';
+import { AsyncQueue } from '../utils/AsyncQueue';
 
 export class Events extends EventEmitter {
 
@@ -20,6 +21,7 @@ export class Events extends EventEmitter {
 
 	private throttler: Throttler;
 	private activeToken = 0;
+	private queue: AsyncQueue = new AsyncQueue();
 
 	private isInMaintenance = false;
 
@@ -112,7 +114,6 @@ export class Events extends EventEmitter {
 		const startTime = Date.now();
 		for (const tag of this.clans.keys()) {
 			const data = await this.fetch(`/clans/${encodeURIComponent(tag)}`);
-			await this.throttler.throttle();
 			handleClanUpdate(this, data);
 		}
 		const timeTaken = Date.now() - startTime;
@@ -125,7 +126,6 @@ export class Events extends EventEmitter {
 		const startTime = Date.now();
 		for (const tag of this.players.keys()) {
 			const data = await this.fetch(`/players/${encodeURIComponent(tag)}`);
-			await this.throttler.throttle();
 			handlePlayerUpdate(this, data);
 		}
 		const timeTaken = Date.now() - startTime;
@@ -138,7 +138,6 @@ export class Events extends EventEmitter {
 		const startTime = Date.now();
 		for (const tag of this.wars.keys()) {
 			const data = await this.fetch(`/clans/${encodeURIComponent(tag)}/currentwar`);
-			await this.throttler.throttle();
 			handleWarUpdate(this, tag, data);
 		}
 		const timeTaken = Date.now() - startTime;
@@ -148,7 +147,6 @@ export class Events extends EventEmitter {
 
 	private async checkMaintenace() {
 		const data = await this.fetch(`/clans?limit=1&minMembers=${Math.floor(Math.random() * 40) + 10}`);
-		await this.throttler.throttle();
 		if (data.status === 503 && !this.isInMaintenance) {
 			this.isInMaintenance = true;
 			this.emit('maintenanceStart');
@@ -165,8 +163,13 @@ export class Events extends EventEmitter {
 		return token;
 	}
 
-	private fetch(url: string) {
-		return fetchURL(`${this.baseUrl}${url}`, this.token, this.timeout);
+	private async fetch(path: string) {
+		await this.queue.wait();
+		try {
+			return await fetchURL(`${this.baseUrl}${path}`, this.token, this.timeout);
+		} finally {
+			await this.throttler.throttle().then(() => this.queue.shift());
+		}
 	}
 
 }
