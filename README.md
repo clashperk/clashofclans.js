@@ -500,7 +500,17 @@ client.playerLabels()
 Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
 
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+<!-- prettier-ignore-start -->
+<!-- markdownlint-disable -->
+<table>
+  <tr>
+    <td align="center"><a href="https://github.com/csuvajit"><img src="https://avatars2.githubusercontent.com/u/45002322?v=4" width="100px;" alt=""/><br /><sub><b>Suvajit</b></sub></a><br /><a href="https://github.com/clashperk/clashofclans.js/commits?author=csuvajit" title="Code">💻</a> <a href="https://github.com/clashperk/clashofclans.js/commits?author=csuvajit" title="Documentation">📖</a> <a href="#example-csuvajit" title="Examples">💡</a> <a href="#ideas-csuvajit" title="Ideas, Planning, & Feedback">🤔</a> <a href="#maintenance-csuvajit" title="Maintenance">🚧</a> <a href="https://github.com/clashperk/clashofclans.js/commits?author=csuvajit" title="Tests">⚠️</a></td>
+    <td align="center"><a href="http://santoshb.com.np"><img src="https://avatars0.githubusercontent.com/u/23402178?v=4" width="100px;" alt=""/><br /><sub><b>Santosh Bhandari</b></sub></a><br /><a href="https://github.com/clashperk/clashofclans.js/commits?author=TheLearneer" title="Code">💻</a> <a href="#ideas-TheLearneer" title="Ideas, Planning, & Feedback">🤔</a></td>
+  </tr>
+</table>
 
+<!-- markdownlint-enable -->
+<!-- prettier-ignore-end -->
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
