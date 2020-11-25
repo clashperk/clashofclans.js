@@ -189,7 +189,7 @@ interface Player {
 	}] | [];
 }
 
-interface WarBody {
+interface WarClan {
 	tag: string;
 	name: string;
 	badgeUrls: {
@@ -201,7 +201,7 @@ interface WarBody {
 	attacks: number;
 	stars: number;
 	destructionPercentage: number;
-	expEarned: number;
+	expEarned?: number;
 	members: [
 		{
 			tag: string;
@@ -229,13 +229,35 @@ interface WarBody {
 	];
 }
 
-interface ClanWar {
+interface War {
 	state: 'notInWar' | 'preparation' | 'inWar' | 'warEnded';
 	teamSize: number;
 	startTime: string;
 	preparationStartTime: string;
 	endTime: string;
-	clan: WarBody;
-	opponent: WarBody;
+	clan: WarClan;
+	opponent: WarClan;
 }
 
+interface CWL {
+	state: 'notInWar' | 'preparation' | 'inWar' | 'warEnded';
+	season: string;
+	clans: [{
+		name: string;
+		tag: string;
+		clanLevel: number;
+		badgeUrls: {
+			small: string;
+			large: string;
+			medium: string;
+		};
+		members: [{
+			name: string;
+			tag: string;
+			townHallLevel: number;
+		}];
+	}];
+	rounds: [{
+		warTags: string[];
+	}];
+}

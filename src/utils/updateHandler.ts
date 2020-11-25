@@ -110,7 +110,7 @@ export function handlePlayerUpdate(client: Events, player: Player) {
 	}
 }
 
-function isFreshAttack(clan: WarBody, defenderTag: string, order: number) {
+function isFreshAttack(clan: WarClan, defenderTag: string, order: number) {
 	const attacks = clan.members.filter(mem => mem.attacks && mem.attacks.length)
 		.map(mem => mem.attacks)
 		.flat()
@@ -119,8 +119,8 @@ function isFreshAttack(clan: WarBody, defenderTag: string, order: number) {
 	return attacks.length === 1 || attacks[0]!.order === order;
 }
 
-export function handleWarUpdate(client: Events, tag: string, war: ClanWar) {
-	const oldWar: ClanWar = client.wars.get(tag);
+export function handleWarUpdate(client: Events, tag: string, war: War) {
+	const oldWar: War = client.wars.get(tag);
 	client.wars.set(tag, war);
 	if (oldWar.hasOwnProperty('state')) return;
 	if (war.state === 'notInWar') return;
