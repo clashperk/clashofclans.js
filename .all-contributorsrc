@@ -1,9 +1,28 @@
 {
-	"projectName": "clashofclans.js",
-	"projectOwner": "clashperk",
-	"files": [
-		"README.md"
-	],
-	"imageSize": 100,
-	"contributors": []
+  "projectName": "clashofclans.js",
+  "projectOwner": "clashperk",
+  "files": [
+    "README.md"
+  ],
+  "imageSize": 100,
+  "contributors": [
+    {
+      "login": "csuvajit",
+      "name": "Suvajit",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/45002322?v=4",
+      "profile": "https://github.com/csuvajit",
+      "contributions": [
+        "code",
+        "doc",
+        "example",
+        "ideas",
+        "maintenance",
+        "test"
+      ]
+    }
+  ],
+  "repoType": "github",
+  "repoHost": "https://github.com",
+  "skipCi": true,
+  "contributorsPerLine": 7
 }
