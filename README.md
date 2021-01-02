@@ -11,38 +11,38 @@
 Represents Clash of Clans API
 
 * [Client](#Client)
-    * [new Client(option)](#new_Client_new)
+    * [new Client(options)](#new_Client_new)
     * [.fetch(path, options)](#Client+fetch)
-    * [.clans(clan)](#Client+clans)
+    * [.clans(options)](#Client+clans)
     * [.clan(clanTag)](#Client+clan)
-    * [.clanMembers(clanTag, option)](#Client+clanMembers)      
-    * [.clanWarLog(clanTag, option)](#Client+clanWarLog)        
-    * [.currentClanWar(clanTag, option)](#Client+currentClanWar)
+    * [.clanMembers(clanTag, options)](#Client+clanMembers)      
+    * [.clanWarLog(clanTag, options)](#Client+clanWarLog)        
+    * [.currentClanWar(clanTag, options)](#Client+currentClanWar)
     * [.clanWarLeague(clanTag)](#Client+clanWarLeague)
     * [.clanWarLeagueWar(warTag)](#Client+clanWarLeagueWar)     
     * [.player(playerTag)](#Client+player)
-    * [.leagues(option)](#Client+leagues)
+    * [.leagues(options)](#Client+leagues)
     * [.league(leagueId)](#Client+league)
-    * [.leagueSeason(leagueId, option)](#Client+leagueSeason)
-    * [.leagueRanking(leagueId, seasonId, option)](#Client+leagueRanking)
-    * [.warLeagues(option)](#Client+warLeagues)
+    * [.leagueSeason(leagueId, options)](#Client+leagueSeason)
+    * [.leagueRanking(leagueId, seasonId, options)](#Client+leagueRanking)
+    * [.warLeagues(options)](#Client+warLeagues)
     * [.warLeague(leagueId)](#Client+warLeague)
-    * [.locations(option)](#Client+locations)
+    * [.locations(options)](#Client+locations)
     * [.location(locationId)](#Client+location)
-    * [.clanRanks(locationId, option)](#Client+clanRanks)
-    * [.playerRanks(locationId, option)](#Client+playerRanks)
-    * [.versusClanRanks(locationId, option)](#Client+versusClanRanks)
-    * [.versusPlayerRanks(locationId, option)](#Client+versusPlayerRanks)
-    * [.clanLabels(option)](#Client+clanLabels)
-    * [.playerLabels(option)](#Client+playerLabels)
+    * [.clanRanks(locationId, options)](#Client+clanRanks)
+    * [.playerRanks(locationId, options)](#Client+playerRanks)
+    * [.versusClanRanks(locationId, options)](#Client+versusClanRanks)
+    * [.versusPlayerRanks(locationId, options)](#Client+versusPlayerRanks)
+    * [.clanLabels(options)](#Client+clanLabels)
+    * [.playerLabels(options)](#Client+playerLabels)
 
 <a name="new_Client_new"></a>
 
-### new Client(option)
+### new Client(options)
 
 | Param | Type | Description |
 | --- | --- | --- |
-| option | [<code>ClientOption</code>](#ClientOption) | API Options |
+| options | [<code>ClientOptions</code>](#ClientOptions) | API Options |
 
 **Example**
 ```js
@@ -125,12 +125,12 @@ client.fetch('/locations').then(data => console.log(data)));
 ```
 <a name="Client+clans"></a>
 
-### client.clans(clan)
+### client.clans(options)
 Search clans
 
 | Param | Type | Description |
 | --- | --- | --- |
-| clan | <code>string</code> \| [<code>ClanSearchOption</code>](#ClanSearchOption) | Search clans by name or filtering parameters. If name is used as part of search query, it needs to be at least three characters long. Name search parameter is interpreted as wild card search, so it may appear anywhere in the clan name. |  
+| options | <code>string</code> \| [<code>ClanSearchOptions</code>](#ClanSearchOptions) | Search clans by name or filtering parameters. If name is used as part of search query, it needs to be at least three characters long. Name search parameter is interpreted as wild card search, so it may appear anywhere in the clan name. |  
 
 **Example**
 ```js
@@ -155,13 +155,13 @@ client.clan('#8QU8J9LP');
 ```
 <a name="Client+clanMembers"></a>
 
-### client.clanMembers(clanTag, option)
+### client.clanMembers(clanTag, options)
 List clan members
 
 | Param | Type | Description |
 | --- | --- | --- |
 | clanTag | <code>string</code> | Tag of the clan. |
-| option | [<code>SearchOption</code>](#SearchOption) | Optional options |
+| options | [<code>SearchOptions</code>](#SearchOptions) | Optional options |
 
 **Example**
 ```js
@@ -169,13 +169,13 @@ client.clanMembers('#8QU8J9LP', { limit: 10 });
 ```
 <a name="Client+clanWarLog"></a>
 
-### client.clanWarLog(clanTag, option)
+### client.clanWarLog(clanTag, options)
 Retrieve clan's clan war log
 
 | Param | Type | Description |
 | --- | --- | --- |
 | clanTag | <code>string</code> | Tag of the clan. |
-| option | [<code>SearchOption</code>](#SearchOption) | Optional options |
+| options | [<code>SearchOptions</code>](#SearchOptions) | Optional options |
 
 **Example**
 ```js
@@ -183,13 +183,13 @@ client.clanWarLog('#8QU8J9LP', { limit: 10 });
 ```
 <a name="Client+currentClanWar"></a>
 
-### client.currentClanWar(clanTag, option)
+### client.currentClanWar(clanTag, options)
 Retrieve information about clan's current clan war
 
 | Param | Type | Description |
 | --- | --- | --- |
 | clanTag | <code>string</code> | Tag of the clan. |
-| option | [<code>SearchOption</code>](#SearchOption) | Optional options |
+| options | [<code>SearchOptions</code>](#SearchOptions) | Optional options |
 
 **Example**
 ```js
@@ -236,12 +236,12 @@ client.player('#9Q92C8R20');
 ```
 <a name="Client+leagues"></a>
 
-### client.leagues(option)
+### client.leagues(options)
 List Leagues
 
 | Param | Type | Description |
 | --- | --- | --- |
-| option | [<code>SearchOption</code>](#SearchOption) | Optional options |
+| options | [<code>SearchOptions</code>](#SearchOptions) | Optional options |
 
 **Example**
 ```js
@@ -262,13 +262,13 @@ client.league('29000022');
 ```
 <a name="Client+leagueSeason"></a>
 
-### client.leagueSeason(leagueId, option)
+### client.leagueSeason(leagueId, options)
 Get league seasons. Note that league season information is available only for Legend League.
 
 | Param | Type | Description |
 | --- | --- | --- |
 | leagueId | <code>string</code> | Identifier of the league. |
-| option | [<code>SearchOption</code>](#SearchOption) | Optional options |
+| options | [<code>SearchOptions</code>](#SearchOptions) | Optional options |
 
 **Example**
 ```js
@@ -276,14 +276,14 @@ client.leagueSeason('29000022', { limit: 10 });
 ```
 <a name="Client+leagueRanking"></a>
 
-### client.leagueRanking(leagueId, seasonId, option)
+### client.leagueRanking(leagueId, seasonId, options)
 Get league season rankings. Note that league season information is available only for Legend League.
 
 | Param | Type | Description |
 | --- | --- | --- |
 | leagueId | <code>string</code> | Identifier of the league. |
 | seasonId | <code>string</code> | Identifier of the season. |
-| option | [<code>SearchOption</code>](#SearchOption) | Optional options |
+| options | [<code>SearchOptions</code>](#SearchOptions) | Optional options |
 
 **Example**
 ```js
@@ -291,12 +291,12 @@ client.leagueRanking('29000022', '2020-03', { limit: 10 });
 ```
 <a name="Client+warLeagues"></a>
 
-### client.warLeagues(option)
+### client.warLeagues(options)
 List war leagues
 
 | Param | Type | Description |
 | --- | --- | --- |
-| option | [<code>SearchOption</code>](#SearchOption) | Optional options |
+| options | [<code>SearchOptions</code>](#SearchOptions) | Optional options |
 
 **Example**
 ```js
@@ -317,12 +317,12 @@ client.warLeague('48000018');
 ```
 <a name="Client+locations"></a>
 
-### client.locations(option)
+### client.locations(options)
 List locations
 
 | Param | Type | Description |
 | --- | --- | --- |
-| option | [<code>SearchOption</code>](#SearchOption) | Optional options |
+| options | [<code>SearchOptions</code>](#SearchOptions) | Optional options |
 
 **Example**
 ```js
@@ -345,13 +345,13 @@ client.location('32000107');
 ```
 <a name="Client+clanRanks"></a>
 
-### client.clanRanks(locationId, option)
+### client.clanRanks(locationId, options)
 Get clan rankings for a specific location
 
 | Param | Type | Description |
 | --- | --- | --- |
 | locationId | <code>string</code> | Identifier of the location to retrieve. |
-| option | [<code>SearchOption</code>](#SearchOption) | Optional options |
+| options | [<code>SearchOptions</code>](#SearchOptions) | Optional options |
 
 **Example**
 ```js
@@ -359,13 +359,13 @@ client.clanRanks('32000107', { limit: 10 });
 ```
 <a name="Client+playerRanks"></a>
 
-### client.playerRanks(locationId, option)
+### client.playerRanks(locationId, options)
 Get player rankings for a specific location
 
 | Param | Type | Description |
 | --- | --- | --- |
 | locationId | <code>string</code> | Identifier of the location to retrieve. |
-| option | [<code>SearchOption</code>](#SearchOption) | Optional options |
+| options | [<code>SearchOptions</code>](#SearchOptions) | Optional options |
 
 **Example**
 ```js
@@ -373,13 +373,13 @@ client.playerRanks('32000107', { limit: 10 });
 ```
 <a name="Client+versusClanRanks"></a>
 
-### client.versusClanRanks(locationId, option)
+### client.versusClanRanks(locationId, options)
 Get clan versus rankings for a specific location
 
 | Param | Type | Description |
 | --- | --- | --- |
 | locationId | <code>string</code> | Identifier of the location to retrieve. |
-| option | [<code>SearchOption</code>](#SearchOption) | Optional options |
+| options | [<code>SearchOptions</code>](#SearchOptions) | Optional options |
 
 **Example**
 ```js
@@ -387,13 +387,13 @@ client.versusClanRanks('32000107', { limit: 10 });
 ```
 <a name="Client+versusPlayerRanks"></a>
 
-### client.versusPlayerRanks(locationId, option)
+### client.versusPlayerRanks(locationId, options)
 Get player versus rankings for a specific location
 
 | Param | Type | Description |
 | --- | --- | --- |
 | locationId | <code>string</code> | Identifier of the location to retrieve. |
-| option | [<code>SearchOption</code>](#SearchOption) | Optional options |
+| options | [<code>SearchOptions</code>](#SearchOptions) | Optional options |
 
 **Example**
 ```js
@@ -401,12 +401,12 @@ client.versusPlayerRanks('32000107', { limit: 10 });
 ```
 <a name="Client+clanLabels"></a>
 
-### client.clanLabels(option)
+### client.clanLabels(options)
 List clan labels
 
 | Param | Type | Description |
 | --- | --- | --- |
-| option | [<code>SearchOption</code>](#SearchOption) | Optional options |
+| options | [<code>SearchOptions</code>](#SearchOptions) | Optional options |
 
 **Example**
 ```js
@@ -414,20 +414,20 @@ client.clanLabels();
 ```
 <a name="Client+playerLabels"></a>
 
-### client.playerLabels(option)
+### client.playerLabels(options)
 List player labels
 
 | Param | Type | Description |
 | --- | --- | --- |
-| option | [<code>SearchOption</code>](#SearchOption) | Optional options |
+| options | [<code>SearchOptions</code>](#SearchOptions) | Optional options |
 
 **Example**
 ```js
 client.playerLabels();
 ```
-<a name="ClientOption"></a>
+<a name="ClientOptions"></a>
 
-## ClientOption
+## ClientOptions
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -435,9 +435,9 @@ client.playerLabels();
 | timeout | <code>number</code> | Request timeout in millisecond |
 | baseURL | <code>string</code> | API Base URL |
 
-<a name="ClanSearchOption"></a>
+<a name="ClanSearchOptions"></a>
 
-## ClanSearchOption
+## ClanSearchOptions
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -453,9 +453,9 @@ client.playerLabels();
 | before | <code>string</code> | Return only items that occur before this marker. Before marker can be found from the response, inside the 'paging' property. Note that only after or before can be specified for a request, not both. |
 | labelIds | <code>string</code> | Comma separatered list of label IDs to use for filtering results. |
 
-<a name="SearchOption"></a>
+<a name="SearchOptions"></a>
 
-## SearchOption
+## SearchOptions
 
 | Param | Type | Description |
 | --- | --- | --- |

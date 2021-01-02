@@ -2,7 +2,7 @@ declare module 'clashofclans.js' {
 	/**
 	 * Client Options
 	 */
-	export interface ClientOption {
+	export interface ClientOptions {
 		/**
 		 * Clash of Clans API Token
 		 */
@@ -10,17 +10,17 @@ declare module 'clashofclans.js' {
 		/**
 		 * Request timeout in millisecond
 		 */
-		timeout?: number | 0;
+		timeout?: number;
 		/**
-		 * Clash of Clans API base URL
+		 * Clash of Clans API base URL (Or Use Proxy URL)
 		 */
-		baseURL?: string | 'https://api.clashofclans.com/v1'
+		baseURL?: string;
 	}
 
 	/**
 	 * Clan Search Options
 	 */
-	export interface ClanSearchOption {
+	export interface ClanSearchOptions {
 		/**
 		 * Search clans by name. If name is used as part of search query, it needs to be at least three characters long. Name search parameter is interpreted as wild card search, so it may appear anywhere in the clan name.
 		 */
@@ -70,7 +70,7 @@ declare module 'clashofclans.js' {
 	/**
 	 * Search Options
 	 */
-	export interface SearchOption {
+	export interface SearchOptions {
 		/**
 		 * Limit the number of items returned in the response.
 		 */
@@ -88,12 +88,12 @@ declare module 'clashofclans.js' {
 	export class Client {
 		/**
 		 * Represents Clash of Clans API
-		 * @param {ClientOption} option - API Options
+		 * @param {ClientOptions} options - API Options
 		 * @example
 		 * const { Client } = require('clashofclans.js');
 		 * const client = new Client({ token: '', timeout: 5000 });
 		 */
-		constructor(option?: ClientOption);
+		constructor(options?: ClientOptions);
 		/**
 		 * Clash of Clans API Token
 		 */
@@ -101,11 +101,11 @@ declare module 'clashofclans.js' {
 		/**
 		 * Request timeout in millisecond
 		 */
-		public timeout?: number | 0;
+		public timeout?: number;
 		/**
 		 * Clash of Clans API base URL
 		 */
-		public baseURL?: string | 'https://api.clashofclans.com/v1';
+		public baseURL?: string;
 
 		/**
 		 * Fetch any Endpoint
@@ -118,7 +118,7 @@ declare module 'clashofclans.js' {
 
 		/**
 		 * Search clans
-		 * @param {string} clan Search clans by name or filtering parameters. If name is used as part of search query, it needs to be at least three characters long. Name search parameter is interpreted as wild card search, so it may appear anywhere in the clan name.
+		 * @param {string} options Search clans by name or filtering parameters. If name is used as part of search query, it needs to be at least three characters long. Name search parameter is interpreted as wild card search, so it may appear anywhere in the clan name.
 		 * @example
 		 * client.clans('air hounds');
 		 * // or
@@ -127,7 +127,7 @@ declare module 'clashofclans.js' {
 		 * client.clans({ minMembers: 40, maxMembers: 50 });
 		 * @returns {Promise<any>} Object
 		 */
-		public clans(clan?: string | ClanSearchOption): Promise<any>;
+		public clans(options: string | ClanSearchOptions): Promise<any>;
 
 		/**
 		 * Get clan information
@@ -136,37 +136,37 @@ declare module 'clashofclans.js' {
 		 * client.clan('#8QU8J9LP');
 		 * @returns {Promise<any>} Object
 		 */
-		public clan(clanTag?: string): Promise<any>;
+		public clan(clanTag: string): Promise<any>;
 
 		/**
 		 * List clan members
 		 * @param {string} clanTag Tag of the clan.
-		 * @param {SearchOption} option Search options (optional)
+		 * @param {SearchOptions} options Search options (optional)
 		 * @example
 		 * client.clanMembers('#8QU8J9LP', { limit: 10 });
 		 * @returns {Promise<any>} Object
 		 */
-		public clanMembers(clanTag: string, option?: SearchOption): Promise<any>;
+		public clanMembers(clanTag: string, options?: SearchOptions): Promise<any>;
 
 		/**
 		 * Retrieve clan's clan war log
 		 * @param {string} clanTag Tag of the clan.
-		 * @param {SearchOption} option Search options (optional)
+		 * @param {SearchOptions} options Search options (optional)
 		 * @example
 		 * client.clanWarLog('#8QU8J9LP', { limit: 10 });
 		 * @returns {Promise<any>} Object
 		 */
-		public clanWarLog(clanTag: string, option?: SearchOption): Promise<any>;
+		public clanWarLog(clanTag: string, options?: SearchOptions): Promise<any>;
 
 		/**
 		 * Retrieve information about clan's current clan war
 		 * @param {string} clanTag Tag of the clan.
-		 * @param {SearchOption} option Search options (optional)
+		 * @param {SearchOptions} options Search options (optional)
 		 * @example
 		 * client.currentClanWar('#8QU8J9LP');
 		 * @returns {Promise<any>} Object
 		 */
-		public currentClanWar(clanTag: string, option?: SearchOption): Promise<any>;
+		public currentClanWar(clanTag: string, options?: SearchOptions): Promise<any>;
 
 		/**
 		 * Retrieve information about clan's current clan war league group
@@ -197,12 +197,12 @@ declare module 'clashofclans.js' {
 
 		/**
 		 * List Leagues
-		 * @param {SearchOption} option Search options (optional)
+		 * @param {SearchOptions} options Search options (optional)
 		 * @example
 		 * client.leagues();
 		 * @returns {Promise<any>} Object
 		 */
-		public leagues(option?: SearchOption): Promise<any>;
+		public leagues(options?: SearchOptions): Promise<any>;
 
 		/**
 		 * Get league information
@@ -216,32 +216,32 @@ declare module 'clashofclans.js' {
 		/**
 		 * Get league seasons. Note that league season information is available only for Legend League.
 		 * @param {string} leagueId Identifier of the league.
-		 * @param {SearchOption} option Search options (optional)
+		 * @param {SearchOptions} options Search options (optional)
 		 * @example
 		 * client.leagueSeason('29000022', { limit: 10 });
 		 * @returns {Promise<any>} Object
 		 */
-		public leagueSeason(leagueId: string, option?: SearchOption): Promise<any>;
+		public leagueSeason(leagueId: string, options?: SearchOptions): Promise<any>;
 
 		/**
 		 * Get league season rankings. Note that league season information is available only for Legend League.
 		 * @param {string} leagueId Identifier of the league.
 		 * @param {string} seasonId Identifier of the season.
-		 * @param {SearchOption} option Search options (optional)
+		 * @param {SearchOptions} options Search options (optional)
 		 * @example
 		 * client.leagueRanking('29000022', '2020-03', { limit: 10 });
 		 * @returns {Promise<any>} Object
 		 */
-		public leagueRanking(leagueId: string, seasonId: string, option?: SearchOption): Promise<any>;
+		public leagueRanking(leagueId: string, seasonId: string, options?: SearchOptions): Promise<any>;
 
 		/**
 		 * List war leagues
-		 * @param {SearchOption} option Search options (optional)
+		 * @param {SearchOptions} options Search options (optional)
 		 * @example
 		 * client.warLeagues();
 		 * @returns {Promise<any>} Object
 		 */
-		public warLeagues(option?: SearchOption): Promise<any>;
+		public warLeagues(options?: SearchOptions): Promise<any>;
 
 		/**
 		 * Get war league information
@@ -254,14 +254,14 @@ declare module 'clashofclans.js' {
 
 		/**
 		 * List locations
-		 * @param {SearchOption} option Search options (optional)
+		 * @param {SearchOptions} options Search options (optional)
 		 * @example
 		 * client.locations();
 		 * // OR
 		 * client.locations({ limit: 10 });
 		 * @returns {Promise<any>} Object
 		 */
-		public locations(option?: SearchOption): Promise<any>;
+		public locations(options?: SearchOptions): Promise<any>;
 
 		/**
 		 * Get information about specific location
@@ -275,60 +275,60 @@ declare module 'clashofclans.js' {
 		/**
 		 * Get clan rankings for a specific location
 		 * @param {string} locationId Identifier of the location to retrieve.
-		 * @param {SearchOption} option Search options (optional)
+		 * @param {SearchOptions} options Search options (optional)
 		 * @example
 		 * client.clanRanks('32000107', { limit: 10 });
 		 * @returns {Promise<any>} Object
 		 */
-		public clanRanks(locationId: string, option?: SearchOption): Promise<any>;
+		public clanRanks(locationId: string, options?: SearchOptions): Promise<any>;
 
 		/**
 		 * Get player rankings for a specific location
 		 * @param {string} locationId Identifier of the location to retrieve.
-		 * @param {SearchOption} option Search options (optional)
+		 * @param {SearchOptions} options Search options (optional)
 		 * @example
 		 * client.playerRanks('32000107', { limit: 10 });
 		 * @returns {Promise<any>} Object
 		 */
-		public playerRanks(locationId: string, option?: SearchOption): Promise<any>;
+		public playerRanks(locationId: string, options?: SearchOptions): Promise<any>;
 
 		/**
 		 * Get clan versus rankings for a specific location
 		 * @param {string} locationId Identifier of the location to retrieve.
-		 * @param {SearchOption} option Search options (optional)
+		 * @param {SearchOptions} options Search options (optional)
 		 * @example
 		 * client.versusClanRanks('32000107', { limit: 10 });
 		 * @returns {Promise<any>} Object
 		 */
-		public versusClanRanks(locationId: string, option?: SearchOption): Promise<any>;
+		public versusClanRanks(locationId: string, options?: SearchOptions): Promise<any>;
 
 		/**
 		 * Get player versus rankings for a specific location
 		 * @param {string} locationId Identifier of the location to retrieve.
-		 * @param {SearchOption} option Search options (optional)
+		 * @param {SearchOptions} options Search options (optional)
 		 * @example
 		 * client.versusPlayerRanks('32000107', { limit: 10 });
 		 * @returns {Promise<any>} Object
 		 */
-		public versusPlayerRanks(locationId: string, option?: SearchOption): Promise<any>;
+		public versusPlayerRanks(locationId: string, options?: SearchOptions): Promise<any>;
 
 		/**
 		 * List clan labels
-		 * @param {SearchOption} option Search options (optional)
+		 * @param {SearchOptions} options Search options (optional)
 		 * @example
 		 * client.clanLabels();
 		 * @returns {Promise<any>} Object
 		 */
-		public clanLabels(option?: SearchOption): Promise<any>;
+		public clanLabels(options?: SearchOptions): Promise<any>;
 
 		/**
 		 * List player labels
-		 * @param {SearchOption} option Search options (optional)
+		 * @param {SearchOptions} options Search options (optional)
 		 * @example
 		 * client.playerLabels();
 		 * @returns {Promise<any>} Object
 		 */
-		public playerLabels(option?: SearchOption): Promise<any>;
+		public playerLabels(options?: SearchOptions): Promise<any>;
 	}
 
 	/**
@@ -594,7 +594,7 @@ declare module 'clashofclans.js' {
 	export interface ClanWarOpponentAttack extends ClanWarAttack { }
 
 	/**
-	 * ClanWar Member Interface
+	 * ClanWar Member Interface (Note the small `h` of `townhallLevel`)
 	 */
 	export interface ClanWarMember {
 		tag: string;
