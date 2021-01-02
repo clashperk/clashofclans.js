@@ -686,4 +686,57 @@ declare module 'clashofclans.js' {
 		status: number;
 		maxAge: number;
 	}
+
+	/**
+	 * WarLog Clan Interface
+	 */
+	export interface WarLogClan {
+		tag: string;
+		name: string;
+		badgeUrls: {
+			small: string;
+			large: string;
+			medium: string;
+		};
+		clanLevel: number;
+		attacks: number;
+		stars: number;
+		destructionPercentage: number;
+		expEarned: number;
+	}
+
+	/**
+	 * WarLog Opponent Interface (Note: CWL logs don't have `name` and `tag`)
+	 */
+	export interface WarLogOpponent {
+		tag?: string;
+		name?: string;
+		badgeUrls: {
+			small: string;
+			large: string;
+			medium: string;
+		};
+		clanLevel: number;
+		stars: number;
+		destructionPercentage: number;
+	}
+
+	/**
+	 * ClanWarLog (Method: `Client#clanWarLog(clanTag)`)
+	 */
+	export interface WarLog {
+		items: {
+			result: 'win' | 'lose' | 'tie' | null;
+			endTime: string;
+			teamSize: number;
+			clan: WarLogClan;
+			oppnent: WarLogOpponent;
+		};
+		paging: {
+			cursors: {
+				after?: string;
+				before?: string;
+			};
+		};
+	}
 }
