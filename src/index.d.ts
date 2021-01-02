@@ -332,7 +332,7 @@ declare module 'clashofclans.js' {
 	}
 
 	/**
-	 * Client#clans()
+	 * Season Clans (Method: `Client#clans()`)
 	 */
 	export interface Clans {
 		items: {
@@ -413,7 +413,7 @@ declare module 'clashofclans.js' {
 	}
 
 	/**
-	 * Client#clanMembers()
+	 * Clan Members (Method: `Client#clanMembers()`)
 	 */
 	export interface ClanMembers {
 		items: ClanMember[];
@@ -426,7 +426,7 @@ declare module 'clashofclans.js' {
 	}
 
 	/**
-	 * Client#clan()
+	 * Clan Interface (Method: `Client#clan(clanTag)`)
 	 */
 	export interface Clan {
 		tag: string;
@@ -509,7 +509,7 @@ declare module 'clashofclans.js' {
 	}
 
 	/**
-	 * Client#player()
+	 * Player Interface (Method: `Client#player(playerTag)`)
 	 */
 	export interface Player {
 		name: string;
@@ -648,17 +648,17 @@ declare module 'clashofclans.js' {
 	}
 
 	/**
-	 * Client#currentClanWar()
+	 * Clan Current War (Method: `Client#currentClanWar(clanTag)`)
 	 */
 	export interface CurrentWar extends ClanWar { }
 
 	/**
-	 * Client#clanWarLeagueWar()
+	 * Clan War League Round (Method: `Client#clanWarLeagueWar(clanTag)`)
 	 */
 	export interface ClanWarLeagueWar extends CurrentWar { }
 
 	/**
-	 * Client#clanWarLeague()
+	 * Clan War League Group (Method: `Client#clanWarLeague(clanTag)`)
 	 */
 	export interface ClanWarLeague {
 		state: 'notInWar' | 'preparation' | 'inWar' | 'warEnded';
@@ -688,7 +688,7 @@ declare module 'clashofclans.js' {
 	}
 
 	/**
-	 * WarLog Clan Interface
+	 * War Log Clan Interface
 	 */
 	export interface WarLogClan {
 		tag: string;
@@ -706,7 +706,7 @@ declare module 'clashofclans.js' {
 	}
 
 	/**
-	 * WarLog Opponent Interface (Note: CWL logs don't have `name` and `tag`)
+	 * War Log Opponent Interface (Note: CWL logs don't have `name` and `tag`)
 	 */
 	export interface WarLogOpponent {
 		tag?: string;
@@ -722,7 +722,7 @@ declare module 'clashofclans.js' {
 	}
 
 	/**
-	 * ClanWarLog (Method: `Client#clanWarLog(clanTag)`)
+	 * Clan War Log (Method: `Client#clanWarLog(clanTag)`)
 	 */
 	export interface WarLog {
 		items: {
