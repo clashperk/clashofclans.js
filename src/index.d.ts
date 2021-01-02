@@ -731,7 +731,7 @@ declare module 'clashofclans.js' {
 			teamSize: number;
 			clan: WarLogClan;
 			oppnent: WarLogOpponent;
-		};
+		}[];
 		paging: {
 			cursors: {
 				after?: string;
@@ -739,4 +739,25 @@ declare module 'clashofclans.js' {
 			};
 		};
 	}
+
+	export interface Label {
+		id: number;
+		name: string;
+		iconUrls: {
+			small: string;
+			medium: string;
+		}
+	}
+
+	export interface ClanLabels {
+		items: Label[];
+		paging: {
+			cursors: {
+				after?: string;
+				before?: string;
+			};
+		};
+	}
+
+	export interface PlayerLabels extends ClanLabels { }
 }
