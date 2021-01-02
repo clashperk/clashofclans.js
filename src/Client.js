@@ -32,7 +32,7 @@ class Client {
 		}).catch(() => null);
 
 		const parsed = await res?.json().catch(() => null);
-		if (!parsed) return { ok: false, status: res?.status ?? 504 };
+		if (!parsed) return { ok: false, status: res?.status ?? 504, maxAge: 0 };
 
 		const maxAge = res?.headers.get('cache-control')?.split('=')?.[1] ?? 0;
 		return Object.assign(parsed, { status: res?.status ?? 504, ok: res?.status === 200, maxAge: Number(maxAge) * 1000 });
@@ -42,7 +42,7 @@ class Client {
 	 * Search clans
 	 * @param {string | ClanSearchOptions} options - Search clans by name or filtering parameters. If name is used as part of search query, it needs to be at least three characters long. Name search parameter is interpreted as wild card search, so it may appear anywhere in the clan name.
 	 * @example
-	 * client.clans('air hounds', { limit: 10 });
+	 * client.clans('air hounds');
 	 * // or
 	 * client.clans({ name: 'air hounds', limit: 10 });
 	 * // or

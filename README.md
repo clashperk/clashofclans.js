@@ -134,7 +134,7 @@ Search clans
 
 **Example**
 ```js
-client.clans('air hounds', { limit: 10 });
+client.clans('air hounds');
 // or
 client.clans({ name: 'air hounds', limit: 10 });
 // or

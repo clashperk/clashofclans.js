@@ -738,6 +738,10 @@ declare module 'clashofclans.js' {
 				before?: string;
 			};
 		};
+
+		ok: boolean;
+		status: number;
+		maxAge: number;
 	}
 
 	export interface Label {
@@ -757,6 +761,10 @@ declare module 'clashofclans.js' {
 				before?: string;
 			};
 		};
+		
+		ok: boolean;
+		status: number;
+		maxAge: number;
 	}
 
 	export interface PlayerLabels extends ClanLabels { }
