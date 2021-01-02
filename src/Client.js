@@ -40,7 +40,7 @@ class Client {
 
 	/**
 	 * Search clans
-	 * @param {string | ClanSearchOptions} clan - Search clans by name or filtering parameters. If name is used as part of search query, it needs to be at least three characters long. Name search parameter is interpreted as wild card search, so it may appear anywhere in the clan name.
+	 * @param {string | ClanSearchOptions} options - Search clans by name or filtering parameters. If name is used as part of search query, it needs to be at least three characters long. Name search parameter is interpreted as wild card search, so it may appear anywhere in the clan name.
 	 * @example
 	 * client.clans('air hounds', { limit: 10 });
 	 * // or

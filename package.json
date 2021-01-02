@@ -27,5 +27,9 @@
   },
   "engines": {
     "node": ">=14.x"
+  },
+  "devDependencies": {
+    "eslint": "^7.17.0",
+    "eslint-config-mars": "^1.0.7"
   }
 }
