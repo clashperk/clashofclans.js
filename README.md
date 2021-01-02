@@ -12,22 +12,23 @@ Represents Clash of Clans API
 
 * [Client](#Client)
     * [new Client(option)](#new_Client_new)
+    * [.fetch(path, options)](#Client+fetch)
     * [.clans(clan)](#Client+clans)
     * [.clan(clanTag)](#Client+clan)
-    * [.clanMembers(clanTag, option)](#Client+clanMembers)
-    * [.clanWarlog(clanTag, option)](#Client+clanWarlog)
-    * [.currentWar(clanTag, option)](#Client+currentWar)
+    * [.clanMembers(clanTag, option)](#Client+clanMembers)      
+    * [.clanWarLog(clanTag, option)](#Client+clanWarLog)        
+    * [.currentClanWar(clanTag, option)](#Client+currentClanWar)
     * [.clanWarLeague(clanTag)](#Client+clanWarLeague)
-    * [.clanWarLeagueWarTags(warTag)](#Client+clanWarLeagueWarTags)
+    * [.clanWarLeagueWar(warTag)](#Client+clanWarLeagueWar)     
     * [.player(playerTag)](#Client+player)
     * [.leagues(option)](#Client+leagues)
-    * [.leagueId(leagueId)](#Client+leagueId)
-    * [.leagueSeasons(leagueId, option)](#Client+leagueSeasons)
+    * [.league(leagueId)](#Client+league)
+    * [.leagueSeason(leagueId, option)](#Client+leagueSeason)
     * [.leagueRanking(leagueId, seasonId, option)](#Client+leagueRanking)
     * [.warLeagues(option)](#Client+warLeagues)
-    * [.warLeagueId(leagueId)](#Client+warLeagueId)
+    * [.warLeague(leagueId)](#Client+warLeague)
     * [.locations(option)](#Client+locations)
-    * [.locationId(locationId)](#Client+locationId)
+    * [.location(locationId)](#Client+location)
     * [.clanRanks(locationId, option)](#Client+clanRanks)
     * [.playerRanks(locationId, option)](#Client+playerRanks)
     * [.versusClanRanks(locationId, option)](#Client+versusClanRanks)
@@ -46,7 +47,7 @@ Represents Clash of Clans API
 **Example**
 ```js
 const { Client } = require('clashofclans.js');
-const client = new Client({ token: '' });
+const client = new Client({ token: '', timeout: 5000 });
 ```
 
 ```js
@@ -72,14 +73,14 @@ const client = new Client({ token: '' });
     },
     "status": 200,
     "ok": true,
-    "maxAge": 600
+    "maxAge": 600000
 }
 ```
 
 <a name="maxAge"></a>
 
 ### maxAge
-The `maxAge` ([Cache-Control](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cache-Control)) is the maximum amount of time in seconds which shows how long until a fresh data is available.
+The `maxAge` ([Cache-Control](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cache-Control)) is the maximum amount of time in milliseconds (converted) which shows how long until a fresh data is available.
 
 ```js
 (async function() {
@@ -94,7 +95,7 @@ The `maxAge` ([Cache-Control](https://developer.mozilla.org/en-US/docs/Web/HTTP/
     "reason": "notFound",
     "status": 404,
     "ok": false,
-    "maxAge": 600
+    "maxAge": 600000
 }
 ```
 <a name="Status+Codes"></a>
@@ -109,18 +110,31 @@ The `maxAge` ([Cache-Control](https://developer.mozilla.org/en-US/docs/Web/HTTP/
 - **503:** Service is temporarily unavailable because of maintenance.
 - **504:** Request Timeout.
 
+<a name="Client+fetch"></a>
+
+### client.fetch(path)
+Fetch any Endpoint
+
+| Param | Type | Description |
+| --- | --- | --- |
+| path | <code>string</code> | Request URL |
+
+**Example**
+```js
+client.fetch('/locations').then(data => console.log(data)));
+```
 <a name="Client+clans"></a>
 
-### client.clans(name, option)
+### client.clans(clan)
 Search clans
 
 | Param | Type | Description |
 | --- | --- | --- |
-| clan | <code>string</code> or [<code>ClanSearchOption</code>](#ClanSearchOption) | Search clans by name or filtering parameters. If name is used as part of search query, it needs to be at least three characters long. Name search parameter is interpreted as wild card search, so it may appear anywhere in the clan name. |
+| clan | <code>string</code> \| [<code>ClanSearchOption</code>](#ClanSearchOption) | Search clans by name or filtering parameters. If name is used as part of search query, it needs to be at least three characters long. Name search parameter is interpreted as wild card search, so it may appear anywhere in the clan name. |  
 
 **Example**
 ```js
-client.clans('air hounds');
+client.clans('air hounds', { limit: 10 });
 // or
 client.clans({ name: 'air hounds', limit: 10 });
 // or
@@ -137,9 +151,7 @@ Get clan information
 
 **Example**
 ```js
-client.clan('#8QU8J9LP')
-    .then(data => console.log(data))
-    .catch(error => console.error(error));
+client.clan('#8QU8J9LP');
 ```
 <a name="Client+clanMembers"></a>
 
@@ -153,13 +165,11 @@ List clan members
 
 **Example**
 ```js
-client.clanMembers('#8QU8J9LP', { limit: 10 })
-    .then(data => console.log(data))
-    .catch(error => console.error(error));
+client.clanMembers('#8QU8J9LP', { limit: 10 });
 ```
-<a name="Client+clanWarlog"></a>
+<a name="Client+clanWarLog"></a>
 
-### client.clanWarlog(clanTag, option)
+### client.clanWarLog(clanTag, option)
 Retrieve clan's clan war log
 
 | Param | Type | Description |
@@ -169,13 +179,11 @@ Retrieve clan's clan war log
 
 **Example**
 ```js
-client.clanWarlog('#8QU8J9LP', { limit: 10 })
-    .then(data => console.log(data))
-    .catch(error => console.error(error));
+client.clanWarLog('#8QU8J9LP', { limit: 10 });
 ```
-<a name="Client+currentWar"></a>
+<a name="Client+currentClanWar"></a>
 
-### client.currentWar(clanTag, option)
+### client.currentClanWar(clanTag, option)
 Retrieve information about clan's current clan war
 
 | Param | Type | Description |
@@ -185,9 +193,7 @@ Retrieve information about clan's current clan war
 
 **Example**
 ```js
-client.currentWar('#8QU8J9LP')
-    .then(data => console.log(data))
-    .catch(error => console.error(error));
+client.currentClanWar('#8QU8J9LP');
 ```
 <a name="Client+clanWarLeague"></a>
 
@@ -200,13 +206,11 @@ Retrieve information about clan's current clan war league group
 
 **Example**
 ```js
-client.clanWarLeague('#8QU8J9LP')
-    .then(data => console.log(data))
-    .catch(error => console.error(error));
+client.clanWarLeague('#8QU8J9LP');
 ```
-<a name="Client+clanWarLeagueWarTags"></a>
+<a name="Client+clanWarLeagueWar"></a>
 
-### client.clanWarLeagueWarTags(clanTag)
+### client.clanWarLeagueWar(warTag)
 Retrieve information about individual clan war league war
 
 | Param | Type | Description |
@@ -215,9 +219,7 @@ Retrieve information about individual clan war league war
 
 **Example**
 ```js
-client.clanWarLeagueWarTags('#2QJQPYLJU')
-    .then(data => console.log(data))
-    .catch(error => console.error(error));
+client.clanWarLeagueWar('#2QJQPYLJU');
 ```
 <a name="Client+player"></a>
 
@@ -230,9 +232,7 @@ Get player information.
 
 **Example**
 ```js
-client.player('#9Q92C8R20')
-    .then(data => console.log(data))
-    .catch(error => console.error(error));
+client.player('#9Q92C8R20');
 ```
 <a name="Client+leagues"></a>
 
@@ -245,13 +245,11 @@ List Leagues
 
 **Example**
 ```js
-client.leagues()
-    .then(data => console.log(data))
-    .catch(error => console.error(error));
+client.leagues();
 ```
-<a name="Client+leagueId"></a>
+<a name="Client+league"></a>
 
-### client.leagueId(leagueId)
+### client.league(leagueId)
 Get league information
 
 | Param | Type | Description |
@@ -260,13 +258,11 @@ Get league information
 
 **Example**
 ```js
-client.leagueId('29000022')
-    .then(data => console.log(data))
-    .catch(error => console.error(error));
+client.league('29000022');
 ```
-<a name="Client+leagueSeasons"></a>
+<a name="Client+leagueSeason"></a>
 
-### client.leagueSeasons(leagueId, option)
+### client.leagueSeason(leagueId, option)
 Get league seasons. Note that league season information is available only for Legend League.
 
 | Param | Type | Description |
@@ -276,9 +272,7 @@ Get league seasons. Note that league season information is available only for Le
 
 **Example**
 ```js
-client.leagueSeasons('29000022', { limit: 10 })
-    .then(data => console.log(data))
-    .catch(error => console.error(error));
+client.leagueSeason('29000022', { limit: 10 });
 ```
 <a name="Client+leagueRanking"></a>
 
@@ -293,9 +287,7 @@ Get league season rankings. Note that league season information is available onl
 
 **Example**
 ```js
-client.leagueRanking('29000022', '2020-03', { limit: 10 })
-    .then(data => console.log(data))
-    .catch(error => console.error(error));
+client.leagueRanking('29000022', '2020-03', { limit: 10 });
 ```
 <a name="Client+warLeagues"></a>
 
@@ -308,13 +300,11 @@ List war leagues
 
 **Example**
 ```js
-client.warLeagues()
-    .then(data => console.log(data))
-    .catch(error => console.error(error));
+client.warLeagues();
 ```
-<a name="Client+warLeagueId"></a>
+<a name="Client+warLeague"></a>
 
-### client.warLeagueId(leagueId)
+### client.warLeague(leagueId)
 Get war league information
 
 | Param | Type | Description |
@@ -323,9 +313,7 @@ Get war league information
 
 **Example**
 ```js
-client.warLeagueId('48000018')
-    .then(data => console.log(data))
-    .catch(error => console.error(error));
+client.warLeague('48000018');
 ```
 <a name="Client+locations"></a>
 
@@ -338,17 +326,13 @@ List locations
 
 **Example**
 ```js
-client.locations()
-    .then(data => console.log(data))
-    .catch(error => console.error(error));
+client.locations();
 // OR
-client.locations({ limit: 10 })
-    .then(data => console.log(data))
-    .catch(error => console.error(error));
+client.locations({ limit: 10 });
 ```
-<a name="Client+locationId"></a>
+<a name="Client+location"></a>
 
-### client.locationId(locationId)
+### client.location(locationId)
 Get information about specific location
 
 | Param | Type | Description |
@@ -357,9 +341,7 @@ Get information about specific location
 
 **Example**
 ```js
-client.locationId('32000107')
-    .then(data => console.log(data))
-    .catch(error => console.error(error));
+client.location('32000107');
 ```
 <a name="Client+clanRanks"></a>
 
@@ -373,9 +355,7 @@ Get clan rankings for a specific location
 
 **Example**
 ```js
-client.clanRanks('32000107', { limit: 10 })
-    .then(data => console.log(data))
-    .catch(error => console.error(error));
+client.clanRanks('32000107', { limit: 10 });
 ```
 <a name="Client+playerRanks"></a>
 
@@ -389,9 +369,7 @@ Get player rankings for a specific location
 
 **Example**
 ```js
-client.playerRanks('32000107', { limit: 10 })
-    .then(data => console.log(data))
-    .catch(error => console.error(error));
+client.playerRanks('32000107', { limit: 10 });
 ```
 <a name="Client+versusClanRanks"></a>
 
@@ -405,9 +383,7 @@ Get clan versus rankings for a specific location
 
 **Example**
 ```js
-client.versusClanRanks('32000107', { limit: 10 })
-    .then(data => console.log(data))
-    .catch(error => console.error(error));
+client.versusClanRanks('32000107', { limit: 10 });
 ```
 <a name="Client+versusPlayerRanks"></a>
 
@@ -421,9 +397,7 @@ Get player versus rankings for a specific location
 
 **Example**
 ```js
-client.versusPlayerRanks('32000107', { limit: 10 })
-    .then(data => console.log(data))
-    .catch(error => console.error(error));
+client.versusPlayerRanks('32000107', { limit: 10 });
 ```
 <a name="Client+clanLabels"></a>
 
@@ -436,9 +410,7 @@ List clan labels
 
 **Example**
 ```js
-client.clanLabels()
-    .then(data => console.log(data))
-    .catch(error => console.error(error));
+client.clanLabels();
 ```
 <a name="Client+playerLabels"></a>
 
@@ -451,25 +423,21 @@ List player labels
 
 **Example**
 ```js
-client.playerLabels()
-    .then(data => console.log(data))
-    .catch(error => console.error(error));
+client.playerLabels();
 ```
-
-<hr>
-
 <a name="ClientOption"></a>
 
-## ClientOption : <code>Object</code>
+## ClientOption
 
 | Param | Type | Description |
 | --- | --- | --- |
 | token | <code>string</code> | Clash of Clans API Token |
 | timeout | <code>number</code> | Request timeout in millisecond |
+| baseURL | <code>string</code> | API Base URL |
 
 <a name="ClanSearchOption"></a>
 
-## ClanSearchOption : <code>Object</code>
+## ClanSearchOption
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -487,7 +455,7 @@ client.playerLabels()
 
 <a name="SearchOption"></a>
 
-## SearchOption : <code>Object</code>
+## SearchOption
 
 | Param | Type | Description |
 | --- | --- | --- |
