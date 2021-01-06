@@ -91,7 +91,7 @@ declare module 'clashofclans.js' {
 		 * @param {ClientOptions} options - API Options
 		 * @example
 		 * const { Client } = require('clashofclans.js');
-		 * const client = new Client({ token: '', timeout: 5000 });
+		 * const client = new Client({ token: [''], timeout: 5000 });
 		 */
 		constructor(options?: ClientOptions);
 		/**

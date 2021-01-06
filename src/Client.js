@@ -6,7 +6,7 @@ const qs = require('querystring');
  * @param {ClientOptions} options - API Options
  * @example
  * const { Client } = require('clashofclans.js');
- * const client = new Client({ token: '', timeout: 5000 });
+ * const client = new Client({ token: [''], timeout: 5000 });
  */
 class Client {
 	constructor(options = {}) {

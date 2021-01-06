@@ -48,7 +48,7 @@ Represents Clash of Clans API
 **Example**
 ```js
 const { Client } = require('clashofclans.js');
-const client = new Client({ token: '', timeout: 5000 });
+const client = new Client({ token: [''], timeout: 5000 });
 ```
 
 ```js
@@ -446,7 +446,7 @@ client.playerLabels();
 
 | Param | Type | Description |
 | --- | --- | --- |
-| token | <code>string</code> | Clash of Clans API Token |
+| token | <code>string \| string[]</code> | Clash of Clans API Token |
 | timeout | <code>number</code> | Request timeout in millisecond |
 | baseURL | <code>string</code> | API Base URL |
 
