@@ -10,9 +10,20 @@ const qs = require('querystring');
  */
 class Client {
 	constructor(options = {}) {
+		this.tokenIndex = 0;
 		this.token = options.token;
 		this.timeout = options.timeout || 0;
 		this.baseURL = options.baseURL || 'https://api.clashofclans.com/v1';
+	}
+
+	get tokens() {
+		return Array.isArray(this.token) ? [...this.token] : [this.token];
+	}
+
+	get nextToken() {
+		const token = this.tokens[this.tokenIndex];
+		this.tokenIndex = (this.tokenIndex + 1) >= this.tokens.length ? 0 : this.tokenIndex + 1;
+		return token;
 	}
 
 	/**
@@ -25,7 +36,7 @@ class Client {
 	async fetch(path) {
 		const res = await fetch(`${this.baseURL}${path}`, {
 			headers: {
-				Authorization: `Bearer ${this.token}`,
+				Authorization: `Bearer ${this.nextToken}`,
 				Accept: 'application/json'
 			},
 			timeout: Number(this.timeout)
@@ -77,6 +88,18 @@ class Client {
 	async clanMembers(clanTag, options) {
 		const query = qs.stringify(options);
 		return this.fetch(`/clans/${this.parseTag(clanTag)}/members?${query}`);
+	}
+
+	/**
+	 * Detailed clan members
+	 * @param {any[]} members - List of members
+	 * @example
+	 * const data = await client.clan('#8QU8J9LP');
+	 * client.detailedClanMembers(data.memberList);
+	 * @returns {Promise<any[]>} Object
+	 */
+	async detailedClanMembers(members) {
+		return Promise.all(members.map(mem => this.fetch(`/players/${encodeURIComponent(mem.tag)}`)));
 	}
 
 	/**
@@ -324,7 +347,7 @@ module.exports = Client;
 
 /**
  * @typedef {Object} ClientOptions
- * @param {string} token - Clash of Clans API Token
+ * @param {string|string[]} token - Clash of Clans API Token
  * @param {number} timeout - Request timeout in millisecond
  * @param {string} baseURL - API Base URL
  */

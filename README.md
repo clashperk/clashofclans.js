@@ -15,7 +15,8 @@ Represents Clash of Clans API
     * [.fetch(path, options)](#Client+fetch)
     * [.clans(options)](#Client+clans)
     * [.clan(clanTag)](#Client+clan)
-    * [.clanMembers(clanTag, options)](#Client+clanMembers)      
+    * [.clanMembers(clanTag, options)](#Client+clanMembers)
+    * [.detailedClanMembers(members)](#Client+detailedClanMembers)      
     * [.clanWarLog(clanTag, options)](#Client+clanWarLog)        
     * [.currentClanWar(clanTag, options)](#Client+currentClanWar)
     * [.clanWarLeague(clanTag)](#Client+clanWarLeague)
@@ -166,6 +167,20 @@ List clan members
 **Example**
 ```js
 client.clanMembers('#8QU8J9LP', { limit: 10 });
+```
+<a name="Client+detailedClanMembers"></a>
+
+### client.detailedClanMembers(members)
+Detailed clan members
+
+| Param | Type | Description |
+| --- | --- | --- |
+| members | <code>Array.&lt;any&gt;</code> | List of members |
+
+**Example**
+```js
+const data = await client.clan('#8QU8J9LP');
+client.detailedClanMembers(data.memberList);
 ```
 <a name="Client+clanWarLog"></a>
 

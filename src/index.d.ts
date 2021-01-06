@@ -6,7 +6,7 @@ declare module 'clashofclans.js' {
 		/**
 		 * Clash of Clans API Token
 		 */
-		token?: string;
+		token?: string | string[];
 		/**
 		 * Request timeout in millisecond
 		 */
@@ -97,7 +97,7 @@ declare module 'clashofclans.js' {
 		/**
 		 * Clash of Clans API Token
 		 */
-		public token?: string;
+		public token?: string | string[];
 		/**
 		 * Request timeout in millisecond
 		 */
@@ -147,6 +147,16 @@ declare module 'clashofclans.js' {
 		 * @returns {Promise<any>} Object
 		 */
 		public clanMembers(clanTag: string, options?: SearchOptions): Promise<any>;
+
+		/**
+		 * Detailed clan members
+		 * @param {any[]} members - List of members
+		 * @example
+		 * const data = await client.clan('#8QU8J9LP');
+		 * client.detailedClanMembers(data.memberList);
+		 * @returns {Promise<any[]>} Object
+		 */
+		public detailedClanMembers(members: any[]): Promise<any[]>
 
 		/**
 		 * Retrieve clan's clan war log
@@ -761,7 +771,7 @@ declare module 'clashofclans.js' {
 				before?: string;
 			};
 		};
-		
+
 		ok: boolean;
 		status: number;
 		maxAge: number;
