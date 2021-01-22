@@ -98,6 +98,7 @@ declare module 'clashofclans.js' {
 		 * Clash of Clans API Token
 		 */
 		public token?: string | string[];
+		readonly tokens: string[];
 		/**
 		 * Request timeout in millisecond
 		 */
@@ -204,6 +205,16 @@ declare module 'clashofclans.js' {
 		 * @returns {Promise<any>} Object
 		 */
 		public player(playerTag: string): Promise<any>;
+
+		/**
+		 * Verify player API token that can be found from the game settings. This API call can be used to check that players own the game accounts they claim to own as they need to provide the one-time use API token that exists inside the game.
+		 * @param {string} playerTag Tag of the player.
+		 * @param {string} token Player API token.
+		 * @example
+		 * client.verifyPlayer('#9Q92C8R20', 'pd3NN9x2');
+		 * @returns {Promise<boolean>} Boolean value.
+		 */
+		public verifyPlayer(playerTag: string, token: string): Promise<boolean>;
 
 		/**
 		 * List Leagues

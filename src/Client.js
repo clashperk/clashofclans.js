@@ -35,6 +35,7 @@ class Client {
 	 */
 	async fetch(path) {
 		const res = await fetch(`${this.baseURL}${path}`, {
+			method: 'GET',
 			headers: {
 				Authorization: `Bearer ${this.nextToken}`,
 				Accept: 'application/json'
@@ -159,6 +160,28 @@ class Client {
 	 */
 	async player(playerTag) {
 		return this.fetch(`/players/${this.parseTag(playerTag)}`);
+	}
+
+	/**
+	 * Verify player API token that can be found from the game settings. This API call can be used to check that players own the game accounts they claim to own as they need to provide the one-time use API token that exists inside the game.
+	 * @param {string} playerTag Tag of the player.
+	 * @param {string} token Player API token.
+	 * @example
+	 * client.verifyPlayer('#9Q92C8R20', 'pd3NN9x2');
+	 * @returns {Promise<boolean>} Boolean value.
+	 */
+	async verifyPlayer(playerTag, token) {
+		const res = await fetch(`${this.baseURL}/players/${this.parseTag(playerTag)}/verifytoken`, {
+			method: 'POST',
+			body: JSON.stringify({ token }),
+			headers: {
+				Authorization: `Bearer ${this.nextToken}`,
+				Accept: 'application/json'
+			},
+			timeout: Number(this.timeout)
+		}).then(res => res.json()).catch(() => null);
+
+		return Boolean(res?.status === 'ok');
 	}
 
 	/**

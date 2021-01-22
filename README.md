@@ -22,6 +22,7 @@ Represents Clash of Clans API
     * [.clanWarLeague(clanTag)](#Client+clanWarLeague)
     * [.clanWarLeagueWar(warTag)](#Client+clanWarLeagueWar)     
     * [.player(playerTag)](#Client+player)
+    * [.verifyPlayer(playerTag, token)](#Client+verifyPlayer)
     * [.leagues(options)](#Client+leagues)
     * [.league(leagueId)](#Client+league)
     * [.leagueSeason(leagueId, options)](#Client+leagueSeason)
@@ -249,6 +250,21 @@ Get player information.
 ```js
 client.player('#9Q92C8R20');
 ```
+<a name="Client+verifyPlayer"></a>
+
+### client.verifyPlayer(playerTag, token)
+Verify player API token that can be found from the game settings. This API call can be used to check that players own the game accounts they claim to own as they need to provide the one-time use API token that exists inside the game.
+
+| Param | Type | Description |
+| --- | --- | --- |
+| playerTag | <code>string</code> | Tag of the player. |
+| token | <code>string</code> | Player API token. |
+
+**Example**
+```js
+client.verifyPlayer('#9Q92C8R20', 'pd3NN9x2');
+```
+
 <a name="Client+leagues"></a>
 
 ### client.leagues(options)
