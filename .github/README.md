@@ -19,7 +19,7 @@ Represents Clash of Clans API
 * [.clanWarLeague(clanTag)](#Client+clanWarLeague)
 * [.clanWarLeagueWar(warTag)](#Client+clanWarLeagueWar)     
 * [.player(playerTag)](#Client+player)
-* [.verifyPlayer(playerTag, token)](#Client+verifyPlayer)
+* [.verifyPlayerToken(playerTag, token)](#Client+verifyPlayerToken)
 * [.leagues(options)](#Client+leagues)
 * [.league(leagueId)](#Client+league)
 * [.leagueSeason(leagueId, options)](#Client+leagueSeason)
@@ -49,8 +49,11 @@ const { Client } = require('clashofclans.js');
 const client = new Client({ token: [''], timeout: 5000 });
 
 (async function() {
-	const data = await client.locations({ limit: 1 })
+	const data = await client.locations({ limit: 1 });
 	console.log(data);
+
+	// Verify Player API Token (New)
+	await client.verifyPlayerToken('#9Q92C8R20', 'pd3NN9x2');
 })();
 ```
 
@@ -64,7 +67,7 @@ const client = new Client({ token: [''], timeout: 5000 });
         }
     ],
     "paging": {},
-    "status": 200,
+    "statusCode": 200,
     "ok": true,
     "maxAge": 600000
 }
@@ -90,7 +93,7 @@ You can check this with `data.ok` property.
 ```json
 {
     "reason": "notFound",
-    "status": 404,
+    "statusCode": 404,
     "ok": false,
     "maxAge": 600000
 }
@@ -245,9 +248,9 @@ Get player information.
 ```js
 client.player('#9Q92C8R20');
 ```
-<a name="Client+verifyPlayer"></a>
+<a name="Client+verifyPlayerToken"></a>
 
-### client.verifyPlayer(playerTag, token)
+### client.verifyPlayerToken(playerTag, token)
 Verify player API token that can be found from the game settings. This API call can be used to check that players own the game accounts they claim to own as they need to provide the one-time use API token that exists inside the game.
 
 | Param | Type | Description |
@@ -257,7 +260,7 @@ Verify player API token that can be found from the game settings. This API call 
 
 **Example**
 ```js
-client.verifyPlayer('#9Q92C8R20', 'pd3NN9x2');
+client.verifyPlayerToken('#9Q92C8R20', 'pd3NN9x2');
 ```
 
 <a name="Client+leagues"></a>
@@ -488,3 +491,8 @@ client.playerLabels();
 | limit | <code>number</code> | Limit the number of items returned in the response. |
 | after | <code>string</code> | Return only items that occur after this marker. Before marker can be found from the response, inside the 'paging' property. Note that only after or before can be specified for a request, not both. |
 | before | <code>string</code> | Return only items that occur before this marker. Before marker can be found from the response, inside the 'paging' property. Note that only after or before can be specified for a request, not both. |
+
+## License
+**MIT License**
+
+**Copyright (c) 2020 - 2021 ClashPerk**

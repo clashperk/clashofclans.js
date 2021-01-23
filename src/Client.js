@@ -43,11 +43,15 @@ class Client {
 			timeout: Number(this.timeout)
 		}).catch(() => null);
 
+		return this.parseResponse(res);
+	}
+
+	async parseResponse(res) {
 		const parsed = await res?.json().catch(() => null);
-		if (!parsed) return { ok: false, status: res?.status ?? 504, maxAge: 0 };
+		if (!parsed) return { ok: false, statusCode: res?.status ?? 504, maxAge: 0 };
 
 		const maxAge = res?.headers.get('cache-control')?.split('=')?.[1] ?? 0;
-		return Object.assign(parsed, { status: res?.status ?? 504, ok: res?.status === 200, maxAge: Number(maxAge) * 1000 });
+		return Object.assign(parsed, { statusCode: res?.status ?? 504, ok: res?.status === 200, maxAge: Number(maxAge) * 1000 });
 	}
 
 	/**
@@ -167,10 +171,10 @@ class Client {
 	 * @param {string} playerTag Tag of the player.
 	 * @param {string} token Player API token.
 	 * @example
-	 * client.verifyPlayer('#9Q92C8R20', 'pd3NN9x2');
-	 * @returns {Promise<boolean>} Boolean value.
+	 * client.verifyPlayerToken('#9Q92C8R20', 'pd3NN9x2');
+	 * @returns {Promise<any>} Object
 	 */
-	async verifyPlayer(playerTag, token) {
+	async verifyPlayerToken(playerTag, token) {
 		const res = await fetch(`${this.baseURL}/players/${this.parseTag(playerTag)}/verifytoken`, {
 			method: 'POST',
 			body: JSON.stringify({ token }),
@@ -179,9 +183,9 @@ class Client {
 				Accept: 'application/json'
 			},
 			timeout: Number(this.timeout)
-		}).then(res => res.json()).catch(() => null);
+		}).catch(() => null);
 
-		return Boolean(res?.status === 'ok');
+		return this.parseResponse(res);
 	}
 
 	/**

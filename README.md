@@ -17,7 +17,7 @@ const client = new Client({ token: '', timeout: 5000 });
 	console.log(data);
 
 	// Verify Player API Token
-	await client.verifyPlayer('#9Q92C8R20', 'pd3NN9x2');
+	await client.verifyPlayerToken('#9Q92C8R20', 'pd3NN9x2');
 })();
 ```
 

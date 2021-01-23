@@ -211,10 +211,10 @@ declare module 'clashofclans.js' {
 		 * @param {string} playerTag Tag of the player.
 		 * @param {string} token Player API token.
 		 * @example
-		 * client.verifyPlayer('#9Q92C8R20', 'pd3NN9x2');
-		 * @returns {Promise<boolean>} Boolean value.
+		 * client.verifyPlayerToken('#9Q92C8R20', 'pd3NN9x2');
+		 * @returns {Promise<any>} Object
 		 */
-		public verifyPlayer(playerTag: string, token: string): Promise<boolean>;
+		public verifyPlayerToken(playerTag: string, token: string): Promise<any>;
 
 		/**
 		 * List Leagues
@@ -404,7 +404,7 @@ declare module 'clashofclans.js' {
 		};
 
 		ok: boolean;
-		status: number;
+		statusCode: number;
 		maxAge: number;
 	}
 
@@ -492,7 +492,7 @@ declare module 'clashofclans.js' {
 		memberList: ClanMember[];
 
 		ok: boolean;
-		status: number;
+		statusCode: number;
 		maxAge: number;
 	}
 
@@ -594,7 +594,7 @@ declare module 'clashofclans.js' {
 		spells: Spell[];
 
 		ok: boolean;
-		status: number;
+		statusCode: number;
 		maxAge: number;
 	}
 
@@ -664,7 +664,7 @@ declare module 'clashofclans.js' {
 		opponent: ClanWarOpponent;
 
 		ok: boolean;
-		status: number;
+		statusCode: number;
 		maxAge: number;
 	}
 
@@ -704,7 +704,7 @@ declare module 'clashofclans.js' {
 		}[];
 
 		ok: boolean;
-		status: number;
+		statusCode: number;
 		maxAge: number;
 	}
 
@@ -761,7 +761,7 @@ declare module 'clashofclans.js' {
 		};
 
 		ok: boolean;
-		status: number;
+		statusCode: number;
 		maxAge: number;
 	}
 
@@ -784,7 +784,7 @@ declare module 'clashofclans.js' {
 		};
 
 		ok: boolean;
-		status: number;
+		statusCode: number;
 		maxAge: number;
 	}
 
