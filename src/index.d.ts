@@ -406,6 +406,8 @@ declare module 'clashofclans.js' {
 		ok: boolean;
 		statusCode: number;
 		maxAge: number;
+		reason?: string;
+		message?: string;
 	}
 
 	/**
@@ -494,6 +496,8 @@ declare module 'clashofclans.js' {
 		ok: boolean;
 		statusCode: number;
 		maxAge: number;
+		reason?: string;
+		message?: string;
 	}
 
 	/**
@@ -596,6 +600,8 @@ declare module 'clashofclans.js' {
 		ok: boolean;
 		statusCode: number;
 		maxAge: number;
+		reason?: string;
+		message?: string;
 	}
 
 	/**
@@ -666,6 +672,8 @@ declare module 'clashofclans.js' {
 		ok: boolean;
 		statusCode: number;
 		maxAge: number;
+		reason?: string;
+		message?: string;
 	}
 
 	/**
@@ -706,6 +714,8 @@ declare module 'clashofclans.js' {
 		ok: boolean;
 		statusCode: number;
 		maxAge: number;
+		reason?: string;
+		message?: string;
 	}
 
 	/**
@@ -763,6 +773,8 @@ declare module 'clashofclans.js' {
 		ok: boolean;
 		statusCode: number;
 		maxAge: number;
+		reason?: string;
+		message?: string;
 	}
 
 	export interface Label {
@@ -786,7 +798,21 @@ declare module 'clashofclans.js' {
 		ok: boolean;
 		statusCode: number;
 		maxAge: number;
+		reason?: string;
+		message?: string;
 	}
 
 	export interface PlayerLabels extends ClanLabels { }
+
+	export interface VerifyToken {
+		tag: string;
+		token: string;
+		status: 'ok' | 'invalid';
+
+		ok: boolean;
+		statusCode: number;
+		maxAge: number;
+		reason?: string;
+		message?: string;
+	}
 }
