@@ -93,7 +93,7 @@ class Client {
 
 	/**
 	 * Detailed clan members
-	 * @param {any[]} members - List of members
+	 * @param {{ tag: string }[]} members - List of members
 	 * @example
 	 * const data = await client.clan('#8QU8J9LP');
 	 * client.detailedClanMembers(data.memberList);

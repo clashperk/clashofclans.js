@@ -151,13 +151,13 @@ declare module 'clashofclans.js' {
 
 		/**
 		 * Detailed clan members
-		 * @param {any[]} members - List of members
+		 * @param {{ tag: string }[]} members - List of members
 		 * @example
 		 * const data = await client.clan('#8QU8J9LP');
 		 * client.detailedClanMembers(data.memberList);
 		 * @returns {Promise<any[]>} Object
 		 */
-		public detailedClanMembers(members: any[]): Promise<any[]>
+		public detailedClanMembers(members: { tag: string }[]): Promise<any[]>;
 
 		/**
 		 * Retrieve clan's clan war log
