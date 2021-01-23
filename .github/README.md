@@ -2,7 +2,8 @@
 
 ## Installation
 - **Node.js v14.0.0 or newer is required.**
-- **NPM `npm install clashofclans.js`**
+- **NPM Version `npm install clashofclans.js`**
+- **GitHub Version `npm install clashperk/clashofclans.js`**
 
 ## Client
 Represents Clash of Clans API
@@ -46,9 +47,7 @@ Represents Clash of Clans API
 ```js
 const { Client } = require('clashofclans.js');
 const client = new Client({ token: [''], timeout: 5000 });
-```
 
-```js
 (async function() {
 	const data = await client.locations({ limit: 1 })
 	console.log(data);
@@ -64,11 +63,7 @@ const client = new Client({ token: [''], timeout: 5000 });
             "isCountry": false
         }
     ],
-    "paging": {
-        "cursors": {
-            "after": "eyJwb3MiOjF9"
-        }
-    },
+    "paging": {},
     "status": 200,
     "ok": true,
     "maxAge": 600000
@@ -80,11 +75,15 @@ const client = new Client({ token: [''], timeout: 5000 });
 ### maxAge
 The `maxAge` ([Cache-Control](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cache-Control)) is the maximum amount of time in milliseconds (converted) which shows how long until a fresh data is available.
 
+### Validation
+It's recommended to see if a data is available before performing operations or reading data from it. 
+You can check this with `data.ok` property.
+
 ```js
 (async function() {
 	const data = await client.clan('WRONG_TAG');
 	console.log(data);
-	// if (!data.ok) return console.log('INVALID TAG');
+	if (!data.ok) return console.log('INVALID TAG');
 })();
 ```
 
