@@ -1,42 +1,34 @@
-<div align="center">
-	<h1>Powerful JavaScript library for interacting with the Clash of Clans API</h1>
-	<p>
-		<a href="https://www.npmjs.com/package/clashofclans.js/">
-			<img src="https://nodei.co/npm/clashofclans.js.png" alt="NPM Info" />
-		</a>
-	</p>
-</div>
+# Powerful JavaScript library for interacting with the Clash of Clans API
 
 ## Client
 Represents Clash of Clans API
 
-* [Client](#Client)
-    * [new Client(options)](#new_Client_new)
-    * [.fetch(path, options)](#Client+fetch)
-    * [.clans(options)](#Client+clans)
-    * [.clan(clanTag)](#Client+clan)
-    * [.clanMembers(clanTag, options)](#Client+clanMembers)
-    * [.detailedClanMembers(members)](#Client+detailedClanMembers)      
-    * [.clanWarLog(clanTag, options)](#Client+clanWarLog)        
-    * [.currentClanWar(clanTag, options)](#Client+currentClanWar)
-    * [.clanWarLeague(clanTag)](#Client+clanWarLeague)
-    * [.clanWarLeagueWar(warTag)](#Client+clanWarLeagueWar)     
-    * [.player(playerTag)](#Client+player)
-    * [.verifyPlayer(playerTag, token)](#Client+verifyPlayer)
-    * [.leagues(options)](#Client+leagues)
-    * [.league(leagueId)](#Client+league)
-    * [.leagueSeason(leagueId, options)](#Client+leagueSeason)
-    * [.leagueRanking(leagueId, seasonId, options)](#Client+leagueRanking)
-    * [.warLeagues(options)](#Client+warLeagues)
-    * [.warLeague(leagueId)](#Client+warLeague)
-    * [.locations(options)](#Client+locations)
-    * [.location(locationId)](#Client+location)
-    * [.clanRanks(locationId, options)](#Client+clanRanks)
-    * [.playerRanks(locationId, options)](#Client+playerRanks)
-    * [.versusClanRanks(locationId, options)](#Client+versusClanRanks)
-    * [.versusPlayerRanks(locationId, options)](#Client+versusPlayerRanks)
-    * [.clanLabels(options)](#Client+clanLabels)
-    * [.playerLabels(options)](#Client+playerLabels)
+* [new Client(options)](#new_Client_new)
+* [.fetch(path, options)](#Client+fetch)
+* [.clans(options)](#Client+clans)
+* [.clan(clanTag)](#Client+clan)
+* [.clanMembers(clanTag, options)](#Client+clanMembers)
+* [.detailedClanMembers(members)](#Client+detailedClanMembers)      
+* [.clanWarLog(clanTag, options)](#Client+clanWarLog)        
+* [.currentClanWar(clanTag, options)](#Client+currentClanWar)
+* [.clanWarLeague(clanTag)](#Client+clanWarLeague)
+* [.clanWarLeagueWar(warTag)](#Client+clanWarLeagueWar)     
+* [.player(playerTag)](#Client+player)
+* [.verifyPlayer(playerTag, token)](#Client+verifyPlayer)
+* [.leagues(options)](#Client+leagues)
+* [.league(leagueId)](#Client+league)
+* [.leagueSeason(leagueId, options)](#Client+leagueSeason)
+* [.leagueRanking(leagueId, seasonId, options)](#Client+leagueRanking)
+* [.warLeagues(options)](#Client+warLeagues)
+* [.warLeague(leagueId)](#Client+warLeague)
+* [.locations(options)](#Client+locations)
+* [.location(locationId)](#Client+location)
+* [.clanRanks(locationId, options)](#Client+clanRanks)
+* [.playerRanks(locationId, options)](#Client+playerRanks)
+* [.versusClanRanks(locationId, options)](#Client+versusClanRanks)
+* [.versusPlayerRanks(locationId, options)](#Client+versusPlayerRanks)
+* [.clanLabels(options)](#Client+clanLabels)
+* [.playerLabels(options)](#Client+playerLabels)
 
 <a name="new_Client_new"></a>
 
