@@ -2,8 +2,9 @@
 
 ## Installation
 - **Node.js v14.0.0 or newer is required.**
-- **NPM Version `npm install clashofclans.js`**
-- **GitHub Version `npm install clashperk/clashofclans.js`**
+- **NPM Version `npm i clashofclans.js`**
+- **GitHub Version `npm i clashperk/clashofclans.js`**
+- **For Node.js 12.x `npm i clashperk/clashofclans.js#stable`**
 
 ## Client
 Represents Clash of Clans API
