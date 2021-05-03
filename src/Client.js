@@ -16,13 +16,13 @@ class Client {
 		this.baseURL = options.baseURL || 'https://api.clashofclans.com/v1';
 	}
 
-	get tokens() {
+	get _tokens() {
 		return Array.isArray(this.token) ? [...this.token] : [this.token];
 	}
 
-	get nextToken() {
-		const token = this.tokens[this.tokenIndex];
-		this.tokenIndex = (this.tokenIndex + 1) >= this.tokens.length ? 0 : this.tokenIndex + 1;
+	get _token() {
+		const token = this._tokens[this.tokenIndex];
+		this.tokenIndex = (this.tokenIndex + 1) >= this._tokens.length ? 0 : this.tokenIndex + 1;
 		return token;
 	}
 
@@ -37,16 +37,16 @@ class Client {
 		const res = await fetch(`${this.baseURL}${path}`, {
 			method: 'GET',
 			headers: {
-				Authorization: `Bearer ${this.nextToken}`,
+				Authorization: `Bearer ${this._token}`,
 				Accept: 'application/json'
 			},
 			timeout: Number(this.timeout)
 		}).catch(() => null);
 
-		return this.parseResponse(res);
+		return this.toJSON(res);
 	}
 
-	async parseResponse(res) {
+	async toJSON(res) {
 		const parsed = await res?.json().catch(() => null);
 		if (!parsed) return { ok: false, statusCode: res?.status ?? 504, maxAge: 0 };
 
@@ -56,17 +56,14 @@ class Client {
 
 	/**
 	 * Search clans
-	 * @param {string | ClanSearchOptions} options - Search clans by name or filtering parameters. If name is used as part of search query, it needs to be at least three characters long. Name search parameter is interpreted as wild card search, so it may appear anywhere in the clan name.
+	 * @param {ClanSearchOptions} options - Search clans by name or filtering parameters. If name is used as part of search query, it needs to be at least three characters long. Name search parameter is interpreted as wild card search, so it may appear anywhere in the clan name.
 	 * @example
-	 * client.clans('air hounds');
-	 * // or
 	 * client.clans({ name: 'air hounds', limit: 10 });
 	 * // or
 	 * client.clans({ minMembers: 40, maxMembers: 50 });
 	 * @returns {Promise<any>} Object
 	 */
 	async clans(options) {
-		if (typeof clan === 'string') return this.fetch(`/clans?name=${encodeURIComponent(options)}`);
 		const query = qs.stringify(options);
 		return this.fetch(`/clans?${query}`);
 	}
@@ -179,13 +176,13 @@ class Client {
 			method: 'POST',
 			body: JSON.stringify({ token }),
 			headers: {
-				Authorization: `Bearer ${this.nextToken}`,
+				Authorization: `Bearer ${this._token}`,
 				Accept: 'application/json'
 			},
 			timeout: Number(this.timeout)
 		}).catch(() => null);
 
-		return this.parseResponse(res);
+		return this.toJSON(res);
 	}
 
 	/**
@@ -362,9 +359,20 @@ class Client {
 		return this.fetch(`/labels/players?${query}`);
 	}
 
-	parseTag(tag) {
+	/**
+	 * Get information about the current gold pass season.
+	 * @returns {Promise<any>} Object
+	 */
+	async goldPassSeason() {
+		return this.fetch('/goldpass/seasons/current');
+	}
+
+	parseTag(tag, encode = true) {
 		if (tag && typeof tag === 'string') {
-			return encodeURIComponent(`#${tag.toUpperCase().replace(/O|o/g, '0').replace(/^#/g, '')}`);
+			const fixed = `#${tag.toUpperCase().replace(/O|o/g, '0').replace(/^#/g, '')}`;
+
+			if (!encode) return fixed;
+			return encodeURIComponent(fixed);
 		}
 		throw TypeError('The "tag" argument must be of type string.');
 	}
