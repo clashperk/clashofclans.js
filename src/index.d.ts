@@ -98,7 +98,11 @@ declare module 'clashofclans.js' {
 		 * Clash of Clans API Token
 		 */
 		public token?: string | string[];
-		readonly tokens: string[];
+
+		readonly tokenIndex: number;
+		readonly _tokens: string[];
+		readonly _token: string;
+
 		/**
 		 * Request timeout in millisecond
 		 */
@@ -121,14 +125,12 @@ declare module 'clashofclans.js' {
 		 * Search clans
 		 * @param {string} options Search clans by name or filtering parameters. If name is used as part of search query, it needs to be at least three characters long. Name search parameter is interpreted as wild card search, so it may appear anywhere in the clan name.
 		 * @example
-		 * client.clans('air hounds');
-		 * // or
 		 * client.clans({ name: 'air hounds', limit: 10 });
 		 * // or
 		 * client.clans({ minMembers: 40, maxMembers: 50 });
 		 * @returns {Promise<any>} Object
 		 */
-		public clans(options: string | ClanSearchOptions): Promise<any>;
+		public clans(options: ClanSearchOptions): Promise<ClanList>;
 
 		/**
 		 * Get clan information
@@ -137,7 +139,7 @@ declare module 'clashofclans.js' {
 		 * client.clan('#8QU8J9LP');
 		 * @returns {Promise<any>} Object
 		 */
-		public clan(clanTag: string): Promise<any>;
+		public clan(clanTag: string): Promise<Clan>;
 
 		/**
 		 * List clan members
@@ -147,7 +149,7 @@ declare module 'clashofclans.js' {
 		 * client.clanMembers('#8QU8J9LP', { limit: 10 });
 		 * @returns {Promise<any>} Object
 		 */
-		public clanMembers(clanTag: string, options?: SearchOptions): Promise<any>;
+		public clanMembers(clanTag: string, options?: SearchOptions): Promise<ClanMemberList>;
 
 		/**
 		 * Detailed clan members
@@ -157,7 +159,7 @@ declare module 'clashofclans.js' {
 		 * client.detailedClanMembers(data.memberList);
 		 * @returns {Promise<any[]>} Object
 		 */
-		public detailedClanMembers(members: { tag: string }[]): Promise<any[]>;
+		public detailedClanMembers(members: { tag: string }[]): Promise<Player[]>;
 
 		/**
 		 * Retrieve clan's clan war log
@@ -167,7 +169,7 @@ declare module 'clashofclans.js' {
 		 * client.clanWarLog('#8QU8J9LP', { limit: 10 });
 		 * @returns {Promise<any>} Object
 		 */
-		public clanWarLog(clanTag: string, options?: SearchOptions): Promise<any>;
+		public clanWarLog(clanTag: string, options?: SearchOptions): Promise<ClanWarLog>;
 
 		/**
 		 * Retrieve information about clan's current clan war
@@ -177,7 +179,7 @@ declare module 'clashofclans.js' {
 		 * client.currentClanWar('#8QU8J9LP');
 		 * @returns {Promise<any>} Object
 		 */
-		public currentClanWar(clanTag: string, options?: SearchOptions): Promise<any>;
+		public currentClanWar(clanTag: string, options?: SearchOptions): Promise<ClanWar>;
 
 		/**
 		 * Retrieve information about clan's current clan war league group
@@ -186,7 +188,7 @@ declare module 'clashofclans.js' {
 		 * client.clanWarLeague('#8QU8J9LP');
 		 * @returns {Promise<any>} Object
 		 */
-		public clanWarLeague(clanTag: string): Promise<any>;
+		public clanWarLeague(clanTag: string): Promise<ClanWarLeagueGroup>;
 
 		/**
 		 * Retrieve information about individual clan war league war
@@ -195,7 +197,7 @@ declare module 'clashofclans.js' {
 		 * client.clanWarLeagueWar('#2QJQPYLJU');
 		 * @returns {Promise<any>} Object
 		 */
-		public clanWarLeagueWar(warTag: string): Promise<any>;
+		public clanWarLeagueWar(warTag: string): Promise<ClanWar>;
 
 		/**
 		 * Get player information.
@@ -204,7 +206,7 @@ declare module 'clashofclans.js' {
 		 * client.player('#9Q92C8R20');
 		 * @returns {Promise<any>} Object
 		 */
-		public player(playerTag: string): Promise<any>;
+		public player(playerTag: string): Promise<Player>;
 
 		/**
 		 * Verify player API token that can be found from the game settings. This API call can be used to check that players own the game accounts they claim to own as they need to provide the one-time use API token that exists inside the game.
@@ -214,7 +216,7 @@ declare module 'clashofclans.js' {
 		 * client.verifyPlayerToken('#9Q92C8R20', 'pd3NN9x2');
 		 * @returns {Promise<any>} Object
 		 */
-		public verifyPlayerToken(playerTag: string, token: string): Promise<any>;
+		public verifyPlayerToken(playerTag: string, token: string): Promise<VerifyToken>;
 
 		/**
 		 * List Leagues
@@ -223,7 +225,7 @@ declare module 'clashofclans.js' {
 		 * client.leagues();
 		 * @returns {Promise<any>} Object
 		 */
-		public leagues(options?: SearchOptions): Promise<any>;
+		public leagues(options?: SearchOptions): Promise<LeagueList>;
 
 		/**
 		 * Get league information
@@ -232,7 +234,7 @@ declare module 'clashofclans.js' {
 		 * client.league('29000022');
 		 * @returns {Promise<any>} Object
 		 */
-		public league(leagueId: string): Promise<any>;
+		public league(leagueId: string): Promise<League>;
 
 		/**
 		 * Get league seasons. Note that league season information is available only for Legend League.
@@ -242,7 +244,7 @@ declare module 'clashofclans.js' {
 		 * client.leagueSeason('29000022', { limit: 10 });
 		 * @returns {Promise<any>} Object
 		 */
-		public leagueSeason(leagueId: string, options?: SearchOptions): Promise<any>;
+		public leagueSeason(leagueId: string, options?: SearchOptions): Promise<LeagueSeasonList>;
 
 		/**
 		 * Get league season rankings. Note that league season information is available only for Legend League.
@@ -253,7 +255,7 @@ declare module 'clashofclans.js' {
 		 * client.leagueRanking('29000022', '2020-03', { limit: 10 });
 		 * @returns {Promise<any>} Object
 		 */
-		public leagueRanking(leagueId: string, seasonId: string, options?: SearchOptions): Promise<any>;
+		public leagueRanking(leagueId: string, seasonId: string, options?: SearchOptions): Promise<PlayerSeasonRankingList>;
 
 		/**
 		 * List war leagues
@@ -262,7 +264,7 @@ declare module 'clashofclans.js' {
 		 * client.warLeagues();
 		 * @returns {Promise<any>} Object
 		 */
-		public warLeagues(options?: SearchOptions): Promise<any>;
+		public warLeagues(options?: SearchOptions): Promise<WarLeagueList>;
 
 		/**
 		 * Get war league information
@@ -271,7 +273,7 @@ declare module 'clashofclans.js' {
 		 * client.warLeague('48000018');
 		 * @returns {Promise<any>} Object
 		 */
-		public warLeague(leagueId: string): Promise<any>;
+		public warLeague(leagueId: string): Promise<WarLeague>;
 
 		/**
 		 * List locations
@@ -282,7 +284,7 @@ declare module 'clashofclans.js' {
 		 * client.locations({ limit: 10 });
 		 * @returns {Promise<any>} Object
 		 */
-		public locations(options?: SearchOptions): Promise<any>;
+		public locations(options?: SearchOptions): Promise<LocationList>;
 
 		/**
 		 * Get information about specific location
@@ -291,7 +293,7 @@ declare module 'clashofclans.js' {
 		 * client.locationId('32000107');
 		 * @returns {Promise<any>} Object
 		 */
-		public location(locationId: string): Promise<any>;
+		public location(locationId: string): Promise<Location>;
 
 		/**
 		 * Get clan rankings for a specific location
@@ -301,7 +303,7 @@ declare module 'clashofclans.js' {
 		 * client.clanRanks('32000107', { limit: 10 });
 		 * @returns {Promise<any>} Object
 		 */
-		public clanRanks(locationId: string, options?: SearchOptions): Promise<any>;
+		public clanRanks(locationId: string, options?: SearchOptions): Promise<ClanRankingList>;
 
 		/**
 		 * Get player rankings for a specific location
@@ -311,7 +313,7 @@ declare module 'clashofclans.js' {
 		 * client.playerRanks('32000107', { limit: 10 });
 		 * @returns {Promise<any>} Object
 		 */
-		public playerRanks(locationId: string, options?: SearchOptions): Promise<any>;
+		public playerRanks(locationId: string, options?: SearchOptions): Promise<PlayerRankingList>;
 
 		/**
 		 * Get clan versus rankings for a specific location
@@ -321,7 +323,7 @@ declare module 'clashofclans.js' {
 		 * client.versusClanRanks('32000107', { limit: 10 });
 		 * @returns {Promise<any>} Object
 		 */
-		public versusClanRanks(locationId: string, options?: SearchOptions): Promise<any>;
+		public versusClanRanks(locationId: string, options?: SearchOptions): Promise<ClanVersusRankingList>;
 
 		/**
 		 * Get player versus rankings for a specific location
@@ -331,7 +333,7 @@ declare module 'clashofclans.js' {
 		 * client.versusPlayerRanks('32000107', { limit: 10 });
 		 * @returns {Promise<any>} Object
 		 */
-		public versusPlayerRanks(locationId: string, options?: SearchOptions): Promise<any>;
+		public versusPlayerRanks(locationId: string, options?: SearchOptions): Promise<PlayerVersusRankingList>;
 
 		/**
 		 * List clan labels
@@ -340,7 +342,7 @@ declare module 'clashofclans.js' {
 		 * client.clanLabels();
 		 * @returns {Promise<any>} Object
 		 */
-		public clanLabels(options?: SearchOptions): Promise<any>;
+		public clanLabels(options?: SearchOptions): Promise<LabelList>;
 
 		/**
 		 * List player labels
@@ -349,53 +351,22 @@ declare module 'clashofclans.js' {
 		 * client.playerLabels();
 		 * @returns {Promise<any>} Object
 		 */
-		public playerLabels(options?: SearchOptions): Promise<any>;
+		public playerLabels(options?: SearchOptions): Promise<LabelList>;
+
+		/**
+		 * Get information about the current gold pass season.
+		 * @returns {Promise<any>} Object
+		 */
+		public goldPassSeason(): Promise<GoldPassSeason>;
 	}
 
+	// **************** CLANS **************** //
+
 	/**
-	 * Season Clans (Method: `Client#clans()`)
+	 * GET /clans?name=air+hounds&limit=10
 	 */
-	export interface Clans {
-		items: {
-			tag: string;
-			name: string;
-			type: string;
-			badgeUrls: {
-				small: string;
-				large: string;
-				medium: string;
-			};
-			location?: {
-				localizedName: string;
-				id: number;
-				name: string;
-				isCountry: boolean;
-				countryCode: string;
-			};
-			clanLevel: number;
-			clanPoints: number;
-			clanVersusPoints: number;
-			requiredTrophies: number;
-			warFrequency: string;
-			warWinStreak: number;
-			warWins: number;
-			warTies?: number;
-			warLosses?: number;
-			isWarLogPublic: boolean;
-			warLeague?: {
-				id: number;
-				name: string;
-			};
-			members: number;
-			labels: {
-				id: number;
-				name: string;
-				iconUrls: {
-					small: string;
-					medium: string;
-				};
-			}[];
-		}[];
+	export interface ClanList {
+		items: (Omit<Clan, 'memberList'>)[],
 		paging: {
 			cursors: {
 				after?: string;
@@ -404,15 +375,56 @@ declare module 'clashofclans.js' {
 		};
 
 		ok: boolean;
-		statusCode: number;
-		maxAge: number;
+		maxAge?: number;
 		reason?: string;
 		message?: string;
+		statusCode: number;
 	}
 
 	/**
-	 * Clan Member Interface
+	 * GET /clans/{clanTag}
 	 */
+	export interface Clan {
+		tag: string;
+		name: string;
+		type: string;
+		description: string;
+		location?: Location;
+		chatLanguage?: {
+			name: string;
+			id: number;
+			languageCode: string;
+		}
+		badgeUrls: {
+			small: string;
+			large: string;
+			medium: string;
+		};
+		clanLevel: number;
+		clanPoints: number;
+		clanVersusPoints: number;
+		requiredTrophies: number;
+		warFrequency: string;
+		warWinStreak: number;
+		warWins: number;
+		warTies?: number;
+		warLosses?: number;
+		isWarLogPublic: boolean;
+		warLeague?: {
+			name: string;
+			id: number;
+		};
+		members: number;
+		labels: Label[];
+		memberList: ClanMember[];
+
+		ok: true;
+		maxAge?: number;
+		reason?: string;
+		message?: string;
+		statusCode: number;
+	}
+
 	export interface ClanMember {
 		name: string;
 		tag: string;
@@ -436,105 +448,148 @@ declare module 'clashofclans.js' {
 	}
 
 	/**
-	 * Clan Members (Method: `Client#clanMembers()`)
+	 * GET /clans/{clanTag}/members
 	 */
-	export interface ClanMembers {
-		items: ClanMember[];
+	export interface ClanMemberList {
+		items: ClanMember[],
 		paging: {
 			cursors: {
 				after?: string;
 				before?: string;
 			};
 		};
+
+		ok: boolean;
+		maxAge?: number;
+		reason?: string;
+		message?: string;
+		statusCode: number;
 	}
 
 	/**
-	 * Clan Interface (Method: `Client#clan(clanTag)`)
+	 * GET /clans/{clanTag}/currentwar
 	 */
-	export interface Clan {
+	export interface ClanWar {
+		state: 'notInWar' | 'preparation' | 'inWar' | 'warEnded';
+		teamSize: number;
+		startTime: string;
+		preparationStartTime: string;
+		endTime: string;
+		clan: WarClan;
+		opponent: WarClan;
+
+		ok: boolean;
+		maxAge?: number;
+		reason?: string;
+		message?: string;
+		statusCode: number;
+	}
+
+	export interface WarClan {
 		tag: string;
 		name: string;
-		type: string;
-		description: string;
-		location?: {
-			localizedName: string;
-			id: number;
-			name: string;
-			isCountry: boolean;
-			countryCode: string;
-		};
 		badgeUrls: {
 			small: string;
 			large: string;
 			medium: string;
 		};
 		clanLevel: number;
-		clanPoints: number;
-		clanVersusPoints: number;
-		requiredTrophies: number;
-		warFrequency: string;
-		warWinStreak: number;
-		warWins: number;
-		warTies?: number;
-		warLosses?: number;
-		isWarLogPublic: boolean;
-		warLeague?: {
-			name: string;
-			id: number;
-		};
-		members: number;
-		labels: {
-			id: number;
-			name: string;
-			iconUrls?: {
-				small: string;
-				medium: string;
-			};
+		attacks: number;
+		stars: number;
+		destructionPercentage: number;
+		expEarned?: number;
+		members: ClanWarMember[];
+	}
+
+	export interface ClanWarMember {
+		tag: string;
+		name: string;
+		mapPosition: number;
+		townhallLevel: number;
+		opponentAttacks: number;
+		bestOpponentAttack?: ClanWarAttack;
+		attacks?: ClanWarAttack[];
+	}
+
+	export interface ClanWarAttack {
+		order: number;
+		attackerTag: string;
+		defenderTag: string;
+		stars: number;
+		duration: number;
+		destructionPercentage: number;
+	}
+
+	/**
+	 * GET /clans/{clanTag}/warlog
+	 */
+	export interface ClanWarLog {
+		items: {
+			result: 'win' | 'lose' | 'tie' | null;
+			endTime: string;
+			teamSize: number;
+			clan: Omit<WarClan, 'members'>;
+			opponent: Omit<WarClan, 'members' | 'attacks' | 'expEarned'>;
 		}[];
-		memberList: ClanMember[];
+		paging: {
+			cursors: {
+				after?: string;
+				before?: string;
+			};
+		};
 
 		ok: boolean;
-		statusCode: number;
-		maxAge: number;
+		maxAge?: number;
 		reason?: string;
 		message?: string;
+		statusCode: number;
 	}
 
 	/**
-	 * Player Troops Interface
+	 * GET /clans/{clanTag}/currentwar/leaguegroup
 	 */
-	export interface Troop {
+	export interface ClanWarLeagueGroup {
+		state: 'notInWar' | 'preparation' | 'inWar' | 'warEnded';
+		season: string;
+		clans: ClanWarLeagueClan[];
+		rounds: ClanWarLeagueRound[];
+
+		ok: boolean;
+		maxAge?: number;
+		reason?: string;
+		message?: string;
+		statusCode: number;
+	}
+
+	export interface ClanWarLeagueClan {
 		name: string;
-		level: number;
-		maxLevel: number;
-		village: 'home' | 'builderBase';
+		tag: string;
+		clanLevel: number;
+		badgeUrls: {
+			small: string;
+			large: string;
+			medium: string;
+		};
+		members: ClanWarLeagueClanMember[];
 	}
 
-	/**
-	 * Player Spells Interface
-	 */
-	export interface Spell extends Troop { }
-
-	/**
-	 * Player Heroes Interface
-	 */
-	export interface Hero extends Troop { }
-
-	/**
-	 * Player Achievements Interface
-	 */
-	export interface Achievements {
+	export interface ClanWarLeagueClanMember {
 		name: string;
-		stars: number;
-		value: number;
-		target: number;
-		info: string;
-		completionInfo: string | null;
-		village: 'home' | 'builderBase';
+		tag: string;
+		townHallLevel: number;
 	}
 
+	export interface ClanWarLeagueRound {
+		warTags: string[]
+	}
+
+	// GET /clanwarleagues/wars/{warTag}
+	// Same as {ClanWar}
+
+	// *************** PLAYERS *************** //
+
 	/**
-	 * Player Interface (Method: `Client#player(playerTag)`)
+	 * GET /players/{playerTag}
 	 */
 	export interface Player {
 		name: string;
@@ -551,20 +606,9 @@ declare module 'clashofclans.js' {
 		versusTrophies?: number;
 		bestVersusTrophies?: number;
 		versusBattleWins?: number;
-		role?: string;
 		donations: number;
 		donationsReceived: number;
-		legendStatistics?: {
-			legendTrophies: number;
-			bestSeason: {
-				id: string;
-				rank: number;
-				trophies: number;
-			};
-			currentSeason: {
-				trophies: number;
-			}
-		};
+		role?: string;
 		clan?: {
 			tag: string;
 			name: string;
@@ -584,7 +628,21 @@ declare module 'clashofclans.js' {
 				medium: string;
 			};
 		};
-		achievements: Achievements[];
+		legendStatistics?: {
+			legendTrophies: number;
+			bestSeason: {
+				id: string;
+				rank: number;
+				trophies: number;
+			};
+			currentSeason: {
+				trophies: number;
+			}
+		};
+		achievements: PlayerAchievement[];
+		troops: PlayerItem[];
+		heroes: PlayerItem[];
+		spells: PlayerItem[];
 		labels: {
 			id: number;
 			name: string;
@@ -593,176 +651,54 @@ declare module 'clashofclans.js' {
 				medium: string;
 			};
 		}[];
-		troops: Troop[];
-		heroes: Hero[];
-		spells: Spell[];
 
 		ok: boolean;
-		statusCode: number;
-		maxAge: number;
+		maxAge?: number;
 		reason?: string;
 		message?: string;
+		statusCode: number;
 	}
 
-	/**
-	 * ClanWar Attack Interface
-	 */
-	export interface ClanWarAttack {
-		order: number;
-		attackerTag: string;
-		defenderTag: string;
-		stars: number;
-		destructionPercentage: number;
-	}
-
-	/**
-	 * ClanWar Opponent Attack
-	 */
-	export interface ClanWarOpponentAttack extends ClanWarAttack { }
-
-	/**
-	 * ClanWar Member Interface (Note the small `h` of `townhallLevel`)
-	 */
-	export interface ClanWarMember {
-		tag: string;
+	export interface PlayerAchievement {
 		name: string;
-		mapPosition: number;
-		townhallLevel: number;
-		opponentAttacks: number;
-		bestOpponentAttack?: ClanWarOpponentAttack;
-		attacks?: ClanWarAttack[];
-	}
-
-	/**
-	 * ClanWar Clan Interface
-	 */
-	export interface ClanWarClan {
-		tag: string;
-		name: string;
-		badgeUrls: {
-			small: string;
-			large: string;
-			medium: string;
-		};
-		clanLevel: number;
-		attacks: number;
 		stars: number;
-		destructionPercentage: number;
-		expEarned?: number;
-		members: ClanWarMember[];
+		value: number;
+		target: number;
+		info: string;
+		completionInfo: string | null;
+		village: 'home' | 'builderBase';
+	}
+
+	export interface PlayerItem {
+		name: string;
+		level: number;
+		maxLevel: number;
+		superTroopIsActive?: boolean;
+		village: 'home' | 'builderBase';
 	}
 
 	/**
-	 * ClanWar Opponent Interface
+	 * POST /players/{playerTag}/verifytoken
 	 */
-	export interface ClanWarOpponent extends ClanWarClan { }
-
-	/**
-	 * ClanWar Interface
-	 */
-	export interface ClanWar {
-		state: 'notInWar' | 'preparation' | 'inWar' | 'warEnded';
-		teamSize: number;
-		startTime: string;
-		preparationStartTime: string;
-		endTime: string;
-		clan: ClanWarClan;
-		opponent: ClanWarOpponent;
+	export interface VerifyToken {
+		tag: string;
+		token: string;
+		status: 'ok' | 'invalid';
 
 		ok: boolean;
-		statusCode: number;
-		maxAge: number;
+		maxAge?: number;
 		reason?: string;
 		message?: string;
-	}
-
-	/**
-	 * Clan Current War (Method: `Client#currentClanWar(clanTag)`)
-	 */
-	export interface CurrentWar extends ClanWar { }
-
-	/**
-	 * Clan War League Round (Method: `Client#clanWarLeagueWar(clanTag)`)
-	 */
-	export interface ClanWarLeagueWar extends CurrentWar { }
-
-	/**
-	 * Clan War League Group (Method: `Client#clanWarLeague(clanTag)`)
-	 */
-	export interface ClanWarLeague {
-		state: 'notInWar' | 'preparation' | 'inWar' | 'warEnded';
-		season: string;
-		clans: {
-			name: string;
-			tag: string;
-			clanLevel: number;
-			badgeUrls: {
-				small: string;
-				large: string;
-				medium: string;
-			};
-			members: {
-				name: string;
-				tag: string;
-				townHallLevel: number;
-			}[];
-		}[];
-		rounds: {
-			warTags: string[];
-		}[];
-
-		ok: boolean;
 		statusCode: number;
-		maxAge: number;
-		reason?: string;
-		message?: string;
 	}
 
-	/**
-	 * War Log Clan Interface
-	 */
-	export interface WarLogClan {
-		tag: string;
-		name: string;
-		badgeUrls: {
-			small: string;
-			large: string;
-			medium: string;
-		};
-		clanLevel: number;
-		attacks: number;
-		stars: number;
-		destructionPercentage: number;
-		expEarned: number;
-	}
+	// ************* LOCATIONS ************* //
 
 	/**
-	 * War Log Opponent Interface (Note: CWL logs don't have `name` and `tag`)
+	 * GET /locations
 	 */
-	export interface WarLogOpponent {
-		tag?: string;
-		name?: string;
-		badgeUrls: {
-			small: string;
-			large: string;
-			medium: string;
-		};
-		clanLevel: number;
-		stars: number;
-		destructionPercentage: number;
-	}
-
-	/**
-	 * Clan War Log (Method: `Client#clanWarLog(clanTag)`)
-	 */
-	export interface WarLog {
-		items: {
-			result: 'win' | 'lose' | 'tie' | null;
-			endTime: string;
-			teamSize: number;
-			clan: WarLogClan;
-			oppnent: WarLogOpponent;
-		}[];
+	export interface LocationList {
+		items: Location[];
 		paging: {
 			cursors: {
 				after?: string;
@@ -771,10 +707,316 @@ declare module 'clashofclans.js' {
 		};
 
 		ok: boolean;
-		statusCode: number;
-		maxAge: number;
+		maxAge?: number;
 		reason?: string;
 		message?: string;
+		statusCode: number;
+	}
+
+	/**
+	 * GET /locations/{loacationId}
+	 */
+	export interface Location {
+		localizedName: string;
+		id: number;
+		name: string;
+		isCountry: boolean;
+		countryCode: string;
+
+		ok: boolean;
+		maxAge?: number;
+		reason?: string;
+		message?: string;
+		statusCode: number;
+	}
+
+	/**
+	 * GET /locations/{locationId}/rankings/clans
+	 */
+	export interface ClanRankingList {
+		items: ClanRanking[];
+		paging: {
+			cursors: {
+				after?: string;
+				before?: string;
+			};
+		};
+
+		ok: boolean;
+		maxAge?: number;
+		reason?: string;
+		message?: string;
+		statusCode: number;
+	}
+
+	export interface ClanRanking {
+		clanLevel: number;
+		clanPoints: number;
+		location: Location;
+		members: number;
+		tag: string;
+		name: string;
+		rank: number;
+		previousRank: number
+		badgeUrls: {
+			small: string;
+			large: string;
+			medium: string;
+		}
+	}
+
+	/**
+	 * GET /locations/{locationId}/rankings/players
+	 */
+	export interface PlayerRankingList {
+		items: PlayerRanking[];
+		paging: {
+			cursors: {
+				after?: string;
+				before?: string;
+			};
+		};
+
+		ok: boolean;
+		maxAge?: number;
+		reason?: string;
+		message?: string;
+		statusCode: number;
+	}
+
+	export interface PlayerRanking {
+		tag: string;
+		name: string;
+		expLevel: number;
+		trophies: number;
+		attackWins: number;
+		defenseWins: number;
+		rank: number;
+		clan: {
+			tag: string;
+			name: string;
+			badgeUrls: {
+				small: string;
+				large: string;
+				medium: string;
+			}
+		};
+		league: {
+			id: number;
+			name: string;
+			iconUrls: {
+				small: string;
+				tiny: string;
+				medium: string;
+			};
+		}
+	}
+
+	/**
+	 * GET /locations/{locationId}/rankings/clans-versus
+	 */
+	export interface ClanVersusRankingList {
+		items: ClanVersusRanking[];
+		paging: {
+			cursors: {
+				after?: string;
+				before?: string;
+			};
+		};
+
+		ok: boolean;
+		maxAge?: number;
+		reason?: string;
+		message?: string;
+		statusCode: number;
+	}
+
+	export interface ClanVersusRanking {
+		clanLevel: number;
+		location: Location;
+		members: number;
+		tag: string;
+		name: string;
+		rank: number;
+		previousRank: number
+		badgeUrls: {
+			small: string;
+			large: string;
+			medium: string;
+		}
+		clanVersusPoints: number;
+	}
+
+	/**
+	 * GET /locations/{locationId}/rankings/clans-versus
+	 */
+	export interface PlayerVersusRankingList {
+		items: ClanVersusRanking[];
+		paging: {
+			cursors: {
+				after?: string;
+				before?: string;
+			};
+		};
+
+		ok: boolean;
+		maxAge?: number;
+		reason?: string;
+		message?: string;
+		statusCode: number;
+	}
+
+	export interface PlayerVersusRanking {
+		tag: string;
+		name: string;
+		expLevel: number;
+		versusTrophies: number;
+		versusBattleWins: number;
+		rank: number;
+		clan: {
+			tag: string;
+			name: string;
+			badgeUrls: {
+				small: string;
+				large: string;
+				medium: string;
+			}
+		};
+	}
+
+	// *************** LEAGUES *************** //
+
+	/**
+	 * GET /leagues
+	 */
+	export interface LeagueList {
+		items: League[];
+		paging: {
+			cursors: {
+				after?: string;
+				before?: string;
+			};
+		};
+
+		ok: boolean;
+		maxAge?: number;
+		reason?: string;
+		message?: string;
+		statusCode: number;
+	}
+
+	/**
+	 * GET /leagues/{leagueId}
+	 */
+	export interface League {
+		id: string;
+		name: string;
+		iconUrls: {
+			tiny: string;
+			small: string;
+		}
+
+		ok: boolean;
+		maxAge?: number;
+		reason?: string;
+		message?: string;
+		statusCode: number;
+	}
+
+	/**
+	 * GET /leagues/{leagueId}/seasons/{seasonId}
+	 */
+	export interface PlayerSeasonRankingList {
+		items: (Omit<PlayerRanking, 'league'>)[];
+		paging: {
+			cursors: {
+				after?: string;
+				before?: string;
+			};
+		};
+
+		ok: boolean;
+		maxAge?: number;
+		reason?: string;
+		message?: string;
+		statusCode: number;
+	}
+
+	/**
+	 * GET /leagues/{leagueId}/seasons
+	 */
+	export interface LeagueSeasonList {
+		items: {
+			id: string;
+		}[]
+		paging: {
+			cursors: {
+				after?: string;
+				before?: string;
+			};
+		};
+
+		ok: boolean;
+		maxAge?: number;
+		reason?: string;
+		message?: string;
+		statusCode: number;
+	}
+
+	/**
+	 * GET /warleagues
+	 */
+	export interface WarLeagueList {
+		items: WarLeague[];
+		paging: {
+			cursors: {
+				after?: string;
+				before?: string;
+			};
+		};
+
+		ok: boolean;
+		maxAge?: number;
+		reason?: string;
+		message?: string;
+		statusCode: number;
+	}
+
+	/**
+	 * GET /warleagues/{leagueId}
+	 */
+	export interface WarLeague {
+		id: string;
+		name: string;
+
+		ok: boolean;
+		maxAge?: number;
+		reason?: string;
+		message?: string;
+		statusCode: number;
+	}
+
+	// ************** LABELS ************** //
+
+	/**
+	  * GET /labels/players
+	  * 
+	  * GET /labels/clans
+	  */
+	export interface LabelList {
+		items: Label[];
+		paging: {
+			cursors: {
+				after?: string;
+				before?: string;
+			};
+		};
+
+		ok: boolean;
+		maxAge?: number;
+		reason?: string;
+		message?: string;
+		statusCode: number;
 	}
 
 	export interface Label {
@@ -786,33 +1028,19 @@ declare module 'clashofclans.js' {
 		}
 	}
 
-	export interface ClanLabels {
-		items: Label[];
-		paging: {
-			cursors: {
-				after?: string;
-				before?: string;
-			};
-		};
+	// *********** GOLD PASS *********** //
+
+	/**
+	 * GET /goldpass/seasons/current
+	 */
+	export interface GoldPassSeason {
+		startTime: string;
+		endTime: string;
 
 		ok: boolean;
-		statusCode: number;
-		maxAge: number;
+		maxAge?: number;
 		reason?: string;
 		message?: string;
-	}
-
-	export interface PlayerLabels extends ClanLabels { }
-
-	export interface VerifyToken {
-		tag: string;
-		token: string;
-		status: 'ok' | 'invalid';
-
-		ok: boolean;
 		statusCode: number;
-		maxAge: number;
-		reason?: string;
-		message?: string;
 	}
 }

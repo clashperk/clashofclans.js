@@ -35,6 +35,7 @@ Represents Clash of Clans API
 * [.versusPlayerRanks(locationId, options)](#Client+versusPlayerRanks)
 * [.clanLabels(options)](#Client+clanLabels)
 * [.playerLabels(options)](#Client+playerLabels)
+* [.goldPassSeason()](#Client+goldPassSeason)
 
 <a name="new_Client_new"></a>
 
@@ -133,12 +134,10 @@ Search clans
 
 | Param | Type | Description |
 | --- | --- | --- |
-| options | <code>string</code> \| [<code>ClanSearchOptions</code>](#ClanSearchOptions) | Search clans by name or filtering parameters. If name is used as part of search query, it needs to be at least three characters long. Name search parameter is interpreted as wild card search, so it may appear anywhere in the clan name. |  
+| options | [<code>ClanSearchOptions</code>](#ClanSearchOptions) | Search clans by name or filtering parameters. If name is used as part of search query, it needs to be at least three characters long. Name search parameter is interpreted as wild card search, so it may appear anywhere in the clan name. |  
 
 **Example**
 ```js
-client.clans('air hounds');
-// or
 client.clans({ name: 'air hounds', limit: 10 });
 // or
 client.clans({ minMembers: 40, maxMembers: 50 });
@@ -457,6 +456,17 @@ List player labels
 ```js
 client.playerLabels();
 ```
+
+<a name="Client+goldPassSeason"></a>
+
+### client.goldPassSeason()
+Get information about the current gold pass season.
+
+**Example**
+```js
+client.goldPassSeason();
+```
+
 <a name="ClientOptions"></a>
 
 ## ClientOptions
