@@ -363,7 +363,7 @@ declare module 'clashofclans.js' {
 	// **************** CLANS **************** //
 
 	/**
-	 * GET /clans?name=air+hounds&limit=10
+	 * GET /clans?name={name}&limit={limit}
 	 */
 	export interface ClanList {
 		items: (Omit<Clan, 'memberList'>)[],
@@ -375,7 +375,7 @@ declare module 'clashofclans.js' {
 		};
 
 		ok: boolean;
-		maxAge?: number;
+		maxAge: number;
 		reason?: string;
 		message?: string;
 		statusCode: number;
@@ -419,7 +419,7 @@ declare module 'clashofclans.js' {
 		memberList: ClanMember[];
 
 		ok: true;
-		maxAge?: number;
+		maxAge: number;
 		reason?: string;
 		message?: string;
 		statusCode: number;
@@ -460,7 +460,7 @@ declare module 'clashofclans.js' {
 		};
 
 		ok: boolean;
-		maxAge?: number;
+		maxAge: number;
 		reason?: string;
 		message?: string;
 		statusCode: number;
@@ -479,7 +479,7 @@ declare module 'clashofclans.js' {
 		opponent: WarClan;
 
 		ok: boolean;
-		maxAge?: number;
+		maxAge: number;
 		reason?: string;
 		message?: string;
 		statusCode: number;
@@ -539,7 +539,7 @@ declare module 'clashofclans.js' {
 		};
 
 		ok: boolean;
-		maxAge?: number;
+		maxAge: number;
 		reason?: string;
 		message?: string;
 		statusCode: number;
@@ -555,7 +555,7 @@ declare module 'clashofclans.js' {
 		rounds: ClanWarLeagueRound[];
 
 		ok: boolean;
-		maxAge?: number;
+		maxAge: number;
 		reason?: string;
 		message?: string;
 		statusCode: number;
@@ -653,7 +653,7 @@ declare module 'clashofclans.js' {
 		}[];
 
 		ok: boolean;
-		maxAge?: number;
+		maxAge: number;
 		reason?: string;
 		message?: string;
 		statusCode: number;
@@ -686,7 +686,7 @@ declare module 'clashofclans.js' {
 		status: 'ok' | 'invalid';
 
 		ok: boolean;
-		maxAge?: number;
+		maxAge: number;
 		reason?: string;
 		message?: string;
 		statusCode: number;
@@ -707,7 +707,7 @@ declare module 'clashofclans.js' {
 		};
 
 		ok: boolean;
-		maxAge?: number;
+		maxAge: number;
 		reason?: string;
 		message?: string;
 		statusCode: number;
@@ -724,7 +724,7 @@ declare module 'clashofclans.js' {
 		countryCode: string;
 
 		ok: boolean;
-		maxAge?: number;
+		maxAge: number;
 		reason?: string;
 		message?: string;
 		statusCode: number;
@@ -743,7 +743,7 @@ declare module 'clashofclans.js' {
 		};
 
 		ok: boolean;
-		maxAge?: number;
+		maxAge: number;
 		reason?: string;
 		message?: string;
 		statusCode: number;
@@ -778,7 +778,7 @@ declare module 'clashofclans.js' {
 		};
 
 		ok: boolean;
-		maxAge?: number;
+		maxAge: number;
 		reason?: string;
 		message?: string;
 		statusCode: number;
@@ -825,7 +825,7 @@ declare module 'clashofclans.js' {
 		};
 
 		ok: boolean;
-		maxAge?: number;
+		maxAge: number;
 		reason?: string;
 		message?: string;
 		statusCode: number;
@@ -860,7 +860,7 @@ declare module 'clashofclans.js' {
 		};
 
 		ok: boolean;
-		maxAge?: number;
+		maxAge: number;
 		reason?: string;
 		message?: string;
 		statusCode: number;
@@ -899,7 +899,7 @@ declare module 'clashofclans.js' {
 		};
 
 		ok: boolean;
-		maxAge?: number;
+		maxAge: number;
 		reason?: string;
 		message?: string;
 		statusCode: number;
@@ -917,7 +917,7 @@ declare module 'clashofclans.js' {
 		}
 
 		ok: boolean;
-		maxAge?: number;
+		maxAge: number;
 		reason?: string;
 		message?: string;
 		statusCode: number;
@@ -936,7 +936,7 @@ declare module 'clashofclans.js' {
 		};
 
 		ok: boolean;
-		maxAge?: number;
+		maxAge: number;
 		reason?: string;
 		message?: string;
 		statusCode: number;
@@ -957,7 +957,7 @@ declare module 'clashofclans.js' {
 		};
 
 		ok: boolean;
-		maxAge?: number;
+		maxAge: number;
 		reason?: string;
 		message?: string;
 		statusCode: number;
@@ -976,7 +976,7 @@ declare module 'clashofclans.js' {
 		};
 
 		ok: boolean;
-		maxAge?: number;
+		maxAge: number;
 		reason?: string;
 		message?: string;
 		statusCode: number;
@@ -990,7 +990,7 @@ declare module 'clashofclans.js' {
 		name: string;
 
 		ok: boolean;
-		maxAge?: number;
+		maxAge: number;
 		reason?: string;
 		message?: string;
 		statusCode: number;
@@ -1013,7 +1013,7 @@ declare module 'clashofclans.js' {
 		};
 
 		ok: boolean;
-		maxAge?: number;
+		maxAge: number;
 		reason?: string;
 		message?: string;
 		statusCode: number;
@@ -1038,7 +1038,7 @@ declare module 'clashofclans.js' {
 		endTime: string;
 
 		ok: boolean;
-		maxAge?: number;
+		maxAge: number;
 		reason?: string;
 		message?: string;
 		statusCode: number;

@@ -3,8 +3,6 @@
 ## Installation
 - **Node.js v14.0.0 or newer is required.**
 - **NPM Version `npm i clashofclans.js`**
-- **GitHub Version `npm i clashperk/clashofclans.js`**
-- **For Node.js 12.x `npm i clashperk/clashofclans.js#stable`**
 
 ## Example
 
