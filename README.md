@@ -2,7 +2,6 @@
 
 ## Installation
 - **Node.js v14.0.0 or newer is required.**
-- **NPM Version `npm i clashofclans.js`**
 
 ## Example
 

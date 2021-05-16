@@ -9,6 +9,7 @@ Represents Clash of Clans API
 
 * [new Client(options)](#new_Client_new)
 * [.fetch(path, options)](#Client+fetch)
+* [.fetch(tag, encode)](#Client+parseTag)
 * [.clans(options)](#Client+clans)
 * [.clan(clanTag)](#Client+clan)
 * [.clanMembers(clanTag, options)](#Client+clanMembers)
@@ -111,6 +112,23 @@ You can check this with `data.ok` property.
 - **500:** Unknown error happened when handling the request.
 - **503:** Service is temporarily unavailable because of maintenance.
 - **504:** Request Timeout.
+
+<a name="Client+parseTag"></a>
+
+### client.parseTag(tag, encode)
+Parse a Clan/Player Tag
+
+**Example**
+```js
+// Fix Lowercase
+client.parseTag('8qu8j9lp'); // #8QU8J9LP
+
+// URL Encode
+client.parseTag('8qu8j9lp', true); // %238QU8J9LP
+
+// Fix Zeroes
+client.parseTag('PCCVQQGO') // #PCCVQQG0
+```
 
 <a name="Client+fetch"></a>
 

@@ -122,6 +122,11 @@ declare module 'clashofclans.js' {
 		public fetch(path: string): Promise<any>;
 
 		/**
+		 * Parse a Clan/Player Tag
+		 */
+		public parseTag(tag: string, encode?: boolean): string;
+
+		/**
 		 * Search clans
 		 * @param {string} options Search clans by name or filtering parameters. If name is used as part of search query, it needs to be at least three characters long. Name search parameter is interpreted as wild card search, so it may appear anywhere in the clan name.
 		 * @example
