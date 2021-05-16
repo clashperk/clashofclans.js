@@ -418,7 +418,7 @@ declare module 'clashofclans.js' {
 		labels: Label[];
 		memberList: ClanMember[];
 
-		ok: true;
+		ok: boolean;
 		maxAge: number;
 		reason?: string;
 		message?: string;
