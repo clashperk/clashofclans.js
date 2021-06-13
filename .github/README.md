@@ -121,13 +121,13 @@ Parse a Clan/Player Tag
 **Example**
 ```js
 // Fix Lowercase
-client.parseTag('8qu8j9lp'); // #8QU8J9LP
+client.parseTag('8qu8j9lp', false); // #8QU8J9LP
 
 // URL Encode
 client.parseTag('8qu8j9lp', true); // %238QU8J9LP
 
 // Fix Zeroes
-client.parseTag('PCCVQQGO') // #PCCVQQG0
+client.parseTag('PCCVQQGO', false) // #PCCVQQG0
 ```
 
 <a name="Client+fetch"></a>
