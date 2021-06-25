@@ -1,14 +1,18 @@
 const fetch = require('node-fetch');
 const qs = require('querystring');
 
-/**
- * Represents Clash of Clans API
- * @param {ClientOptions} options - API Options
- * @example
- * const { Client } = require('clashofclans.js');
- * const client = new Client({ token: [''], timeout: 5000 });
- */
 class Client {
+	/**
+	 * Represents Clash of Clans API
+	 *
+	 * In order to access the API, you need a developer account and a key or token for your application.
+	 *
+	 * {@link https://developer.clashofclans.com}
+	 * @param {ClientOptions} [options={}] - Client Options
+	 * @example
+	 * const { Client } = require('clashofclans.js');
+	 * const client = new Client({ token: ['original-token'] });
+	 */
 	constructor(options = {}) {
 		this.tokenIndex = 0;
 		this.token = options.token;
@@ -26,13 +30,6 @@ class Client {
 		return token;
 	}
 
-	/**
-	 * Fetch any Endpoint
-	 * @param {string} path - Request Path
-	 * @example
-	 * client.fetch('/locations').then(data => console.log(data)));
-	 * @returns {Promise<any>} Object
-	 */
 	async fetch(path) {
 		const res = await fetch(`${this.baseURL}${path}`, {
 			method: 'GET',
@@ -55,13 +52,37 @@ class Client {
 	}
 
 	/**
+	 * Parse a clan or player Tag
+	 * @param {string} tag Tag of clans or players
+	 * @throws {TypeError} The "tag" argument must be of type string
+	 * @returns {string} Fixed Tag
+	 * @example
+	 * // Fix Lowercase, Zero and Missing Hash #
+	 * client.parseTag('PccVqqGO'); // #PCCVQQG0
+	 */
+	parseTag(tag) {
+		if (tag && typeof tag === 'string') {
+			return `#${tag.toUpperCase().replace(/O|o/g, '0').replace(/^#/g, '')}`;
+		}
+		throw TypeError('The "tag" argument must be of type string.');
+	}
+
+	encodeTag(tag) {
+		return encodeURIComponent(this.parseTag(tag));
+	}
+
+	/**
 	 * Search clans
-	 * @param {ClanSearchOptions} options - Search clans by name or filtering parameters. If name is used as part of search query, it needs to be at least three characters long. Name search parameter is interpreted as wild card search, so it may appear anywhere in the clan name.
+	 * @param {ClanSearchOptions} [options={}] - Search clans by name or filtering parameters.
+	 *
+	 * **- If name is used as part of search query, it needs to be at least three characters long.**
+	 *
+	 * **- Name search parameter is interpreted as wild card search, so it may appear anywhere in the clan name.**
 	 * @example
 	 * client.clans({ name: 'air hounds', limit: 10 });
 	 * // or
 	 * client.clans({ minMembers: 40, maxMembers: 50 });
-	 * @returns {Promise<any>} Object
+	 * @returns {Promise<Object>} Object
 	 */
 	async clans(options) {
 		const query = qs.stringify(options);
@@ -73,61 +94,61 @@ class Client {
 	 * @param {string} clanTag - Tag of the clan.
 	 * @example
 	 * client.clan('#8QU8J9LP');
-	 * @returns {Promise<any>} Object
+	 * @returns {Promise<Object>} Object
 	 */
 	async clan(clanTag) {
-		return this.fetch(`/clans/${this.parseTag(clanTag)}`);
+		return this.fetch(`/clans/${this.encodeTag(clanTag)}`);
 	}
 
 	/**
 	 * List clan members
 	 * @param {string} clanTag - Tag of the clan.
-	 * @param {SearchOption} options - Optional options
+	 * @param {SearchOptions} [options={}] - Optional options
 	 * @example
 	 * client.clanMembers('#8QU8J9LP', { limit: 10 });
-	 * @returns {Promise<any>} Object
+	 * @returns {Promise<Object>} Object
 	 */
 	async clanMembers(clanTag, options) {
 		const query = qs.stringify(options);
-		return this.fetch(`/clans/${this.parseTag(clanTag)}/members?${query}`);
+		return this.fetch(`/clans/${this.encodeTag(clanTag)}/members?${query}`);
 	}
 
 	/**
 	 * Detailed clan members
-	 * @param {{ tag: string }[]} members - List of members
+	 * @param {Array.<{ tag: string }>} members - List of members
 	 * @example
 	 * const data = await client.clan('#8QU8J9LP');
 	 * client.detailedClanMembers(data.memberList);
-	 * @returns {Promise<any[]>} Object
+	 * @returns {Promise<Object[]>} Player Objects
 	 */
 	async detailedClanMembers(members) {
-		return Promise.all(members.map(mem => this.fetch(`/players/${encodeURIComponent(mem.tag)}`)));
+		return Promise.all(members.map(mem => this.fetch(`/players/${this.encodeTag(mem.tag)}`)));
 	}
 
 	/**
 	 * Retrieve clan's clan war log
 	 * @param {string} clanTag - Tag of the clan.
-	 * @param {SearchOption} [options] - Optional options
+	 * @param {SearchOptions} [options] - Optional options
 	 * @example
 	 * client.clanWarLog('#8QU8J9LP', { limit: 10 });
-	 * @returns {Promise<any>} Object
+	 * @returns {Promise<Object>} Object
 	 */
 	async clanWarLog(clanTag, options) {
 		const query = qs.stringify(options);
-		return this.fetch(`/clans/${this.parseTag(clanTag)}/warlog?${query}`);
+		return this.fetch(`/clans/${this.encodeTag(clanTag)}/warlog?${query}`);
 	}
 
 	/**
 	 * Retrieve information about clan's current clan war
 	 * @param {string} clanTag - Tag of the clan.
-	 * @param {SearchOption} options - Optional options
+	 * @param {SearchOptions} [options={}] - Optional options
 	 * @example
 	 * client.currentClanWar('#8QU8J9LP');
-	 * @returns {Promise<any>} Object
+	 * @returns {Promise<Object>} Object
 	 */
 	async currentClanWar(clanTag, options) {
 		const query = qs.stringify(options);
-		return this.fetch(`/clans/${this.parseTag(clanTag)}/currentwar?${query}`);
+		return this.fetch(`/clans/${this.encodeTag(clanTag, true)}/currentwar?${query}`);
 	}
 
 	/**
@@ -135,10 +156,10 @@ class Client {
 	 * @param {string} clanTag - Tag of the clan.
 	 * @example
 	 * client.clanWarLeague('#8QU8J9LP');
-	 * @returns {Promise<any>} Object
+	 * @returns {Promise<Object>} Object
 	 */
 	async clanWarLeague(clanTag) {
-		return this.fetch(`/clans/${this.parseTag(clanTag)}/currentwar/leaguegroup`);
+		return this.fetch(`/clans/${this.encodeTag(clanTag)}/currentwar/leaguegroup`);
 	}
 
 	/**
@@ -146,10 +167,10 @@ class Client {
 	 * @param {string} warTag - WarTag of a CWL round.
 	 * @example
 	 * client.clanWarLeagueWar('#2QJQPYLJU');
-	 * @returns {Promise<any>} Object
+	 * @returns {Promise<Object>} Object
 	 */
 	async clanWarLeagueWar(warTag) {
-		return this.fetch(`/clanwarleagues/wars/${this.parseTag(warTag)}`);
+		return this.fetch(`/clanwarleagues/wars/${this.encodeTag(warTag)}`);
 	}
 
 	/**
@@ -157,10 +178,10 @@ class Client {
 	 * @param {string} playerTag - Tag of the player.
 	 * @example
 	 * client.player('#9Q92C8R20');
-	 * @returns {Promise<any>} Object
+	 * @returns {Promise<Object>} Object
 	 */
 	async player(playerTag) {
-		return this.fetch(`/players/${this.parseTag(playerTag)}`);
+		return this.fetch(`/players/${this.encodeTag(playerTag)}`);
 	}
 
 	/**
@@ -169,10 +190,10 @@ class Client {
 	 * @param {string} token Player API token.
 	 * @example
 	 * client.verifyPlayerToken('#9Q92C8R20', 'pd3NN9x2');
-	 * @returns {Promise<any>} Object
+	 * @returns {Promise<Object>} Object
 	 */
 	async verifyPlayerToken(playerTag, token) {
-		const res = await fetch(`${this.baseURL}/players/${this.parseTag(playerTag)}/verifytoken`, {
+		const res = await fetch(`${this.baseURL}/players/${this.encodeTag(playerTag)}/verifytoken`, {
 			method: 'POST',
 			body: JSON.stringify({ token }),
 			headers: {
@@ -187,10 +208,10 @@ class Client {
 
 	/**
 	 * List Leagues
-	 * @param {SearchOption} options - Optional options
+	 * @param {SearchOptions} [options={}] - Optional options
 	 * @example
 	 * client.leagues();
-	 * @returns {Promise<any>} Object
+	 * @returns {Promise<Object>} Object
 	 */
 	async leagues(options) {
 		const query = qs.stringify(options);
@@ -202,7 +223,7 @@ class Client {
 	 * @param {string} leagueId - Identifier of the league.
 	 * @example
 	 * client.league('29000022');
-	 * @returns {Promise<any>} Object
+	 * @returns {Promise<Object>} Object
 	 */
 	async league(leagueId) {
 		return this.fetch(`/leagues/${leagueId}`);
@@ -211,10 +232,10 @@ class Client {
 	/**
 	 * Get league seasons. Note that league season information is available only for Legend League.
 	 * @param {string} leagueId - Identifier of the league.
-	 * @param {SearchOption} options - Optional options
+	 * @param {SearchOptions} [options={}] - Optional options
 	 * @example
 	 * client.leagueSeason('29000022', { limit: 10 });
-	 * @returns {Promise<any>} Object
+	 * @returns {Promise<Object>} Object
 	 */
 	async leagueSeason(leagueId, options) {
 		const query = qs.stringify(options);
@@ -225,10 +246,10 @@ class Client {
 	 * Get league season rankings. Note that league season information is available only for Legend League.
 	 * @param {string} leagueId - Identifier of the league.
 	 * @param {string} seasonId - Identifier of the season.
-	 * @param {SearchOption} options - Optional options
+	 * @param {SearchOptions} [options={}] - Optional options
 	 * @example
 	 * client.leagueRanking('29000022', '2020-03', { limit: 10 });
-	 * @returns {Promise<any>} Object
+	 * @returns {Promise<Object>} Object
 	 */
 	async leagueRanking(leagueId, seasonId, options) {
 		const query = qs.stringify(options);
@@ -237,10 +258,10 @@ class Client {
 
 	/**
 	 * List war leagues
-	 * @param {SearchOption} options - Optional options
+	 * @param {SearchOptions} [options={}] - Optional options
 	 * @example
 	 * client.warLeagues();
-	 * @returns {Promise<any>} Object
+	 * @returns {Promise<Object>} Object
 	 */
 	async warLeagues(options) {
 		const query = qs.stringify(options);
@@ -252,7 +273,7 @@ class Client {
 	 * @param {string} leagueId - Identifier of the league.
 	 * @example
 	 * client.warLeague('48000018');
-	 * @returns {Promise<any>} Object
+	 * @returns {Promise<Object>} Object
 	 */
 	async warLeague(leagueId) {
 		return this.fetch(`/warleagues/${leagueId}`);
@@ -260,12 +281,12 @@ class Client {
 
 	/**
 	 * List locations
-	 * @param {SearchOption} options - Optional options
+	 * @param {SearchOptions} [options={}] - Optional options
 	 * @example
 	 * client.locations();
 	 * // OR
 	 * client.locations({ limit: 10 });
-	 * @returns {Promise<any>} Object
+	 * @returns {Promise<Object>} Object
 	 */
 	async locations(options) {
 		const query = qs.stringify(options);
@@ -277,7 +298,7 @@ class Client {
 	 * @param {string} locationId - Identifier of the location to retrieve.
 	 * @example
 	 * client.location('32000107');
-	 * @returns {Promise<any>} Object
+	 * @returns {Promise<Object>} Object
 	 */
 	async location(locationId) {
 		return this.fetch(`/locations/${locationId}`);
@@ -286,10 +307,10 @@ class Client {
 	/**
 	 * Get clan rankings for a specific location
 	 * @param {string} locationId - Identifier of the location to retrieve.
-	 * @param {SearchOption} options - Optional options
+	 * @param {SearchOptions} [options={}] - Optional options
 	 * @example
 	 * client.clanRanks('32000107', { limit: 10 });
-	 * @returns {Promise<any>} Object
+	 * @returns {Promise<Object>} Object
 	 */
 	async clanRanks(locationId, options) {
 		const query = qs.stringify(options);
@@ -299,10 +320,10 @@ class Client {
 	/**
 	 * Get player rankings for a specific location
 	 * @param {string} locationId - Identifier of the location to retrieve.
-	 * @param {SearchOption} options - Optional options
+	 * @param {SearchOptions} [options={}] - Optional options
 	 * @example
 	 * client.playerRanks('32000107', { limit: 10 });
-	 * @returns {Promise<any>} Object
+	 * @returns {Promise<Object>} Object
 	 */
 	async playerRanks(locationId, options) {
 		const query = qs.stringify(options);
@@ -312,10 +333,10 @@ class Client {
 	/**
 	 * Get clan versus rankings for a specific location
 	 * @param {string} locationId - Identifier of the location to retrieve.
-	 * @param {SearchOption} options - Optional options
+	 * @param {SearchOptions} [options={}] - Optional options
 	 * @example
 	 * client.versusClanRanks('32000107', { limit: 10 });
-	 * @returns {Promise<any>} Object
+	 * @returns {Promise<Object>} Object
 	 */
 	async versusClanRanks(locationId, options) {
 		const query = qs.stringify(options);
@@ -325,10 +346,10 @@ class Client {
 	/**
 	 * Get player versus rankings for a specific location
 	 * @param {string} locationId - Identifier of the location to retrieve.
-	 * @param {SearchOption} options - Optional options
+	 * @param {SearchOptions} [options={}] - Optional options
 	 * @example
 	 * client.versusPlayerRanks('32000107', { limit: 10 });
-	 * @returns {Promise<any>} Object
+	 * @returns {Promise<Object>} Object
 	 */
 	async versusPlayerRanks(locationId, options) {
 		const query = qs.stringify(options);
@@ -337,10 +358,10 @@ class Client {
 
 	/**
 	 * List clan labels
-	 * @param {SearchOption} options - Optional options
+	 * @param {SearchOptions} [options={}] - Optional options
 	 * @example
 	 * client.clanLabels();
-	 * @returns {Promise<any>} Object
+	 * @returns {Promise<Object>} Object
 	 */
 	async clanLabels(options) {
 		const query = qs.stringify(options);
@@ -349,10 +370,10 @@ class Client {
 
 	/**
 	 * List player labels
-	 * @param {SearchOption} options - Optional options
+	 * @param {SearchOptions} [options={}] - Optional options
 	 * @example
 	 * client.playerLabels();
-	 * @returns {Promise<any>} Object
+	 * @returns {Promise<Object>} Object
 	 */
 	async playerLabels(options) {
 		const query = qs.stringify(options);
@@ -361,50 +382,57 @@ class Client {
 
 	/**
 	 * Get information about the current gold pass season.
-	 * @returns {Promise<any>} Object
+	 * @returns {Promise<Object>} Object
 	 */
 	async goldPassSeason() {
 		return this.fetch('/goldpass/seasons/current');
-	}
-
-	parseTag(tag, encode = true) {
-		if (tag && typeof tag === 'string') {
-			const fixed = `#${tag.toUpperCase().replace(/O|o/g, '0').replace(/^#/g, '')}`;
-
-			if (!encode) return fixed;
-			return encodeURIComponent(fixed);
-		}
-		throw TypeError('The "tag" argument must be of type string.');
 	}
 }
 
 module.exports = Client;
 
 /**
+ * TypeDefs
+ * @namespace core
+ */
+
+/**
+ * Base Client Options
  * @typedef {Object} ClientOptions
- * @param {string|string[]} token - Clash of Clans API Token
- * @param {number} timeout - Request timeout in millisecond
- * @param {string} baseURL - API Base URL
+ * @memberof core
+ * @property {string|string[]} token - Clash of Clans API token from Developer Site
+ *
+ * {@link https://developer.clashofclans.com}
+ * @property {number} timeout - Request timeout in millisecond
+ * @property {string} [baseURL] - API Base URL.
  */
 
 /**
+ * Clan Search Options
+ *
+ * **- If name is used as part of search query, it needs to be at least three characters long.**
+ *
+ * **- Name search parameter is interpreted as wild card search, so it may appear anywhere in the clan name.**
  * @typedef {Object} ClanSearchOptions
- * @param {string} name - Search clans by name. If name is used as part of search query, it needs to be at least three characters long. Name search parameter is interpreted as wild card search, so it may appear anywhere in the clan name.
- * @param {string} warFrequency - Filter by clan war frequency
- * @param {string} locationId - Filter by clan location identifier. For list of available locations, refer to getLocations operation
- * @param {number} minMembers - Filter by minimum number of clan members
- * @param {number} maxMembers - Filter by maximum number of clan members
- * @param {number} minClanPoints - Filter by minimum amount of clan points.
- * @param {number} minClanLevel - Filter by minimum clan level.
- * @param {number} limit - Limit the number of items returned in the response.
- * @param {string} after - Return only items that occur after this marker. Before marker can be found from the response, inside the 'paging' property. Note that only after or before can be specified for a request, not both.
- * @param {string} before - Return only items that occur before this marker. Before marker can be found from the response, inside the 'paging' property. Note that only after or before can be specified for a request, not both.
- * @param {string} labelIds - Comma separatered list of label IDs to use for filtering results.
+ * @memberof core
+ * @property {string} name - Search clans by name.
+ * @property {string} warFrequency - Filter by clan war frequency
+ * @property {string} locationId - Filter by clan location identifier. For list of available locations, refer to getLocations operation
+ * @property {number} minMembers - Filter by minimum number of clan members
+ * @property {number} maxMembers - Filter by maximum number of clan members
+ * @property {number} minClanPoints - Filter by minimum amount of clan points.
+ * @property {number} minClanLevel - Filter by minimum clan level.
+ * @property {number} limit - Limit the number of items returned in the response.
+ * @property {string} after - Return only items that occur after this marker. Before marker can be found from the response, inside the 'paging' property. Note that only after or before can be specified for a request, not both.
+ * @property {string} before - Return only items that occur before this marker. Before marker can be found from the response, inside the 'paging' property. Note that only after or before can be specified for a request, not both.
+ * @property {string} labelIds - Comma separatered list of label IDs to use for filtering results.
  */
 
 /**
+ * Search Options
  * @typedef {Object} SearchOptions
- * @param {number} limit - Limit the number of items returned in the response.
- * @param {string} after - Return only items that occur after this marker. Before marker can be found from the response, inside the 'paging' property. Note that only after or before can be specified for a request, not both.
- * @param {string} before - Return only items that occur before this marker. Before marker can be found from the response, inside the 'paging' property. Note that only after or before can be specified for a request, not both.
+ * @memberof core
+ * @property {number} limit - Limit the number of items returned in the response.
+ * @property {string} after - Return only items that occur after this marker. Before marker can be found from the response, inside the 'paging' property. Note that only after or before can be specified for a request, not both.
+ * @property {string} before - Return only items that occur before this marker. Before marker can be found from the response, inside the 'paging' property. Note that only after or before can be specified for a request, not both.
  */
