@@ -21,10 +21,16 @@ jobs:
       run: npm i docma
 
     - name: Build
-      run: npm run predeploy
+      run: |
+        mkdir assets
+        curl https://clashperk.com/assets/lib_favicon.ico -o assets/favicon.ico
+        curl https://clashperk.com/assets/lib_logo.png -o assets/logo.png
+        npm run predeploy
       
     - name: Deploy Documentation
       uses: JamesIves/github-pages-deploy-action@4.1.4
       with:
-        branch: gh-pages
         folder: docs
+        branch: gh-pages
+        single-commit: true
+        commit-message: Deploying to GitHub Pages

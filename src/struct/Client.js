@@ -5,12 +5,14 @@ const qs = require('querystring');
 /**
  * Represents Base Client
  * @class
+ * @example
+ * const { Client } = require('clashofclans.js');
  */
 class Client {
 	/**
 	 * Represents Clash of Clans API
 	 *
-	 * In order to access the API, you need a developer account and a key or token for your application.
+	 * In order to access the API, you need a developer account and a key for your application.
 	 *
 	 * {@link https://developer.clashofclans.com}
 	 * @param {ClientOptions} [options={}] - Client Options
@@ -27,7 +29,7 @@ class Client {
 
 	/**
 	 * Initialize Extension class and create keys
-	 * @param {ExtensionOptions} options Required extension options
+	 * @param {ExtensionOptions} options Required extension options.
 	 * @returns {string[]} Created Tokens
 	 * @example
 	 * const { Client } = require('clashofclans.js');
