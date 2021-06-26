@@ -5,7 +5,8 @@
     ],
     "assets": {
         "/": [
-            "./.github/CNAME"
+            "./.github/CNAME",
+            "./assets/favicon.ico"
         ],
         "/assets": [
             "./assets/*.*"

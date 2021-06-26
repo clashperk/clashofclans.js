@@ -1,6 +1,11 @@
+const { Extension } = require('../util/Extension');
 const fetch = require('node-fetch');
 const qs = require('querystring');
 
+/**
+ * Represents Base Client
+ * @class
+ */
 class Client {
 	/**
 	 * Represents Clash of Clans API
@@ -14,19 +19,51 @@ class Client {
 	 * const client = new Client({ token: ['original-token'] });
 	 */
 	constructor(options = {}) {
-		this.tokenIndex = 0;
-		this.token = options.token;
+		this._tokenIndex = 0;
+		this.keys = options.keys;
 		this.timeout = options.timeout || 0;
 		this.baseURL = options.baseURL || 'https://api.clashofclans.com/v1';
 	}
 
+	/**
+	 * Initialize Extension class and create keys
+	 * @param {ExtensionOptions} options Required extension options
+	 * @returns {string[]} Created Tokens
+	 * @example
+	 * const { Client } = require('clashofclans.js');
+	 * const client = new Client();
+	 * (async () => {
+	 *		await client.init({ email: '', password: '' });
+	 *		// you would have to run the `init` method just for once.
+	 *
+	 *		const data = await client.clan('#2PP');
+	 *		console.log(data);
+	 * })();
+	 */
+	async init(options = {}) {
+		this.keys = [];
+
+		const ext = new Extension({
+			email: options.email,
+			keyName: options.keyName,
+			password: options.password,
+			keyCount: options.keyCount,
+			keyDescription: options.keyDescription
+		});
+
+		return ext.login().then(() => {
+			this.keys = ext.keys;
+			return ext.keys;
+		});
+	}
+
 	get _tokens() {
-		return Array.isArray(this.token) ? [...this.token] : [this.token];
+		return Array.isArray(this.keys) ? [...this.keys] : [this.keys];
 	}
 
 	get _token() {
-		const token = this._tokens[this.tokenIndex];
-		this.tokenIndex = (this.tokenIndex + 1) >= this._tokens.length ? 0 : this.tokenIndex + 1;
+		const token = this._tokens[this._tokenIndex];
+		this._tokenIndex = (this._tokenIndex + 1) >= this._tokens.length ? 0 : this._tokenIndex + 1;
 		return token;
 	}
 
@@ -119,16 +156,16 @@ class Client {
 	 * @example
 	 * const data = await client.clan('#8QU8J9LP');
 	 * client.detailedClanMembers(data.memberList);
-	 * @returns {Promise<Object[]>} Player Objects
+	 * @returns {Promise<Object>} Player Objects
 	 */
 	async detailedClanMembers(members) {
-		return Promise.all(members.map(mem => this.fetch(`/players/${this.encodeTag(mem.tag)}`)));
+		return Promise.all(members.map(mem => this.player(mem.tag)));
 	}
 
 	/**
 	 * Retrieve clan's clan war log
 	 * @param {string} clanTag - Tag of the clan.
-	 * @param {SearchOptions} [options] - Optional options
+	 * @param {SearchOptions} [options={}] - Optional options
 	 * @example
 	 * client.clanWarLog('#8QU8J9LP', { limit: 10 });
 	 * @returns {Promise<Object>} Object
@@ -306,7 +343,7 @@ class Client {
 
 	/**
 	 * Get clan rankings for a specific location
-	 * @param {string} locationId - Identifier of the location to retrieve.
+	 * @param {string|'global'} locationId - Identifier of the location to retrieve.
 	 * @param {SearchOptions} [options={}] - Optional options
 	 * @example
 	 * client.clanRanks('32000107', { limit: 10 });
@@ -319,7 +356,7 @@ class Client {
 
 	/**
 	 * Get player rankings for a specific location
-	 * @param {string} locationId - Identifier of the location to retrieve.
+	 * @param {string|'global'} locationId - Identifier of the location to retrieve.
 	 * @param {SearchOptions} [options={}] - Optional options
 	 * @example
 	 * client.playerRanks('32000107', { limit: 10 });
@@ -332,7 +369,7 @@ class Client {
 
 	/**
 	 * Get clan versus rankings for a specific location
-	 * @param {string} locationId - Identifier of the location to retrieve.
+	 * @param {string|'global'} locationId - Identifier of the location to retrieve.
 	 * @param {SearchOptions} [options={}] - Optional options
 	 * @example
 	 * client.versusClanRanks('32000107', { limit: 10 });
@@ -345,7 +382,7 @@ class Client {
 
 	/**
 	 * Get player versus rankings for a specific location
-	 * @param {string} locationId - Identifier of the location to retrieve.
+	 * @param {string|'global'} locationId - Identifier of the location to retrieve.
 	 * @param {SearchOptions} [options={}] - Optional options
 	 * @example
 	 * client.versusPlayerRanks('32000107', { limit: 10 });
@@ -400,11 +437,9 @@ module.exports = Client;
  * Base Client Options
  * @typedef {Object} ClientOptions
  * @memberof core
- * @property {string|string[]} token - Clash of Clans API token from Developer Site
- *
- * {@link https://developer.clashofclans.com}
+ * @property {string|string[]} token - Clash of Clans API token
  * @property {number} timeout - Request timeout in millisecond
- * @property {string} [baseURL] - API Base URL.
+ * @property {string} [baseURL] - Clash of Clans API Base URL
  */
 
 /**

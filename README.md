@@ -18,7 +18,7 @@
 
 ```js
 const { Client } = require('clashofclans.js');
-const client = new Client({ token: ['original-token'] });
+const client = new Client({ keys: ['API_KEYS'] });
 
 (async function() {
 	const data = await client.locations('#8QU8J9LP', { limit: 1 });
@@ -79,6 +79,23 @@ You can check this with `data.ok` property.
 - **500:** Unknown error happened when handling the request.
 - **503:** Service is temporarily unavailable because of maintenance.
 - **504:** Request Timeout.
+
+## Create API Token
+
+This method is for creating API keys for the external IP the code is running on. Therefore no static IP is required and always ready to be deployed on Serverless platform like Heroku.
+
+```js
+const { Client } = require('clashofclans.js');
+const client = new Client();
+
+(async () => {
+	await client.init({ email: '', password: '' });
+	// you would have to run the `init` method just for once.
+    
+	const data = await client.clan('#2PP');
+	console.log(data);
+})();
+```
 
 ### Links
 
