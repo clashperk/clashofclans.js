@@ -2,3 +2,5 @@ node_modules/
 .vs/
 .vscode/
 dist/
+docs/
+assets/

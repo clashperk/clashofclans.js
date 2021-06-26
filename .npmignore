@@ -8,3 +8,6 @@ package-lock.json
 .vs
 .vscode
 .github
+docma.json
+docs/
+assets/

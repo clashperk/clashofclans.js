@@ -1,31 +1,107 @@
-# Powerful JavaScript library for interacting with the Clash of Clans API
+<div align="center">
 
-## Installation
+[![Logo](https://i.imgur.com/RHkfYVm.png.png)](https://clashofclans.js.org/)
+
+### JavaScript library for interacting with the Clash of Clans API
+
+[![ESLint](https://github.com/clashperk/clashofclans.js/actions/workflows/node.js.yml/badge.svg)](https://github.com/clashperk/clashofclans.js/actions/workflows/node.js.yml)
+[![Node.js Package](https://github.com/clashperk/clashofclans.js/actions/workflows/npm-publish.yml/badge.svg)](https://github.com/clashperk/clashofclans.js/actions/workflows/npm-publish.yml)
+[![Logo](https://img.shields.io/npm/v/clashofclans.js.svg?maxAge=3600)](https://www.npmjs.com/package/clashofclans.js)
+
+</div>
+
+### Installation
+- **`npm i clashofclans.js`**
 - **Node.js v14.0.0 or newer is required.**
 
-## Example
+### Example
 
 ```js
 const { Client } = require('clashofclans.js');
-const client = new Client({ token: '', timeout: 5000 });
+const client = new Client({ keys: ['API_KEYS'] });
 
 (async function() {
-	// Search Clan
-	const data = await client.clan('#8QU8J9LP');
+	const data = await client.locations('#8QU8J9LP', { limit: 1 });
 	console.log(data);
-
-	// Verify Player API Token
-	const token = await client.verifyPlayerToken('#9Q92C8R20', 'pd3NN9x2');
-	if (token.status === 'ok') console.log('Verified!');
 })();
 ```
 
-## Links
+### Response
 
-- [GitHub Repository](https://github.com/clashperk/clashofclans.js)
-- [Full Documentation](https://github.com/clashperk/clashofclans.js#readme)
+```json
+{
+    "items": [
+        {
+            "id": 32000000,
+            "name": "Europe",
+            "isCountry": false
+        }
+    ],
+    "paging": {},
+    "statusCode": 200,
+    "ok": true,
+    "maxAge": 600000
+}
+```
 
-## License
-**MIT License**
+### What is **`maxAge`**?
 
-**Copyright (c) 2020 - 2021 ClashPerk**
+The `maxAge` ([Cache-Control](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cache-Control)) is the maximum amount of time in milliseconds (converted) which shows how long until a fresh data is available.
+
+### Validation
+
+It's recommended to see if a data is available before performing operations or reading data from it. 
+You can check this with `data.ok` property.
+
+```js
+(async function() {
+	const data = await client.clan('#WRONG_TAG');
+	console.log(data);
+	if (!data.ok) return; // Invalid Tag
+})();
+```
+
+```json
+{
+    "reason": "notFound",
+    "statusCode": 404,
+    "ok": false,
+    "maxAge": 600000
+}
+```
+
+### Status Codes
+- **200:** Successful Response.
+- **400:** Client provided incorrect parameters for the request.
+- **403:** Access denied, either because of missing/incorrect credentials or used API token does not grant access to the requested resource.
+- **404:** Resource was not found.
+- **429:** Request was throttled, because amount of requests was above the threshold defined for the used API token.
+- **500:** Unknown error happened when handling the request.
+- **503:** Service is temporarily unavailable because of maintenance.
+- **504:** Request Timeout.
+
+## Create API Token
+
+This method is for creating API keys for the external IP the code is running on. Therefore no static IP is required and always ready to be deployed on Serverless platform like Heroku.
+
+```js
+const { Client } = require('clashofclans.js');
+const client = new Client();
+
+(async () => {
+	await client.init({ email: '', password: '' });
+	// you would have to run the `init` method just for once.
+    
+	const data = await client.clan('#2PP');
+	console.log(data);
+})();
+```
+
+### Links
+
+- [Documentation](https://clashofclans.js.org/)
+- [Clash of Clans Developer Website](https://developer.clashofclans.com/)
+- [Clash of Clans API Community Discord](https://discord.gg/Eaja7gJ)
+
+### Disclaimer
+> This content is not affiliated with, endorsed, sponsored, or specifically approved by Supercell and Supercell is not responsible for it. For more information see [Supercell’s Fan Content Policy](https://supercell.com/en/fan-content-policy/).

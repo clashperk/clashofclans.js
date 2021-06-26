@@ -1,0 +1,30 @@
+name: Docs
+
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  build:
+    name: Docs
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v2
+    
+    - name: Use Node.js 14
+      uses: actions/setup-node@v2
+      with:
+        node-version: '14'
+        
+    - name: NPM Install
+      run: npm i docma
+
+    - name: Build
+      run: npm run predeploy
+      
+    - name: Deploy Documentation
+      uses: JamesIves/github-pages-deploy-action@4.1.4
+      with:
+        branch: gh-pages
+        folder: docs
