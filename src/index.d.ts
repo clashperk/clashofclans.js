@@ -3,7 +3,7 @@ declare module 'clashofclans.js' {
 		keys?: string[];
 		timeout?: number;
 		baseURL?: string;
-		token: string | string[];
+		token?: string | string[];
 	}
 
 	export interface ClanSearchOptions {
@@ -23,10 +23,10 @@ declare module 'clashofclans.js' {
 	export interface ExtensionOptions {
 		email: string;
 		password: string;
-		keyCount: number;
-		keyName: string;
-		keyDescription: string;
-		baseURL: string;
+		keyCount?: number;
+		keyName?: string;
+		keyDescription?: string;
+		baseURL?: string;
 	}
 
 	export interface SearchOptions {

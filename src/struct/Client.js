@@ -16,12 +16,12 @@ class Client {
 	 * @param {ClientOptions} [options={}] - Client Options
 	 * @example
 	 * const { Client } = require('clashofclans.js');
-	 * const client = new Client({ token: ['original-token'] });
+	 * const client = new Client({ keys: ['API_KEY'] });
 	 */
 	constructor(options = {}) {
 		this._tokenIndex = 0;
-		this.keys = options.keys;
 		this.timeout = options.timeout || 0;
+		this.keys = options.keys || options.token;
 		this.baseURL = options.baseURL || 'https://api.clashofclans.com/v1';
 	}
 

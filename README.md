@@ -18,7 +18,7 @@
 
 ```js
 const { Client } = require('clashofclans.js');
-const client = new Client({ keys: ['API_KEYS'] });
+const client = new Client({ keys: ['API_KEY'] });
 
 (async function() {
 	const data = await client.locations('#8QU8J9LP', { limit: 1 });
