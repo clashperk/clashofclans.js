@@ -14,6 +14,12 @@
 - **`npm i clashofclans.js`**
 - **Node.js v14.0.0 or newer is required.**
 
+### Links
+
+- [Documentation](https://clashofclans.js.org/api/)
+- [Clash of Clans Developer Website](https://developer.clashofclans.com/)
+- [Clash of Clans API Community Discord](https://discord.gg/Eaja7gJ)
+
 ### Example
 
 ```js
@@ -80,7 +86,39 @@ You can check this with `data.ok` property.
 - **503:** Service is temporarily unavailable because of maintenance.
 - **504:** Request Timeout.
 
-## Create API Token
+## Methods
+
+| Methods                                                               | Description                       |
+| --------------------------------------------------------------------- | --------------------------------- |
+| [init(options)](https://clashofclans.js.org/api#Client#init)                                         | Initialize Extension class and create keys |
+| [parseTag(tag)](https://clashofclans.js.org/api#Client#parseTag)                                     | Parse a clan or player Tag |
+| [clans([options])](https://clashofclans.js.org/api#Client#clans)                                     | Search clans |
+| [clan(clanTag)](https://clashofclans.js.org/api#Client#clan)                                         | Get clan information |
+| [clanMembers(clanTag, [options])](https://clashofclans.js.org/api#Client#clanMembers)                | List clan members |
+| [detailedClanMembers(members)](https://clashofclans.js.org/api#Client#detailedClanMembers)           | Detailed clan members |
+| [clanWarLog(clanTag, [options])](https://clashofclans.js.org/api#Client#clanWarLog)                  | Retrieve clan's clan war log |
+| [currentClanWar(clanTag, [options])](https://clashofclans.js.org/api#Client#currentClanWar)          | Information about clan's current clan war |
+| [clanWarLeague(clanTag)](https://clashofclans.js.org/api#Client#clanWarLeague)                       | Information about clan's current clan war league group |
+| [clanWarLeagueWar(warTag)](https://clashofclans.js.org/api#Client#clanWarLeagueWar)                  | Information about individual clan war league war |
+| [player(playerTag)](https://clashofclans.js.org/api#Client#player)                                   | Get player information |
+| [verifyPlayerToken(playerTag, token)](https://clashofclans.js.org/api#Client#verifyPlayerToken)      | Verify player API token |
+| [leagues([options])](https://clashofclans.js.org/api#Client#leagues)                                 | List Leagues |
+| [league(leagueId)](https://clashofclans.js.org/api#Client#league)                                    | Get league information |
+| [leagueSeason(leagueId, [options])](https://clashofclans.js.org/api#Client#leagueSeason)             | Get league seasons |
+| [leagueRanking(leagueId, seasonId, [options])](https://clashofclans.js.org/api#Client#leagueRanking) | Get league season rankings |
+| [warLeagues([options])](https://clashofclans.js.org/api#Client#warLeagues)                           | List war leagues |
+| [warLeague(leagueId)](https://clashofclans.js.org/api#Client#warLeague)                              | Get war league information |
+| [locations([options])](https://clashofclans.js.org/api#Client#locations)                             | List locations |
+| [location(locationId)](https://clashofclans.js.org/api#Client#location)                              | Get information about specific location |
+| [clanRanks(locationId, [options])](https://clashofclans.js.org/api#Client#clanRanks)                 | Get clan rankings for a specific location |
+| [playerRanks(locationId, [options])](https://clashofclans.js.org/api#Client#playerRanks)             | Get player rankings for a specific location |
+| [versusClanRanks(locationId, [options])](https://clashofclans.js.org/api#Client#versusClanRanks)     | Get clan versus rankings for a specific location |
+| [versusPlayerRanks(locationId, [options])](https://clashofclans.js.org/api#Client#versusPlayerRanks) | Get player versus rankings for a specific location |
+| [clanLabels([options])](https://clashofclans.js.org/api#Client#clanLabels)                           | List clan labels |
+| [playerLabels([options])](https://clashofclans.js.org/api#Client#playerLabels)                       | List player labels |
+| [goldPassSeason()](https://clashofclans.js.org/api#Client#goldPassSeason)                            | Get information about the current gold pass season |
+
+### Create API Token
 
 This method is for creating API keys for the external IP the code is running on. Therefore no static IP is required and always ready to be deployed on Serverless platform like Heroku.
 
@@ -96,12 +134,6 @@ const client = new Client();
 	console.log(data);
 })();
 ```
-
-### Links
-
-- [Documentation](https://clashofclans.js.org/)
-- [Clash of Clans Developer Website](https://developer.clashofclans.com/)
-- [Clash of Clans API Community Discord](https://discord.gg/Eaja7gJ)
 
 ### Disclaimer
 > This content is not affiliated with, endorsed, sponsored, or specifically approved by Supercell and Supercell is not responsible for it. For more information see [Supercell’s Fan Content Policy](https://supercell.com/en/fan-content-policy/).

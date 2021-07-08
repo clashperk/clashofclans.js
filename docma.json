@@ -1,7 +1,8 @@
 {
     "src": [
         "./src/**/*.js",
-        "./README.md"
+        "./README.md",
+        "./.github/EXAMPLE.md"
     ],
     "assets": {
         "/": [
@@ -20,7 +21,7 @@
     },
     "app": {
         "favicon": "./assets/favicon.ico",
-        "title": "clashofclans.js.org",
+        "title": "clashofclans.js",
         "entrance": "content:readme",
         "routing": "path",
         "server": "github",
@@ -32,7 +33,7 @@
             },
             {
                 "name": "title",
-                "content": "clashofclans.js.org"
+                "content": "clashofclans.js"
             },
             {
                 "name": "theme-color",
@@ -46,7 +47,7 @@
     "template": {
         "options": {
             "title": {
-                "label": "HOME",
+                "label": "clashofclans.js",
                 "href": "."
             },
             "logo": "./assets/logo.png",
@@ -59,6 +60,10 @@
                     {
                         "label": "Documentation",
                         "href": "/api"
+                    },
+                    {
+                        "label": "Example",
+                        "href": "/example"
                     },
                     {
                         "iconClass": "fab fa-lg fa-github",
