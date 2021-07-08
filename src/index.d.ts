@@ -37,7 +37,7 @@ declare module 'clashofclans.js' {
 
 	export class Extension {
 		constructor(options: ExtensionOptions);
-		
+
 		public email: string;
 		public password: string;
 		public keyCount?: number;
@@ -57,7 +57,7 @@ declare module 'clashofclans.js' {
 		readonly _tokens: string[];
 		readonly _token: string;
 
-		public key?: string[];
+		public keys?: string[];
 		public timeout?: number;
 		public baseURL?: string;
 		public token?: string | string[];
@@ -122,7 +122,7 @@ declare module 'clashofclans.js' {
 	// **************** CLANS **************** //
 
 	/**
-	 * GET /clans?name={name}&limit={limit}
+	 * /clans?name={name}&limit={limit}
 	 */
 	export interface ClanList {
 		items: (Omit<Clan, 'memberList'>)[],
@@ -141,7 +141,7 @@ declare module 'clashofclans.js' {
 	}
 
 	/**
-	 * GET /clans/{clanTag}
+	 * /clans/{clanTag}
 	 */
 	export interface Clan {
 		tag: string;
@@ -163,6 +163,7 @@ declare module 'clashofclans.js' {
 		clanPoints: number;
 		clanVersusPoints: number;
 		requiredTrophies: number;
+		requiredTownhallLevel?: number;
 		warFrequency: string;
 		warWinStreak: number;
 		warWins: number;
@@ -207,7 +208,7 @@ declare module 'clashofclans.js' {
 	}
 
 	/**
-	 * GET /clans/{clanTag}/members
+	 * /clans/{clanTag}/members
 	 */
 	export interface ClanMemberList {
 		items: ClanMember[],
@@ -226,7 +227,7 @@ declare module 'clashofclans.js' {
 	}
 
 	/**
-	 * GET /clans/{clanTag}/currentwar
+	 * /clans/{clanTag}/currentwar
 	 */
 	export interface ClanWar {
 		state: 'notInWar' | 'preparation' | 'inWar' | 'warEnded';
@@ -280,7 +281,7 @@ declare module 'clashofclans.js' {
 	}
 
 	/**
-	 * GET /clans/{clanTag}/warlog
+	 * /clans/{clanTag}/warlog
 	 */
 	export interface ClanWarLog {
 		items: {
@@ -305,7 +306,7 @@ declare module 'clashofclans.js' {
 	}
 
 	/**
-	 * GET /clans/{clanTag}/currentwar/leaguegroup
+	 * /clans/{clanTag}/currentwar/leaguegroup
 	 */
 	export interface ClanWarLeagueGroup {
 		state: 'notInWar' | 'preparation' | 'inWar' | 'warEnded';
@@ -342,13 +343,13 @@ declare module 'clashofclans.js' {
 		warTags: string[]
 	}
 
-	// GET /clanwarleagues/wars/{warTag}
+	// /clanwarleagues/wars/{warTag}
 	// Same as {ClanWar}
 
 	// *************** PLAYERS *************** //
 
 	/**
-	 * GET /players/{playerTag}
+	 * /players/{playerTag}
 	 */
 	export interface Player {
 		name: string;
@@ -437,7 +438,7 @@ declare module 'clashofclans.js' {
 	}
 
 	/**
-	 * POST /players/{playerTag}/verifytoken
+	 * /players/{playerTag}/verifytoken
 	 */
 	export interface VerifyToken {
 		tag: string;
@@ -454,7 +455,7 @@ declare module 'clashofclans.js' {
 	// ************* LOCATIONS ************* //
 
 	/**
-	 * GET /locations
+	 * /locations
 	 */
 	export interface LocationList {
 		items: Location[];
@@ -473,7 +474,7 @@ declare module 'clashofclans.js' {
 	}
 
 	/**
-	 * GET /locations/{loacationId}
+	 * /locations/{loacationId}
 	 */
 	export interface Location {
 		localizedName: string;
@@ -490,7 +491,7 @@ declare module 'clashofclans.js' {
 	}
 
 	/**
-	 * GET /locations/{locationId}/rankings/clans
+	 * /locations/{locationId}/rankings/clans
 	 */
 	export interface ClanRankingList {
 		items: ClanRanking[];
@@ -525,7 +526,7 @@ declare module 'clashofclans.js' {
 	}
 
 	/**
-	 * GET /locations/{locationId}/rankings/players
+	 * /locations/{locationId}/rankings/players
 	 */
 	export interface PlayerRankingList {
 		items: PlayerRanking[];
@@ -572,7 +573,7 @@ declare module 'clashofclans.js' {
 	}
 
 	/**
-	 * GET /locations/{locationId}/rankings/clans-versus
+	 * /locations/{locationId}/rankings/clans-versus
 	 */
 	export interface ClanVersusRankingList {
 		items: ClanVersusRanking[];
@@ -607,7 +608,7 @@ declare module 'clashofclans.js' {
 	}
 
 	/**
-	 * GET /locations/{locationId}/rankings/clans-versus
+	 * /locations/{locationId}/rankings/clans-versus
 	 */
 	export interface PlayerVersusRankingList {
 		items: ClanVersusRanking[];
@@ -646,7 +647,7 @@ declare module 'clashofclans.js' {
 	// *************** LEAGUES *************** //
 
 	/**
-	 * GET /leagues
+	 * /leagues
 	 */
 	export interface LeagueList {
 		items: League[];
@@ -665,7 +666,7 @@ declare module 'clashofclans.js' {
 	}
 
 	/**
-	 * GET /leagues/{leagueId}
+	 * /leagues/{leagueId}
 	 */
 	export interface League {
 		id: string;
@@ -683,7 +684,7 @@ declare module 'clashofclans.js' {
 	}
 
 	/**
-	 * GET /leagues/{leagueId}/seasons/{seasonId}
+	 * /leagues/{leagueId}/seasons/{seasonId}
 	 */
 	export interface PlayerSeasonRankingList {
 		items: (Omit<PlayerRanking, 'league'>)[];
@@ -702,7 +703,7 @@ declare module 'clashofclans.js' {
 	}
 
 	/**
-	 * GET /leagues/{leagueId}/seasons
+	 * /leagues/{leagueId}/seasons
 	 */
 	export interface LeagueSeasonList {
 		items: {
@@ -723,7 +724,7 @@ declare module 'clashofclans.js' {
 	}
 
 	/**
-	 * GET /warleagues
+	 * /warleagues
 	 */
 	export interface WarLeagueList {
 		items: WarLeague[];
@@ -742,7 +743,7 @@ declare module 'clashofclans.js' {
 	}
 
 	/**
-	 * GET /warleagues/{leagueId}
+	 * /warleagues/{leagueId}
 	 */
 	export interface WarLeague {
 		id: string;
@@ -758,9 +759,9 @@ declare module 'clashofclans.js' {
 	// ************** LABELS ************** //
 
 	/**
-	  * GET /labels/players
+	  * /labels/players
 	  * 
-	  * GET /labels/clans
+	  * /labels/clans
 	  */
 	export interface LabelList {
 		items: Label[];
@@ -790,7 +791,7 @@ declare module 'clashofclans.js' {
 	// *********** GOLD PASS *********** //
 
 	/**
-	 * GET /goldpass/seasons/current
+	 * /goldpass/seasons/current
 	 */
 	export interface GoldPassSeason {
 		startTime: string;
