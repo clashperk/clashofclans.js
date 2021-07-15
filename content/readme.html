@@ -1,0 +1,205 @@
+
+<html><head></head><body><div align="center">
+
+<p><a href="https://clashofclans.js.org/"><img src="https://i.imgur.com/RHkfYVm.png.png" alt="Logo" style="max-width: 100%;"></a></p>
+<h3 id="javascript-library-for-interacting-with-the-clash-of-clans-api">JavaScript library for interacting with the Clash of Clans API</h3>
+<p><a href="https://github.com/clashperk/clashofclans.js/actions/workflows/node.js.yml"><img src="https://github.com/clashperk/clashofclans.js/actions/workflows/node.js.yml/badge.svg" alt="ESLint" style="max-width: 100%;"></a>
+<a href="https://github.com/clashperk/clashofclans.js/actions/workflows/docs.yml"><img src="https://github.com/clashperk/clashofclans.js/actions/workflows/docs.yml/badge.svg" alt="Docs" style="max-width: 100%;"></a>
+<a href="https://www.npmjs.com/package/clashofclans.js"><img src="https://img.shields.io/npm/v/clashofclans.js.svg?maxAge=3600" alt="Logo" style="max-width: 100%;"></a></p>
+</div>
+
+<h3 id="installation">Installation</h3>
+<ul>
+<li><strong><code>npm i clashofclans.js</code></strong></li>
+<li><strong>Node.js v14.0.0 or newer is required.</strong></li>
+</ul>
+<h3 id="links">Links</h3>
+<ul>
+<li><a href="https://clashofclans.js.org/api/">Documentation</a></li>
+<li><a href="https://developer.clashofclans.com/">Clash of Clans Developer Website</a></li>
+<li><a href="https://discord.gg/Eaja7gJ">Clash of Clans API Community Discord</a></li>
+</ul>
+<h3 id="example">Example</h3>
+<pre><code class="js">const { Client } = require('clashofclans.js');
+const client = new Client({ keys: ['API_KEY'] });
+
+(async function() {
+    const data = await client.locations('#8QU8J9LP', { limit: 1 });
+    console.log(data);
+})();</code></pre>
+<h3 id="response">Response</h3>
+<pre><code class="json">{
+    "items": [
+        {
+            "id": 32000000,
+            "name": "Europe",
+            "isCountry": false
+        }
+    ],
+    "paging": {},
+    "statusCode": 200,
+    "ok": true,
+    "maxAge": 600000
+}</code></pre>
+<h3 id="what-is-maxage-">What is <strong><code>maxAge</code></strong>?</h3>
+<p>The <code>maxAge</code> (<a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cache-Control">Cache-Control</a>) is the maximum amount of time in milliseconds (converted) which shows how long until a fresh data is available.</p>
+<h3 id="validation">Validation</h3>
+<p>It's recommended to see if a data is available before performing operations or reading data from it. 
+You can check this with <code>data.ok</code> property.</p>
+<pre><code class="js">(async function() {
+    const data = await client.clan('#WRONG_TAG');
+    console.log(data);
+    if (!data.ok) return; // Invalid Tag
+})();</code></pre>
+<pre><code class="json">{
+    "reason": "notFound",
+    "statusCode": 404,
+    "ok": false,
+    "maxAge": 600000
+}</code></pre>
+<h3 id="status-codes">Status Codes</h3>
+<ul>
+<li><strong>200:</strong> Successful Response.</li>
+<li><strong>400:</strong> Client provided incorrect parameters for the request.</li>
+<li><strong>403:</strong> Access denied, either because of missing/incorrect credentials or used API token does not grant access to the requested resource.</li>
+<li><strong>404:</strong> Resource was not found.</li>
+<li><strong>429:</strong> Request was throttled, because amount of requests was above the threshold defined for the used API token.</li>
+<li><strong>500:</strong> Unknown error happened when handling the request.</li>
+<li><strong>503:</strong> Service is temporarily unavailable because of maintenance.</li>
+<li><strong>504:</strong> Request Timeout.</li>
+</ul>
+<h2 id="methods">Methods</h2>
+<hr />
+<table>
+<thead>
+<tr>
+<th>Methods</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><a href="https://clashofclans.js.org/api#Client#init">init(options)</a></td>
+<td>Initialize Extension class and create keys</td>
+</tr>
+<tr>
+<td><a href="https://clashofclans.js.org/api#Client#parseTag">parseTag(tag)</a></td>
+<td>Parse a clan or player Tag</td>
+</tr>
+<tr>
+<td><a href="https://clashofclans.js.org/api#Client#clans">clans([options])</a></td>
+<td>Search clans</td>
+</tr>
+<tr>
+<td><a href="https://clashofclans.js.org/api#Client#clan">clan(clanTag)</a></td>
+<td>Get clan information</td>
+</tr>
+<tr>
+<td><a href="https://clashofclans.js.org/api#Client#clanMembers">clanMembers(clanTag, [options])</a></td>
+<td>List clan members</td>
+</tr>
+<tr>
+<td><a href="https://clashofclans.js.org/api#Client#detailedClanMembers">detailedClanMembers(members)</a></td>
+<td>Detailed clan members</td>
+</tr>
+<tr>
+<td><a href="https://clashofclans.js.org/api#Client#clanWarLog">clanWarLog(clanTag, [options])</a></td>
+<td>Retrieve clan's clan war log</td>
+</tr>
+<tr>
+<td><a href="https://clashofclans.js.org/api#Client#currentClanWar">currentClanWar(clanTag, [options])</a></td>
+<td>Information about clan's current clan war</td>
+</tr>
+<tr>
+<td><a href="https://clashofclans.js.org/api#Client#clanWarLeague">clanWarLeague(clanTag)</a></td>
+<td>Information about clan's current clan war league group</td>
+</tr>
+<tr>
+<td><a href="https://clashofclans.js.org/api#Client#clanWarLeagueWar">clanWarLeagueWar(warTag)</a></td>
+<td>Information about individual clan war league war</td>
+</tr>
+<tr>
+<td><a href="https://clashofclans.js.org/api#Client#player">player(playerTag)</a></td>
+<td>Get player information</td>
+</tr>
+<tr>
+<td><a href="https://clashofclans.js.org/api#Client#verifyPlayerToken">verifyPlayerToken(playerTag, token)</a></td>
+<td>Verify player API token</td>
+</tr>
+<tr>
+<td><a href="https://clashofclans.js.org/api#Client#leagues">leagues([options])</a></td>
+<td>List Leagues</td>
+</tr>
+<tr>
+<td><a href="https://clashofclans.js.org/api#Client#league">league(leagueId)</a></td>
+<td>Get league information</td>
+</tr>
+<tr>
+<td><a href="https://clashofclans.js.org/api#Client#leagueSeason">leagueSeason(leagueId, [options])</a></td>
+<td>Get league seasons</td>
+</tr>
+<tr>
+<td><a href="https://clashofclans.js.org/api#Client#leagueRanking">leagueRanking(leagueId, seasonId, [options])</a></td>
+<td>Get league season rankings</td>
+</tr>
+<tr>
+<td><a href="https://clashofclans.js.org/api#Client#warLeagues">warLeagues([options])</a></td>
+<td>List war leagues</td>
+</tr>
+<tr>
+<td><a href="https://clashofclans.js.org/api#Client#warLeague">warLeague(leagueId)</a></td>
+<td>Get war league information</td>
+</tr>
+<tr>
+<td><a href="https://clashofclans.js.org/api#Client#locations">locations([options])</a></td>
+<td>List locations</td>
+</tr>
+<tr>
+<td><a href="https://clashofclans.js.org/api#Client#location">location(locationId)</a></td>
+<td>Get information about specific location</td>
+</tr>
+<tr>
+<td><a href="https://clashofclans.js.org/api#Client#clanRanks">clanRanks(locationId, [options])</a></td>
+<td>Get clan rankings for a specific location</td>
+</tr>
+<tr>
+<td><a href="https://clashofclans.js.org/api#Client#playerRanks">playerRanks(locationId, [options])</a></td>
+<td>Get player rankings for a specific location</td>
+</tr>
+<tr>
+<td><a href="https://clashofclans.js.org/api#Client#versusClanRanks">versusClanRanks(locationId, [options])</a></td>
+<td>Get clan versus rankings for a specific location</td>
+</tr>
+<tr>
+<td><a href="https://clashofclans.js.org/api#Client#versusPlayerRanks">versusPlayerRanks(locationId, [options])</a></td>
+<td>Get player versus rankings for a specific location</td>
+</tr>
+<tr>
+<td><a href="https://clashofclans.js.org/api#Client#clanLabels">clanLabels([options])</a></td>
+<td>List clan labels</td>
+</tr>
+<tr>
+<td><a href="https://clashofclans.js.org/api#Client#playerLabels">playerLabels([options])</a></td>
+<td>List player labels</td>
+</tr>
+<tr>
+<td><a href="https://clashofclans.js.org/api#Client#goldPassSeason">goldPassSeason()</a></td>
+<td>Get information about the current gold pass season</td>
+</tr>
+</tbody></table>
+<h3 id="create-api-token">Create API Token</h3>
+<p>This method is for creating API keys for the external IP the code is running on. Therefore no static IP is required and always ready to be deployed on Serverless platform like Heroku.</p>
+<pre><code class="js">const { Client } = require('clashofclans.js');
+const client = new Client();
+
+(async () =&gt; {
+    await client.init({ email: '', password: '' });
+    // you would have to run the `init` method just for once.
+
+    const data = await client.clan('#2PP');
+    console.log(data);
+})();</code></pre>
+<h3 id="disclaimer">Disclaimer</h3>
+<blockquote>
+<p>This content is not affiliated with, endorsed, sponsored, or specifically approved by Supercell and Supercell is not responsible for it. For more information see <a href="https://supercell.com/en/fan-content-policy/">Supercell’s Fan Content Policy</a>.</p>
+</blockquote>
+</body></html>
