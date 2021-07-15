@@ -439,7 +439,7 @@ module.exports = Client;
  * Base Client Options
  * @typedef {Object} ClientOptions
  * @memberof core
- * @property {string|string[]} token - Clash of Clans API token
+ * @property {string} keys - Clash of Clans API keys(s)
  * @property {number} timeout - Request timeout in millisecond
  * @property {string} [baseURL] - Clash of Clans API Base URL
  */

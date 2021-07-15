@@ -60,7 +60,6 @@ declare module 'clashofclans.js' {
 		public keys?: string[];
 		public timeout?: number;
 		public baseURL?: string;
-		public token?: string | string[];
 
 		public init(options: ExtensionOptions): Promise<string[]>;
 
