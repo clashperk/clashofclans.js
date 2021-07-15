@@ -1,6 +1,6 @@
 {
   "name": "clashofclans.js",
-  "version": "1.5.1",
+  "version": "1.5.2",
   "description": "JavaScript library for interacting with the Clash of Clans API",
   "author": "SUVAJIT <suvajit.me@gmail.com>",
   "license": "MIT",
