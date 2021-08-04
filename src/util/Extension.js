@@ -66,7 +66,10 @@ class Extension {
 		});
 
 		const data = await res.json();
-		const keys = data.keys.filter(key => key.name === this.keyName);
+		if (!res.ok) {
+			throw Error(`Failed to Fetch Keys [${JSON.stringify(data)}]`);
+		}
+		const keys = data.keys?.filter(key => key.name === this.keyName);
 		if (!keys.length) return this.createKey(cookie);
 
 		if (this.keyCount > (10 - (data.keys.length - keys.length))) {
@@ -84,17 +87,18 @@ class Extension {
 			body: JSON.stringify({ id: key.id })
 		});
 
-		return res.json();
+		return res.json().catch(() => null);
 	}
 
 	async createKey(cookie) {
+		const IP = await this.getIP();
 		const res = await fetch(`${this.baseURL}/apikey/create`, {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json', cookie },
 			body: JSON.stringify({
 				name: this.keyName,
 				description: this.keyDescription,
-				cidrRanges: [await this.getIP()]
+				cidrRanges: [IP]
 			})
 		});
 
@@ -102,7 +106,7 @@ class Extension {
 		if (res.ok && data.key) {
 			return this._keys.push(data.key.key);
 		}
-		throw Error('Failed to create API Tokens!');
+		throw Error(`Failed to create API Tokens. IP: ${IP} [${JSON.stringify(data)}]`);
 	}
 
 	async getIP() {
