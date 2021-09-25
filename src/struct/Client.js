@@ -25,6 +25,13 @@ class Client {
 		this.timeout = options.timeout || 0;
 		this.keys = options.keys || options.token;
 		this.baseURL = options.baseURL || 'https://api.clashofclans.com/v1';
+
+		if (options.token) {
+			process.emitWarning(
+				'The `token` field is considered deprecated and will be removed in the next version, use `keys` instead.',
+				'DeprecationWarning'
+			);
+		}
 	}
 
 	/**

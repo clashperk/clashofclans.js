@@ -3,6 +3,7 @@ declare module 'clashofclans.js' {
 		keys?: string[];
 		timeout?: number;
 		baseURL?: string;
+		/** @deprecated The `token` field is considered deprecated, use `keys` instead. */
 		token?: string | string[];
 	}
 
@@ -236,6 +237,7 @@ declare module 'clashofclans.js' {
 		endTime: string;
 		clan: WarClan;
 		opponent: WarClan;
+		attacksPerMember: number;
 
 		ok: boolean;
 		maxAge: number;
@@ -287,6 +289,7 @@ declare module 'clashofclans.js' {
 			result: 'win' | 'lose' | 'tie' | null;
 			endTime: string;
 			teamSize: number;
+			attacksPerMember?: number;
 			clan: Omit<WarClan, 'members'>;
 			opponent: Omit<WarClan, 'members' | 'attacks' | 'expEarned'>;
 		}[];
@@ -368,6 +371,7 @@ declare module 'clashofclans.js' {
 		donations: number;
 		donationsReceived: number;
 		role?: string;
+		warPreference?: 'in' | 'out'
 		clan?: {
 			tag: string;
 			name: string;
