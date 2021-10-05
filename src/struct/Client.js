@@ -154,7 +154,7 @@ class Client {
 	 * @returns {Promise<Object>} Object
 	 */
 	async clanMembers(clanTag, options) {
-		const query = new URLSearchParams(options);
+		const query = new URLSearchParams(options).toString();
 		return this.fetch(`/clans/${this.encodeTag(clanTag)}/members?${query}`);
 	}
 
@@ -179,7 +179,7 @@ class Client {
 	 * @returns {Promise<Object>} Object
 	 */
 	async clanWarLog(clanTag, options) {
-		const query = new URLSearchParams(options);
+		const query = new URLSearchParams(options).toString();
 		return this.fetch(`/clans/${this.encodeTag(clanTag)}/warlog?${query}`);
 	}
 
@@ -192,7 +192,7 @@ class Client {
 	 * @returns {Promise<Object>} Object
 	 */
 	async currentClanWar(clanTag, options) {
-		const query = new URLSearchParams(options);
+		const query = new URLSearchParams(options).toString();
 		return this.fetch(`/clans/${this.encodeTag(clanTag, true)}/currentwar?${query}`);
 	}
 
@@ -259,7 +259,7 @@ class Client {
 	 * @returns {Promise<Object>} Object
 	 */
 	async leagues(options) {
-		const query = new URLSearchParams(options);
+		const query = new URLSearchParams(options).toString();
 		return this.fetch(`/leagues?${query}`);
 	}
 
@@ -283,7 +283,7 @@ class Client {
 	 * @returns {Promise<Object>} Object
 	 */
 	async leagueSeason(leagueId, options) {
-		const query = new URLSearchParams(options);
+		const query = new URLSearchParams(options).toString();
 		return this.fetch(`/leagues/${leagueId}/seasons?${query}`);
 	}
 
@@ -297,7 +297,7 @@ class Client {
 	 * @returns {Promise<Object>} Object
 	 */
 	async leagueRanking(leagueId, seasonId, options) {
-		const query = new URLSearchParams(options);
+		const query = new URLSearchParams(options).toString();
 		return this.fetch(`/leagues/${leagueId}/seasons/${seasonId}?${query}`);
 	}
 
@@ -309,7 +309,7 @@ class Client {
 	 * @returns {Promise<Object>} Object
 	 */
 	async warLeagues(options) {
-		const query = new URLSearchParams(options);
+		const query = new URLSearchParams(options).toString();
 		return this.fetch(`/warleagues?${query}`);
 	}
 
@@ -334,7 +334,7 @@ class Client {
 	 * @returns {Promise<Object>} Object
 	 */
 	async locations(options) {
-		const query = new URLSearchParams(options);
+		const query = new URLSearchParams(options).toString();
 		return this.fetch(`/locations?${query}`);
 	}
 
@@ -358,7 +358,7 @@ class Client {
 	 * @returns {Promise<Object>} Object
 	 */
 	async clanRanks(locationId, options) {
-		const query = new URLSearchParams(options);
+		const query = new URLSearchParams(options).toString();
 		return this.fetch(`/locations/${locationId}/rankings/clans?${query}`);
 	}
 
@@ -371,7 +371,7 @@ class Client {
 	 * @returns {Promise<Object>} Object
 	 */
 	async playerRanks(locationId, options) {
-		const query = new URLSearchParams(options);
+		const query = new URLSearchParams(options).toString();
 		return this.fetch(`/locations/${locationId}/rankings/players?${query}`);
 	}
 
@@ -384,7 +384,7 @@ class Client {
 	 * @returns {Promise<Object>} Object
 	 */
 	async versusClanRanks(locationId, options) {
-		const query = new URLSearchParams(options);
+		const query = new URLSearchParams(options).toString();
 		return this.fetch(`/locations/${locationId}/rankings/clans-versus?${query}`);
 	}
 
@@ -397,7 +397,7 @@ class Client {
 	 * @returns {Promise<Object>} Object
 	 */
 	async versusPlayerRanks(locationId, options) {
-		const query = new URLSearchParams(options);
+		const query = new URLSearchParams(options).toString();
 		return this.fetch(`/locations/${locationId}/rankings/players-versus?${query}`);
 	}
 
@@ -409,7 +409,7 @@ class Client {
 	 * @returns {Promise<Object>} Object
 	 */
 	async clanLabels(options) {
-		const query = new URLSearchParams(options);
+		const query = new URLSearchParams(options).toString();
 		return this.fetch(`/labels/clans?${query}`);
 	}
 
@@ -421,7 +421,7 @@ class Client {
 	 * @returns {Promise<Object>} Object
 	 */
 	async playerLabels(options) {
-		const query = new URLSearchParams(options);
+		const query = new URLSearchParams(options).toString();
 		return this.fetch(`/labels/players?${query}`);
 	}
 
