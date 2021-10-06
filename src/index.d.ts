@@ -67,6 +67,8 @@ declare module 'clashofclans.js' {
 		public fetch(path: string): Promise<any>;
 
 		public parseTag(tag: string): string;
+		
+		public encodeTag(tag: string): string;
 
 		public clans(options: ClanSearchOptions): Promise<ClanList>;
 
