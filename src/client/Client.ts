@@ -7,7 +7,7 @@ export class Client {
 	public baseURL: string;
 	public restRequestTimeout: number;
 
-	public util = new Util();
+	public util = Util;
 	public rest = new RESTManager(this);
 
 	public constructor(options: ClientOptions = {}) {
