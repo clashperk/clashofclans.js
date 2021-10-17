@@ -17,7 +17,7 @@ import {
 	LeagueSeasonList,
 	Location,
 	LocationList,
-	Player,
+	APIPlayer,
 	PlayerRankingList,
 	PlayerSeasonRankingList,
 	PlayerVersusRankingList,
@@ -68,7 +68,7 @@ export default class RESTManager {
 	}
 
 	public getPlayer(playerTag: string) {
-		return this.handler.request<Player>(`/players/${this.encodeTag(playerTag)}`);
+		return this.handler.request<APIPlayer>(`/players/${this.encodeTag(playerTag)}`);
 	}
 
 	public postPlayerToken(playerTag: string, token: string) {
@@ -130,7 +130,9 @@ export default class RESTManager {
 
 	public getVersusPlayerRanks(locationId: string | number, options: SearchOptions) {
 		const query = this.getQueryString(options);
-		return this.handler.request<PlayerVersusRankingList>(`/locations/${locationId}/rankings/players-versus?${query}`);
+		return this.handler.request<PlayerVersusRankingList>(
+			`/locations/${locationId}/rankings/players-versus?${query}`
+		);
 	}
 
 	public getClanLabels(options: SearchOptions) {
