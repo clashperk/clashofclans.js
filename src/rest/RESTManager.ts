@@ -42,19 +42,18 @@ export class RESTManager {
 		return this.handler.request<APIClan>(`/clans/${this.encodeTag(clanTag)}`);
 	}
 
-	public getClanMembers(clanTag: string, options: SearchOptions) {
+	public getClanMembers(clanTag: string, options?: SearchOptions) {
 		const query = this.getQueryString(options);
 		return this.handler.request<APIClanMemberList>(`/clans/${this.encodeTag(clanTag)}/members?${query}`);
 	}
 
-	public getClanWarLog(clanTag: string, options: SearchOptions) {
+	public getClanWarLog(clanTag: string, options?: SearchOptions) {
 		const query = this.getQueryString(options);
 		return this.handler.request<APIClanWarLog>(`/clans/${this.encodeTag(clanTag)}/warlog?${query}`);
 	}
 
-	public getCurrentWar(clanTag: string, options: SearchOptions) {
-		const query = this.getQueryString(options);
-		return this.handler.request<APIClanWar>(`/clans/${this.encodeTag(clanTag)}/currentwar?${query}`);
+	public getCurrentWar(clanTag: string) {
+		return this.handler.request<APIClanWar>(`/clans/${this.encodeTag(clanTag)}/currentwar`);
 	}
 
 	public getClanWarLeagueGroup(clanTag: string) {
@@ -74,7 +73,7 @@ export class RESTManager {
 		return this.handler.request<APIVerifyToken>(`/players/${this.encodeTag(playerTag)}/verifytoken`, options);
 	}
 
-	public getLeagues(options: SearchOptions) {
+	public getLeagues(options?: SearchOptions) {
 		const query = this.getQueryString(options);
 		return this.handler.request<APILeagueList>(`/leagues?${query}`);
 	}
@@ -83,60 +82,60 @@ export class RESTManager {
 		return this.handler.request<APILeague>(`/leagues/${leagueId}`);
 	}
 
-	public getLeagueSeason(leagueId: string | number, options: SearchOptions) {
+	public getLeagueSeasons(leagueId: number, options?: SearchOptions) {
 		const query = this.getQueryString(options);
 		return this.handler.request<APILeagueSeasonList>(`/leagues/${leagueId}/seasons?${query}`);
 	}
 
-	public getLeagueRanking(leagueId: string | number, seasonId: string, options: SearchOptions) {
+	public getSeasonRankings(leagueId: number, seasonId: string, options?: SearchOptions) {
 		const query = this.getQueryString(options);
 		return this.handler.request<APIPlayerSeasonRankingList>(`/leagues/${leagueId}/seasons/${seasonId}?${query}`);
 	}
 
-	public getWarLeagues(options: SearchOptions) {
+	public getWarLeagues(options?: SearchOptions) {
 		const query = this.getQueryString(options);
 		return this.handler.request<APIWarLeagueList>(`/warleagues?${query}`);
 	}
 
-	public getWarLeague(leagueId: string | number) {
+	public getWarLeague(leagueId: number) {
 		return this.handler.request<APIWarLeague>(`/warleagues/${leagueId}`);
 	}
 
-	public getLocations(options: SearchOptions) {
+	public getLocations(options?: SearchOptions) {
 		const query = this.getQueryString(options);
 		return this.handler.request<APILocationList>(`/locations?${query}`);
 	}
 
-	public getLocation(locationId: string | number) {
+	public getLocation(locationId: number) {
 		return this.handler.request<APILocation>(`/locations/${locationId}`);
 	}
 
-	public getClanRanks(locationId: string | number, options: SearchOptions) {
+	public getClanRanks(locationId: number | string, options?: SearchOptions) {
 		const query = this.getQueryString(options);
 		return this.handler.request<APIClanRankingList>(`/locations/${locationId}/rankings/clans?${query}`);
 	}
 
-	public getPlayerRanks(locationId: string | number, options: SearchOptions) {
+	public getPlayerRanks(locationId: number | string, options?: SearchOptions) {
 		const query = this.getQueryString(options);
 		return this.handler.request<APIPlayerRankingList>(`/locations/${locationId}/rankings/players?${query}`);
 	}
 
-	public getVersusClanRanks(locationId: string | number, options: SearchOptions) {
+	public getVersusClanRanks(locationId: number | string, options?: SearchOptions) {
 		const query = this.getQueryString(options);
 		return this.handler.request<APIClanVersusRankingList>(`/locations/${locationId}/rankings/clans-versus?${query}`);
 	}
 
-	public getVersusPlayerRanks(locationId: string | number, options: SearchOptions) {
+	public getVersusPlayerRanks(locationId: number | string, options?: SearchOptions) {
 		const query = this.getQueryString(options);
 		return this.handler.request<APIPlayerVersusRankingList>(`/locations/${locationId}/rankings/players-versus?${query}`);
 	}
 
-	public getClanLabels(options: SearchOptions) {
+	public getClanLabels(options?: SearchOptions) {
 		const query = this.getQueryString(options);
 		return this.handler.request<APILabelList>(`/labels/clans?${query}`);
 	}
 
-	public getPlayerLabels(options: SearchOptions) {
+	public getPlayerLabels(options?: SearchOptions) {
 		const query = this.getQueryString(options);
 		return this.handler.request<APILabelList>(`/labels/players?${query}`);
 	}

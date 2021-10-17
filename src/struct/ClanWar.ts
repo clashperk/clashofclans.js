@@ -1,6 +1,7 @@
 import { APIClanWar, APIClanWarAttack, APIClanWarMember, APIWarClan, APIWarState } from '../types';
 import { Client } from '../client/Client';
 import { Badge } from './Badge';
+import moment from 'moment';
 
 export class ClanWarAttack {
 	public order: number;
@@ -40,24 +41,32 @@ export class ClanWarMember {
 	}
 }
 
-export class WarClan {
+export class BaseWarClan {
 	public tag: string;
 	public name: string;
-	public badgeUrls: Badge;
+	public badge: Badge;
 	public clanLevel: number;
-	public attacks: number;
 	public stars: number;
 	public destructionPercentage: number;
-	public members: ClanWarMember[];
 
 	public constructor(data: APIWarClan) {
 		this.name = data.name;
 		this.tag = data.tag;
-		this.badgeUrls = new Badge(data.badgeUrls);
+		this.badge = new Badge(data.badgeUrls);
 		this.clanLevel = data.clanLevel;
-		this.attacks = data.attacks;
 		this.stars = data.stars;
 		this.destructionPercentage = data.destructionPercentage;
+	}
+}
+
+export class WarClan extends BaseWarClan {
+	public members: ClanWarMember[];
+	public attacks: number;
+
+	public constructor(data: APIWarClan) {
+		super(data);
+
+		this.attacks = data.attacks;
 		this.members = data.members.map((mem) => new ClanWarMember(mem));
 	}
 }
@@ -65,9 +74,9 @@ export class WarClan {
 export class ClanWar {
 	public state: APIWarState;
 	public teamSize: number;
-	public startTime: string;
-	public preparationStartTime: string;
-	public endTime: string;
+	public startTime: Date;
+	public preparationStartTime: Date;
+	public endTime: Date;
 	public clan: WarClan;
 	public opponent: WarClan;
 	public attacksPerMember: number;
@@ -75,9 +84,9 @@ export class ClanWar {
 	public constructor(private readonly client: Client, data: APIClanWar) {
 		this.state = data.state;
 		this.teamSize = data.teamSize;
-		this.startTime = data.startTime;
-		this.preparationStartTime = data.preparationStartTime;
-		this.endTime = data.endTime;
+		this.startTime = moment(data.startTime).toDate();
+		this.preparationStartTime = moment(data.preparationStartTime).toDate();
+		this.endTime = moment(data.endTime).toDate();
 		this.clan = new WarClan(data.clan);
 		this.opponent = new WarClan(data.opponent);
 		this.attacksPerMember = data.attacksPerMember;

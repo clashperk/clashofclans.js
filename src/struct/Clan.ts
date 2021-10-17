@@ -1,12 +1,11 @@
-import { Location } from './Location';
 import { ChatLanguage } from './ChatLanguage';
-import { Badge } from './Badge';
-import { WarLeague } from './WarLeague';
-import { Label } from './Label';
 import { ClanMember } from './ClanMember';
-
 import { Client } from '../client/Client';
+import { WarLeague } from './WarLeague';
+import { Location } from './Location';
 import { APIClan } from '../types';
+import { Label } from './Label';
+import { Badge } from './Badge';
 
 /**
  * Represents a Clan in Clash of Clans
@@ -31,11 +30,13 @@ export class Clan {
 	public warLosses: number | null;
 	public isWarLogPublic: boolean;
 	public warLeague: WarLeague | null;
-	public members: number;
+	public memberCount: number;
 	public labels: Label[];
-	public memberList: ClanMember[];
 
-	public constructor(private readonly client: Client, data: APIClan) {
+	/** List of clan members (Note: This property returns empty array for searched clans) */
+	public members: ClanMember[];
+
+	public constructor(public client: Client, data: APIClan) {
 		/**
 		 * Name of the clan
 		 * @type {string}
@@ -120,18 +121,15 @@ export class Clan {
 		 * Member count of the clan
 		 * @type {number}
 		 */
-		this.members = data.members;
+		this.memberCount = data.members;
 
 		/**
 		 * Clan Labels
 		 * @type {Label[]}
 		 */
-		this.labels = data.labels.map((label: any) => new Label(label));
+		this.labels = data.labels.map((label) => new Label(label));
 
-		/**
-		 * Member list of the clan
-		 * @type {ClanMember[]}
-		 */
-		this.memberList = data.memberList.map((mem: any) => new ClanMember(mem));
+		/** List of clan members (Note: This property returns empty array for searched clans) */
+		this.members = data.memberList?.map((mem) => new ClanMember(mem)) ?? []; // eslint-disable-line
 	}
 }

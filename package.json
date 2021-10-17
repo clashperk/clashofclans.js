@@ -32,6 +32,7 @@
 		"plugins": [
 			"prettier"
 		],
+		"parser": "@typescript-eslint/parser",
 		"rules": {
 			"no-process-env": 0,
 			"no-inline-comments": 0,
@@ -54,6 +55,7 @@
 		"trailingComma": "none"
 	},
 	"dependencies": {
+		"moment": "^2.29.1",
 		"node-fetch": "^2.6.1"
 	},
 	"devDependencies": {
