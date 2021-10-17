@@ -303,3 +303,103 @@ export class ClanMember {
 		this.donationsReceived = data.donationsReceived;
 	}
 }
+
+export class Season {
+	public id: string;
+	public rank: number;
+	public trophies: number;
+
+	public constructor(data: any) {
+		this.id = data.id;
+		this.rank = data.rank;
+		this.trophies = data.trophies;
+	}
+}
+
+// TODO:
+export class LegendStatistics {
+	public legendTrophies: number;
+
+	public constructor(data: any) {
+		this.legendTrophies = data.legendTrophies;
+	}
+}
+
+export class Unit {
+	public name: string;
+	public level: number;
+	public maxLevel: number;
+	public village: 'home' | 'builderBase';
+
+	public constructor(data: any) {
+		this.name = data.name;
+		this.level = data.level;
+		this.maxLevel = data.maxLevel;
+		this.village = data.village;
+	}
+}
+
+export class Troop extends Unit {
+	public superTroopIsActive: boolean;
+
+	public constructor(data: any) {
+		super(data);
+		this.superTroopIsActive = data.superTroopIsActive;
+	}
+}
+
+export class Spell extends Unit {
+	public constructor(data: any) {
+		super(data);
+	}
+}
+
+export class Hero extends Unit {
+	public constructor(data: any) {
+		super(data);
+	}
+}
+
+export class PlayerClan {
+	public name: string;
+	public tag: string;
+	public level: number;
+	public badge: Badge;
+
+	public constructor(data: any) {
+		this.name = data.name;
+		this.tag = data.tag;
+		this.level = data.level;
+		this.badge = new Badge(data.badge);
+	}
+}
+
+export interface PlayerAchievement {
+	name: string;
+	stars: number;
+	value: number;
+	target: number;
+	info: string;
+	completionInfo: string | null;
+	village: 'home' | 'builderBase';
+}
+
+export class Achievement {
+	public name: string;
+	public stars: number;
+	public value: number;
+	public target: number;
+	public info: string;
+	public village: 'home' | 'builderBase';
+	public completionInfo: string | null;
+
+	public constructor(data: any) {
+		this.name = data.name;
+		this.stars = data.stars;
+		this.value = data.value;
+		this.target = data.target;
+		this.info = data.info;
+		this.village = data.village;
+		this.completionInfo = data.completionInfo ?? null;
+	}
+}
