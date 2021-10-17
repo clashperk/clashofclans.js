@@ -24,7 +24,7 @@ export default class RequestHandler {
 		return key;
 	}
 
-	public async request(path: string, options: RequestOptions = {}) {
+	public async request<T = any>(path: string, options: RequestOptions = {}) {
 		const timeout = this.client.restRequestTimeout || 0;
 		const res = await fetch(`${this.client.baseURL}${path}`, {
 			headers: {
@@ -33,7 +33,7 @@ export default class RequestHandler {
 			}, timeout, agent, ...options
 		}).catch(() => null);
 
-		const data = await res?.json().catch(() => null);
+		const data: T = await res?.json().catch(() => null);
 		if (!res?.ok) throw new HTTPError(data, res?.status ?? 504, options.method ?? 'GET', path);
 
 		const maxAge = res.headers.get('cache-control')?.split('=')?.[1] ?? 0;
