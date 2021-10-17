@@ -1,6 +1,31 @@
 import RequestHandler from './RequestHandler';
 import { Client } from '../client/Client';
 
+import {
+	APIClan,
+	ClanList,
+	ClanMemberList,
+	ClanRankingList,
+	ClanVersusRankingList,
+	ClanWar,
+	ClanWarLeagueGroup,
+	ClanWarLog,
+	GoldPassSeason,
+	LabelList,
+	League,
+	LeagueList,
+	LeagueSeasonList,
+	Location,
+	LocationList,
+	Player,
+	PlayerRankingList,
+	PlayerSeasonRankingList,
+	PlayerVersusRankingList,
+	VerifyToken,
+	WarLeague,
+	WarLeagueList
+} from '../types';
+
 export default class RESTManager {
 	private readonly client: Client;
 	private readonly handler: RequestHandler;
@@ -10,116 +35,116 @@ export default class RESTManager {
 		this.handler = new RequestHandler(client);
 	}
 
-	public async getClans(options: ClanSearchOptions) {
+	public getClans(options: ClanSearchOptions) {
 		const query = this.getQueryString(options);
-		return this.handler.request(`/clans?${query}`);
+		return this.handler.request<ClanList>(`/clans?${query}`);
 	}
 
-	public async getClan(clanTag: string) {
-		return this.handler.request(`/clans/${this.encodeTag(clanTag)}`);
+	public getClan(clanTag: string) {
+		return this.handler.request<APIClan>(`/clans/${this.encodeTag(clanTag)}`);
 	}
 
-	public async getClanMembers(clanTag: string, options: SearchOptions) {
+	public getClanMembers(clanTag: string, options: SearchOptions) {
 		const query = this.getQueryString(options);
-		return this.handler.request(`/clans/${this.encodeTag(clanTag)}/members?${query}`);
+		return this.handler.request<ClanMemberList>(`/clans/${this.encodeTag(clanTag)}/members?${query}`);
 	}
 
-	public async getClanWarLog(clanTag: string, options: SearchOptions) {
+	public getClanWarLog(clanTag: string, options: SearchOptions) {
 		const query = this.getQueryString(options);
-		return this.handler.request(`/clans/${this.encodeTag(clanTag)}/warlog?${query}`);
+		return this.handler.request<ClanWarLog>(`/clans/${this.encodeTag(clanTag)}/warlog?${query}`);
 	}
 
-	public async getCurrentWar(clanTag: string, options: SearchOptions) {
+	public getCurrentWar(clanTag: string, options: SearchOptions) {
 		const query = this.getQueryString(options);
-		return this.handler.request(`/clans/${this.encodeTag(clanTag)}/currentwar?${query}`);
+		return this.handler.request<ClanWar>(`/clans/${this.encodeTag(clanTag)}/currentwar?${query}`);
 	}
 
-	public async getClanWarLeagueGroup(clanTag: string) {
-		return this.handler.request(`/clans/${this.encodeTag(clanTag)}/currentwar/leaguegroup`);
+	public getClanWarLeagueGroup(clanTag: string) {
+		return this.handler.request<ClanWarLeagueGroup>(`/clans/${this.encodeTag(clanTag)}/currentwar/leaguegroup`);
 	}
 
-	public async getClanWarLeagueWar(warTag: string) {
-		return this.handler.request(`/clanwarleagues/wars/${this.encodeTag(warTag)}`);
+	public getClanWarLeagueWar(warTag: string) {
+		return this.handler.request<ClanWar>(`/clanwarleagues/wars/${this.encodeTag(warTag)}`);
 	}
 
-	public async getPlayer(playerTag: string) {
-		return this.handler.request(`/players/${this.encodeTag(playerTag)}`);
+	public getPlayer(playerTag: string) {
+		return this.handler.request<Player>(`/players/${this.encodeTag(playerTag)}`);
 	}
 
-	public async postPlayerToken(playerTag: string, token: string) {
+	public postPlayerToken(playerTag: string, token: string) {
 		const options = { method: 'POST', body: JSON.stringify({ token }) };
-		return this.handler.request(`/players/${this.encodeTag(playerTag)}/verifytoken`, options);
+		return this.handler.request<VerifyToken>(`/players/${this.encodeTag(playerTag)}/verifytoken`, options);
 	}
 
-	public async getLeagues(options: SearchOptions) {
+	public getLeagues(options: SearchOptions) {
 		const query = this.getQueryString(options);
-		return this.handler.request(`/leagues?${query}`);
+		return this.handler.request<LeagueList>(`/leagues?${query}`);
 	}
 
-	public async getLeague(leagueId: string | number) {
-		return this.handler.request(`/leagues/${leagueId}`);
+	public getLeague(leagueId: string | number) {
+		return this.handler.request<League>(`/leagues/${leagueId}`);
 	}
 
-	public async getLeagueSeason(leagueId: string | number, options: SearchOptions) {
+	public getLeagueSeason(leagueId: string | number, options: SearchOptions) {
 		const query = this.getQueryString(options);
-		return this.handler.request(`/leagues/${leagueId}/seasons?${query}`);
+		return this.handler.request<LeagueSeasonList>(`/leagues/${leagueId}/seasons?${query}`);
 	}
 
-	public async getLeagueRanking(leagueId: string | number, seasonId: string, options: SearchOptions) {
+	public getLeagueRanking(leagueId: string | number, seasonId: string, options: SearchOptions) {
 		const query = this.getQueryString(options);
-		return this.handler.request(`/leagues/${leagueId}/seasons/${seasonId}?${query}`);
+		return this.handler.request<PlayerSeasonRankingList>(`/leagues/${leagueId}/seasons/${seasonId}?${query}`);
 	}
 
-	public async getWarLeagues(options: SearchOptions) {
+	public getWarLeagues(options: SearchOptions) {
 		const query = this.getQueryString(options);
-		return this.handler.request(`/warleagues?${query}`);
+		return this.handler.request<WarLeagueList>(`/warleagues?${query}`);
 	}
 
-	public async getWarLeague(leagueId: string | number) {
-		return this.handler.request(`/warleagues/${leagueId}`);
+	public getWarLeague(leagueId: string | number) {
+		return this.handler.request<WarLeague>(`/warleagues/${leagueId}`);
 	}
 
-	public async getLocations(options: SearchOptions) {
+	public getLocations(options: SearchOptions) {
 		const query = this.getQueryString(options);
-		return this.handler.request(`/locations?${query}`);
+		return this.handler.request<LocationList>(`/locations?${query}`);
 	}
 
-	public async getLocation(locationId: string | number) {
-		return this.handler.request(`/locations/${locationId}`);
+	public getLocation(locationId: string | number) {
+		return this.handler.request<Location>(`/locations/${locationId}`);
 	}
 
-	public async getClanRanks(locationId: string | number, options: SearchOptions) {
+	public getClanRanks(locationId: string | number, options: SearchOptions) {
 		const query = this.getQueryString(options);
-		return this.handler.request(`/locations/${locationId}/rankings/clans?${query}`);
+		return this.handler.request<ClanRankingList>(`/locations/${locationId}/rankings/clans?${query}`);
 	}
 
-	public async getPlayerRanks(locationId: string | number, options: SearchOptions) {
+	public getPlayerRanks(locationId: string | number, options: SearchOptions) {
 		const query = this.getQueryString(options);
-		return this.handler.request(`/locations/${locationId}/rankings/players?${query}`);
+		return this.handler.request<PlayerRankingList>(`/locations/${locationId}/rankings/players?${query}`);
 	}
 
-	public async getVersusClanRanks(locationId: string | number, options: SearchOptions) {
+	public getVersusClanRanks(locationId: string | number, options: SearchOptions) {
 		const query = this.getQueryString(options);
-		return this.handler.request(`/locations/${locationId}/rankings/clans-versus?${query}`);
+		return this.handler.request<ClanVersusRankingList>(`/locations/${locationId}/rankings/clans-versus?${query}`);
 	}
 
-	public async getVersusPlayerRanks(locationId: string | number, options: SearchOptions) {
+	public getVersusPlayerRanks(locationId: string | number, options: SearchOptions) {
 		const query = this.getQueryString(options);
-		return this.handler.request(`/locations/${locationId}/rankings/players-versus?${query}`);
+		return this.handler.request<PlayerVersusRankingList>(`/locations/${locationId}/rankings/players-versus?${query}`);
 	}
 
-	public async getClanLabels(options: SearchOptions) {
+	public getClanLabels(options: SearchOptions) {
 		const query = this.getQueryString(options);
-		return this.handler.request(`/labels/clans?${query}`);
+		return this.handler.request<LabelList>(`/labels/clans?${query}`);
 	}
 
-	public async getPlayerLabels(options: SearchOptions) {
+	public getPlayerLabels(options: SearchOptions) {
 		const query = this.getQueryString(options);
-		return this.handler.request(`/labels/players?${query}`);
+		return this.handler.request<LabelList>(`/labels/players?${query}`);
 	}
 
-	public async getGoldPassSeason() {
-		return this.handler.request('/goldpass/seasons/current');
+	public getGoldPassSeason() {
+		return this.handler.request<GoldPassSeason>('/goldpass/seasons/current');
 	}
 
 	private encodeTag(tag: string) {
