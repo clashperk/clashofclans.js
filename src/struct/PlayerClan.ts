@@ -1,3 +1,4 @@
+import { APIPlayerClan } from '../types';
 import { Badge } from './Badge';
 
 export class PlayerClan {
@@ -6,10 +7,10 @@ export class PlayerClan {
 	public level: number;
 	public badge: Badge;
 
-	public constructor(data: any) {
+	public constructor(data: APIPlayerClan) {
 		this.name = data.name;
 		this.tag = data.tag;
-		this.level = data.level;
-		this.badge = new Badge(data.badge);
+		this.level = data.clanLevel;
+		this.badge = new Badge(data.badgeUrls);
 	}
 }

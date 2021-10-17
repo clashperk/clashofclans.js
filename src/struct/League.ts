@@ -1,3 +1,4 @@
+import { APILeague } from '../types';
 import { Icon } from './Icon';
 
 /**
@@ -8,7 +9,7 @@ export class League {
 	public name: string;
 	public icon: Icon;
 
-	public constructor(data: any) {
+	public constructor(data: APILeague) {
 		/**
 		 * The league ID
 		 * @type {number}

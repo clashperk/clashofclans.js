@@ -1,3 +1,5 @@
+import { APIBadge } from '../types';
+
 /**
  * Represents a Badge
  */
@@ -7,7 +9,7 @@ export class Badge {
 	public medium: string;
 	public small: string;
 
-	public constructor(data: any) {
+	public constructor(data: APIBadge) {
 		/**
 		 * The default icon URL
 		 * @type {string}

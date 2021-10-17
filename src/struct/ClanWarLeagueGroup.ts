@@ -38,7 +38,7 @@ export class ClanWarLeagueRound {
 	}
 }
 
-export default class ClanWarLeagueGroup {
+export class ClanWarLeagueGroup {
 	public state: 'notInWar' | 'preparation' | 'inWar' | 'warEnded';
 	public season: string;
 	public clans: ClanWarLeagueClan[];

@@ -8,7 +8,7 @@ import { LegendStatistics } from './LegendStatistics';
 import { Client } from '../client/Client';
 import { APIPlayer } from '../types';
 
-export default class Player {
+export class Player {
 	public name: string;
 	public tag: string;
 	public townHallLevel: number;
