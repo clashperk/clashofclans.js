@@ -4,7 +4,7 @@
  * /clans?name={name}&limit={limit}
  */
 export interface ClanList {
-	items: (Omit<APIClan, 'memberList'>)[];
+	items: Omit<APIClan, 'memberList'>[];
 	paging: {
 		cursors: {
 			after?: string;
@@ -569,7 +569,7 @@ export interface League {
  * /leagues/{leagueId}/seasons/{seasonId}
  */
 export interface PlayerSeasonRankingList {
-	items: (Omit<PlayerRanking, 'league'>)[];
+	items: Omit<PlayerRanking, 'league'>[];
 	paging: {
 		cursors: {
 			after?: string;
@@ -641,10 +641,10 @@ export interface WarLeague {
 // ************** LABELS ************** //
 
 /**
-  * /labels/players
-  *
-  * /labels/clans
-  */
+ * /labels/players
+ *
+ * /labels/clans
+ */
 export interface LabelList {
 	items: Label[];
 	paging: {
@@ -685,4 +685,3 @@ export interface GoldPassSeason {
 	message?: string;
 	statusCode: number;
 }
-

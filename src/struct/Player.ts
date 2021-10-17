@@ -51,11 +51,11 @@ export default class Player {
 		this.clan = data.clan ? new PlayerClan(data.clan) : null;
 		this.league = data.league ? new League(data.league) : null;
 		this.legendStatistics = data.legendStatistics ? new LegendStatistics(data.legendStatistics) : null;
-		this.achievements = data.achievements.map(data => new Achievement(data));
-		this.labels = data.labels.map(data => new Label(data));
-		this.troops = data.troops.map(data => new Troop(data));
-		this.spells = data.spells.map(data => new Spell(data));
-		this.heroes = data.heroes.map(data => new Hero(data));
+		this.achievements = data.achievements.map((data) => new Achievement(data));
+		this.labels = data.labels.map((data) => new Label(data));
+		this.troops = data.troops.map((data) => new Troop(data));
+		this.spells = data.spells.map((data) => new Spell(data));
+		this.heroes = data.heroes.map((data) => new Hero(data));
 	}
 
 	public async fetchClan() {
