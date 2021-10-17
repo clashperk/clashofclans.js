@@ -30,7 +30,7 @@ export default class Player {
 	public spells: Spell[];
 	public heroes: Hero[];
 
-	public constructor(client: Client, data: APIPlayer) {
+	public constructor(private readonly client: Client, data: APIPlayer) {
 		this.name = data.name;
 		this.tag = data.tag;
 		this.townHallLevel = data.townHallLevel;
@@ -56,5 +56,10 @@ export default class Player {
 		this.troops = data.troops.map(data => new Troop(data));
 		this.spells = data.spells.map(data => new Spell(data));
 		this.heroes = data.heroes.map(data => new Hero(data));
+	}
+
+	public async fetchClan() {
+		if (!this.clan) return null;
+		return this.client.getClan(this.clan.tag);
 	}
 }
