@@ -125,16 +125,12 @@ export default class RESTManager {
 
 	public getVersusClanRanks(locationId: string | number, options: SearchOptions) {
 		const query = this.getQueryString(options);
-		return this.handler.request<APIClanVersusRankingList>(
-			`/locations/${locationId}/rankings/clans-versus?${query}`
-		);
+		return this.handler.request<APIClanVersusRankingList>(`/locations/${locationId}/rankings/clans-versus?${query}`);
 	}
 
 	public getVersusPlayerRanks(locationId: string | number, options: SearchOptions) {
 		const query = this.getQueryString(options);
-		return this.handler.request<APIPlayerVersusRankingList>(
-			`/locations/${locationId}/rankings/players-versus?${query}`
-		);
+		return this.handler.request<APIPlayerVersusRankingList>(`/locations/${locationId}/rankings/players-versus?${query}`);
 	}
 
 	public getClanLabels(options: SearchOptions) {
