@@ -1,23 +1,18 @@
-import RESTManager from '../rest/RESTManager';
+import { ClientOptions } from '../rest/RequestHandler';
+import { RESTManager } from '../rest/RESTManager';
 import { Clan } from '../struct/Clan';
 import Util from '../util/Util';
 
 export class Client {
-	public keys: string[];
-	public baseURL: string;
-	public restRequestTimeout: number;
+	private readonly rest: RESTManager;
+	public readonly util = Util;
 
-	public util = Util;
-	public rest = new RESTManager(this);
-
-	public constructor(options: ClientOptions = {}) {
-		this.keys = options.keys ?? [];
-		this.restRequestTimeout = options.restRequestTimeout ?? 0;
-		this.baseURL = options.baseURL ?? 'https://api.clashofclans.com/v1';
+	public constructor(options?: ClientOptions) {
+		this.rest = new RESTManager(options);
 	}
 
 	public setkeys(keys: string[]) {
-		this.keys = keys;
+		this.rest.handler.setKeys(keys);
 		return this;
 	}
 
@@ -25,10 +20,4 @@ export class Client {
 		const { data } = await this.rest.getClan(clanTag);
 		return new Clan(this, data);
 	}
-}
-
-export interface ClientOptions {
-	keys?: string[];
-	baseURL?: string;
-	restRequestTimeout?: number;
 }
