@@ -29,6 +29,7 @@ export class RequestHandler {
 
 	public setKeys(keys: string[]) {
 		this.keys = keys;
+		return this;
 	}
 
 	public async request<T = any>(path: string, options: RequestOptions = {}) {

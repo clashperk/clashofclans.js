@@ -1,12 +1,11 @@
+import { LegendStatistics } from './LegendStatistics';
 import { Achievement } from './Achievement';
 import { Hero, Spell, Troop } from './Unit';
-import { Label } from './Label';
-import { League } from './League';
 import { PlayerClan } from './PlayerClan';
-import { LegendStatistics } from './LegendStatistics';
-
 import { Client } from '../client/Client';
 import { APIPlayer } from '../types';
+import { League } from './League';
+import { Label } from './Label';
 
 export class Player {
 	public name: string;
@@ -35,7 +34,7 @@ export class Player {
 	public spells: Spell[];
 	public heroes: Hero[];
 
-	public constructor(private readonly client: Client, data: APIPlayer) {
+	public constructor(public client: Client, data: APIPlayer) {
 		this.name = data.name;
 		this.tag = data.tag;
 		this.townHallLevel = data.townHallLevel;
