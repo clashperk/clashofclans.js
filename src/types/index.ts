@@ -3,7 +3,7 @@
 /**
  * /clans?name={name}&limit={limit}
  */
-export interface ClanList {
+export interface APIClanList {
 	items: Omit<APIClan, 'memberList'>[];
 	paging: {
 		cursors: {
@@ -11,12 +11,6 @@ export interface ClanList {
 			before?: string;
 		};
 	};
-
-	ok: boolean;
-	maxAge: number;
-	reason?: string;
-	message?: string;
-	statusCode: number;
 }
 
 /**
@@ -27,7 +21,7 @@ export interface APIClan {
 	name: string;
 	type: string;
 	description: string;
-	location?: Location;
+	location?: APILocation;
 	chatLanguage?: {
 		name: string;
 		id: number;
@@ -54,17 +48,11 @@ export interface APIClan {
 		id: number;
 	};
 	members: number;
-	labels: Label[];
-	memberList: ClanMember[];
-
-	ok: boolean;
-	maxAge: number;
-	reason?: string;
-	message?: string;
-	statusCode: number;
+	labels: APILabel[];
+	memberList: APIClanMember[];
 }
 
-export interface ClanMember {
+export interface APIClanMember {
 	name: string;
 	tag: string;
 	role: 'member' | 'admin' | 'coLeader' | 'leader';
@@ -89,43 +77,31 @@ export interface ClanMember {
 /**
  * /clans/{clanTag}/members
  */
-export interface ClanMemberList {
-	items: ClanMember[];
+export interface APIClanMemberList {
+	items: APIClanMember[];
 	paging: {
 		cursors: {
 			after?: string;
 			before?: string;
 		};
 	};
-
-	ok: boolean;
-	maxAge: number;
-	reason?: string;
-	message?: string;
-	statusCode: number;
 }
 
 /**
  * /clans/{clanTag}/currentwar
  */
-export interface ClanWar {
+export interface APIClanWar {
 	state: 'notInWar' | 'preparation' | 'inWar' | 'warEnded';
 	teamSize: number;
 	startTime: string;
 	preparationStartTime: string;
 	endTime: string;
-	clan: WarClan;
-	opponent: WarClan;
+	clan: APIWarClan;
+	opponent: APIWarClan;
 	attacksPerMember: number;
-
-	ok: boolean;
-	maxAge: number;
-	reason?: string;
-	message?: string;
-	statusCode: number;
 }
 
-export interface WarClan {
+export interface APIWarClan {
 	tag: string;
 	name: string;
 	badgeUrls: {
@@ -138,20 +114,20 @@ export interface WarClan {
 	stars: number;
 	destructionPercentage: number;
 	expEarned?: number;
-	members: ClanWarMember[];
+	members: APIClanWarMember[];
 }
 
-export interface ClanWarMember {
+export interface APIClanWarMember {
 	tag: string;
 	name: string;
 	mapPosition: number;
 	townhallLevel: number;
 	opponentAttacks: number;
-	bestOpponentAttack?: ClanWarAttack;
-	attacks?: ClanWarAttack[];
+	bestOpponentAttack?: APIClanWarAttack;
+	attacks?: APIClanWarAttack[];
 }
 
-export interface ClanWarAttack {
+export interface APIClanWarAttack {
 	order: number;
 	attackerTag: string;
 	defenderTag: string;
@@ -163,14 +139,14 @@ export interface ClanWarAttack {
 /**
  * /clans/{clanTag}/warlog
  */
-export interface ClanWarLog {
+export interface APIClanWarLog {
 	items: {
 		result: 'win' | 'lose' | 'tie' | null;
 		endTime: string;
 		teamSize: number;
 		attacksPerMember?: number;
-		clan: Omit<WarClan, 'members'>;
-		opponent: Omit<WarClan, 'members' | 'attacks' | 'expEarned'>;
+		clan: Omit<APIWarClan, 'members'>;
+		opponent: Omit<APIWarClan, 'members' | 'attacks' | 'expEarned'>;
 	}[];
 	paging: {
 		cursors: {
@@ -178,31 +154,19 @@ export interface ClanWarLog {
 			before?: string;
 		};
 	};
-
-	ok: boolean;
-	maxAge: number;
-	reason?: string;
-	message?: string;
-	statusCode: number;
 }
 
 /**
  * /clans/{clanTag}/currentwar/leaguegroup
  */
-export interface ClanWarLeagueGroup {
+export interface APIClanWarLeagueGroup {
 	state: 'notInWar' | 'preparation' | 'inWar' | 'warEnded';
 	season: string;
-	clans: ClanWarLeagueClan[];
-	rounds: ClanWarLeagueRound[];
-
-	ok: boolean;
-	maxAge: number;
-	reason?: string;
-	message?: string;
-	statusCode: number;
+	clans: APIClanWarLeagueClan[];
+	rounds: APIClanWarLeagueRound[];
 }
 
-export interface ClanWarLeagueClan {
+export interface APIClanWarLeagueClan {
 	name: string;
 	tag: string;
 	clanLevel: number;
@@ -211,16 +175,16 @@ export interface ClanWarLeagueClan {
 		large: string;
 		medium: string;
 	};
-	members: ClanWarLeagueClanMember[];
+	members: APIClanWarLeagueClanMember[];
 }
 
-export interface ClanWarLeagueClanMember {
+export interface APIClanWarLeagueClanMember {
 	name: string;
 	tag: string;
 	townHallLevel: number;
 }
 
-export interface ClanWarLeagueRound {
+export interface APIClanWarLeagueRound {
 	warTags: string[];
 }
 
@@ -281,10 +245,10 @@ export interface APIPlayer {
 			trophies: number;
 		};
 	};
-	achievements: PlayerAchievement[];
-	troops: PlayerItem[];
-	heroes: PlayerItem[];
-	spells: PlayerItem[];
+	achievements: APIPlayerAchievement[];
+	troops: APIPlayerItem[];
+	heroes: APIPlayerItem[];
+	spells: APIPlayerItem[];
 	labels: {
 		id: number;
 		name: string;
@@ -293,15 +257,9 @@ export interface APIPlayer {
 			medium: string;
 		};
 	}[];
-
-	ok: boolean;
-	maxAge: number;
-	reason?: string;
-	message?: string;
-	statusCode: number;
 }
 
-export interface PlayerAchievement {
+export interface APIPlayerAchievement {
 	name: string;
 	stars: number;
 	value: number;
@@ -311,7 +269,7 @@ export interface PlayerAchievement {
 	village: 'home' | 'builderBase';
 }
 
-export interface PlayerItem {
+export interface APIPlayerItem {
 	name: string;
 	level: number;
 	maxLevel: number;
@@ -322,16 +280,10 @@ export interface PlayerItem {
 /**
  * /players/{playerTag}/verifytoken
  */
-export interface VerifyToken {
+export interface APIVerifyToken {
 	tag: string;
 	token: string;
 	status: 'ok' | 'invalid';
-
-	ok: boolean;
-	maxAge: number;
-	reason?: string;
-	message?: string;
-	statusCode: number;
 }
 
 // ************* LOCATIONS ************* //
@@ -339,62 +291,44 @@ export interface VerifyToken {
 /**
  * /locations
  */
-export interface LocationList {
-	items: Location[];
+export interface APILocationList {
+	items: APILocation[];
 	paging: {
 		cursors: {
 			after?: string;
 			before?: string;
 		};
 	};
-
-	ok: boolean;
-	maxAge: number;
-	reason?: string;
-	message?: string;
-	statusCode: number;
 }
 
 /**
  * /locations/{loacationId}
  */
-export interface Location {
+export interface APILocation {
 	localizedName: string;
 	id: number;
 	name: string;
 	isCountry: boolean;
 	countryCode: string;
-
-	ok: boolean;
-	maxAge: number;
-	reason?: string;
-	message?: string;
-	statusCode: number;
 }
 
 /**
  * /locations/{locationId}/rankings/clans
  */
-export interface ClanRankingList {
-	items: ClanRanking[];
+export interface APIClanRankingList {
+	items: APIClanRanking[];
 	paging: {
 		cursors: {
 			after?: string;
 			before?: string;
 		};
 	};
-
-	ok: boolean;
-	maxAge: number;
-	reason?: string;
-	message?: string;
-	statusCode: number;
 }
 
-export interface ClanRanking {
+export interface APIClanRanking {
 	clanLevel: number;
 	clanPoints: number;
-	location: Location;
+	location: APILocation;
 	members: number;
 	tag: string;
 	name: string;
@@ -410,23 +344,17 @@ export interface ClanRanking {
 /**
  * /locations/{locationId}/rankings/players
  */
-export interface PlayerRankingList {
-	items: PlayerRanking[];
+export interface APIPlayerRankingList {
+	items: APIPlayerRanking[];
 	paging: {
 		cursors: {
 			after?: string;
 			before?: string;
 		};
 	};
-
-	ok: boolean;
-	maxAge: number;
-	reason?: string;
-	message?: string;
-	statusCode: number;
 }
 
-export interface PlayerRanking {
+export interface APIPlayerRanking {
 	tag: string;
 	name: string;
 	expLevel: number;
@@ -457,25 +385,19 @@ export interface PlayerRanking {
 /**
  * /locations/{locationId}/rankings/clans-versus
  */
-export interface ClanVersusRankingList {
-	items: ClanVersusRanking[];
+export interface APIClanVersusRankingList {
+	items: APIClanVersusRanking[];
 	paging: {
 		cursors: {
 			after?: string;
 			before?: string;
 		};
 	};
-
-	ok: boolean;
-	maxAge: number;
-	reason?: string;
-	message?: string;
-	statusCode: number;
 }
 
-export interface ClanVersusRanking {
+export interface APIClanVersusRanking {
 	clanLevel: number;
-	location: Location;
+	location: APILocation;
 	members: number;
 	tag: string;
 	name: string;
@@ -490,25 +412,19 @@ export interface ClanVersusRanking {
 }
 
 /**
- * /locations/{locationId}/rankings/clans-versus
+ * /locations/{locationId}/rankings/players-versus
  */
-export interface PlayerVersusRankingList {
-	items: ClanVersusRanking[];
+export interface APIPlayerVersusRankingList {
+	items: APIClanVersusRanking[];
 	paging: {
 		cursors: {
 			after?: string;
 			before?: string;
 		};
 	};
-
-	ok: boolean;
-	maxAge: number;
-	reason?: string;
-	message?: string;
-	statusCode: number;
 }
 
-export interface PlayerVersusRanking {
+export interface APIPlayerVersusRanking {
 	tag: string;
 	name: string;
 	expLevel: number;
@@ -531,63 +447,45 @@ export interface PlayerVersusRanking {
 /**
  * /leagues
  */
-export interface LeagueList {
-	items: League[];
+export interface APILeagueList {
+	items: APILeague[];
 	paging: {
 		cursors: {
 			after?: string;
 			before?: string;
 		};
 	};
-
-	ok: boolean;
-	maxAge: number;
-	reason?: string;
-	message?: string;
-	statusCode: number;
 }
 
 /**
  * /leagues/{leagueId}
  */
-export interface League {
+export interface APILeague {
 	id: string;
 	name: string;
 	iconUrls: {
 		tiny: string;
 		small: string;
 	};
-
-	ok: boolean;
-	maxAge: number;
-	reason?: string;
-	message?: string;
-	statusCode: number;
 }
 
 /**
  * /leagues/{leagueId}/seasons/{seasonId}
  */
-export interface PlayerSeasonRankingList {
-	items: Omit<PlayerRanking, 'league'>[];
+export interface APIPlayerSeasonRankingList {
+	items: Omit<APIPlayerRanking, 'league'>[];
 	paging: {
 		cursors: {
 			after?: string;
 			before?: string;
 		};
 	};
-
-	ok: boolean;
-	maxAge: number;
-	reason?: string;
-	message?: string;
-	statusCode: number;
 }
 
 /**
  * /leagues/{leagueId}/seasons
  */
-export interface LeagueSeasonList {
+export interface APILeagueSeasonList {
 	items: {
 		id: string;
 	}[];
@@ -597,45 +495,27 @@ export interface LeagueSeasonList {
 			before?: string;
 		};
 	};
-
-	ok: boolean;
-	maxAge: number;
-	reason?: string;
-	message?: string;
-	statusCode: number;
 }
 
 /**
  * /warleagues
  */
-export interface WarLeagueList {
-	items: WarLeague[];
+export interface APIWarLeagueList {
+	items: APIWarLeague[];
 	paging: {
 		cursors: {
 			after?: string;
 			before?: string;
 		};
 	};
-
-	ok: boolean;
-	maxAge: number;
-	reason?: string;
-	message?: string;
-	statusCode: number;
 }
 
 /**
  * /warleagues/{leagueId}
  */
-export interface WarLeague {
+export interface APIWarLeague {
 	id: string;
 	name: string;
-
-	ok: boolean;
-	maxAge: number;
-	reason?: string;
-	message?: string;
-	statusCode: number;
 }
 
 // ************** LABELS ************** //
@@ -645,23 +525,17 @@ export interface WarLeague {
  *
  * /labels/clans
  */
-export interface LabelList {
-	items: Label[];
+export interface APILabelList {
+	items: APILabel[];
 	paging: {
 		cursors: {
 			after?: string;
 			before?: string;
 		};
 	};
-
-	ok: boolean;
-	maxAge: number;
-	reason?: string;
-	message?: string;
-	statusCode: number;
 }
 
-export interface Label {
+export interface APILabel {
 	id: number;
 	name: string;
 	iconUrls: {
@@ -675,13 +549,7 @@ export interface Label {
 /**
  * /goldpass/seasons/current
  */
-export interface GoldPassSeason {
+export interface APIGoldPassSeason {
 	startTime: string;
 	endTime: string;
-
-	ok: boolean;
-	maxAge: number;
-	reason?: string;
-	message?: string;
-	statusCode: number;
 }
