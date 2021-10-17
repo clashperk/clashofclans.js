@@ -1,7 +1,12 @@
-import { Achievement, Hero, Label, League, PlayerClan, Spell, Troop } from './Misc';
+import { Achievement } from './Achievement';
+import { Hero, Spell, Troop } from './Unit';
+import { Label } from './Label';
+import { League } from './League';
+import { PlayerClan } from './PlayerClan';
+import { LegendStatistics } from './LegendStatistics';
+
 import { Client } from '../client/Client';
 import { APIPlayer } from '../types';
-import { LegendStatistics } from '..';
 
 export default class Player {
 	public name: string;

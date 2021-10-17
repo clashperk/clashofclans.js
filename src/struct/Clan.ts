@@ -1,5 +1,12 @@
-import { Location, ChatLanguage, Badge, WarLeague, Label, ClanMember } from './Misc';
+import { Location } from './Location';
+import { ChatLanguage } from './ChatLanguage';
+import { Badge } from './Badge';
+import { WarLeague } from './WarLeague';
+import { Label } from './Label';
+import { ClanMember } from './ClanMember';
+
 import { Client } from '../client/Client';
+import { APIClan } from '../types';
 
 /**
  * Represents a Clan in Clash of Clans
@@ -28,7 +35,7 @@ export class Clan {
 	public labels: Label[];
 	public memberList: ClanMember[];
 
-	public constructor(private readonly client: Client, data: any) {
+	public constructor(private readonly client: Client, data: APIClan) {
 		/**
 		 * Name of the clan
 		 * @type {string}

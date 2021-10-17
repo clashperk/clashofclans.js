@@ -87,11 +87,13 @@ export interface APIClanMemberList {
 	};
 }
 
+export type APIWarStatus = 'notInWar' | 'preparation' | 'inWar' | 'warEnded';
+
 /**
  * /clans/{clanTag}/currentwar
  */
 export interface APIClanWar {
-	state: 'notInWar' | 'preparation' | 'inWar' | 'warEnded';
+	state: APIWarStatus;
 	teamSize: number;
 	startTime: string;
 	preparationStartTime: string;
@@ -160,7 +162,7 @@ export interface APIClanWarLog {
  * /clans/{clanTag}/currentwar/leaguegroup
  */
 export interface APIClanWarLeagueGroup {
-	state: 'notInWar' | 'preparation' | 'inWar' | 'warEnded';
+	state: APIWarStatus;
 	season: string;
 	clans: APIClanWarLeagueClan[];
 	rounds: APIClanWarLeagueRound[];
