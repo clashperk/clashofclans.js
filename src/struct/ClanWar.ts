@@ -62,7 +62,7 @@ export class WarClan {
 	}
 }
 
-export default class ClanWar {
+export class ClanWar {
 	public state: APIWarState;
 	public teamSize: number;
 	public startTime: string;

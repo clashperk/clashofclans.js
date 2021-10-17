@@ -1,3 +1,5 @@
+import { APIPlayerAchievement } from '../types';
+
 export class Achievement {
 	public name: string;
 	public stars: number;
@@ -7,7 +9,7 @@ export class Achievement {
 	public village: 'home' | 'builderBase';
 	public completionInfo: string | null;
 
-	public constructor(data: any) {
+	public constructor(data: APIPlayerAchievement) {
 		this.name = data.name;
 		this.stars = data.stars;
 		this.value = data.value;

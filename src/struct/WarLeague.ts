@@ -1,3 +1,5 @@
+import { APIWarLeague } from '../types';
+
 /**
  * Represents a Clan's War League
  */
@@ -5,7 +7,7 @@ export class WarLeague {
 	public id: string;
 	public name: string;
 
-	public constructor(data: any) {
+	public constructor(data: APIWarLeague) {
 		/**
 		 * The league's unique ID
 		 * @type {number}

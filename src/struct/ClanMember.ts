@@ -1,3 +1,4 @@
+import { APIClanMember } from '../types';
 import { League } from './League';
 
 export class ClanMember {
@@ -13,7 +14,7 @@ export class ClanMember {
 	public donations: number;
 	public donationsReceived: number;
 
-	public constructor(data: any) {
+	public constructor(data: APIClanMember) {
 		/**
 		 * Name of the member
 		 * @type {string}
@@ -30,7 +31,7 @@ export class ClanMember {
 		 * Role of member
 		 * @type {string}
 		 */
-		this.role = data.role ?? null;
+		this.role = data.role;
 
 		/**
 		 * EXP Level of the member

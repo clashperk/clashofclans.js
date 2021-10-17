@@ -1,6 +1,6 @@
+import { HTTPError } from './HTTPError';
 import fetch from 'node-fetch';
 import https from 'https';
-import HTTPError from './HTTPError';
 
 const agent = new https.Agent({ keepAlive: true });
 

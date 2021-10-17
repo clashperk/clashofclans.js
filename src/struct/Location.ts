@@ -1,14 +1,16 @@
+import { APILocation } from '../types';
+
 /**
  * Represents a Location
  */
 export class Location {
-	public id: string;
+	public id: number;
 	public name: string;
 	public localizedName: string | null;
 	public isCountry: boolean;
 	public countryCode: string | null;
 
-	public constructor(data: any) {
+	public constructor(data: APILocation) {
 		/**
 		 * The location ID
 		 * @type {string}

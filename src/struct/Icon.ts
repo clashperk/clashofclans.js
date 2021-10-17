@@ -1,3 +1,5 @@
+import { APIIcon } from '../types';
+
 /**
  * Represents a Icon
  */
@@ -7,7 +9,7 @@ export class Icon {
 	public small: string;
 	public medium: string;
 
-	public constructor(data: any) {
+	public constructor(data: APIIcon) {
 		/**
 		 * The default icon URL
 		 * @type {string}
@@ -30,6 +32,6 @@ export class Icon {
 		 * The tiny icon URL
 		 * @type {string}
 		 */
-		this.tiny = data.tiny ?? data.small;
+		this.tiny = data.tiny || data.small;
 	}
 }

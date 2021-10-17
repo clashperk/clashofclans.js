@@ -1,10 +1,12 @@
+import { APIPlayerItem } from '../types';
+
 export class Unit {
 	public name: string;
 	public level: number;
 	public maxLevel: number;
 	public village: 'home' | 'builderBase';
 
-	public constructor(data: any) {
+	public constructor(data: APIPlayerItem) {
 		this.name = data.name;
 		this.level = data.level;
 		this.maxLevel = data.maxLevel;
@@ -15,9 +17,9 @@ export class Unit {
 export class Troop extends Unit {
 	public superTroopIsActive: boolean;
 
-	public constructor(data: any) {
+	public constructor(data: APIPlayerItem) {
 		super(data);
-		this.superTroopIsActive = data.superTroopIsActive;
+		this.superTroopIsActive = data.superTroopIsActive ?? false;
 	}
 }
 
