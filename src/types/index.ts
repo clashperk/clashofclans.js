@@ -232,7 +232,7 @@ export interface ClanWarLeagueRound {
 /**
  * /players/{playerTag}
  */
-export interface Player {
+export interface APIPlayer {
 	name: string;
 	tag: string;
 	townHallLevel: number;
