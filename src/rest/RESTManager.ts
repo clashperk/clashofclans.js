@@ -1,5 +1,5 @@
-import RequestHandler from './RequestHandler';
-import { Client } from '../client/Client';
+import { RequestHandler, ClientOptions } from './RequestHandler';
+import { encodeTag } from '../util/Util';
 
 import {
 	APIClan,
@@ -26,13 +26,11 @@ import {
 	APIWarLeagueList
 } from '../types';
 
-export default class RESTManager {
-	private readonly client: Client;
-	private readonly handler: RequestHandler;
+export class RESTManager {
+	public readonly handler: RequestHandler;
 
-	public constructor(client: Client) {
-		this.client = client;
-		this.handler = new RequestHandler(client);
+	public constructor(options?: ClientOptions) {
+		this.handler = new RequestHandler(options);
 	}
 
 	public getClans(options: ClanSearchOptions) {
@@ -148,7 +146,7 @@ export default class RESTManager {
 	}
 
 	private encodeTag(tag: string) {
-		return this.client.util.encodeTag(tag);
+		return encodeTag(tag);
 	}
 
 	private getQueryString(options = {}) {
