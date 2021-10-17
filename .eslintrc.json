@@ -1,22 +1,16 @@
 {
-    "extends": "mars/node",
-    "rules": {
-        "max-len": "off",
-        "no-confusing-arrow": "off",
-        "no-eq-null": "off",
-        "no-negated-condition": "off",
-        "no-undefined": "off",
-        "linebreak-style": "off",
-        "camelcase": "off",
-        "no-shadow": "off",
-        "no-unused-vars": "off",
-        "prefer-destructuring": [
-            "off"
-        ],
-        "quotes": [
-            "error",
-            "single"
-        ],
-        "quote-props": "off"
-    }
+	"extends": "marine/node",
+	"parser": "@typescript-eslint/parser",
+	"rules": {
+		"no-process-env": 0,
+		"no-inline-comments": 0,
+		"no-warning-comments": 0,
+		"comma-dangle": [
+			"error",
+			"never"
+		],
+		"@typescript-eslint/naming-convention": 0,
+		"@typescript-eslint/no-misused-promises": 0,
+		"@typescript-eslint/no-floating-promises": 0
+	}
 }
