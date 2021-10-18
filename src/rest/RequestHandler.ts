@@ -9,10 +9,12 @@ export class RequestHandler {
 
 	private keys: string[];
 	private readonly baseURL: string;
+	private readonly retryLimit: number;
 	private readonly restRequestTimeout: number;
 
 	public constructor(options?: ClientOptions) {
 		this.keys = options?.keys ?? [];
+		this.retryLimit = options?.retryLimit ?? 0;
 		this.baseURL = options?.baseURL ?? 'https://api.clashofclans.com/v1';
 		this.restRequestTimeout = options?.restRequestTimeout ?? 0;
 	}
@@ -32,18 +34,19 @@ export class RequestHandler {
 		return this;
 	}
 
-	public async request<T = any>(path: string, options: RequestOptions = {}) {
+	public async request<T = any>(path: string, options: RequestOptions = {}, retries = 0): Promise<Response<T>> {
 		const res = await fetch(`${this.baseURL}${path}`, {
+			agent,
+			...options,
+			timeout: this.restRequestTimeout,
 			headers: {
 				Authorization: `Bearer ${this._key}`,
 				'Content-Type': 'application/json'
-			},
-			timeout: this.restRequestTimeout,
-			agent,
-			...options
+			}
 		}).catch(() => null);
 
 		const data: T = await res?.json().catch(() => null);
+		if (!res && retries <= this.retryLimit) return this.request<T>(path, options, ++retries);
 		if (!res?.ok) throw new HTTPError(data, res?.status ?? 504, options.method ?? 'GET', path);
 
 		const maxAge = res.headers.get('cache-control')?.split('=')?.[1] ?? 0;
@@ -59,5 +62,15 @@ export interface RequestOptions {
 export interface ClientOptions {
 	keys?: string[];
 	baseURL?: string;
+	retryLimit?: number;
 	restRequestTimeout?: number;
+}
+
+export interface Response<T> {
+	data: T;
+	response: {
+		ok: boolean;
+		status: number;
+		maxAge: number;
+	};
 }

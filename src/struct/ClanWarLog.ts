@@ -1,7 +1,7 @@
 import { APIClanWarLogEntry, APIWarClan } from '../types';
 import { Client } from '../client/Client';
 import { BaseWarClan } from './ClanWar';
-import moment from 'moment';
+import Util from '../util/Util';
 
 export class WarLogClan extends BaseWarClan {
 	/** This property is null for opponent. */
@@ -30,7 +30,7 @@ export class ClanWarLog {
 
 	public constructor(public client: Client, data: APIClanWarLogEntry) {
 		this.result = data.result;
-		this.endTime = moment(data.endTime).toDate();
+		this.endTime = Util.parseDate(data.endTime);
 		this.teamSize = data.teamSize;
 		this.attacksPerMember = data.attacksPerMember ?? null;
 
