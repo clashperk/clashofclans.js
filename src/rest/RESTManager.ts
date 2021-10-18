@@ -60,7 +60,7 @@ export class RESTManager {
 		return this.handler.request<APIClanWarLeagueGroup>(`/clans/${this.encodeTag(clanTag)}/currentwar/leaguegroup`);
 	}
 
-	public getClanWarLeagueWar(warTag: string) {
+	public getClanWarLeagueRound(warTag: string) {
 		return this.handler.request<APIClanWar>(`/clanwarleagues/wars/${this.encodeTag(warTag)}`);
 	}
 

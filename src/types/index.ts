@@ -1,14 +1,39 @@
+export type APIWarState = 'notInWar' | 'preparation' | 'inWar' | 'warEnded';
+export type APIRole = 'member' | 'admin' | 'coLeader' | 'leader';
+
+export interface APIPaging {
+	cursors?: APICursors;
+}
+
+export interface APICursors {
+	after?: string;
+	before?: string;
+}
+
+export interface APIIcon {
+	small: string;
+	tiny: string;
+	medium: string;
+}
+
+export interface APIBadge {
+	small: string;
+	large: string;
+	medium: string;
+}
+
+export interface APISeason {
+	id: string;
+	rank: number;
+	trophies: number;
+}
+
 // **************** CLANS **************** //
 
 /** /clans?name={name}&limit={limit} */
 export interface APIClanList {
 	items: Omit<APIClan, 'memberList'>[];
-	paging: {
-		cursors: {
-			after?: string;
-			before?: string;
-		};
-	};
+	paging: APIPaging;
 }
 
 export interface APIChatLanguage {
@@ -43,8 +68,6 @@ export interface APIClan {
 	memberList: APIClanMember[];
 }
 
-export type APIRole = 'member' | 'admin' | 'coLeader' | 'leader';
-
 export interface APIClanMember {
 	name: string;
 	tag: string;
@@ -62,15 +85,8 @@ export interface APIClanMember {
 /** /clans/{clanTag}/members */
 export interface APIClanMemberList {
 	items: APIClanMember[];
-	paging: {
-		cursors: {
-			after?: string;
-			before?: string;
-		};
-	};
+	paging: APIPaging;
 }
-
-export type APIWarState = 'notInWar' | 'preparation' | 'inWar' | 'warEnded';
 
 /** /clans/{clanTag}/currentwar and /clanwarleagues/wars/{warTag} */
 export interface APIClanWar {
@@ -128,12 +144,7 @@ export interface APIClanWarLogEntry {
 /** /clans/{clanTag}/warlog */
 export interface APIClanWarLog {
 	items: APIClanWarLogEntry[];
-	paging: {
-		cursors: {
-			after?: string;
-			before?: string;
-		};
-	};
+	paging: APIPaging;
 }
 
 /** /clans/{clanTag}/currentwar/leaguegroup */
@@ -194,12 +205,6 @@ export interface APIPlayer {
 	labels: APILabel[];
 }
 
-export interface APISeason {
-	id: string;
-	rank: number;
-	trophies: number;
-}
-
 export interface APILegendStatistics {
 	previousSeason?: APISeason;
 	previousVersusSeason?: APISeason;
@@ -214,12 +219,6 @@ export interface APIPlayerClan {
 	name: string;
 	clanLevel: number;
 	badgeUrls: APIBadge;
-}
-
-export interface APIBadge {
-	small: string;
-	large: string;
-	medium: string;
 }
 
 export interface APIPlayerAchievement {
@@ -252,12 +251,7 @@ export interface APIVerifyToken {
 /** /locations */
 export interface APILocationList {
 	items: APILocation[];
-	paging: {
-		cursors: {
-			after?: string;
-			before?: string;
-		};
-	};
+	paging: APIPaging;
 }
 
 /** /locations/{loacationId} */
@@ -272,12 +266,7 @@ export interface APILocation {
 /** /locations/{locationId}/rankings/clans */
 export interface APIClanRankingList {
 	items: APIClanRanking[];
-	paging: {
-		cursors: {
-			after?: string;
-			before?: string;
-		};
-	};
+	paging: APIPaging;
 }
 
 export interface APIClanRanking {
@@ -295,12 +284,7 @@ export interface APIClanRanking {
 /** /locations/{locationId}/rankings/players */
 export interface APIPlayerRankingList {
 	items: APIPlayerRanking[];
-	paging: {
-		cursors: {
-			after?: string;
-			before?: string;
-		};
-	};
+	paging: APIPaging;
 }
 
 export interface APIPlayerRanking {
@@ -318,12 +302,7 @@ export interface APIPlayerRanking {
 /** /locations/{locationId}/rankings/clans-versus */
 export interface APIClanVersusRankingList {
 	items: APIClanVersusRanking[];
-	paging: {
-		cursors: {
-			after?: string;
-			before?: string;
-		};
-	};
+	paging: APIPaging;
 }
 
 export interface APIClanVersusRanking {
@@ -341,12 +320,7 @@ export interface APIClanVersusRanking {
 /** /locations/{locationId}/rankings/players-versus */
 export interface APIPlayerVersusRankingList {
 	items: APIPlayerVersusRanking[];
-	paging: {
-		cursors: {
-			after?: string;
-			before?: string;
-		};
-	};
+	paging: APIPaging;
 }
 
 export interface APIPlayerVersusRanking {
@@ -364,12 +338,7 @@ export interface APIPlayerVersusRanking {
 /** /leagues */
 export interface APILeagueList {
 	items: APILeague[];
-	paging: {
-		cursors: {
-			after?: string;
-			before?: string;
-		};
-	};
+	paging: APIPaging;
 }
 
 /** /leagues/{leagueId} */
@@ -379,21 +348,10 @@ export interface APILeague {
 	iconUrls: APIIcon;
 }
 
-export interface APIIcon {
-	small: string;
-	tiny: string;
-	medium: string;
-}
-
 /** /leagues/{leagueId}/seasons/{seasonId} */
 export interface APIPlayerSeasonRankingList {
 	items: Omit<APIPlayerRanking, 'league'>[];
-	paging: {
-		cursors: {
-			after?: string;
-			before?: string;
-		};
-	};
+	paging: APIPaging;
 }
 
 /** /leagues/{leagueId}/seasons */
@@ -401,23 +359,13 @@ export interface APILeagueSeasonList {
 	items: {
 		id: string;
 	}[];
-	paging: {
-		cursors: {
-			after?: string;
-			before?: string;
-		};
-	};
+	paging: APIPaging;
 }
 
 /** /warleagues */
 export interface APIWarLeagueList {
 	items: APIWarLeague[];
-	paging: {
-		cursors: {
-			after?: string;
-			before?: string;
-		};
-	};
+	paging: APIPaging;
 }
 
 /** /warleagues/{leagueId} */
@@ -428,21 +376,16 @@ export interface APIWarLeague {
 
 // ************** LABELS ************** //
 
-/** /labels/clans and /labels/players */
-export interface APILabelList {
-	items: APILabel[];
-	paging: {
-		cursors: {
-			after?: string;
-			before?: string;
-		};
-	};
-}
-
 export interface APILabel {
 	id: number;
 	name: string;
 	iconUrls: APIIcon;
+}
+
+/** /labels/clans and /labels/players */
+export interface APILabelList {
+	items: APILabel[];
+	paging: APIPaging;
 }
 
 // *********** GOLD PASS *********** //
