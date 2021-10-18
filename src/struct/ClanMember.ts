@@ -1,3 +1,4 @@
+import { Client } from '../client/Client';
 import { APIClanMember } from '../types';
 import { League } from './League';
 
@@ -14,7 +15,7 @@ export class ClanMember {
 	public donations: number;
 	public donationsReceived: number;
 
-	public constructor(data: APIClanMember) {
+	public constructor(public client: Client, data: APIClanMember) {
 		/**
 		 * Name of the member
 		 * @type {string}
@@ -80,5 +81,9 @@ export class ClanMember {
 		 * @type {number}
 		 */
 		this.donationsReceived = data.donationsReceived;
+	}
+
+	public async fetch() {
+		return this.client.getPlayer(this.tag);
 	}
 }

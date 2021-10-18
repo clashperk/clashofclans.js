@@ -34,4 +34,8 @@ export class Icon {
 		 */
 		this.tiny = data.tiny || data.small;
 	}
+
+	public get hash() {
+		return this.url.split('/').pop();
+	}
 }

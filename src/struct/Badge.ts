@@ -1,8 +1,6 @@
 import { APIBadge } from '../types';
 
-/**
- * Represents a Badge
- */
+/** Represents a Badge */
 export class Badge {
 	public url: string;
 	public large: string;
@@ -33,5 +31,9 @@ export class Badge {
 		 * @type {string}
 		 */
 		this.small = data.small;
+	}
+
+	public get hash() {
+		return this.url.split('/').pop();
 	}
 }

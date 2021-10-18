@@ -4,6 +4,9 @@ import https from 'https';
 
 const agent = new https.Agent({ keepAlive: true });
 
+/**
+ * @private
+ */
 export class RequestHandler {
 	#keyIndex = 0; // eslint-disable-line
 
@@ -46,7 +49,7 @@ export class RequestHandler {
 		}).catch(() => null);
 
 		const data: T = await res?.json().catch(() => null);
-		if (!res && retries <= this.retryLimit) return this.request<T>(path, options, ++retries);
+		if (!res && retries < this.retryLimit) return this.request<T>(path, options, ++retries);
 		if (!res?.ok) throw new HTTPError(data, res?.status ?? 504, options.method ?? 'GET', path);
 
 		const maxAge = res.headers.get('cache-control')?.split('=')?.[1] ?? 0;
