@@ -1,5 +1,5 @@
-import moment from 'moment';
 import { APIGoldPassSeason, APISeason } from '../types';
+import Util from '../util/Util';
 
 export class Season {
 	public id: string;
@@ -18,7 +18,7 @@ export class GoldPassSeason {
 	public endTime: Date;
 
 	public constructor(data: APIGoldPassSeason) {
-		this.startTime = moment(data.startTime).toDate();
-		this.endTime = moment(data.endTime).toDate();
+		this.startTime = Util.parseDate(data.startTime);
+		this.endTime = Util.parseDate(data.endTime);
 	}
 }

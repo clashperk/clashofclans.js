@@ -44,7 +44,7 @@ export class Client {
 
 	public async getClanMembers(clanTag: string, options: SearchOptions) {
 		const { data } = await this.rest.getClanMembers(clanTag, options);
-		return data.items.map((mem) => new ClanMember(mem));
+		return data.items.map((entry) => new ClanMember(entry));
 	}
 
 	public async getClanWarLog(clanTag: string, options: SearchOptions) {
@@ -79,24 +79,24 @@ export class Client {
 
 	public async getLeagues(options?: SearchOptions) {
 		const { data } = await this.rest.getLeagues(options);
-		return data.items.map((league) => new League(league));
+		return data.items.map((entry) => new League(entry));
 	}
 
 	/** Only works for Legend League. */
 	public async getLeagueSeasons(options?: SearchOptions) {
-		const { data } = await this.rest.getLeagueSeasons(29000021, options);
+		const { data } = await this.rest.getLeagueSeasons(29000022, options);
 		return data.items.map((league) => league.id);
 	}
 
 	public async getSeasonRankings(seasonId: string, options?: SearchOptions) {
-		const { data } = await this.rest.getSeasonRankings(29000021, seasonId, options);
+		const { data } = await this.rest.getSeasonRankings(29000022, seasonId, options);
 		// @ts-expect-error
-		return data.items.map((item) => new RankedPlayer(item));
+		return data.items.map((entry) => new RankedPlayer(entry));
 	}
 
 	public async getWarLeagues(options?: SearchOptions) {
 		const { data } = await this.rest.getWarLeagues(options);
-		return data.items.map((league) => new WarLeague(league));
+		return data.items.map((entry) => new WarLeague(entry));
 	}
 
 	public async getLocations(options?: SearchOptions) {

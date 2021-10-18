@@ -1,7 +1,7 @@
 import { APIClanWar, APIClanWarAttack, APIClanWarMember, APIWarClan, APIWarState } from '../types';
 import { Client } from '../client/Client';
 import { Badge } from './Badge';
-import moment from 'moment';
+import Util from '../util/Util';
 
 export class ClanWarAttack {
 	public order: number;
@@ -84,9 +84,9 @@ export class ClanWar {
 	public constructor(private readonly client: Client, data: APIClanWar) {
 		this.state = data.state;
 		this.teamSize = data.teamSize;
-		this.startTime = moment(data.startTime).toDate();
-		this.preparationStartTime = moment(data.preparationStartTime).toDate();
-		this.endTime = moment(data.endTime).toDate();
+		this.startTime = Util.parseDate(data.startTime);
+		this.preparationStartTime = Util.parseDate(data.preparationStartTime);
+		this.endTime = Util.parseDate(data.endTime);
 		this.clan = new WarClan(data.clan);
 		this.opponent = new WarClan(data.opponent);
 		this.attacksPerMember = data.attacksPerMember;
