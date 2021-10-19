@@ -12,8 +12,12 @@ export interface APICursors {
 
 export interface APIIcon {
 	small: string;
-	tiny: string;
-	medium: string;
+
+	/** Tiny Icon is not available for Labels. */
+	tiny?: string;
+
+	/** Medium Icon is not available for Unranked Icon. */
+	medium?: string;
 }
 
 export interface APIBadge {
@@ -343,7 +347,7 @@ export interface APILeagueList {
 
 /** /leagues/{leagueId} */
 export interface APILeague {
-	id: string;
+	id: number;
 	name: string;
 	iconUrls: APIIcon;
 }
@@ -370,7 +374,7 @@ export interface APIWarLeagueList {
 
 /** /warleagues/{leagueId} */
 export interface APIWarLeague {
-	id: string;
+	id: number;
 	name: string;
 }
 

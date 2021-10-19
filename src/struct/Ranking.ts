@@ -1,5 +1,6 @@
 import { APIClanRanking, APIClanVersusRanking, APIPlayerRanking, APIPlayerVersusRanking } from '../types';
 import { PlayerClan } from './PlayerClan';
+import { Client } from '../client/Client';
 import { Location } from './Location';
 import { League } from './League';
 import { Badge } from './Badge';
@@ -17,7 +18,7 @@ export class RankedPlayer {
 	public versusTrophies: number | null;
 	public versusBattleWins: number | null;
 
-	public constructor(data: APIPlayerRanking | APIPlayerVersusRanking) {
+	public constructor(client: Client, data: APIPlayerRanking | APIPlayerVersusRanking) {
 		this.name = data.name;
 		this.tag = data.tag;
 		this.expLevel = data.expLevel;
@@ -32,7 +33,7 @@ export class RankedPlayer {
 		// @ts-expect-error
 		this.versusBattleWins = data.versusBattleWins ?? null;
 		this.rank = data.rank;
-		this.clan = new PlayerClan(data.clan);
+		this.clan = new PlayerClan(client, data.clan);
 		// @ts-expect-error
 		this.league = data.league ? new League(data.league) : null; // eslint-disable-line
 	}

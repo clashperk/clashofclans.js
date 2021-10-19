@@ -14,7 +14,8 @@ export class LegendStatistics {
 		this.previousSeason = data.previousSeason ? new Season(data.previousSeason) : null;
 		this.previousVersusSeason = data.previousVersusSeason ? new Season(data.previousVersusSeason) : null;
 		this.bestVersusSeason = data.bestVersusSeason ? new Season(data.bestVersusSeason) : null;
-		this.currentSeason = data.currentSeason ? new Season(data.currentSeason) : null;
+		// #blame-supercell
+		this.currentSeason = data.currentSeason?.id ? new Season(data.currentSeason) : null;
 		this.bestSeason = data.bestSeason ? new Season(data.bestSeason) : null;
 	}
 }

@@ -2,7 +2,7 @@ import { APILabel } from '../types';
 import { Icon } from './Icon';
 
 /**
- * Represents a Clan or Player Label
+ * Represents a Clan or Player Label.
  */
 export class Label {
 	public id: number;

@@ -6,6 +6,7 @@ import { Client } from '../client/Client';
 import { APIPlayer } from '../types';
 import { League } from './League';
 import { Label } from './Label';
+import { HERO_PETS, SIEGE_MACHINES, SUPER_TROOPS } from '../util/Constants';
 
 export class Player {
 	public name: string;
@@ -52,7 +53,7 @@ export class Player {
 		this.donations = data.donations;
 		this.donationsReceived = data.donationsReceived;
 		this.role = data.role ?? null;
-		this.clan = data.clan ? new PlayerClan(data.clan) : null;
+		this.clan = data.clan ? new PlayerClan(client, data.clan) : null;
 		this.league = data.league ? new League(data.league) : null;
 		this.legendStatistics = data.legendStatistics ? new LegendStatistics(data.legendStatistics) : null;
 		this.achievements = data.achievements.map((data) => new Achievement(data));
@@ -65,5 +66,19 @@ export class Player {
 	public async fetchClan() {
 		if (!this.clan) return null;
 		return this.client.getClan(this.clan.tag);
+	}
+
+	public get homeTroops() {
+		return this.troops.filter(
+			(entry) =>
+				entry.isHomeBase &&
+				!HERO_PETS.includes(entry.name) &&
+				!SUPER_TROOPS.includes(entry.name) &&
+				!SIEGE_MACHINES.includes(entry.name)
+		);
+	}
+
+	public get pets() {
+		return this.troops.filter((entry) => entry.isHomeBase && HERO_PETS.includes(entry.name));
 	}
 }

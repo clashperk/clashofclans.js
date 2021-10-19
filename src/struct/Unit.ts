@@ -1,4 +1,5 @@
 import { APIPlayerItem } from '../types';
+import { SUPER_TROOPS } from '../util/Constants';
 
 export class Unit {
 	public name: string;
@@ -12,6 +13,18 @@ export class Unit {
 		this.maxLevel = data.maxLevel;
 		this.village = data.village;
 	}
+
+	public get isHomeBase() {
+		return this.village === 'home';
+	}
+
+	public get isBuilderBase() {
+		return this.village === 'builderBase';
+	}
+
+	public get isMax() {
+		return this.level === this.maxLevel;
+	}
 }
 
 export class Troop extends Unit {
@@ -20,6 +33,10 @@ export class Troop extends Unit {
 	public constructor(data: APIPlayerItem) {
 		super(data);
 		this.superTroopIsActive = data.superTroopIsActive ?? false;
+	}
+
+	public get isSuperTroop() {
+		return this.superTroopIsActive || (this.isHomeBase && SUPER_TROOPS.includes(this.name));
 	}
 }
 
