@@ -1,23 +1,23 @@
 import { APIWarLeague } from '../types';
+import { WAR_LEAGUES } from '../util/Constants';
 
 /**
- * Represents a Clan's War League
+ * Represents a Clan's War League.
  */
 export class WarLeague {
-	public id: string;
+	/** The league's unique Id. */
+	public id: number;
+
+	/** The league's name. */
 	public name: string;
 
 	public constructor(data: APIWarLeague) {
-		/**
-		 * The league's unique ID
-		 * @type {number}
-		 */
 		this.id = data.id;
-
-		/**
-		 * The league's name
-		 * @type {string}
-		 */
 		this.name = data.name;
+	}
+
+	/** Position of this War League. Starting from 0 (Unranked) */
+	public get position() {
+		return WAR_LEAGUES.indexOf(this.id);
 	}
 }
