@@ -12,8 +12,13 @@ export function parseDate(time: string) {
 	);
 }
 
+export function queryString(options = {}) {
+	return new URLSearchParams(options).toString();
+}
+
 export default {
 	encodeTag,
 	parseTag,
-	parseDate
+	parseDate,
+	queryString
 };
