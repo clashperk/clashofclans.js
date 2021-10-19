@@ -53,7 +53,7 @@ export class ClanWarAttack {
 			[...this.clan.attacks]
 				.filter((atk) => atk.defenderTag === this.defenderTag && atk.attackerTag !== this.attackerTag)
 				.sort((a, b) => b.destruction ** b.stars - a.destruction ** a.stars)
-				.pop() ?? null
+				.shift() ?? null
 		);
 	}
 }
@@ -110,7 +110,7 @@ export class ClanWarMember {
 			[...this.defenses]
 				.filter((def) => def.defenderTag === this.tag && def.attackerTag !== this.bestOpponentAttack?.attackerTag)
 				.sort((a, b) => b.destruction ** b.stars - a.destruction ** a.stars)
-				.pop() ?? null
+				.shift() ?? null
 		);
 	}
 }

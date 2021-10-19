@@ -17,7 +17,7 @@ export class Achievement {
 	/** Information regarding the achievement. */
 	public info: string;
 
-	/** The illage this achievement belongs to.  */
+	/** The village this achievement belongs to.  */
 	public village: 'home' | 'builderBase';
 
 	/** Information regarding completion of the achievement. */
