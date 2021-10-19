@@ -34,7 +34,7 @@ export class Clan {
 
 	/**
 	 * List of clan members.
-	 * > This property returns empty array for searched clans.
+	 * - This property returns empty array for searched clans.
 	 */
 	public members: ClanMember[];
 
