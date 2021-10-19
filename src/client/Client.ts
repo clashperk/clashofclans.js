@@ -1,5 +1,5 @@
-import { RESTManager, ClanSearchOptions, SearchOptions } from '../rest/RESTManager';
-import { ClientOptions } from '../rest/RequestHandler';
+import { ClanSearchOptions, SearchOptions, ClientOptions } from '../rest/RequestHandler';
+import { RESTManager } from '../rest/RESTManager';
 import Util from '../util/Util';
 
 import {
@@ -19,9 +19,14 @@ import {
 } from '../struct';
 
 export class Client {
-	private readonly rest: RESTManager;
+	public rest: RESTManager;
 	public readonly util = Util;
 
+	/**
+	 * ```js
+	 * const client = new Client({ keys: [] });
+	 * ```
+	 */
 	public constructor(options?: ClientOptions) {
 		this.rest = new RESTManager(options);
 	}
@@ -60,7 +65,7 @@ export class Client {
 	/** Get information about currently running war in the clan. */
 	public async getCurrentWar(clanTag: string) {
 		const { data } = await this.rest.getCurrentWar(clanTag);
-		return new ClanWar(this, clanTag, data);
+		return new ClanWar(this, data, clanTag);
 	}
 
 	/** Get information about clan war league. */
@@ -70,9 +75,9 @@ export class Client {
 	}
 
 	/** Get information about CWL round by WarTag. */
-	public async getClanWarLeagueRound(clanTag: string) {
-		const { data } = await this.rest.getClanWarLeagueRound(clanTag);
-		return new ClanWar(this, clanTag, data);
+	public async getClanWarLeagueRound(warTag: string, clanTag?: string) {
+		const { data } = await this.rest.getClanWarLeagueRound(warTag);
+		return new ClanWar(this, data, clanTag);
 	}
 
 	/** Get information about a player by tag. */
@@ -127,7 +132,7 @@ export class Client {
 	/** Get player rankings for a specific location. */
 	public async getPlayerRanks(locationId: number | 'global', options?: SearchOptions) {
 		const { data } = await this.rest.getPlayerRanks(locationId, options);
-		return data.items.map((entry) => new RankedPlayer(entry));
+		return data.items.map((entry) => new RankedPlayer(this, entry));
 	}
 
 	/** Get clan versus rankings for a specific location */
@@ -139,7 +144,7 @@ export class Client {
 	/** Get player versus rankings for a specific location */
 	public async getVersusPlayerRanks(locationId: number | 'global', options?: SearchOptions) {
 		const { data } = await this.rest.getVersusPlayerRanks(locationId, options);
-		return data.items.map((entry) => new RankedPlayer(entry));
+		return data.items.map((entry) => new RankedPlayer(this, entry));
 	}
 
 	/** Get list of clan labels. */

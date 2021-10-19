@@ -1,4 +1,4 @@
-import { RequestHandler, ClientOptions } from './RequestHandler';
+import { RequestHandler, SearchOptions, ClanSearchOptions, ClientOptions } from './RequestHandler';
 import { encodeTag } from '../util/Util';
 
 import {
@@ -151,21 +151,4 @@ export class RESTManager {
 	private getQueryString(options = {}) {
 		return new URLSearchParams(options).toString();
 	}
-}
-
-export interface SearchOptions {
-	limit?: number;
-	after?: string;
-	before?: string;
-}
-
-export interface ClanSearchOptions extends SearchOptions {
-	name?: string;
-	warFrequency?: string;
-	locationId?: string;
-	minMembers?: number;
-	maxMembers?: number;
-	minClanPoints?: number;
-	minClanLevel?: number;
-	labelIds?: string;
 }

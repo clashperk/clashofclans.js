@@ -1,12 +1,11 @@
+import { API_BASE_URL } from '../util/Constants';
 import { HTTPError } from './HTTPError';
 import fetch from 'node-fetch';
 import https from 'https';
 
 const agent = new https.Agent({ keepAlive: true });
 
-/**
- * @private
- */
+/** @private */
 export class RequestHandler {
 	#keyIndex = 0; // eslint-disable-line
 
@@ -18,7 +17,7 @@ export class RequestHandler {
 	public constructor(options?: ClientOptions) {
 		this.keys = options?.keys ?? [];
 		this.retryLimit = options?.retryLimit ?? 0;
-		this.baseURL = options?.baseURL ?? 'https://api.clashofclans.com/v1';
+		this.baseURL = options?.baseURL ?? API_BASE_URL;
 		this.restRequestTimeout = options?.restRequestTimeout ?? 0;
 	}
 
@@ -37,7 +36,11 @@ export class RequestHandler {
 		return this;
 	}
 
-	public async request<T = any>(path: string, options: RequestOptions = {}, retries = 0): Promise<Response<T>> {
+	public async request<T>(
+		path: string,
+		options: { method?: string; body?: string } = {},
+		retries = 0
+	): Promise<{ data: T; ok: boolean; status: number; maxAge: number }> {
 		const res = await fetch(`${this.baseURL}${path}`, {
 			agent,
 			...options,
@@ -53,13 +56,8 @@ export class RequestHandler {
 		if (!res?.ok) throw new HTTPError(data, res?.status ?? 504, options.method ?? 'GET', path);
 
 		const maxAge = res.headers.get('cache-control')?.split('=')?.[1] ?? 0;
-		return { data, response: { ok: res.status === 200, status: res.status, maxAge: Number(maxAge) * 1000 } };
+		return { data, ok: res.status === 200, status: res.status, maxAge: Number(maxAge) * 1000 };
 	}
-}
-
-export interface RequestOptions {
-	method?: string;
-	body?: string;
 }
 
 export interface ClientOptions {
@@ -69,11 +67,22 @@ export interface ClientOptions {
 	restRequestTimeout?: number;
 }
 
-export interface Response<T> {
-	data: T;
-	response: {
-		ok: boolean;
-		status: number;
-		maxAge: number;
-	};
+export interface SearchOptions {
+	limit?: number;
+	after?: string;
+	before?: string;
+}
+
+export interface ClanSearchOptions {
+	name?: string;
+	minMembers?: number;
+	maxMembers?: number;
+	minClanPoints?: number;
+	minClanLevel?: number;
+	warFrequency?: string;
+	locationId?: string;
+	labelIds?: string;
+	limit?: number;
+	after?: string;
+	before?: string;
 }
