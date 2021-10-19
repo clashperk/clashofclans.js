@@ -1,35 +1,18 @@
 import { APIBadge } from '../types';
 
-/** Represents a Badge */
+/** Represents a Clash of Clans Badge. */
 export class Badge {
+	/** The default icon URL */
 	public url: string;
+
 	public large: string;
 	public medium: string;
 	public small: string;
 
 	public constructor(data: APIBadge) {
-		/**
-		 * The default icon URL
-		 * @type {string}
-		 */
 		this.url = data.large;
-
-		/**
-		 * The large icon URL
-		 * @type {string}
-		 */
 		this.large = data.large;
-
-		/**
-		 * The medium icon URL
-		 * @type {string}
-		 */
 		this.medium = data.medium;
-
-		/**
-		 * The small icon URL
-		 * @type {string}
-		 */
 		this.small = data.small;
 	}
 

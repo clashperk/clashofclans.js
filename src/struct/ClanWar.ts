@@ -36,6 +36,7 @@ export class ClanWarAttack {
 		return this.war.getMember(this.attackerTag)!;
 	}
 
+	/** Returns whether the attack is a fresh or first attack on the defender. */
 	public isFresh() {
 		if (this.defender.defenses.length === 1) return true;
 		return this.order === Math.min(...this.defender.defenses.map((def) => def.order));
@@ -171,7 +172,7 @@ export class ClanWar {
 	public clan: WarClan;
 	public opponent: WarClan;
 
-	public constructor(client: Client, clanTag: string, data: APIClanWar) {
+	public constructor(client: Client, data: APIClanWar, clanTag?: string) {
 		Object.defineProperty(this, 'client', { value: client });
 
 		this.state = data.state;
@@ -181,18 +182,22 @@ export class ClanWar {
 		this.startTime = client.util.parseDate(data.startTime);
 		this.endTime = client.util.parseDate(data.endTime);
 
-		const clan = data.clan.tag === clanTag ? data.clan : data.opponent;
-		const opponent = data.clan.tag === clan.tag ? data.opponent : data.clan;
+		let [clan, opponent] = [data.clan, data.opponent];
+		clanTag &&= client.util.parseTag(clanTag);
+		if (clanTag && [data.clan.tag, data.opponent.tag].includes(clanTag)) {
+			clan = data.clan.tag === clanTag ? data.clan : data.opponent;
+			opponent = data.clan.tag === clan.tag ? data.opponent : data.clan;
+		}
 
 		this.clan = new WarClan(this, clan);
 		this.opponent = new WarClan(this, opponent);
 	}
 
-	public getMember(tag: string) {
+	public getMember(tag: string): ClanWarMember | null {
 		return this.clan.getMember(tag) ?? this.opponent.getMember(tag) ?? null;
 	}
 
-	public getAttack(attackerTag: string, defenderTag: string) {
+	public getAttack(attackerTag: string, defenderTag: string): ClanWarAttack | null {
 		const attacker = this.getMember(attackerTag);
 		if (!attacker?.attacks.length) return null;
 		return attacker.attacks.find((atk) => atk.defenderTag === defenderTag) ?? null;

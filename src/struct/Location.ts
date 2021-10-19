@@ -1,44 +1,27 @@
 import { APILocation } from '../types';
 
-/**
- * Represents a Location
- */
+/** Represents a Clash of Clans Location. */
 export class Location {
+	/** The location Id. */
 	public id: number;
+
+	/** The location name. */
 	public name: string;
+
+	/** A localized name of the location. */
 	public localizedName: string | null;
+
+	/** Indicates whether the location is a country. */
 	public isCountry: boolean;
+
+	/** The country code of the location. */
 	public countryCode: string | null;
 
 	public constructor(data: APILocation) {
-		/**
-		 * The location ID
-		 * @type {string}
-		 */
 		this.id = data.id;
-
-		/**
-		 * The location name
-		 * @type {string}
-		 */
 		this.name = data.name;
-
-		/**
-		 * A localized name of the location
-		 * @type {string}
-		 */
 		this.localizedName = data.localizedName ?? null;
-
-		/**
-		 * Indicates whether the location is a country
-		 * @type {boolean}
-		 */
 		this.isCountry = data.isCountry;
-
-		/**
-		 * The country code of the location
-		 * @type {?string|null}
-		 */
 		this.countryCode = data.countryCode ?? null;
 	}
 }
