@@ -22,7 +22,7 @@ export class PlayerClan {
 		this.badge = new Badge(data.badgeUrls);
 	}
 
-	/** Get clan details for the player's clan. */
+	/** Fetch detailed clan info for the player's clan. */
 	public fetch() {
 		return this._client.getClan(this.tag);
 	}

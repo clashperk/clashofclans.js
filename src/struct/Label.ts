@@ -1,31 +1,20 @@
 import { APILabel } from '../types';
 import { Icon } from './Icon';
 
-/**
- * Represents a Clan or Player Label.
- */
+/** Represents a Clan or Player Label. */
 export class Label {
+	/** The label's unique Id. */
 	public id: number;
+
+	/** The label's name. */
 	public name: string;
+
+	/** The label's icon. */
 	public icon: Icon;
 
 	public constructor(data: APILabel) {
-		/**
-		 * The label's unique ID
-		 * @type {number}
-		 */
 		this.id = data.id;
-
-		/**
-		 * The label's name
-		 * @type {string}
-		 */
 		this.name = data.name;
-
-		/**
-		 * The label's icon
-		 * @type {Icon}
-		 */
 		this.icon = new Icon(data.iconUrls);
 	}
 }

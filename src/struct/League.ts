@@ -2,9 +2,7 @@ import { APILeague } from '../types';
 import { LEAGUES } from '../util/Constants';
 import { Icon } from './Icon';
 
-/**
- * Represents a Player's League.
- */
+/** Represents a Player's League. */
 export class League {
 	/** The league Id. */
 	public id: number;

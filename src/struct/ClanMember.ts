@@ -3,86 +3,54 @@ import { APIClanMember } from '../types';
 import { League } from './League';
 
 export class ClanMember {
+	/** The member's name. */
 	public name: string;
+
+	/** The member's tag. */
 	public tag: string;
-	public role: string;
+
+	/** The members's role in the clan. */
+	public role: 'member' | 'elder' | 'coLeader' | 'leader';
+
+	/** The member's experience level. */
 	public expLevel: number;
+
+	/** The member's current League. */
 	public league: League;
+
+	/** The member's trophy count. */
 	public trophies: number;
-	public versusTrophies: number;
+
+	/** The member's versus trophy count. */
+	public versusTrophies: number | null;
+
+	/** The member's rank in the clan. */
 	public clanRank: number;
+
+	/** The member's rank before the last leaderboard change. */
 	public previousClanRank: number;
+
+	/** The member's donation count for this season. */
 	public donations: number;
-	public donationsReceived: number;
+
+	/** The member's donation received count for this season. */
+	public donationsReceived: number; // TODO
 
 	public constructor(public client: Client, data: APIClanMember) {
-		/**
-		 * Name of the member
-		 * @type {string}
-		 */
 		this.name = data.name;
-
-		/**
-		 * Tag of the member
-		 * @type {string}
-		 */
 		this.tag = data.tag;
-
-		/**
-		 * Role of member
-		 * @type {string}
-		 */
-		this.role = data.role;
-
-		/**
-		 * EXP Level of the member
-		 * @type {number}
-		 */
+		this.role = (data.role as any).replace('admin', 'elder'); // TODO
 		this.expLevel = data.expLevel;
-
-		/**
-		 * League of the member
-		 * @type {League}
-		 */
 		this.league = new League(data.league);
-
-		/**
-		 * Trophies of the member
-		 * @type {number}
-		 */
 		this.trophies = data.trophies;
-
-		/**
-		 * Versus trophies of the member
-		 * @type {number}
-		 */
-		this.versusTrophies = data.versusTrophies;
-
-		/**
-		 * Clan rank of the member
-		 * @type {number}
-		 */
+		this.versusTrophies = data.versusTrophies ?? null;
 		this.clanRank = data.clanRank;
-
-		/**
-		 * Previous clan rank of the member
-		 * @type {number}
-		 */
 		this.previousClanRank = data.previousClanRank;
-
-		/**
-		 * Donations of the member
-		 * @type {number}
-		 */
 		this.donations = data.donations;
-
-		/**
-		 * Donations Received of the member
-		 * @type {number}
-		 */
 		this.donationsReceived = data.donationsReceived;
 	}
 
+	/** Fetch detailed clan info for the member's clan. */
 	public async fetch() {
 		return this.client.getPlayer(this.tag);
 	}
