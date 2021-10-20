@@ -10,6 +10,12 @@ export class RequestHandler {
 	/** @internal */
 	#keyIndex = 0; // eslint-disable-line
 
+	private email!: string;
+	private password!: string;
+	private keyCount!: number;
+	private keyName!: string;
+	private keyDescription!: string;
+
 	private keys: string[];
 	private readonly baseURL: string;
 	private readonly retryLimit: number;
@@ -67,73 +73,80 @@ export class RequestHandler {
 		return res.text();
 	}
 
+	public init(options: InitOptions) {
+		if (!(options.email && options.password)) throw ReferenceError('Missing email and password.');
+
+		this.keyDescription = options.keyDescription ?? new Date().toISOString();
+		this.keyName = options.keyName ?? 'clashofclans.js.keys';
+		this.keyCount = Math.min(options.keyCount ?? 1, 10);
+		this.password = options.password;
+		this.email = options.email;
+		return this.login();
+	}
+
 	private async login() {
 		const res = await fetch(`${DEV_SITE_API_BASE_URL}/login`, {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify({ email: '', password: '' })
-		}).catch(() => null);
-		const data = await res?.json().catch(() => null);
+			body: JSON.stringify({ email: this.email, password: this.password })
+		});
+		const data = await res.json();
 
-		if (res && data?.status?.message === 'ok') {
-			await this.getKeys(res.headers.get('set-cookie')!);
+		if (res.ok && data) {
+			return this.getKeys(res.headers.get('set-cookie')!);
 		}
+		throw new ReferenceError('Invalid email or password.');
 	}
 
 	private async getKeys(cookie: string) {
-		const keyName = 'something';
-		const keyCount = 1;
-
+		const ip = await this.getIp();
 		const res = await fetch(`${DEV_SITE_API_BASE_URL}/apikey/list`, {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json', cookie }
 		});
 		const data = await res.json();
 
-		const keys = data.keys?.filter((key: { name: string }) => key.name === keyName);
-		if (!keys.length) return this.createKey(cookie);
+		const keys = (data.keys ?? []) as { id: string; name: string; key: string; cidrRanges: string[] }[];
+		const validKeys = keys.filter((key) => key.name === this.keyName && key.cidrRanges.includes(ip));
+		if (validKeys.length) this.keys.push(...validKeys.map((key) => key.key).slice(0, this.keyCount));
 
-		if (keyCount > 10 - (data.keys.length - keys.length)) {
-			// TODO: throw Error
+		const expiredKeys = keys.filter((key) => key.name === this.keyName && !key.cidrRanges.includes(ip));
+		for (const key of expiredKeys) await this.revokeKey(key.id, cookie);
+
+		let slots = 10 - keys.length - expiredKeys.length;
+		while (this.keys.length < this.keyCount && slots > 0) {
+			const key = await this.createKey(cookie, ip);
+			this.keys.push(key);
+			--slots;
 		}
 
-		for (const key of keys as { id: string }[]) await this.revokeKey(key, cookie);
-		return Promise.all(
-			Array(keyCount)
-				.fill(0)
-				.map(() => this.createKey(cookie))
-		);
+		if (this.keys.length < this.keyCount && slots === 0) {
+			const missing = this.keyCount - this.keys.length;
+			console.warn(`[WARN] ${this.keyCount} key(s) were requested but failed to create ${missing} more key(s).`);
+		}
+
+		return this.keys;
 	}
 
-	private async revokeKey(key: { id: string }, cookie: string) {
+	private async revokeKey(keyId: string, cookie: string) {
 		const res = await fetch(`${DEV_SITE_API_BASE_URL}/apikey/revoke`, {
 			method: 'POST',
-			headers: { 'Content-Type': 'application/json', cookie },
-			body: JSON.stringify({ id: key.id })
+			body: JSON.stringify({ id: keyId }),
+			headers: { 'Content-Type': 'application/json', cookie }
 		});
 
-		return res.json().catch(() => null);
+		return res.json();
 	}
 
-	private async createKey(cookie: string) {
-		const keyName = 'something';
-		const keyDescription = 'some desc';
-
-		const IP = await this.getIp();
-
+	private async createKey(cookie: string, ip: string) {
 		const res = await fetch(`${DEV_SITE_API_BASE_URL}/apikey/create`, {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json', cookie },
-			body: JSON.stringify({
-				name: keyName,
-				description: keyDescription,
-				cidrRanges: [IP]
-			})
+			body: JSON.stringify({ cidrRanges: [ip], name: this.keyName, description: this.keyDescription })
 		});
 
 		const data = await res.json();
-		if (res.ok && data.key) return data.key.key as string;
-		// TODO: throw Error
+		return data.key.key as string;
 	}
 }
 
@@ -142,13 +155,6 @@ export interface ClientOptions {
 	baseURL?: string;
 	retryLimit?: number;
 	restRequestTimeout?: number;
-	credentials?: {
-		email: string;
-		password: string;
-		keyName?: string;
-		keyCount?: string;
-		keyDescription?: string;
-	};
 }
 
 export interface SearchOptions {
@@ -171,4 +177,10 @@ export interface ClanSearchOptions {
 	before?: string;
 }
 
-export interface InitOptions {}
+export interface InitOptions {
+	email: string;
+	password: string;
+	keyName?: string;
+	keyCount?: number;
+	keyDescription?: string;
+}

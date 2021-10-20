@@ -28,17 +28,9 @@ import {
 
 export class RESTManager {
 	public readonly handler: RequestHandler;
-	private readonly credentials?: {
-		email: string;
-		password: string;
-		keyName?: string;
-		keyCount?: string;
-		keyDescription?: string;
-	};
 
 	public constructor(options?: ClientOptions) {
 		this.handler = new RequestHandler(options);
-		Object.defineProperty(this, 'credentials', { value: options?.credentials });
 	}
 
 	public getClans(options: ClanSearchOptions) {
