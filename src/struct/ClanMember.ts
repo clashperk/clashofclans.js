@@ -9,7 +9,7 @@ export class ClanMember {
 	/** The member's tag. */
 	public tag: string;
 
-	/** The members's role in the clan. */
+	/** The member's role in the clan. */
 	public role: 'member' | 'elder' | 'coLeader' | 'leader';
 
 	/** The member's experience level. */

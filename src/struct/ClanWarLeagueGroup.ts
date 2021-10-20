@@ -1,8 +1,8 @@
 import { APIClanWarLeagueClan, APIClanWarLeagueClanMember, APIClanWarLeagueGroup, APIClanWarLeagueRound } from '../types';
 import { Client } from '../client/Client';
+import { ClanWar } from './ClanWar';
 import { Player } from './Player';
 import { Badge } from './Badge';
-import { ClanWar } from '.';
 
 export class ClanWarLeagueClanMember {
 	public name: string;

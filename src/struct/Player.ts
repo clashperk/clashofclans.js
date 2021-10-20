@@ -82,7 +82,7 @@ export class Player {
 	/** An array of player's spells. */
 	public spells: Spell[];
 
-	/** An array of player's heros. */
+	/** An array of player's heroes. */
 	public heroes: Hero[];
 
 	public constructor(public client: Client, data: APIPlayer) {

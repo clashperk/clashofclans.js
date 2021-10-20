@@ -36,7 +36,7 @@ export class Client {
 	}
 
 	/** Set Clash of Clans API keys. */
-	public setkeys(keys: string[]) {
+	public setKeys(keys: string[]) {
 		this.rest.handler.setKeys(keys);
 		return this;
 	}
@@ -81,7 +81,7 @@ export class Client {
 	/** Get information about CWL round by WarTag. */
 	public async getClanWarLeagueRound(warTag: string, clanTag?: string) {
 		const { data } = await this.rest.getClanWarLeagueRound(warTag);
-		return new ClanWar(this, data, clanTag);
+		return new ClanWar(this, data, clanTag, warTag);
 	}
 
 	/** Get information about a player by tag. */
