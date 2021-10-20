@@ -68,11 +68,6 @@ export class RequestHandler {
 		return { data, ok: res.status === 200, status: res.status, maxAge: Number(maxAge) * 1000 };
 	}
 
-	private async getIp() {
-		const res = await fetch('https://api.ipify.org/');
-		return res.text();
-	}
-
 	public init(options: InitOptions) {
 		if (!(options.email && options.password)) throw ReferenceError('Missing email and password.');
 
@@ -147,6 +142,10 @@ export class RequestHandler {
 
 		const data = await res.json();
 		return data.key.key as string;
+	}
+
+	private async getIp() {
+		return fetch('https://api.ipify.org/').then((res) => res.text());
 	}
 }
 
