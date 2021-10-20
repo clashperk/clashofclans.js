@@ -10,26 +10,67 @@ import { Badge } from './Badge';
 
 /** Represents a Clan. */
 export class Clan {
+	/** Name of the clan. */
 	public name: string;
+
+	/** Tag of the clan. */
 	public tag: string;
-	public type: string;
+
+	/** The clan's type for accepting members. */
+	public type: 'open' | 'inviteOnly' | 'closed';
+
+	/** The clan's description. */
 	public description: string;
+
+	/** The location of this clan. */
 	public location: Location | null;
+
+	/** The clan's trophy count. */
 	public chatLanguage: ChatLanguage | null;
+
+	/** The clan's Badge. */
 	public badge: Badge;
-	public clanLevel: number;
-	public clanPoints: number;
-	public clanVersusPoints: number;
+
+	/** The clan's level. */
+	public level: number;
+
+	/** The clan's trophy count. */
+	public points: number;
+
+	/** The clan's versus trophy count. */
+	public versusPoints: number;
+
+	/** The minimum trophies required to apply to this clan. */
 	public requiredTrophies: number;
+
+	/** The minimum hall level required to apply to this clan. */
 	public requiredTownHallLevel: number | null;
-	public warFrequency: string;
+
+	/** The frequency for when this clan goes to war. */
+	public warFrequency: string; // TODO
+
+	/** The clan's current war winning streak. */
 	public warWinStreak: number;
+
+	/** The number of wars the clan has won. */
 	public warWins: number;
+
+	/** The number of wars the clan has tied. */
 	public warTies: number | null;
+
+	/** The number of wars the clan has lost. */
 	public warLosses: number | null;
+
+	/** Indicates if the clan has a public war log. */
 	public isWarLogPublic: boolean;
+
+	/** The clan's CWL league. */
 	public warLeague: WarLeague | null;
+
+	/** The number of members in the clan. */
 	public memberCount: number;
+
+	/** An array of {@link Label} that the clan has. */
 	public labels: Label[];
 
 	/**
@@ -46,9 +87,9 @@ export class Clan {
 		this.location = data.location ? new Location(data.location) : null;
 		this.chatLanguage = data.chatLanguage ? new ChatLanguage(data.chatLanguage) : null;
 		this.badge = new Badge(data.badgeUrls);
-		this.clanLevel = data.clanLevel;
-		this.clanPoints = data.clanPoints;
-		this.clanVersusPoints = data.clanVersusPoints;
+		this.level = data.clanLevel;
+		this.points = data.clanPoints;
+		this.versusPoints = data.clanVersusPoints;
 		this.requiredTrophies = data.requiredTrophies;
 		this.requiredTownHallLevel = data.requiredTownhallLevel ?? null;
 		this.warFrequency = data.warFrequency;

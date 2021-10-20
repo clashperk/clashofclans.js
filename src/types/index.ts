@@ -50,7 +50,7 @@ export interface APIChatLanguage {
 export interface APIClan {
 	tag: string;
 	name: string;
-	type: string;
+	type: 'open' | 'inviteOnly' | 'closed';
 	description: string;
 	location?: APILocation;
 	chatLanguage?: APIChatLanguage;
@@ -79,7 +79,7 @@ export interface APIClanMember {
 	expLevel: number;
 	league: APILeague;
 	trophies: number;
-	versusTrophies: number;
+	versusTrophies?: number;
 	clanRank: number;
 	previousClanRank: number;
 	donations: number;

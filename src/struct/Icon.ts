@@ -1,8 +1,6 @@
 import { APIIcon } from '../types';
 
-/**
- * Represents a Icon
- */
+/** Represents a Clash of Clans Icon. */
 export class Icon {
 	/** The default icon URL. */
 	public url: string;
@@ -23,6 +21,7 @@ export class Icon {
 		this.tiny = data.tiny ?? data.small;
 	}
 
+	/** Get unique hash of this Badge. */
 	public get hash() {
 		return this.url.split('/').pop();
 	}
