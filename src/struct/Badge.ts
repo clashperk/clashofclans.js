@@ -2,7 +2,7 @@ import { APIBadge } from '../types';
 
 /** Represents a Clash of Clans Badge. */
 export class Badge {
-	/** The default icon URL */
+	/** The default icon URL. */
 	public url: string;
 
 	public large: string;
@@ -16,6 +16,7 @@ export class Badge {
 		this.small = data.small;
 	}
 
+	/** Get unique hash of this Badge. */
 	public get hash() {
 		return this.url.split('/').pop();
 	}

@@ -1,9 +1,7 @@
-import { APIWarLeague } from '../types';
 import { WAR_LEAGUES } from '../util/Constants';
+import { APIWarLeague } from '../types';
 
-/**
- * Represents a Clan's War League.
- */
+/** Represents a Clan's War League. */
 export class WarLeague {
 	/** The league's unique Id. */
 	public id: number;

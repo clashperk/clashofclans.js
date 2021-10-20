@@ -1,4 +1,4 @@
-import { API_BASE_URL } from '../util/Constants';
+import { API_BASE_URL, DEV_SITE_API_BASE_URL } from '../util/Constants';
 import { HTTPError } from './HTTPError';
 import fetch from 'node-fetch';
 import https from 'https';
@@ -7,7 +7,14 @@ const agent = new https.Agent({ keepAlive: true });
 
 /** @private */
 export class RequestHandler {
+	/** @internal */
 	#keyIndex = 0; // eslint-disable-line
+
+	private email!: string;
+	private password!: string;
+	private keyCount!: number;
+	private keyName!: string;
+	private keyDescription!: string;
 
 	private keys: string[];
 	private readonly baseURL: string;
@@ -21,10 +28,12 @@ export class RequestHandler {
 		this.restRequestTimeout = options?.restRequestTimeout ?? 0;
 	}
 
+	/** @internal */
 	private get _keys() {
 		return Array.isArray(this.keys) ? this.keys : [this.keys];
 	}
 
+	/** @internal */
 	private get _key() {
 		const key = this._keys[this.#keyIndex];
 		this.#keyIndex = this.#keyIndex + 1 >= this._keys.length ? 0 : this.#keyIndex + 1;
@@ -53,10 +62,91 @@ export class RequestHandler {
 
 		const data: T = await res?.json().catch(() => null);
 		if (!res && retries < this.retryLimit) return this.request<T>(path, options, ++retries);
-		if (!res?.ok) throw new HTTPError(data, res?.status ?? 504, options.method ?? 'GET', path);
+		if (!res?.ok) throw new HTTPError(data, res?.status ?? 504, path, options.method);
 
 		const maxAge = res.headers.get('cache-control')?.split('=')?.[1] ?? 0;
 		return { data, ok: res.status === 200, status: res.status, maxAge: Number(maxAge) * 1000 };
+	}
+
+	private async getIp() {
+		const res = await fetch('https://api.ipify.org/');
+		return res.text();
+	}
+
+	public init(options: InitOptions) {
+		if (!(options.email && options.password)) throw ReferenceError('Missing email and password.');
+
+		this.keyDescription = options.keyDescription ?? new Date().toISOString();
+		this.keyName = options.keyName ?? 'clashofclans.js.keys';
+		this.keyCount = Math.min(options.keyCount ?? 1, 10);
+		this.password = options.password;
+		this.email = options.email;
+		return this.login();
+	}
+
+	private async login() {
+		const res = await fetch(`${DEV_SITE_API_BASE_URL}/login`, {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({ email: this.email, password: this.password })
+		});
+		const data = await res.json();
+
+		if (res.ok && data) {
+			return this.getKeys(res.headers.get('set-cookie')!);
+		}
+		throw new ReferenceError('Invalid email or password.');
+	}
+
+	private async getKeys(cookie: string) {
+		const ip = await this.getIp();
+		const res = await fetch(`${DEV_SITE_API_BASE_URL}/apikey/list`, {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json', cookie }
+		});
+		const data = await res.json();
+
+		const keys = (data.keys ?? []) as { id: string; name: string; key: string; cidrRanges: string[] }[];
+		const validKeys = keys.filter((key) => key.name === this.keyName && key.cidrRanges.includes(ip));
+		if (validKeys.length) this.keys.push(...validKeys.map((key) => key.key).slice(0, this.keyCount));
+
+		const expiredKeys = keys.filter((key) => key.name === this.keyName && !key.cidrRanges.includes(ip));
+		for (const key of expiredKeys) await this.revokeKey(key.id, cookie);
+
+		let slots = 10 - keys.length - expiredKeys.length;
+		while (this.keys.length < this.keyCount && slots > 0) {
+			const key = await this.createKey(cookie, ip);
+			this.keys.push(key);
+			--slots;
+		}
+
+		if (this.keys.length < this.keyCount && slots === 0) {
+			const missing = this.keyCount - this.keys.length;
+			console.warn(`[WARN] ${this.keyCount} key(s) were requested but failed to create ${missing} more key(s).`);
+		}
+
+		return this.keys;
+	}
+
+	private async revokeKey(keyId: string, cookie: string) {
+		const res = await fetch(`${DEV_SITE_API_BASE_URL}/apikey/revoke`, {
+			method: 'POST',
+			body: JSON.stringify({ id: keyId }),
+			headers: { 'Content-Type': 'application/json', cookie }
+		});
+
+		return res.json();
+	}
+
+	private async createKey(cookie: string, ip: string) {
+		const res = await fetch(`${DEV_SITE_API_BASE_URL}/apikey/create`, {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json', cookie },
+			body: JSON.stringify({ cidrRanges: [ip], name: this.keyName, description: this.keyDescription })
+		});
+
+		const data = await res.json();
+		return data.key.key as string;
 	}
 }
 
@@ -85,4 +175,12 @@ export interface ClanSearchOptions {
 	limit?: number;
 	after?: string;
 	before?: string;
+}
+
+export interface InitOptions {
+	email: string;
+	password: string;
+	keyName?: string;
+	keyCount?: number;
+	keyDescription?: string;
 }

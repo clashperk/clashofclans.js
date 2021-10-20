@@ -1,4 +1,4 @@
-import { ClanSearchOptions, SearchOptions, ClientOptions } from '../rest/RequestHandler';
+import { ClanSearchOptions, SearchOptions, ClientOptions, InitOptions } from '../rest/RequestHandler';
 import { RESTManager } from '../rest/RESTManager';
 import Util from '../util/Util';
 
@@ -29,6 +29,10 @@ export class Client {
 	 */
 	public constructor(options?: ClientOptions) {
 		this.rest = new RESTManager(options);
+	}
+
+	public init(options: InitOptions) {
+		return this.rest.handler.init(options);
 	}
 
 	/** Set Clash of Clans API keys. */

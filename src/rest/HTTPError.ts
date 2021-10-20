@@ -14,7 +14,7 @@ export class HTTPError extends Error {
 	public status: number;
 	public path: string;
 
-	public constructor(error: any, status: number, path: string, method: string) {
+	public constructor(error: any, status: number, path: string, method = 'GET') {
 		super();
 		this.message = error?.message ?? messages[status];
 		this.reason = error?.reason ?? reasons[status];

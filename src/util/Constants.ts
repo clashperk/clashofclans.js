@@ -1,5 +1,7 @@
 export const API_BASE_URL = 'https://api.clashofclans.com/v1';
 
+export const DEV_SITE_API_BASE_URL = 'https://developer.clashofclans.com/api';
+
 export const ELIXIR_TROOPS = [
 	'Barbarian',
 	'Archer',
@@ -40,7 +42,7 @@ export const SUPER_TROOPS = [
 	'Super Bowler'
 ];
 
-export const ELIXIR_SPELLS: string[] = [
+export const ELIXIR_SPELLS = [
 	'Lightning Spell',
 	'Healing Spell',
 	'Rage Spell',
