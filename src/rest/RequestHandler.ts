@@ -71,7 +71,7 @@ export class RequestHandler {
 	public init(options: InitOptions) {
 		if (!(options.email && options.password)) throw ReferenceError('Missing email and password.');
 
-		this.keyDescription = options.keyDescription ?? new Date().toISOString();
+		this.keyDescription = options.keyDescription ?? new Date().toUTCString();
 		this.keyName = options.keyName ?? 'clashofclans.js.keys';
 		this.keyCount = Math.min(options.keyCount ?? 1, 10);
 		this.password = options.password;
@@ -101,23 +101,40 @@ export class RequestHandler {
 		});
 		const data = await res.json();
 
+		// Get all available keys from the developer site.
 		const keys = (data.keys ?? []) as { id: string; name: string; key: string; cidrRanges: string[] }[];
+
+		// Revoke keys for specified key name but not matching current IP address.
+		const expiredKeys = keys.filter((key) => key.name === this.keyName && !key.cidrRanges.includes(ip));
+		for (const key of expiredKeys) {
+			if (!(await this.revokeKey(key.id, cookie))) continue;
+			const index = keys.findIndex(({ id }) => id === key.id);
+			keys.splice(index, 1);
+		}
+
+		// Create keys within limits (maximum of 10 keys per account)
+		while (this.keys.length < this.keyCount && keys.length < 10) {
+			const key = await this.createKey(cookie, ip);
+			keys.push(key);
+		}
+
+		// Filter keys for current IP address and specified key name.
 		const validKeys = keys.filter((key) => key.name === this.keyName && key.cidrRanges.includes(ip));
 		if (validKeys.length) this.keys.push(...validKeys.map((key) => key.key).slice(0, this.keyCount));
 
-		const expiredKeys = keys.filter((key) => key.name === this.keyName && !key.cidrRanges.includes(ip));
-		for (const key of expiredKeys) await this.revokeKey(key.id, cookie);
-
-		let slots = 10 - keys.length - expiredKeys.length;
-		while (this.keys.length < this.keyCount && slots > 0) {
-			const key = await this.createKey(cookie, ip);
-			this.keys.push(key);
-			--slots;
+		if (this.keys.length < this.keyCount && keys.length === 10) {
+			console.warn(
+				`[WARN] ${this.keyCount} key(s) were requested but failed to create ${this.keyCount - this.keys.length} more key(s).`
+			);
 		}
 
-		if (this.keys.length < this.keyCount && slots === 0) {
-			const missing = this.keyCount - this.keys.length;
-			console.warn(`[WARN] ${this.keyCount} key(s) were requested but failed to create ${missing} more key(s).`);
+		if (!this.keys.length) {
+			throw new Error(
+				[
+					`${keys.length} API keys were created but none match a key name of "${this.keyName}" and IP "${ip}".`,
+					`Specify a key name or go to "https://developer.clashofclans.com" to delete unused keys.`
+				].join(' ')
+			);
 		}
 
 		return this.keys;
@@ -130,7 +147,7 @@ export class RequestHandler {
 			headers: { 'Content-Type': 'application/json', cookie }
 		});
 
-		return res.json();
+		return res.ok;
 	}
 
 	private async createKey(cookie: string, ip: string) {
@@ -141,7 +158,7 @@ export class RequestHandler {
 		});
 
 		const data = await res.json();
-		return data.key.key as string;
+		return data.key as { id: string; name: string; key: string; cidrRanges: string[] };
 	}
 
 	private async getIp() {
