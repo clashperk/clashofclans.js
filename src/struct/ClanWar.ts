@@ -234,13 +234,13 @@ export class ClanWar {
 	/** The number of attacks each member has. */
 	public attacksPerMember: number;
 
-	/** The {@link Date} that preparation day started at. */
+	/** The Date that preparation day started at. */
 	public preparationStartTime: Date;
 
-	/** The {@link Date} that battle day starts at. */
+	/** The Date that battle day starts at. */
 	public startTime: Date;
 
-	/** The {@link Date} that battle day ends at. */
+	/** The Date that battle day ends at. */
 	public endTime: Date;
 
 	/** The clan. */
