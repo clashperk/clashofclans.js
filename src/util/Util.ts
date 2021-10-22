@@ -13,7 +13,11 @@ function parseDate(time: string) {
 }
 
 function queryString(options = {}) {
-	return new URLSearchParams(options).toString();
+	const query = new URLSearchParams(options);
+	query.delete('restRequestTimeout');
+	query.delete('ignoreRateLimit');
+	query.delete('retryLimit');
+	return query.toString();
 }
 
 function getSeasonEnd(month: number, autoFix = true): Date {

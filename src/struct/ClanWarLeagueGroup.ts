@@ -99,7 +99,7 @@ export class ClanWarLeagueGroup {
 		if (!rounds.length) return [];
 		const warTags = rounds.map((round) => round.warTags).flat();
 
-		return (await Promise.allSettled(warTags.map((warTag) => this.client.getClanWarLeagueRound(warTag, clanTag))))
+		return (await Promise.allSettled(warTags.map((warTag) => this.client.getClanWarLeagueRound({ warTag, clanTag }))))
 			.filter((res) => res.status === 'fulfilled')
 			.map((res) => (res as PromiseFulfilledResult<ClanWar>).value)
 			.filter((war) => (clanTag ? war.clan.tag === clanTag : true));
