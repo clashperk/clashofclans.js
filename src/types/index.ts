@@ -113,8 +113,6 @@ export interface APIWarClan {
 	stars: number;
 	destructionPercentage: number;
 	members: APIClanWarMember[];
-	/** This property is only available for war log entry. */
-	expEarned?: number;
 }
 
 export interface APIClanWarMember {
@@ -136,13 +134,24 @@ export interface APIClanWarAttack {
 	destructionPercentage: number;
 }
 
+export interface APIWarLogClan {
+	tag?: string;
+	name?: string;
+	badgeUrls: APIBadge;
+	clanLevel: number;
+	attacks?: number;
+	stars: number;
+	destructionPercentage: number;
+	expEarned?: number;
+}
+
 export interface APIClanWarLogEntry {
 	result: 'win' | 'lose' | 'tie' | null;
 	endTime: string;
 	teamSize: number;
 	attacksPerMember?: number;
-	clan: Omit<APIWarClan, 'members'>;
-	opponent: Omit<APIWarClan, 'members' | 'attacks' | 'expEarned'>;
+	clan: APIWarLogClan;
+	opponent: APIWarLogClan;
 }
 
 /** /clans/{clanTag}/warlog */
@@ -153,7 +162,7 @@ export interface APIClanWarLog {
 
 /** /clans/{clanTag}/currentwar/leaguegroup */
 export interface APIClanWarLeagueGroup {
-	state: APIWarState;
+	state: 'preparation' | 'inWar' | 'warEnded';
 	season: string;
 	clans: APIClanWarLeagueClan[];
 	rounds: APIClanWarLeagueRound[];

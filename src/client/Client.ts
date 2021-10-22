@@ -18,6 +18,7 @@ import {
 	ClanWarLeagueGroup
 } from '../struct';
 
+/** Represents Clash of Clans API Client. */
 export class Client {
 	public rest: RESTManager;
 	public readonly util = Util;
@@ -78,6 +79,7 @@ export class Client {
 	/** Get information about currently running war in the clan. */
 	public async getCurrentWar(clanTag: string) {
 		const { data } = await this.rest.getCurrentWar(clanTag);
+		if (data.state === 'notInWar') return null;
 		return new ClanWar(this, data, clanTag);
 	}
 
@@ -90,6 +92,7 @@ export class Client {
 	/** Get information about CWL round by WarTag. */
 	public async getClanWarLeagueRound(warTag: string, clanTag?: string) {
 		const { data } = await this.rest.getClanWarLeagueRound(warTag);
+		if (data.state === 'notInWar') return null;
 		return new ClanWar(this, data, clanTag, warTag);
 	}
 

@@ -1,4 +1,5 @@
 import { API_BASE_URL, DEV_SITE_API_BASE_URL } from '../util/Constants';
+import { QueueThrottler, BatchThrottler } from './Throttler';
 import { HTTPError } from './HTTPError';
 import fetch from 'node-fetch';
 import https from 'https';
@@ -20,10 +21,12 @@ export class RequestHandler {
 	private readonly baseURL: string;
 	private readonly retryLimit: number;
 	private readonly restRequestTimeout: number;
+	private readonly throttler?: QueueThrottler | BatchThrottler | null;
 
 	public constructor(options?: ClientOptions) {
 		this.keys = options?.keys ?? [];
 		this.retryLimit = options?.retryLimit ?? 0;
+		this.throttler = options?.throttler ?? null;
 		this.baseURL = options?.baseURL ?? API_BASE_URL;
 		this.restRequestTimeout = options?.restRequestTimeout ?? 0;
 	}
@@ -43,6 +46,17 @@ export class RequestHandler {
 	public setKeys(keys: string[]) {
 		this.keys = keys;
 		return this;
+	}
+
+	public async exec(path: string, options: { method?: string; body?: string } = {}) {
+		if (!this.throttler) return this.request(path, options);
+		await this.throttler.wait();
+
+		try {
+			return await this.request(path, options);
+		} finally {
+			await this.throttler.throttle();
+		}
 	}
 
 	public async request<T>(
@@ -167,6 +181,7 @@ export interface ClientOptions {
 	baseURL?: string;
 	retryLimit?: number;
 	restRequestTimeout?: number;
+	throttler?: QueueThrottler | BatchThrottler;
 }
 
 export interface SearchOptions {

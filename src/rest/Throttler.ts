@@ -5,7 +5,7 @@ export class QueueThrottler {
 	private readonly sleepTime: number;
 	private readonly promises: DeferredPromise[] = [];
 
-	public constructor(rateLimit = 10) {
+	public constructor(rateLimit: number) {
 		this.sleepTime = 1000 / rateLimit;
 	}
 
@@ -44,8 +44,12 @@ export class BatchThrottler {
 	#taskLogs: number[] = []; // eslint-disable-line
 	private readonly rateLimit: number;
 
-	public constructor(rateLimit = 10) {
+	public constructor(rateLimit: number) {
 		this.rateLimit = rateLimit;
+	}
+
+	public async wait() {
+		return Promise.resolve();
 	}
 
 	public async throttle() {
