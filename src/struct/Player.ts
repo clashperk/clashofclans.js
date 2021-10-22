@@ -56,7 +56,7 @@ export class Player {
 	public donations: number;
 
 	/** The player's donation received count for this season. */
-	public donationsReceived: number;
+	public received: number;
 
 	/** The player's role in the clan or `null` if not in a clan. */
 	public role: string | null;
@@ -101,7 +101,7 @@ export class Player {
 		this.bestVersusTrophies = data.bestVersusTrophies ?? null;
 		this.versusBattleWins = data.versusBattleWins ?? null;
 		this.donations = data.donations;
-		this.donationsReceived = data.donationsReceived;
+		this.received = data.donationsReceived;
 		this.role = data.role ?? null;
 		this.clan = data.clan ? new PlayerClan(client, data.clan) : null;
 		this.league = data.league ? new League(data.league) : null;

@@ -54,10 +54,7 @@ export class RequestHandler {
 			agent,
 			...options,
 			timeout: this.restRequestTimeout,
-			headers: {
-				Authorization: `Bearer ${this._key}`,
-				'Content-Type': 'application/json'
-			}
+			headers: { 'Authorization': `Bearer ${this._key}`, 'Content-Type': 'application/json' }
 		}).catch(() => null);
 
 		const data: T = await res?.json().catch(() => null);
@@ -85,9 +82,8 @@ export class RequestHandler {
 			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify({ email: this.email, password: this.password })
 		});
-		const data = await res.json();
 
-		if (res.ok && data) {
+		if (res.ok) {
 			return this.getKeys(res.headers.get('set-cookie')!);
 		}
 		throw new ReferenceError('Invalid email or password.');
