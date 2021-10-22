@@ -1,4 +1,4 @@
-import { APIClanWar, APIClanWarAttack, APIClanWarMember, APIWarClan, APIWarState } from '../types';
+import { APIClanWar, APIClanWarAttack, APIClanWarMember, APIWarClan } from '../types';
 import { FRIENDLY_WAR_PREPARATION_TIMES } from '../util/Constants';
 import { Client } from '../client/Client';
 import { Badge } from './Badge';
@@ -220,7 +220,7 @@ export class ClanWar {
 	public client!: Client;
 
 	/** The clan's current war state. */
-	public state: APIWarState;
+	public state: 'preparation' | 'inWar' | 'warEnded';
 
 	/** The number of players on each side. */
 	public teamSize: number;
@@ -249,7 +249,7 @@ export class ClanWar {
 	public constructor(client: Client, data: APIClanWar, clanTag?: string, warTag?: string) {
 		Object.defineProperty(this, 'client', { value: client });
 
-		this.state = data.state;
+		this.state = data.state as any;
 		this.teamSize = data.teamSize;
 		this.attacksPerMember = data.attacksPerMember;
 		this.preparationStartTime = client.util.parseDate(data.preparationStartTime);

@@ -39,11 +39,18 @@ function getSeasonEndTime(date = new Date()) {
 	return getSeasonEnd(date.getUTCMonth() + 1);
 }
 
+async function allSettled<T>(values: Promise<T>[]) {
+	return (await Promise.allSettled(values))
+		.filter((res) => res.status === 'fulfilled')
+		.map((res) => (res as PromiseFulfilledResult<T>).value);
+}
+
 export default {
 	encodeTag,
 	parseTag,
 	parseDate,
 	queryString,
 	getSeasonId,
-	getSeasonEndTime
+	getSeasonEndTime,
+	allSettled
 };

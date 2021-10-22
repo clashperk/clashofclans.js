@@ -1,14 +1,14 @@
-import { APIClanWarLogEntry, APIWarClan } from '../types';
+import { APIClanWarLogEntry, APIWarLogClan } from '../types';
 import { Client } from '../client/Client';
 import Util from '../util/Util';
 import { Badge } from './Badge';
 
 export class WarLogClan {
-	/** The clan's name. */
-	public name: string;
+	/** The clan's name. This property is `null` CWL entries. */
+	public name: string | null;
 
-	/** The clan's tag. */
-	public tag: string;
+	/** The clan's tag. This property is `null` CWL entries. */
+	public tag: string | null;
 
 	/** The clan's badge. */
 	public badge: Badge;
@@ -34,13 +34,13 @@ export class WarLogClan {
 	 */
 	public attacksUsed: number | null;
 
-	public constructor(data: APIWarClan) {
-		this.name = data.name;
-		this.tag = data.tag;
+	public constructor(data: APIWarLogClan) {
+		this.name = data.name ?? null;
+		this.tag = data.tag ?? null;
 		this.badge = new Badge(data.badgeUrls);
 		this.level = data.clanLevel;
 		this.stars = data.stars;
-		this.attacksUsed = data.attacks || null;
+		this.attacksUsed = data.attacks ?? null;
 		this.destruction = data.destructionPercentage;
 		this.expEarned = data.expEarned ?? null;
 	}
@@ -62,28 +62,22 @@ export class ClanWarLog {
 	/** The home clan. */
 	public clan: WarLogClan;
 
-	/**
-	 * The opposition clan.
-	 * This property is `null` CWL entries.
-	 */
-	public opponent: WarLogClan | null;
+	/** The opposition clan. */
+	public opponent: WarLogClan;
 
 	public constructor(public client: Client, data: APIClanWarLogEntry) {
 		this.result = data.result;
 		this.endTime = Util.parseDate(data.endTime);
 		this.teamSize = data.teamSize;
 		this.attacksPerMember = data.attacksPerMember ?? null;
-
-		// @ts-expect-error
 		this.clan = new WarLogClan(data.clan);
-		// @ts-expect-error
-		this.opponent = data.opponent.tag ? new WarLogClan(data.opponent) : null; // eslint-disable-line
+		this.opponent = new WarLogClan(data.opponent);
 	}
 
 	/** Returns either `friendly`, `cwl` or `regular`. */
 	public get type() {
 		if (!this.clan.expEarned) return 'friendly';
-		if (!this.opponent) return 'cwl';
+		if (!this.opponent.tag) return 'cwl';
 		return 'regular';
 	}
 }

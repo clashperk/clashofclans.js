@@ -48,6 +48,10 @@ export class BatchThrottler {
 		this.rateLimit = rateLimit;
 	}
 
+	public async wait() {
+		return Promise.resolve();
+	}
+
 	public async throttle() {
 		while (true) { // eslint-disable-line
 			const now = Date.now();
