@@ -145,7 +145,10 @@ export class ClanWarMember {
 	}
 }
 
-export class BaseWarClan {
+/** Represents a War Clan. */
+export class WarClan {
+	private readonly war!: ClanWar;
+
 	/** The clan's name. */
 	public name: string;
 
@@ -164,20 +167,6 @@ export class BaseWarClan {
 	/** The destruction achieved as a percentage. */
 	public destruction: number;
 
-	public constructor(data: APIWarClan) {
-		this.name = data.name;
-		this.tag = data.tag;
-		this.badge = new Badge(data.badgeUrls);
-		this.level = data.clanLevel;
-		this.stars = data.stars;
-		this.destruction = data.destructionPercentage;
-	}
-}
-
-/** Represents a War Clan. */
-export class WarClan extends BaseWarClan {
-	private readonly war!: ClanWar;
-
 	/** An array of members that are in the war. */
 	public members: ClanWarMember[];
 
@@ -185,10 +174,15 @@ export class WarClan extends BaseWarClan {
 	public attacksUsed: number;
 
 	public constructor(war: ClanWar, data: APIWarClan) {
-		super(data);
 		Object.defineProperty(this, 'war', { value: war });
 
+		this.name = data.name;
+		this.tag = data.tag;
+		this.badge = new Badge(data.badgeUrls);
+		this.level = data.clanLevel;
+		this.stars = data.stars;
 		this.attacksUsed = data.attacks;
+		this.destruction = data.destructionPercentage;
 		this.members = data.members.map((mem) => new ClanWarMember(this, war, mem));
 	}
 
@@ -243,7 +237,7 @@ export class ClanWar {
 	/** The Date that battle day ends at. */
 	public endTime: Date;
 
-	/** The clan. */
+	/** The home clan. */
 	public clan: WarClan;
 
 	/** The opposition clan. */

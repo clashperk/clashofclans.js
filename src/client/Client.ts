@@ -6,7 +6,6 @@ import {
 	Clan,
 	ClanMember,
 	ClanWar,
-	ClanWarLeagueGroup,
 	ClanWarLog,
 	League,
 	Location,
@@ -15,7 +14,8 @@ import {
 	RankedClan,
 	RankedPlayer,
 	Label,
-	GoldPassSeason
+	GoldPassSeason,
+	ClanWarLeagueGroup
 } from '../struct';
 
 export class Client {
@@ -24,13 +24,22 @@ export class Client {
 
 	/**
 	 * ```js
-	 * const client = new Client({ keys: [] });
+	 * const { Client } = require('clashofclans.js');
+	 * const client = new Client({ keys: ['***'] });
 	 * ```
 	 */
 	public constructor(options?: ClientOptions) {
 		this.rest = new RESTManager(options);
 	}
 
+	/**
+	 * Initialize the client to create keys.
+	 *
+	 * ```
+	 * const client = new Client();
+	 * client.init({ email: 'developer@email.com', password: '***' });
+	 * ```
+	 */
 	public init(options: InitOptions) {
 		return this.rest.handler.init(options);
 	}

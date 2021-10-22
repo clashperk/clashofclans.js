@@ -17,8 +17,8 @@
 		"url": "git+https://github.com/clashperk/clashofclans.js.git"
 	},
 	"keywords": [
-		"clash-of-clans",
 		"clash-of-clans-api",
+		"clash-of-clans",
 		"clash-api"
 	],
 	"bugs": {
@@ -32,6 +32,10 @@
 		],
 		"plugins": [
 			"prettier"
+		],
+		"ignorePatterns": [
+			"dist/*",
+			"docs/*"
 		],
 		"parser": "@typescript-eslint/parser",
 		"rules": {
@@ -52,6 +56,7 @@
 		"tabWidth": 4,
 		"printWidth": 140,
 		"singleQuote": true,
+		"quoteProps": "consistent",
 		"bracketSpacing": true,
 		"trailingComma": "none"
 	},
@@ -72,6 +77,6 @@
 		"typescript": "^4.4.3"
 	},
 	"engines": {
-		"node": ">=14.x"
+		"node": ">=16.x"
 	}
 }
