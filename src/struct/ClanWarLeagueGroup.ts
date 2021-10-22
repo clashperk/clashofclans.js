@@ -49,7 +49,7 @@ export class ClanWarLeagueClan {
 
 	/** Get {@link Player} information for every members that are in the CWL group. */
 	public async fetchMembers() {
-		return (await Promise.allSettled(this.members.map((m) => this.client.getPlayer(m.tag))))
+		return (await Promise.allSettled(this.members.map((m) => this.client.getPlayer(m.tag, { ignoreRateLimit: true }))))
 			.filter((res) => res.status === 'fulfilled')
 			.map((res) => (res as PromiseFulfilledResult<Player>).value);
 	}
@@ -97,10 +97,13 @@ export class ClanWarLeagueGroup {
 	public async getWars(clanTag?: string) {
 		const rounds = this.rounds.filter((round) => !round.warTags.includes('#0'));
 		if (!rounds.length) return [];
-		const warTags = rounds.map((round) => round.warTags).flat();
 
-		return (await Promise.allSettled(warTags.map((warTag) => this.client.getClanWarLeagueRound(warTag, clanTag))))
-			.filter((res) => res.status === 'fulfilled')
+		const warTags = rounds.map((round) => round.warTags).flat();
+		const wars = await Promise.allSettled(
+			warTags.map((warTag) => this.client.getClanWarLeagueRound({ warTag, clanTag }, { ignoreRateLimit: true }))
+		);
+		return wars
+			.filter((res) => res.status === 'fulfilled' && res.value)
 			.map((res) => (res as PromiseFulfilledResult<ClanWar>).value)
 			.filter((war) => (clanTag ? war.clan.tag === clanTag : true));
 	}

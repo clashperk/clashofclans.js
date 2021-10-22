@@ -49,7 +49,7 @@ export class RequestHandler {
 	}
 
 	public async request<T>(path: string, options: RequestOptions = {}) {
-		if (!this.throttler || options.ignoreRateLimits) return this.exec<T>(path, options);
+		if (!this.throttler || options.ignoreRateLimit) return this.exec<T>(path, options);
 		await this.throttler.wait();
 
 		try {
@@ -185,18 +185,21 @@ export interface ClientOptions {
 	throttler?: QueueThrottler | BatchThrottler;
 }
 
-export interface SearchOptions {
+export interface SearchOptions extends OverrideOptions {
 	limit?: number;
 	after?: string;
 	before?: string;
 }
 
-export interface RequestOptions {
+export interface OverrideOptions {
+	retryLimit?: string;
+	ignoreRateLimit?: boolean;
+	restRequestTimeout?: number;
+}
+
+export interface RequestOptions extends OverrideOptions {
 	body?: string;
 	method?: string;
-	retryLimit?: string;
-	ignoreRateLimits?: boolean;
-	restRequestTimeout?: number;
 }
 
 export interface ClanSearchOptions {

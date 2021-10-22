@@ -11,15 +11,15 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
-        
+
       - name: Use Node.js 14
         uses: actions/setup-node@v2
         with:
           node-version: 14
-          
+
       - name: NPM Install
         run: npm ci
-        
+
       - name: ESLint
         run: npm test
 
@@ -30,16 +30,16 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
-        
+
       - name: Use Node.js 14
         uses: actions/setup-node@v2
         with:
           node-version: 14
           registry-url: https://registry.npmjs.org/
-          
+
       - name: NPM Install
         run: npm ci
-        
+
       - name: Publish
         run: npm publish
         env:

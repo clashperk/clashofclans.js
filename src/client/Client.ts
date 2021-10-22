@@ -1,4 +1,4 @@
-import { ClanSearchOptions, SearchOptions, ClientOptions, InitOptions } from '../rest/RequestHandler';
+import { ClanSearchOptions, SearchOptions, ClientOptions, InitOptions, OverrideOptions } from '../rest/RequestHandler';
 import { RESTManager } from '../rest/RESTManager';
 import Util from '../util/Util';
 
@@ -59,8 +59,8 @@ export class Client {
 	}
 
 	/** Get information about a clan. */
-	public async getClan(clanTag: string) {
-		const { data } = await this.rest.getClan(clanTag);
+	public async getClan(clanTag: string, options?: OverrideOptions) {
+		const { data } = await this.rest.getClan(clanTag, options);
 		return new Clan(this, data);
 	}
 
@@ -77,34 +77,35 @@ export class Client {
 	}
 
 	/** Get information about currently running war in the clan. */
-	public async getCurrentWar(clanTag: string) {
-		const { data } = await this.rest.getCurrentWar(clanTag);
+	public async getCurrentWar(clanTag: string, options?: OverrideOptions) {
+		const { data } = await this.rest.getCurrentWar(clanTag, options);
 		if (data.state === 'notInWar') return null;
 		return new ClanWar(this, data, clanTag);
 	}
 
 	/** Get information about clan war league. */
-	public async getClanWarLeagueGroup(clanTag: string) {
-		const { data } = await this.rest.getClanWarLeagueGroup(clanTag);
+	public async getClanWarLeagueGroup(clanTag: string, options?: OverrideOptions) {
+		const { data } = await this.rest.getClanWarLeagueGroup(clanTag, options);
 		return new ClanWarLeagueGroup(this, data);
 	}
 
 	/** Get information about CWL round by WarTag. */
-	public async getClanWarLeagueRound(warTag: string, clanTag?: string) {
-		const { data } = await this.rest.getClanWarLeagueRound(warTag);
+	public async getClanWarLeagueRound(warTag: string | { warTag: string; clanTag?: string }, options?: OverrideOptions) {
+		const args = typeof warTag === 'string' ? { warTag } : { warTag: warTag.warTag, clanTag: warTag.clanTag };
+		const { data } = await this.rest.getClanWarLeagueRound(args.warTag, options);
 		if (data.state === 'notInWar') return null;
-		return new ClanWar(this, data, clanTag, warTag);
+		return new ClanWar(this, data, args.clanTag, args.warTag);
 	}
 
 	/** Get information about a player by tag. */
-	public async getPlayer(playerTag: string) {
-		const { data } = await this.rest.getPlayer(playerTag);
+	public async getPlayer(playerTag: string, options?: OverrideOptions) {
+		const { data } = await this.rest.getPlayer(playerTag, options);
 		return new Player(this, data);
 	}
 
 	/** Verify Player API token that can be found from the Game settings. */
-	public async verifyPlayerToken(playerTag: string, token: string) {
-		const { data } = await this.rest.postPlayerToken(playerTag, token);
+	public async verifyPlayerToken(playerTag: string, token: string, options?: OverrideOptions) {
+		const { data } = await this.rest.postPlayerToken(playerTag, token, options);
 		return data.status === 'ok';
 	}
 
@@ -176,8 +177,8 @@ export class Client {
 	}
 
 	/** Get information about gold pass season. */
-	public async getGoldPassSeason() {
-		const { data } = await this.rest.getGoldPassSeason();
+	public async getGoldPassSeason(options?: OverrideOptions) {
+		const { data } = await this.rest.getGoldPassSeason(options);
 		return new GoldPassSeason(data);
 	}
 }
