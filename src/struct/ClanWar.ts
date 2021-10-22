@@ -258,7 +258,7 @@ export class ClanWar {
 		this.warTag = warTag ?? null;
 
 		let [clan, opponent] = [data.clan, data.opponent];
-		clanTag &&= client.util.parseTag(clanTag);
+		clanTag = clanTag && client.util.parseTag(clanTag);
 		if (clanTag && [data.clan.tag, data.opponent.tag].includes(clanTag)) {
 			clan = data.clan.tag === clanTag ? data.clan : data.opponent;
 			opponent = data.clan.tag === clan.tag ? data.opponent : data.clan;

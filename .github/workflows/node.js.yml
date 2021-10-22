@@ -12,10 +12,10 @@ jobs:
     - name: Checkout Repository
       uses: actions/checkout@v2
 
-    - name: Use Node.js 16
+    - name: Use Node.js 14
       uses: actions/setup-node@v2
       with:
-        node-version: 16
+        node-version: 14
 
     - name: NPM Install
       run: npm i

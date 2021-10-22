@@ -11,7 +11,7 @@
 
 ### Installation
 - **`npm i clashofclans.js`**
-- **Node.js v16 or newer is required.**
+- **Node.js v14 or newer is required.**
 
 ### Disclaimer
 > This content is not affiliated with, endorsed, sponsored, or specifically approved by Supercell and Supercell is not responsible for it. For more information see [Supercell’s Fan Content Policy](https://supercell.com/en/fan-content-policy/).
