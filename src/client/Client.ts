@@ -65,13 +65,13 @@ export class Client {
 	}
 
 	/** Get list of clan members. */
-	public async getClanMembers(clanTag: string, options: SearchOptions) {
+	public async getClanMembers(clanTag: string, options?: SearchOptions) {
 		const { data } = await this.rest.getClanMembers(clanTag, options);
 		return data.items.map((entry) => new ClanMember(this, entry));
 	}
 
 	/** Get clan war log. */
-	public async getClanWarLog(clanTag: string, options: SearchOptions) {
+	public async getClanWarLog(clanTag: string, options?: SearchOptions) {
 		const { data } = await this.rest.getClanWarLog(clanTag, options);
 		return data.items.map((entry) => new ClanWarLog(this, entry));
 	}

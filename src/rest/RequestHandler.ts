@@ -48,31 +48,32 @@ export class RequestHandler {
 		return this;
 	}
 
-	public async exec(path: string, options: { method?: string; body?: string } = {}) {
-		if (!this.throttler) return this.request(path, options);
+	public async request<T>(path: string, options: RequestOptions = {}) {
+		if (!this.throttler || options.ignoreRateLimits) return this.exec<T>(path, options);
 		await this.throttler.wait();
 
 		try {
-			return await this.request(path, options);
+			return await this.exec<T>(path, options);
 		} finally {
 			await this.throttler.throttle();
 		}
 	}
 
-	public async request<T>(
+	public async exec<T>(
 		path: string,
-		options: { method?: string; body?: string } = {},
+		options: RequestOptions = {},
 		retries = 0
 	): Promise<{ data: T; ok: boolean; status: number; maxAge: number }> {
 		const res = await fetch(`${this.baseURL}${path}`, {
 			agent,
-			...options,
-			timeout: this.restRequestTimeout,
+			body: options.body,
+			method: options.method,
+			timeout: options.restRequestTimeout ?? this.restRequestTimeout,
 			headers: { 'Authorization': `Bearer ${this._key}`, 'Content-Type': 'application/json' }
 		}).catch(() => null);
 
 		const data: T = await res?.json().catch(() => null);
-		if (!res && retries < this.retryLimit) return this.request<T>(path, options, ++retries);
+		if (!res && retries < (options.retryLimit ?? this.retryLimit)) return this.exec<T>(path, options, ++retries);
 		if (!res?.ok) throw new HTTPError(data, res?.status ?? 504, path, options.method);
 
 		const maxAge = res.headers.get('cache-control')?.split('=')?.[1] ?? 0;
@@ -188,6 +189,14 @@ export interface SearchOptions {
 	limit?: number;
 	after?: string;
 	before?: string;
+}
+
+export interface RequestOptions {
+	body?: string;
+	method?: string;
+	retryLimit?: string;
+	ignoreRateLimits?: boolean;
+	restRequestTimeout?: number;
 }
 
 export interface ClanSearchOptions {
