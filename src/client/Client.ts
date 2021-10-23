@@ -2,7 +2,7 @@ import { ClanSearchOptions, SearchOptions, ClientOptions, InitOptions, OverrideO
 import { RESTManager } from '../rest/RESTManager';
 import EventEmitter from 'events';
 import { Event } from './Events';
-import Util from '../util/Util';
+import { Util } from '../util/Util';
 
 import {
 	Clan,
@@ -39,7 +39,7 @@ export class Client extends EventEmitter {
 	}
 
 	/** Contains various general-purpose utility methods. */
-	public get util() {
+	public get util(): typeof Util {
 		return Util;
 	}
 

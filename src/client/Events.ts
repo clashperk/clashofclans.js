@@ -95,7 +95,8 @@ export class Event {
 	}
 
 	private async runClanUpdate(tag: string) {
-		const clan = await this.client.getClan(tag);
+		const clan = await this.client.getClan(tag).catch(() => null);
+		if (!clan) return null;
 		const cached = this._clans.get(clan.tag);
 		if (!cached) return this._clans.set(clan.tag, clan);
 

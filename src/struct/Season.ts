@@ -1,5 +1,5 @@
 import { APIGoldPassSeason, APISeason } from '../types';
-import Util from '../util/Util';
+import { Util } from '../util/Util';
 
 export class Season {
 	public id: string;

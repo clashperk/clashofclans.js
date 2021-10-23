@@ -1,6 +1,6 @@
 import { APIClanWarLogEntry, APIWarLogClan } from '../types';
 import { Client } from '../client/Client';
-import Util from '../util/Util';
+import { Util } from '../util/Util';
 import { Badge } from './Badge';
 
 export class WarLogClan {

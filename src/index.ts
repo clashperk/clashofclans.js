@@ -4,5 +4,6 @@ export * from './rest/RequestHandler';
 export * from './rest/HTTPError';
 export * from './client/Events';
 export * from './rest/Throttler';
+export * from './util/Util';
 export * from './struct';
 export * from './types';
