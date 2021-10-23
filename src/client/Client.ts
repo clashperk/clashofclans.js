@@ -1,5 +1,7 @@
 import { ClanSearchOptions, SearchOptions, ClientOptions, InitOptions, OverrideOptions } from '../rest/RequestHandler';
 import { RESTManager } from '../rest/RESTManager';
+import { Event, EventTypes } from './Events';
+import EventEmitter from 'events';
 import Util from '../util/Util';
 
 import {
@@ -19,9 +21,9 @@ import {
 } from '../struct';
 
 /** Represents Clash of Clans API Client. */
-export class Client {
+export class Client extends EventEmitter {
 	public rest: RESTManager;
-	public readonly util = Util;
+	public events: Event;
 
 	/**
 	 * ```js
@@ -30,7 +32,15 @@ export class Client {
 	 * ```
 	 */
 	public constructor(options?: ClientOptions) {
+		super();
+
+		this.events = new Event(this);
 		this.rest = new RESTManager(options);
+	}
+
+	/** Contains various general-purpose utility methods. */
+	public get util() {
+		return Util;
 	}
 
 	/**
@@ -180,5 +190,9 @@ export class Client {
 	public async getGoldPassSeason(options?: OverrideOptions) {
 		const { data } = await this.rest.getGoldPassSeason(options);
 		return new GoldPassSeason(data);
+	}
+
+	public setEvent<K extends keyof EventTypes>(event: { type: K; name: string; filter: (...args: EventTypes[K]) => boolean }) {
+		return this.events.setEvent(event);
 	}
 }
