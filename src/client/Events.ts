@@ -1,4 +1,4 @@
-import { Clan, ClanWar, Client, Events, EventTypes, Player } from '..';
+import { Clan, ClanWar, Client, Events, EventTypes, HTTPError, Player, Util } from '..';
 
 export class Event {
 	#clans = new Set<string>(); // eslint-disable-line
@@ -20,12 +20,16 @@ export class Event {
 		}[]
 	};
 
+	private _inMaintenance: boolean;
+	private _maintenanceStartTime: Date | null;
 	private readonly _clans = new Map<string, Clan>();
 	private readonly _players = new Map<string, Player>();
 	private readonly _wars = new Map<string, ClanWar>();
 
 	public constructor(public readonly client: Client) {
-		this.clanUpdater();
+		this._inMaintenance = Boolean(false);
+		this._maintenanceStartTime = null;
+		this.clanUpdateHandler();
 	}
 
 	public async delay(ms: number) {
@@ -62,7 +66,7 @@ export class Event {
 		return this;
 	}
 
-	public setEvent<K extends keyof EventTypes>(event: { type: K; name: string; filter: (...args: EventTypes[K]) => boolean }) {
+	public setEvent<K extends keyof EventTypes>(event: { type: K; name: string; filter: (...args: EventTypes[K]) => boolean }): Event {
 		switch (event.type) {
 			case 'CLANS':
 				// @ts-expect-error
@@ -83,28 +87,64 @@ export class Event {
 		return this;
 	}
 
-	private async clanUpdater() {
+	private async maintenanceHandler() {
+		setTimeout(this.maintenanceHandler.bind(this), 10_000).unref();
+		try {
+			const res = await this.client.rest.getClans({ maxMembers: Math.floor(Math.random() * 40) + 10, limit: 1 });
+			if (res.status === 200 && this._inMaintenance) {
+				this._inMaintenance = Boolean(false);
+				const duration = this._maintenanceStartTime!.getTime() - Date.now();
+				this._maintenanceStartTime = null;
+
+				this.client.emit(Events.MAINTENANCE_END, duration);
+			}
+		} catch (error) {
+			if (error instanceof HTTPError && error.status === 503 && !this._inMaintenance) {
+				this._inMaintenance = Boolean(true);
+				this._maintenanceStartTime = new Date();
+
+				this.client.emit(Events.MAINTENANCE_START);
+			}
+		}
+	}
+
+	private seasonEndHandler() {
+		const end = Util.getSeasonEndTime().getTime() - Date.now();
+		// Why this? setTimeout can be up to 24.8 days or 2147483647ms [(2^31 - 1) Max 32bit Integer]
+		if (end > 24 * 60 * 60 * 1000) {
+			setTimeout(this.seasonEndHandler.bind(this), 60 * 60 * 1000).unref();
+		} else if (end > 0) {
+			setTimeout(() => {
+				this.client.emit(Events.NEW_SEASON_START, Util.getSeasonId());
+			}, end + 100).unref();
+		}
+	}
+
+	private async clanUpdateHandler() {
 		this.client.emit(Events.CLAN_LOOP_START);
-
 		for (const tag of this.#clans) await this.runClanUpdate(tag);
-
 		this.client.emit(Events.CLAN_LOOP_END);
 
 		await this.delay(10_000);
-		await this.clanUpdater();
+		await this.clanUpdateHandler();
 	}
 
 	private async runClanUpdate(tag: string) {
+		if (this._inMaintenance) return null;
+
 		const clan = await this.client.getClan(tag).catch(() => null);
 		if (!clan) return null;
+
 		const cached = this._clans.get(clan.tag);
 		if (!cached) return this._clans.set(clan.tag, clan);
 
 		for (const { name, fn } of this._events.clans) {
-			if (!fn(cached, clan)) continue;
-			this.client.emit(name, cached, clan);
+			try {
+				if (!fn(cached, clan)) continue;
+				this.client.emit(name, cached, clan);
+			} catch {}
 		}
 
-		this._clans.set(clan.tag, clan);
+		return this._clans.set(clan.tag, clan);
 	}
 }

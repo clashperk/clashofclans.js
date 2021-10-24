@@ -15,9 +15,6 @@ export class Util extends null {
 
 	public static queryString(options = {}) {
 		const query = new URLSearchParams(options);
-		query.delete('restRequestTimeout');
-		query.delete('ignoreRateLimit');
-		query.delete('retryLimit');
 		return query.toString();
 	}
 
