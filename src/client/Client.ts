@@ -1,6 +1,6 @@
 import { ClanSearchOptions, SearchOptions, ClientOptions, InitOptions, OverrideOptions, EventTypes } from '../rest/RequestHandler';
 import { RESTManager } from '../rest/RESTManager';
-import EventEmitter from 'events';
+import { EventEmitter } from 'events';
 import { Event } from './Events';
 import { Util } from '../util/Util';
 
