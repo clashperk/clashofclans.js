@@ -1,9 +1,16 @@
-import { ClanSearchOptions, SearchOptions, ClientOptions, InitOptions, OverrideOptions, EventTypes } from '../rest/RequestHandler';
-import { LEGEND_LEAGUE_ID } from '../util/Constants';
+import { ClanSearchOptions, SearchOptions, ClientOptions, InitOptions, OverrideOptions } from '../rest/RequestHandler';
+import { LEGEND_LEAGUE_ID, EVENTS } from '../util/Constants';
 import { RESTManager } from '../rest/RESTManager';
+import { HTTPError } from '../rest/HTTPError';
 import { EventEmitter } from 'events';
 import { Util } from '../util/Util';
 import { Event } from './Events';
+
+export const CWLRound = {
+	PREVIOUS_WAR: 'warEnded',
+	CURRENT_WAR: 'inWar',
+	NEXT_WAR: 'preparation'
+} as const;
 
 import {
 	Clan,
@@ -87,11 +94,65 @@ export class Client extends EventEmitter {
 		return data.items.map((entry) => new ClanWarLog(this, entry));
 	}
 
-	/** Get information about currently running war in the clan. */
-	public async getCurrentWar(clanTag: string, options?: OverrideOptions) {
+	/** Get info about currently running war (regular or friendly) in the clan. */
+	public async getClanWar(clanTag: string, options?: OverrideOptions) {
 		const { data } = await this.rest.getCurrentWar(clanTag, options);
 		if (data.state === 'notInWar') return null;
 		return new ClanWar(this, data, clanTag);
+	}
+
+	/** Get info about currently running war in the clan. */
+	public async getCurrentWar(clanTag: string, options?: OverrideOptions): Promise<ClanWar | null> {
+		try {
+			const data = await this.getClanWar(clanTag, options);
+			return data ?? this.getLeagueWar(clanTag);
+		} catch (e) {
+			if (e instanceof HTTPError && e.status === 403) {
+				return this.getLeagueWar(clanTag);
+			}
+		}
+
+		return null;
+	}
+
+	public async getLeagueWar(clanTag: string, warState?: keyof typeof CWLRound) {
+		const state = (warState && CWLRound[warState]) || 'inWar'; // eslint-disable-line
+		const data = await this.getClanWarLeagueGroup(clanTag);
+
+		const rounds = data.rounds.filter((round) => !round.warTags.includes('#0'));
+		if (!rounds.length) return null;
+
+		const num = state === 'preparation' ? -1 : state === 'warEnded' ? -3 : -2;
+		const warTags = rounds
+			.slice(num)
+			.map((round) => round.warTags)
+			.flat()
+			.reverse();
+		const wars = await this.util.allSettled(
+			warTags.map((warTag) => this.getClanWarLeagueRound({ warTag, clanTag }, { ignoreRateLimit: true }))
+		);
+
+		return wars.find((war) => war?.state === state) ?? wars.at(0) ?? null;
+	}
+
+	/** @private */
+	private async _getCurrentLeagueWars(clanTag: string, options?: OverrideOptions) {
+		const data = await this.getClanWarLeagueGroup(clanTag, options);
+		return data.getCurrentWars(clanTag);
+	}
+
+	/** @pri */
+	private async _getClanWars(clanTag: string, options?: OverrideOptions) {
+		try {
+			const { data } = await this.rest.getCurrentWar(clanTag, options);
+			if (data.state !== 'notInWar') return [new ClanWar(this, data, clanTag)];
+			return this._getCurrentLeagueWars(clanTag);
+		} catch (e) {
+			if (e instanceof HTTPError && e.status === 403) {
+				return this._getCurrentLeagueWars(clanTag);
+			}
+			return [];
+		}
 	}
 
 	/** Get information about clan war league. */
@@ -196,4 +257,21 @@ export class Client extends EventEmitter {
 	public setEvent<K extends keyof EventTypes>(event: { type: K; name: string; filter: (...args: EventTypes[K]) => boolean }) {
 		return this.events.setEvent(event);
 	}
+
+	public on<K extends keyof ClientEvents>(event: K, listener: (...args: ClientEvents[K]) => void): this;
+	public on<S extends string | symbol>(event: Exclude<S, keyof ClientEvents>, listener: (...args: any[]) => void): this;
+	public on(event: string | symbol, listener: (...args: any[]) => void) {
+		return super.on(event, listener);
+	}
+}
+
+export interface ClientEvents {
+	[EVENTS.CLAN_MEMBER_JOIN]: [oldClan: Clan, newClan: Clan];
+	[EVENTS.CLAN_MEMBER_LEAVE]: [oldClan: Clan, newClan: Clan];
+}
+
+export interface EventTypes {
+	CLANS: [oldClan: Clan, newClan: Clan];
+	PLAYERS: [oldPlayer: Player, newPlayer: Player];
+	WARS: [oldWar: ClanWar, newWar: ClanWar];
 }

@@ -50,7 +50,7 @@ export class Util extends null {
 
 	public static async allSettled<T>(values: Promise<T>[]) {
 		return (await Promise.allSettled(values))
-			.filter((res) => res.status === 'fulfilled')
+			.filter((res) => res.status === 'fulfilled' && res.value)
 			.map((res) => (res as PromiseFulfilledResult<T>).value);
 	}
 }

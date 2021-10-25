@@ -1,4 +1,5 @@
-import { Clan, ClanWar, Client, Events, EventTypes, HTTPError, Player, Util } from '..';
+import { Clan, ClanWar, Client, EventTypes, HTTPError, Player, Util } from '..';
+import { EVENTS } from '../util/Constants';
 
 export class Event {
 	#clans = new Set<string>(); // eslint-disable-line
@@ -96,14 +97,14 @@ export class Event {
 				const duration = this._maintenanceStartTime!.getTime() - Date.now();
 				this._maintenanceStartTime = null;
 
-				this.client.emit(Events.MAINTENANCE_END, duration);
+				this.client.emit(EVENTS.MAINTENANCE_END, duration);
 			}
 		} catch (error) {
 			if (error instanceof HTTPError && error.status === 503 && !this._inMaintenance) {
 				this._inMaintenance = Boolean(true);
 				this._maintenanceStartTime = new Date();
 
-				this.client.emit(Events.MAINTENANCE_START);
+				this.client.emit(EVENTS.MAINTENANCE_START);
 			}
 		}
 	}
@@ -115,18 +116,27 @@ export class Event {
 			setTimeout(this.seasonEndHandler.bind(this), 60 * 60 * 1000).unref();
 		} else if (end > 0) {
 			setTimeout(() => {
-				this.client.emit(Events.NEW_SEASON_START, Util.getSeasonId());
+				this.client.emit(EVENTS.NEW_SEASON_START, Util.getSeasonId());
 			}, end + 100).unref();
 		}
 	}
 
 	private async clanUpdateHandler() {
-		this.client.emit(Events.CLAN_LOOP_START);
+		this.client.emit(EVENTS.CLAN_LOOP_START);
 		for (const tag of this.#clans) await this.runClanUpdate(tag);
-		this.client.emit(Events.CLAN_LOOP_END);
+		this.client.emit(EVENTS.CLAN_LOOP_END);
 
 		await this.delay(10_000);
 		await this.clanUpdateHandler();
+	}
+
+	private async warUpdateHandler() {
+		this.client.emit(EVENTS.WAR_LOOP_START);
+		for (const tag of this.#wars) await this.runWarUpdate(tag);
+		this.client.emit(EVENTS.WAR_LOOP_END);
+
+		await this.delay(10_000);
+		await this.warUpdateHandler();
 	}
 
 	private async runClanUpdate(tag: string) {
@@ -146,5 +156,26 @@ export class Event {
 		}
 
 		return this._clans.set(clan.tag, clan);
+	}
+
+	private async runWarUpdate(tag: string) {
+		if (this._inMaintenance) return null;
+
+		// @ts-expect-error
+		const clanWars = await this.client._getCurrentLeagueWars(tag).catch(() => null);
+		clanWars?.forEach((war, i) => {
+			const key = `WAR:${i}:${tag}`;
+			const cached = this._wars.get(key);
+			if (!cached) return this._wars.set(key, war);
+
+			for (const { name, fn } of this._events.wars) {
+				try {
+					if (!fn(cached, war)) continue;
+					this.client.emit(name, cached, war);
+				} catch {}
+			}
+
+			return this._wars.set(key, war);
+		});
 	}
 }

@@ -3,7 +3,6 @@ import { QueueThrottler, BatchThrottler } from './Throttler';
 import { HTTPError } from './HTTPError';
 import fetch from 'node-fetch';
 import https from 'https';
-import { Clan, ClanWar, Player } from '..';
 
 const agent = new https.Agent({ keepAlive: true });
 
@@ -223,22 +222,4 @@ export interface InitOptions {
 	keyName?: string;
 	keyCount?: number;
 	keyDescription?: string;
-}
-
-export interface EventTypes {
-	CLANS: [o: Clan, n: Clan];
-	PLAYERS: [o: Player, n: Player];
-	WARS: [o: ClanWar, n: ClanWar];
-}
-
-export enum Events {
-	CLAN_LOOP_START = 'CLAN_LOOP_START',
-	CLAN_LOOP_END = 'CLAN_LOOP_END',
-	PLAYER_LOOP_START = 'PLAYER_LOOP_START',
-	PLAYER_LOOP_END = 'PLAYER_LOOP_END',
-	WAR_LOOP_START = 'WAR_LOOP_START',
-	WAR_LOOP_END = 'WAR_LOOP_END',
-	MAINTENANCE_START = 'MAINTENANCE_START',
-	MAINTENANCE_END = 'MAINTENANCE_END',
-	NEW_SEASON_START = 'NEW_SEASON_START'
 }
