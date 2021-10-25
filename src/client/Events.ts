@@ -30,7 +30,6 @@ export class Event {
 	public constructor(public readonly client: Client) {
 		this._inMaintenance = Boolean(false);
 		this._maintenanceStartTime = null;
-		this.clanUpdateHandler();
 	}
 
 	public async delay(ms: number) {
@@ -139,6 +138,15 @@ export class Event {
 		await this.warUpdateHandler();
 	}
 
+	private async playerUpdateHandler() {
+		this.client.emit(EVENTS.PLAYER_LOOP_START);
+		for (const tag of this.#players) await this.runPlayerUpdate(tag);
+		this.client.emit(EVENTS.PLAYER_LOOP_END);
+
+		await this.delay(10_000);
+		await this.playerUpdateHandler();
+	}
+
 	private async runClanUpdate(tag: string) {
 		if (this._inMaintenance) return null;
 
@@ -177,5 +185,24 @@ export class Event {
 
 			return this._wars.set(key, war);
 		});
+	}
+
+	private async runPlayerUpdate(tag: string) {
+		if (this._inMaintenance) return null;
+
+		const player = await this.client.getPlayer(tag).catch(() => null);
+		if (!player) return null;
+
+		const cached = this._players.get(player.tag);
+		if (!cached) return this._players.set(player.tag, player);
+
+		for (const { name, fn } of this._events.players) {
+			try {
+				if (!fn(cached, player)) continue;
+				this.client.emit(name, cached, player);
+			} catch {}
+		}
+
+		return this._players.set(player.tag, player);
 	}
 }
