@@ -135,13 +135,11 @@ export class Client extends EventEmitter {
 		return wars.find((war) => war?.state === state) ?? wars.at(0) ?? null;
 	}
 
-	/** @private */
 	private async _getCurrentLeagueWars(clanTag: string, options?: OverrideOptions) {
 		const data = await this.getClanWarLeagueGroup(clanTag, options);
 		return data.getCurrentWars(clanTag);
 	}
 
-	/** @pri */
 	private async _getClanWars(clanTag: string, options?: OverrideOptions) {
 		try {
 			const { data } = await this.rest.getCurrentWar(clanTag, options);
@@ -259,15 +257,22 @@ export class Client extends EventEmitter {
 	}
 
 	public on<K extends keyof ClientEvents>(event: K, listener: (...args: ClientEvents[K]) => void): this;
+	// @ts-expect-error
 	public on<S extends string | symbol>(event: Exclude<S, keyof ClientEvents>, listener: (...args: any[]) => void): this;
-	public on(event: string | symbol, listener: (...args: any[]) => void) {
-		return super.on(event, listener);
-	}
 }
 
 export interface ClientEvents {
 	[EVENTS.CLAN_MEMBER_JOIN]: [oldClan: Clan, newClan: Clan];
 	[EVENTS.CLAN_MEMBER_LEAVE]: [oldClan: Clan, newClan: Clan];
+	[EVENTS.NEW_SEASON_START]: [season: string];
+	[EVENTS.MAINTENANCE_START]: [];
+	[EVENTS.MAINTENANCE_END]: [];
+	[EVENTS.CLAN_LOOP_START]: [];
+	[EVENTS.CLAN_LOOP_END]: [];
+	[EVENTS.PLAYER_LOOP_START]: [];
+	[EVENTS.PLAYER_LOOP_END]: [];
+	[EVENTS.WAR_LOOP_START]: [];
+	[EVENTS.WAR_LOOP_END]: [];
 }
 
 export interface EventTypes {
