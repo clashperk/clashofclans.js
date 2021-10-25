@@ -1,8 +1,9 @@
 import { ClanSearchOptions, SearchOptions, ClientOptions, InitOptions, OverrideOptions, EventTypes } from '../rest/RequestHandler';
+import { LEGEND_LEAGUE_ID } from '../util/Constants';
 import { RESTManager } from '../rest/RESTManager';
 import { EventEmitter } from 'events';
-import { Event } from './Events';
 import { Util } from '../util/Util';
+import { Event } from './Events';
 
 import {
 	Clan,
@@ -127,13 +128,13 @@ export class Client extends EventEmitter {
 
 	/** Get Legend League season Ids. */
 	public async getLeagueSeasons(options?: SearchOptions) {
-		const { data } = await this.rest.getLeagueSeasons(29000022, options);
+		const { data } = await this.rest.getLeagueSeasons(LEGEND_LEAGUE_ID, options);
 		return data.items.map((league) => league.id);
 	}
 
 	/** Get Legend League season rankings by season Id. */
 	public async getSeasonRankings(seasonId: string, options?: SearchOptions) {
-		const { data } = await this.rest.getSeasonRankings(29000022, seasonId, options);
+		const { data } = await this.rest.getSeasonRankings(LEGEND_LEAGUE_ID, seasonId, options);
 		// @ts-expect-error
 		return data.items.map((entry) => new RankedPlayer(entry));
 	}
