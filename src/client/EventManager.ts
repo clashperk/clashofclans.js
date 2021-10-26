@@ -1,7 +1,7 @@
 import { Clan, ClanWar, Client, EventTypes, HTTPError, Player, Util } from '..';
 import { EVENTS } from '../util/Constants';
 
-export class Event {
+export class EventManager {
 	#clans = new Set<string>(); // eslint-disable-line
 	#players = new Set<string>(); // eslint-disable-line
 	#wars = new Set<string>(); // eslint-disable-line
@@ -9,15 +9,15 @@ export class Event {
 	private readonly _events = {
 		clans: [] as {
 			name: string;
-			fn: (...args: EventTypes['CLANS']) => boolean;
+			fn: (...args: EventTypes['CLAN']) => boolean;
 		}[],
 		wars: [] as {
 			name: string;
-			fn: (...args: EventTypes['WARS']) => boolean;
+			fn: (...args: EventTypes['CLAN_WAR']) => boolean;
 		}[],
 		players: [] as {
 			name: string;
-			fn: (...args: EventTypes['PLAYERS']) => boolean;
+			fn: (...args: EventTypes['PLAYER']) => boolean;
 		}[]
 	};
 
@@ -27,58 +27,54 @@ export class Event {
 	private readonly _players = new Map<string, Player>();
 	private readonly _wars = new Map<string, ClanWar>();
 
-	public constructor(public readonly client: Client) {
+	public constructor(private readonly client: Client) {
 		this._inMaintenance = Boolean(false);
 		this._maintenanceStartTime = null;
 	}
 
-	public async delay(ms: number) {
-		return new Promise((res) => setTimeout(res, ms));
-	}
-
-	public addClanUpdates(...tags: string[]) {
+	public addClans(...tags: string[]) {
 		for (const tag of tags) this.#clans.add(tag);
 		return this;
 	}
 
-	public addPlayerUpdates(...tags: string[]) {
+	public deleteClans(...tags: string[]) {
+		for (const tag of tags) this.#wars.delete(tag);
+		return this;
+	}
+
+	public addPlayers(...tags: string[]) {
 		for (const tag of tags) this.#players.add(tag);
 		return this;
 	}
 
-	public addWarUpdates(...tags: string[]) {
+	public deletePlayers(...tags: string[]) {
+		for (const tag of tags) this.#wars.delete(tag);
+		return this;
+	}
+
+	public addWars(...tags: string[]) {
 		for (const tag of tags) this.#wars.add(tag);
 		return this;
 	}
 
-	public removeClanUpdates(...tags: string[]) {
+	public deleteWars(...tags: string[]) {
 		for (const tag of tags) this.#wars.delete(tag);
 		return this;
 	}
 
-	public removePlayerUpdates(...tags: string[]) {
-		for (const tag of tags) this.#wars.delete(tag);
-		return this;
-	}
-
-	public removeWarUpdates(...tags: string[]) {
-		for (const tag of tags) this.#wars.delete(tag);
-		return this;
-	}
-
-	public setEvent<K extends keyof EventTypes>(event: { type: K; name: string; filter: (...args: EventTypes[K]) => boolean }): Event {
+	public setCustomEvent<K extends keyof EventTypes>(event: { type: K; name: string; filter: (...args: EventTypes[K]) => boolean }) {
 		switch (event.type) {
-			case 'CLANS':
+			case 'CLAN':
 				// @ts-expect-error
-				this._events.clans.push({ name: event.name, fn: event.filter });
+				this._events.clans.push(event);
 				break;
-			case 'PLAYERS':
+			case 'PLAYER':
 				// @ts-expect-error
-				this._events.players.push({ name: event.name, fn: event.filter });
+				this._events.players.push(event);
 				break;
-			case 'WARS':
+			case 'CLAN_WAR':
 				// @ts-expect-error
-				this._events.wars.push({ name: event.name, fn: event.filter });
+				this._events.wars.push(event);
 				break;
 			default:
 				break;
@@ -125,7 +121,7 @@ export class Event {
 		for (const tag of this.#clans) await this.runClanUpdate(tag);
 		this.client.emit(EVENTS.CLAN_LOOP_END);
 
-		await this.delay(10_000);
+		await this.client.util.delay(10_000);
 		await this.clanUpdateHandler();
 	}
 
@@ -134,7 +130,7 @@ export class Event {
 		for (const tag of this.#wars) await this.runWarUpdate(tag);
 		this.client.emit(EVENTS.WAR_LOOP_END);
 
-		await this.delay(10_000);
+		await this.client.util.delay(10_000);
 		await this.warUpdateHandler();
 	}
 
@@ -143,7 +139,7 @@ export class Event {
 		for (const tag of this.#players) await this.runPlayerUpdate(tag);
 		this.client.emit(EVENTS.PLAYER_LOOP_END);
 
-		await this.delay(10_000);
+		await this.client.util.delay(10_000);
 		await this.playerUpdateHandler();
 	}
 
@@ -170,7 +166,7 @@ export class Event {
 		if (this._inMaintenance) return null;
 
 		// @ts-expect-error
-		const clanWars = await this.client._getCurrentLeagueWars(tag).catch(() => null);
+		const clanWars = await this.client._getClanWars(tag).catch(() => null);
 		clanWars?.forEach((war, i) => {
 			const key = `WAR:${i}:${tag}`;
 			const cached = this._wars.get(key);

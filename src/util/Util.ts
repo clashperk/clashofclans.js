@@ -7,7 +7,7 @@ export class Util extends null {
 
 	/** Parse a game tag. */
 	public static parseTag(tag: string) {
-		return `#${tag.toUpperCase().replace(/O|o/g, '0').replace(/^#/g, '')}`;
+		return `#${tag.toUpperCase().replace(/O/g, '0').replace(/^#/g, '')}`;
 	}
 
 	/** Parse API Date to JavaScript Date. */
@@ -52,5 +52,9 @@ export class Util extends null {
 		return (await Promise.allSettled(values))
 			.filter((res) => res.status === 'fulfilled' && res.value)
 			.map((res) => (res as PromiseFulfilledResult<T>).value);
+	}
+
+	public static async delay(ms: number) {
+		return new Promise((res) => setTimeout(res, ms));
 	}
 }

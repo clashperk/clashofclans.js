@@ -1,10 +1,10 @@
 import { ClanSearchOptions, SearchOptions, ClientOptions, InitOptions, OverrideOptions } from '../rest/RequestHandler';
 import { LEGEND_LEAGUE_ID, EVENTS } from '../util/Constants';
 import { RESTManager } from '../rest/RESTManager';
+import { EventManager } from './EventManager';
 import { HTTPError } from '../rest/HTTPError';
 import { EventEmitter } from 'events';
 import { Util } from '../util/Util';
-import { Event } from './Events';
 
 export const CWLRound = {
 	PREVIOUS_WAR: 'warEnded',
@@ -31,7 +31,7 @@ import {
 /** Represents Clash of Clans API Client. */
 export class Client extends EventEmitter {
 	public rest: RESTManager;
-	public events: Event;
+	public events: EventManager;
 
 	/**
 	 * ```js
@@ -42,7 +42,7 @@ export class Client extends EventEmitter {
 	public constructor(options?: ClientOptions) {
 		super();
 
-		this.events = new Event(this);
+		this.events = new EventManager(this);
 		this.rest = new RESTManager(options);
 	}
 
@@ -56,10 +56,10 @@ export class Client extends EventEmitter {
 	 *
 	 * ```
 	 * const client = new Client();
-	 * client.init({ email: 'developer@email.com', password: '***' });
+	 * client.login({ email: 'developer@email.com', password: '***' });
 	 * ```
 	 */
-	public init(options: InitOptions) {
+	public login(options: InitOptions) {
 		return this.rest.handler.init(options);
 	}
 
@@ -105,7 +105,7 @@ export class Client extends EventEmitter {
 	public async getCurrentWar(clanTag: string, options?: OverrideOptions): Promise<ClanWar | null> {
 		try {
 			const data = await this.getClanWar(clanTag, options);
-			return data ?? this.getLeagueWar(clanTag);
+			return data ?? (await this.getLeagueWar(clanTag));
 		} catch (e) {
 			if (e instanceof HTTPError && e.status === 403) {
 				return this.getLeagueWar(clanTag);
@@ -144,9 +144,8 @@ export class Client extends EventEmitter {
 	/** @internal */
 	private async _getClanWars(clanTag: string, options?: OverrideOptions) {
 		try {
-			const { data } = await this.rest.getCurrentWar(clanTag, options);
-			if (data.state !== 'notInWar') return [new ClanWar(this, data, clanTag)];
-			return this._getCurrentLeagueWars(clanTag);
+			const data = await this.getClanWar(clanTag, options);
+			return data ? [data] : await this._getCurrentLeagueWars(clanTag);
 		} catch (e) {
 			if (e instanceof HTTPError && e.status === 403) {
 				return this._getCurrentLeagueWars(clanTag);
@@ -254,14 +253,22 @@ export class Client extends EventEmitter {
 		return new GoldPassSeason(data);
 	}
 
-	public setEvent<K extends keyof EventTypes>(event: { type: K; name: string; filter: (...args: EventTypes[K]) => boolean }) {
-		return this.events.setEvent(event);
-	}
+	// #region typings
+	/** @internal */
+	public on<K extends keyof ClientEvents>(event: K, listeners: (...args: ClientEvents[K]) => void): this;
+	/** @internal */ // @ts-expect-error
+	public on<S extends string | symbol>(event: Exclude<S, keyof ClientEvents>, listeners: (...args: any[]) => void): this;
 
 	/** @internal */
-	public on<K extends keyof ClientEvents>(event: K, listener: (...args: ClientEvents[K]) => void): this;
+	public once<K extends keyof ClientEvents>(event: K, listeners: (...args: ClientEvents[K]) => void): this;
 	/** @internal */ // @ts-expect-error
-	public on<S extends string | symbol>(event: Exclude<S, keyof ClientEvents>, listener: (...args: any[]) => void): this;
+	public once<S extends string | symbol>(event: Exclude<S, keyof ClientEvents>, listeners: (...args: any[]) => void): this;
+
+	/** @internal */
+	public emit<K extends keyof ClientEvents>(event: K, ...args: ClientEvents[K]): boolean;
+	/** @internal */ // @ts-expect-error
+	public emit<S extends string | symbol>(event: Exclude<S, keyof ClientEvents>, ...args: any[]): boolean;
+	// #endregion typings
 }
 
 export interface ClientEvents {
@@ -269,7 +276,7 @@ export interface ClientEvents {
 	[EVENTS.CLAN_MEMBER_LEAVE]: [oldClan: Clan, newClan: Clan];
 	[EVENTS.NEW_SEASON_START]: [season: string];
 	[EVENTS.MAINTENANCE_START]: [];
-	[EVENTS.MAINTENANCE_END]: [];
+	[EVENTS.MAINTENANCE_END]: [duration: number];
 	[EVENTS.CLAN_LOOP_START]: [];
 	[EVENTS.CLAN_LOOP_END]: [];
 	[EVENTS.PLAYER_LOOP_START]: [];
@@ -279,7 +286,7 @@ export interface ClientEvents {
 }
 
 export interface EventTypes {
-	CLANS: [oldClan: Clan, newClan: Clan];
-	PLAYERS: [oldPlayer: Player, newPlayer: Player];
-	WARS: [oldWar: ClanWar, newWar: ClanWar];
+	CLAN: [oldClan: Clan, newClan: Clan];
+	PLAYER: [oldPlayer: Player, newPlayer: Player];
+	CLAN_WAR: [oldWar: ClanWar, newWar: ClanWar];
 }

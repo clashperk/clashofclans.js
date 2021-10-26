@@ -2,7 +2,7 @@ export * from './client/Client';
 export * from './rest/RESTManager';
 export * from './rest/RequestHandler';
 export * from './rest/HTTPError';
-export * from './client/Events';
+export * from './client/EventManager';
 export * from './rest/Throttler';
 export * from './util/Util';
 export * from './struct';
