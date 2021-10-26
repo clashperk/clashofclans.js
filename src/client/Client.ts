@@ -6,12 +6,6 @@ import { HTTPError } from '../rest/HTTPError';
 import { EventEmitter } from 'events';
 import { Util } from '../util/Util';
 
-export const CWLRound = {
-	PREVIOUS_WAR: 'warEnded',
-	CURRENT_WAR: 'inWar',
-	NEXT_WAR: 'preparation'
-} as const;
-
 import {
 	Clan,
 	ClanMember,
@@ -28,22 +22,26 @@ import {
 	ClanWarLeagueGroup
 } from '../struct';
 
-/** Represents Clash of Clans API Client. */
+/**
+ * Represents Clash of Clans API Client.
+ * @example
+ * ```js
+ * const { Client } = require('clashofclans.js');
+ * const client = new Client({ keys: ['***'] });
+ * ```
+ */
 export class Client extends EventEmitter {
-	public rest: RESTManager;
-	public events: EventManager;
+	/** Event Manager for the client. */
+	public readonly events: EventManager;
 
-	/**
-	 * ```js
-	 * const { Client } = require('clashofclans.js');
-	 * const client = new Client({ keys: ['***'] });
-	 * ```
-	 */
+	/** REST Handler of the client. */
+	public readonly rest: RESTManager;
+
 	public constructor(options?: ClientOptions) {
 		super();
 
-		this.events = new EventManager(this);
 		this.rest = new RESTManager(options);
+		this.events = new EventManager(this);
 	}
 
 	/** Contains various general-purpose utility methods. */
@@ -53,7 +51,7 @@ export class Client extends EventEmitter {
 
 	/**
 	 * Initialize the client to create keys.
-	 *
+	 * @example
 	 * ```
 	 * const client = new Client();
 	 * client.login({ email: 'developer@email.com', password: '***' });
@@ -290,3 +288,9 @@ export interface EventTypes {
 	PLAYER: [oldPlayer: Player, newPlayer: Player];
 	CLAN_WAR: [oldWar: ClanWar, newWar: ClanWar];
 }
+
+export const CWLRound = {
+	PREVIOUS_WAR: 'warEnded',
+	CURRENT_WAR: 'inWar',
+	NEXT_WAR: 'preparation'
+} as const;
