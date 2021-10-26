@@ -1,5 +1,5 @@
-import { APILeague } from '../types';
 import { LEAGUES } from '../util/Constants';
+import { APILeague } from '../types';
 import { Icon } from './Icon';
 
 /** Represents a Player's League. */

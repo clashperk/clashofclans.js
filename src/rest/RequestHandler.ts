@@ -59,7 +59,7 @@ export class RequestHandler {
 		}
 	}
 
-	public async exec<T>(
+	private async exec<T>(
 		path: string,
 		options: RequestOptions = {},
 		retries = 0

@@ -1,5 +1,5 @@
 import { RequestHandler, SearchOptions, ClanSearchOptions, ClientOptions, OverrideOptions } from './RequestHandler';
-import Util from '../util/Util';
+import { Util } from '../util/Util';
 
 import {
 	APIClan,

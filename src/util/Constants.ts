@@ -54,7 +54,7 @@ export const ELIXIR_SPELLS = [
 
 export const DARK_ELIXIR_SPELLS = ['Poison Spell', 'Earthquake Spell', 'Haste Spell', 'Skeleton Spell', 'Bat Spell'];
 
-export const SPELLS = [...ELIXIR_SPELLS, DARK_ELIXIR_SPELLS];
+export const SPELLS = [...ELIXIR_SPELLS, ...DARK_ELIXIR_SPELLS];
 
 export const HEROES = ['Barbarian King', 'Archer Queen', 'Grand Warden', 'Royal Champion', 'Battle Machine'];
 
@@ -116,9 +116,32 @@ export const UNRANKED_LEAGUE_DATA = {
 	}
 };
 
+export const LEGEND_LEAGUE_ID = 29000022;
+
 export const LEAGUES = [
-	29000000, 29000001, 29000002, 29000003, 29000004, 29000005, 29000006, 29000007, 29000008, 29000009, 29000010, 29000011, 29000012,
-	29000013, 29000014, 29000015, 29000016, 29000017, 29000018, 29000019, 29000020, 29000021, 29000022
+	29000000,
+	29000001,
+	29000002,
+	29000003,
+	29000004,
+	29000005,
+	29000006,
+	29000007,
+	29000008,
+	29000009,
+	29000010,
+	29000011,
+	29000012,
+	29000013,
+	29000014,
+	29000015,
+	29000016,
+	29000017,
+	29000018,
+	29000019,
+	29000020,
+	29000021,
+	LEGEND_LEAGUE_ID
 ];
 
 export const WAR_LEAGUES = [
@@ -140,3 +163,17 @@ export const FRIENDLY_WAR_PREPARATION_TIMES = [
 	1000 * 60 * 15,
 	1000 * 60 * 5
 ] as const;
+
+export const EVENTS = {
+	CLAN_MEMBER_JOIN: 'clanMemberJoin',
+	CLAN_MEMBER_LEAVE: 'clanMemberLeave',
+	NEW_SEASON_START: 'newSeasonStart',
+	CLAN_LOOP_START: 'clanLoopStart',
+	CLAN_LOOP_END: 'clanLoopEnd',
+	PLAYER_LOOP_START: 'playerLoopStart',
+	PLAYER_LOOP_END: 'playerLoopEnd',
+	WAR_LOOP_START: 'warLoopEnd',
+	WAR_LOOP_END: 'warLoopEnd',
+	MAINTENANCE_START: 'maintenanceStart',
+	MAINTENANCE_END: 'maintenanceEnd'
+} as const;

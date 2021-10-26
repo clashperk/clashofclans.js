@@ -1,6 +1,10 @@
 import { ClanSearchOptions, SearchOptions, ClientOptions, InitOptions, OverrideOptions } from '../rest/RequestHandler';
+import { LEGEND_LEAGUE_ID, EVENTS } from '../util/Constants';
 import { RESTManager } from '../rest/RESTManager';
-import Util from '../util/Util';
+import { EventManager } from './EventManager';
+import { HTTPError } from '../rest/HTTPError';
+import { EventEmitter } from 'events';
+import { Util } from '../util/Util';
 
 import {
 	Clan,
@@ -18,30 +22,42 @@ import {
 	ClanWarLeagueGroup
 } from '../struct';
 
-/** Represents Clash of Clans API Client. */
-export class Client {
-	public rest: RESTManager;
-	public readonly util = Util;
+/**
+ * Represents Clash of Clans API Client.
+ * @example
+ * ```js
+ * const { Client } = require('clashofclans.js');
+ * const client = new Client({ keys: ['***'] });
+ * ```
+ */
+export class Client extends EventEmitter {
+	/** Event Manager for the client. */
+	public readonly events: EventManager;
 
-	/**
-	 * ```js
-	 * const { Client } = require('clashofclans.js');
-	 * const client = new Client({ keys: ['***'] });
-	 * ```
-	 */
+	/** REST Handler of the client. */
+	public readonly rest: RESTManager;
+
 	public constructor(options?: ClientOptions) {
+		super();
+
 		this.rest = new RESTManager(options);
+		this.events = new EventManager(this);
+	}
+
+	/** Contains various general-purpose utility methods. */
+	public get util(): typeof Util {
+		return Util;
 	}
 
 	/**
 	 * Initialize the client to create keys.
-	 *
+	 * @example
 	 * ```
 	 * const client = new Client();
-	 * client.init({ email: 'developer@email.com', password: '***' });
+	 * client.login({ email: 'developer@email.com', password: '***' });
 	 * ```
 	 */
-	public init(options: InitOptions) {
+	public login(options: InitOptions) {
 		return this.rest.handler.init(options);
 	}
 
@@ -76,11 +92,64 @@ export class Client {
 		return data.items.map((entry) => new ClanWarLog(this, entry));
 	}
 
-	/** Get information about currently running war in the clan. */
-	public async getCurrentWar(clanTag: string, options?: OverrideOptions) {
+	/** Get info about currently running war (regular or friendly) in the clan. */
+	public async getClanWar(clanTag: string, options?: OverrideOptions) {
 		const { data } = await this.rest.getCurrentWar(clanTag, options);
 		if (data.state === 'notInWar') return null;
 		return new ClanWar(this, data, clanTag);
+	}
+
+	/** Get info about currently running war in the clan. */
+	public async getCurrentWar(clanTag: string, options?: OverrideOptions): Promise<ClanWar | null> {
+		try {
+			const data = await this.getClanWar(clanTag, options);
+			return data ?? (await this.getLeagueWar(clanTag));
+		} catch (e) {
+			if (e instanceof HTTPError && e.status === 403) {
+				return this.getLeagueWar(clanTag);
+			}
+		}
+
+		return null;
+	}
+
+	public async getLeagueWar(clanTag: string, warState?: keyof typeof CWLRound) {
+		const state = (warState && CWLRound[warState]) || 'inWar'; // eslint-disable-line
+		const data = await this.getClanWarLeagueGroup(clanTag);
+
+		const rounds = data.rounds.filter((round) => !round.warTags.includes('#0'));
+		if (!rounds.length) return null;
+
+		const num = state === 'preparation' ? -1 : state === 'warEnded' ? -3 : -2;
+		const warTags = rounds
+			.slice(num)
+			.map((round) => round.warTags)
+			.flat()
+			.reverse();
+		const wars = await this.util.allSettled(
+			warTags.map((warTag) => this.getClanWarLeagueRound({ warTag, clanTag }, { ignoreRateLimit: true }))
+		);
+
+		return wars.find((war) => war?.state === state) ?? wars.at(0) ?? null;
+	}
+
+	/** @internal */
+	private async _getCurrentLeagueWars(clanTag: string, options?: OverrideOptions) {
+		const data = await this.getClanWarLeagueGroup(clanTag, options);
+		return data.getCurrentWars(clanTag);
+	}
+
+	/** @internal */
+	private async _getClanWars(clanTag: string, options?: OverrideOptions) {
+		try {
+			const data = await this.getClanWar(clanTag, options);
+			return data ? [data] : await this._getCurrentLeagueWars(clanTag);
+		} catch (e) {
+			if (e instanceof HTTPError && e.status === 403) {
+				return this._getCurrentLeagueWars(clanTag);
+			}
+			return [];
+		}
 	}
 
 	/** Get information about clan war league. */
@@ -117,13 +186,13 @@ export class Client {
 
 	/** Get Legend League season Ids. */
 	public async getLeagueSeasons(options?: SearchOptions) {
-		const { data } = await this.rest.getLeagueSeasons(29000022, options);
+		const { data } = await this.rest.getLeagueSeasons(LEGEND_LEAGUE_ID, options);
 		return data.items.map((league) => league.id);
 	}
 
 	/** Get Legend League season rankings by season Id. */
 	public async getSeasonRankings(seasonId: string, options?: SearchOptions) {
-		const { data } = await this.rest.getSeasonRankings(29000022, seasonId, options);
+		const { data } = await this.rest.getSeasonRankings(LEGEND_LEAGUE_ID, seasonId, options);
 		// @ts-expect-error
 		return data.items.map((entry) => new RankedPlayer(entry));
 	}
@@ -181,4 +250,47 @@ export class Client {
 		const { data } = await this.rest.getGoldPassSeason(options);
 		return new GoldPassSeason(data);
 	}
+
+	// #region typings
+	/** @internal */
+	public on<K extends keyof ClientEvents>(event: K, listeners: (...args: ClientEvents[K]) => void): this;
+	/** @internal */ // @ts-expect-error
+	public on<S extends string | symbol>(event: Exclude<S, keyof ClientEvents>, listeners: (...args: any[]) => void): this;
+
+	/** @internal */
+	public once<K extends keyof ClientEvents>(event: K, listeners: (...args: ClientEvents[K]) => void): this;
+	/** @internal */ // @ts-expect-error
+	public once<S extends string | symbol>(event: Exclude<S, keyof ClientEvents>, listeners: (...args: any[]) => void): this;
+
+	/** @internal */
+	public emit<K extends keyof ClientEvents>(event: K, ...args: ClientEvents[K]): boolean;
+	/** @internal */ // @ts-expect-error
+	public emit<S extends string | symbol>(event: Exclude<S, keyof ClientEvents>, ...args: any[]): boolean;
+	// #endregion typings
 }
+
+export interface ClientEvents {
+	[EVENTS.CLAN_MEMBER_JOIN]: [oldClan: Clan, newClan: Clan];
+	[EVENTS.CLAN_MEMBER_LEAVE]: [oldClan: Clan, newClan: Clan];
+	[EVENTS.NEW_SEASON_START]: [season: string];
+	[EVENTS.MAINTENANCE_START]: [];
+	[EVENTS.MAINTENANCE_END]: [duration: number];
+	[EVENTS.CLAN_LOOP_START]: [];
+	[EVENTS.CLAN_LOOP_END]: [];
+	[EVENTS.PLAYER_LOOP_START]: [];
+	[EVENTS.PLAYER_LOOP_END]: [];
+	[EVENTS.WAR_LOOP_START]: [];
+	[EVENTS.WAR_LOOP_END]: [];
+}
+
+export interface EventTypes {
+	CLAN: [oldClan: Clan, newClan: Clan];
+	PLAYER: [oldPlayer: Player, newPlayer: Player];
+	CLAN_WAR: [oldWar: ClanWar, newWar: ClanWar];
+}
+
+export const CWLRound = {
+	PREVIOUS_WAR: 'warEnded',
+	CURRENT_WAR: 'inWar',
+	NEXT_WAR: 'preparation'
+} as const;

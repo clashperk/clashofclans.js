@@ -71,7 +71,7 @@ export class BatchThrottler {
 	}
 }
 
-interface DeferredPromise {
+export interface DeferredPromise {
 	resolve(): void;
 	promise: Promise<void>;
 }

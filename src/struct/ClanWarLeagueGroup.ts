@@ -60,7 +60,7 @@ export class ClanWarLeagueRound {
 	/** War Tags for this round. */
 	public warTags: string[];
 
-	/** The # of this round. */
+	/** The # (1-7) of this round. */
 	public round: number;
 
 	public constructor(data: APIClanWarLeagueRound, round: number) {
@@ -106,5 +106,26 @@ export class ClanWarLeagueGroup {
 			.filter((res) => res.status === 'fulfilled' && res.value)
 			.map((res) => (res as PromiseFulfilledResult<ClanWar>).value)
 			.filter((war) => (clanTag ? war.clan.tag === clanTag : true));
+	}
+
+	public async getCurrentWars(clanTag: string) {
+		const rounds = this.rounds.filter((round) => !round.warTags.includes('#0'));
+		if (!rounds.length) return [];
+		const warTags = rounds
+			.slice(-2)
+			.map((round) => round.warTags)
+			.flat();
+		const wars = await Promise.allSettled(
+			warTags.map((warTag) => this.client.getClanWarLeagueRound({ warTag, clanTag }, { ignoreRateLimit: true }))
+		);
+		return wars
+			.filter((res) => res.status === 'fulfilled' && res.value)
+			.map((res) => (res as PromiseFulfilledResult<ClanWar>).value)
+			.filter((war) => war.clan.tag === clanTag);
+	}
+
+	/** Returns # (1-7) of the round for the specified warTag. */
+	public getRoundIndex(warTag: string): number | null {
+		return this.rounds.find((round) => round.warTags.includes(warTag))?.round ?? null;
 	}
 }
