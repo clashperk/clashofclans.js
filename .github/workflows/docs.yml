@@ -1,0 +1,40 @@
+name: Docs
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [master]
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v2
+      with:
+        repository: clashperk/clashofclans.js.org
+
+    - name: Use Node.js 14
+      uses: actions/setup-node@v2
+      with:
+        node-version: 14
+
+    - name: Update Submodule
+      run: git pull --recurse-submodules && git submodule update --remote --recursive --init
+
+    - name: Install
+      run: yarn
+
+    - name: Build
+      run: yarn build
+
+    - name: Commit
+      uses: JamesIves/github-pages-deploy-action@4.1.4
+      with:
+        folder: build
+        branch: gh-pages
+        single-commit: true
+        ssh-key: ${{ secrets.DEPLOY_KEY }}
+        commit-message: Deploying to GitHub Pages
+        repository-name: clashperk/clashofclans.js.org
