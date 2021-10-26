@@ -35,4 +35,6 @@ jobs:
         folder: build
         branch: gh-pages
         single-commit: true
+        ssh-key: ${{ secrets.DEPLOY_KEY }}
         commit-message: Deploying to GitHub Pages
+        repository-name: clashperk/clashofclans.js.org
