@@ -13,5 +13,11 @@
 - **`npm i clashofclans.js`**
 - **Node.js v14 or newer is required.**
 
+### Links
+
+- [Documentation](https://cocjs.suvajit.me/docs/intro)
+- [Clash of Clans Developer Website](https://developer.clashofclans.com/)
+- [Clash of Clans API Community Discord](https://discord.gg/Eaja7gJ)
+
 ### Disclaimer
 > This content is not affiliated with, endorsed, sponsored, or specifically approved by Supercell and Supercell is not responsible for it. For more information see [Supercell’s Fan Content Policy](https://supercell.com/en/fan-content-policy/).

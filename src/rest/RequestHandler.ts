@@ -74,6 +74,13 @@ export class RequestHandler {
 
 		const data: T = await res?.json().catch(() => null);
 		if (!res && retries < (options.retryLimit ?? this.retryLimit)) return this.exec<T>(path, options, ++retries);
+
+		/* eslint-disable-next-line */ // @ts-expect-error
+		if (res?.status === 403 && data?.reason === 'accessDenied.invalidIp' && this.email && this.password) {
+			await this.login();
+			return this.exec<T>(path, options, ++retries);
+		}
+
 		if (!res?.ok) throw new HTTPError(data, res?.status ?? 504, path, options.method);
 
 		const maxAge = res.headers.get('cache-control')?.split('=')?.[1] ?? 0;
