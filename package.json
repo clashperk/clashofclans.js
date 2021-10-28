@@ -58,7 +58,23 @@
 		"singleQuote": true,
 		"quoteProps": "consistent",
 		"bracketSpacing": true,
-		"trailingComma": "none"
+		"trailingComma": "none",
+		"overrides": [
+			{
+				"files": "*.md",
+				"options": {
+					"useTabs": false,
+					"tabWidth": 4
+				}
+			}
+		]
+	},
+	"standard-version": {
+		"skip": {
+			"changelog": false,
+			"commit": true,
+			"tag": true
+		}
 	},
 	"dependencies": {
 		"node-fetch": "^2.6.1"
