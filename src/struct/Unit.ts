@@ -36,6 +36,10 @@ export class Unit {
 	public get isMax() {
 		return this.level === this.maxLevel;
 	}
+
+	public get iconURL() {
+		return `https://supercell.vercel.app/assets/troops/icons/${this.name.replace(/ /gi, '_')}.png`;
+	}
 }
 
 /** Represents a player's troop. */
