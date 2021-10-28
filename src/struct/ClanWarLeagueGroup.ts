@@ -108,7 +108,7 @@ export class ClanWarLeagueGroup {
 			.filter((war) => (clanTag ? war.clan.tag === clanTag : true));
 	}
 
-	public async getCurrentWars(clanTag: string) {
+	private async _getCurrentWars(clanTag: string) {
 		const rounds = this.rounds.filter((round) => !round.warTags.includes('#0'));
 		if (!rounds.length) return [];
 		const warTags = rounds

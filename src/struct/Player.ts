@@ -49,7 +49,7 @@ export class Player {
 	/** The player's best versus trophies. */
 	public bestVersusTrophies: number | null;
 
-	/** The number of versus attacks the player has won. */
+	/** The number of total versus attacks the player has won. */
 	public versusBattleWins: number | null;
 
 	/** The player's donation count for this season. */
@@ -60,6 +60,9 @@ export class Player {
 
 	/** The player's role in the clan or `null` if not in a clan. */
 	public role: string | null;
+
+	/** Whether the player has selected that they are opted in. This will be `null` if the player is not in a clan. */
+	public warOptedIn: boolean | null;
 
 	/** The player's clan. */
 	public clan: PlayerClan | null;
@@ -103,6 +106,7 @@ export class Player {
 		this.donations = data.donations;
 		this.received = data.donationsReceived;
 		this.role = data.role ?? null;
+		this.warOptedIn = data.warPreference ? data.warPreference === 'in' : null;
 		this.clan = data.clan ? new PlayerClan(client, data.clan) : null;
 		this.league = data.league ? new League(data.league) : null;
 		this.legendStatistics = data.legendStatistics ? new LegendStatistics(data.legendStatistics) : null;
