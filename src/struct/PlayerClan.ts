@@ -2,6 +2,7 @@ import { Client } from '../client/Client';
 import { APIPlayerClan } from '../types';
 import { Badge } from './Badge';
 
+/** Represents a player's clan. */
 export class PlayerClan {
 	/** Name of the clan. */
 	public name: string;

@@ -1,6 +1,7 @@
 import { SUPER_TROOPS } from '../util/Constants';
 import { APIPlayerItem } from '../types';
 
+/** Represents a player's unit. */
 export class Unit {
 	/** The name of this unit. */
 	public name: string;
@@ -37,6 +38,7 @@ export class Unit {
 	}
 }
 
+/** Represents a player's troop. */
 export class Troop extends Unit {
 	public name!: string;
 
@@ -53,6 +55,8 @@ export class Troop extends Unit {
 	}
 }
 
+/** Represents a player's spell. */
 export class Spell extends Unit {}
 
+/** Represents a player's hero. */
 export class Hero extends Unit {}

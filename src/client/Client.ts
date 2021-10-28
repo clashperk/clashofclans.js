@@ -113,8 +113,9 @@ export class Client extends EventEmitter {
 		return null;
 	}
 
+	/** Get information about a CWL round. */
 	public async getLeagueWar(clanTag: string, warState?: keyof typeof CWLRound) {
-		const state = (warState && CWLRound[warState]) || 'inWar'; // eslint-disable-line
+		const state = (warState && CWLRound[warState]) ?? 'inWar'; // eslint-disable-line
 		const data = await this.getClanWarLeagueGroup(clanTag);
 
 		const rounds = data.rounds.filter((round) => !round.warTags.includes('#0'));
@@ -136,7 +137,8 @@ export class Client extends EventEmitter {
 	/** @internal */
 	private async _getCurrentLeagueWars(clanTag: string, options?: OverrideOptions) {
 		const data = await this.getClanWarLeagueGroup(clanTag, options);
-		return data.getCurrentWars(clanTag);
+		// @ts-expect-error
+		return data._getCurrentWars(clanTag);
 	}
 
 	/** @internal */

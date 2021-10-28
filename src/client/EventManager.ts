@@ -50,37 +50,52 @@ export class EventManager {
 	}
 
 	public addClans(...tags: string[]) {
-		for (const tag of tags) this._clanTags.add(tag);
+		for (const tag of tags) {
+			this._clanTags.add(this.client.util.parseTag(tag));
+		}
 		return this;
 	}
 
 	public deleteClans(...tags: string[]) {
-		for (const tag of tags) this._warTags.delete(tag);
+		for (const tag of tags) {
+			this._warTags.delete(this.client.util.parseTag(tag));
+		}
 		return this;
 	}
 
 	public addPlayers(...tags: string[]) {
-		for (const tag of tags) this._playerTags.add(tag);
+		for (const tag of tags) {
+			this._playerTags.add(this.client.util.parseTag(tag));
+		}
 		return this;
 	}
 
 	public deletePlayers(...tags: string[]) {
-		for (const tag of tags) this._warTags.delete(tag);
+		for (const tag of tags) {
+			this._warTags.delete(this.client.util.parseTag(tag));
+		}
 		return this;
 	}
 
 	public addWars(...tags: string[]) {
-		for (const tag of tags) this._warTags.add(tag);
+		for (const tag of tags) {
+			this._warTags.add(this.client.util.parseTag(tag));
+		}
 		return this;
 	}
 
 	public deleteWars(...tags: string[]) {
-		for (const tag of tags) this._warTags.delete(tag);
+		for (const tag of tags) {
+			this._warTags.delete(this.client.util.parseTag(tag));
+		}
 		return this;
 	}
 
 	/**
 	 * Set your own custom event.
+	 * @param event.type - `CLAN` | `PLAYER` | `CLAN_WAR`
+	 * @param event.name - Name of the event.
+	 * @param event.filter - Filter of this event. Must return a boolean value.
 	 *
 	 * @example
 	 * ```js
@@ -163,15 +178,6 @@ export class EventManager {
 		await this.clanUpdateHandler();
 	}
 
-	private async warUpdateHandler() {
-		this.client.emit(EVENTS.WAR_LOOP_START);
-		for (const tag of this._warTags) await this.runWarUpdate(tag);
-		this.client.emit(EVENTS.WAR_LOOP_END);
-
-		await this.client.util.delay(10_000);
-		await this.warUpdateHandler();
-	}
-
 	private async playerUpdateHandler() {
 		this.client.emit(EVENTS.PLAYER_LOOP_START);
 		for (const tag of this._playerTags) await this.runPlayerUpdate(tag);
@@ -179,6 +185,15 @@ export class EventManager {
 
 		await this.client.util.delay(10_000);
 		await this.playerUpdateHandler();
+	}
+
+	private async warUpdateHandler() {
+		this.client.emit(EVENTS.WAR_LOOP_START);
+		for (const tag of this._warTags) await this.runWarUpdate(tag);
+		this.client.emit(EVENTS.WAR_LOOP_END);
+
+		await this.client.util.delay(10_000);
+		await this.warUpdateHandler();
 	}
 
 	private async runClanUpdate(tag: string) {
@@ -220,7 +235,7 @@ export class EventManager {
 	}
 
 	private async runWarUpdate(tag: string) {
-		if (this._inMaintenance) return null;
+		if (this._inMaintenance) return false;
 
 		// @ts-expect-error
 		const clanWars = await this.client._getClanWars(tag).catch(() => null);

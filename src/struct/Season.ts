@@ -1,6 +1,7 @@
 import { APIGoldPassSeason, APISeason } from '../types';
 import { Util } from '../util/Util';
 
+/** Represents a player's trophy season. */
 export class Season {
 	public id: string;
 	public rank: number;
@@ -13,6 +14,7 @@ export class Season {
 	}
 }
 
+/** Represents a gold pass season. */
 export class GoldPassSeason {
 	public startTime: Date;
 	public endTime: Date;
