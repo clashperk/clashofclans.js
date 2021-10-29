@@ -60,7 +60,7 @@ export interface APIClan {
 	clanVersusPoints: number;
 	requiredTrophies: number;
 	requiredTownhallLevel?: number;
-	warFrequency: string;
+	warFrequency: 'always' | 'moreThanOncePerWeek' | 'oncePerWeek' | 'lessThanOncePerWeek' | 'never' | 'unknown';
 	warWinStreak: number;
 	warWins: number;
 	warTies?: number;

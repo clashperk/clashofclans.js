@@ -47,7 +47,7 @@ export class Clan {
 	public requiredTownHallLevel: number | null;
 
 	/** The frequency for when this clan goes to war. */
-	public warFrequency: string; // TODO
+	public warFrequency: 'always' | 'moreThanOncePerWeek' | 'oncePerWeek' | 'lessThanOncePerWeek' | 'never' | 'unknown';
 
 	/** The clan's current war winning streak. */
 	public warWinStreak: number;

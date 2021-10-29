@@ -99,7 +99,7 @@ export class ClanWarMember {
 	public attacks: ClanWarAttack[];
 
 	/** The number of times this member has been attacked. */
-	public opponentAttacks: number; // TODO
+	public defenseCount: number;
 
 	public constructor(clan: WarClan, war: ClanWar, data: APIClanWarMember) {
 		Object.defineProperty(this, 'clan', { value: clan });
@@ -110,7 +110,7 @@ export class ClanWarMember {
 		this.mapPosition = data.mapPosition;
 		this.townHallLevel = data.townhallLevel;
 		this.attacks = data.attacks?.map((atk) => new ClanWarAttack(clan, war, atk)) ?? [];
-		this.opponentAttacks = data.opponentAttacks;
+		this.defenseCount = data.opponentAttacks;
 		this._bestOpponentAttackerTag = data.bestOpponentAttack?.attackerTag;
 	}
 

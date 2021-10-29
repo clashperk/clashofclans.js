@@ -209,7 +209,9 @@ export class EventManager {
 			try {
 				if (!fn(cached, clan)) continue;
 				this.client.emit(name, cached, clan);
-			} catch {}
+			} catch (error) {
+				this.client.emit(EVENTS.ERROR, error);
+			}
 		}
 
 		return this._clans.set(clan.tag, clan);
@@ -228,18 +230,22 @@ export class EventManager {
 			try {
 				if (!fn(cached, player)) continue;
 				this.client.emit(name, cached, player);
-			} catch {}
+			} catch (error) {
+				this.client.emit(EVENTS.ERROR, error);
+			}
 		}
 
 		return this._players.set(player.tag, player);
 	}
 
 	private async runWarUpdate(tag: string) {
-		if (this._inMaintenance) return false;
+		if (this._inMaintenance) return null;
 
 		// @ts-expect-error
 		const clanWars = await this.client._getClanWars(tag).catch(() => null);
-		clanWars?.forEach((war, i) => {
+		if (!clanWars?.length) return null;
+
+		clanWars.forEach((war, i) => {
 			const key = `WAR:${i}:${tag}`;
 			const cached = this._wars.get(key);
 			if (!cached) return this._wars.set(key, war);
@@ -248,7 +254,9 @@ export class EventManager {
 				try {
 					if (!fn(cached, war)) continue;
 					this.client.emit(name, cached, war);
-				} catch {}
+				} catch (error) {
+					this.client.emit(EVENTS.ERROR, error);
+				}
 			}
 
 			return this._wars.set(key, war);
