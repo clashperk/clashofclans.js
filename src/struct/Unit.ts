@@ -37,6 +37,7 @@ export class Unit {
 		return this.level === this.maxLevel;
 	}
 
+	/** Icon of this unit. */
 	public get iconURL() {
 		return `https://supercell.vercel.app/assets/troops/icons/${this.name.replace(/ /gi, '_')}.png`;
 	}

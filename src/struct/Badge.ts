@@ -28,7 +28,7 @@ export class Badge {
 	}
 
 	/** Get unique hash of this Badge. */
-	public get hash() {
-		return this.url.split('/').pop();
+	public get hash(): string {
+		return this.url.split('/').pop()!;
 	}
 }

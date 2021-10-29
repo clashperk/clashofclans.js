@@ -34,12 +34,13 @@ export class ClanMember {
 	public donations: number;
 
 	/** The member's donation received count for this season. */
-	public donationsReceived: number; // TODO
+	public received: number;
 
 	public constructor(public client: Client, data: APIClanMember) {
 		this.name = data.name;
 		this.tag = data.tag;
-		this.role = (data.role as any).replace('admin', 'elder'); // TODO
+		// @ts-expect-error
+		this.role = data.role.replace('admin', 'elder');
 		this.expLevel = data.expLevel;
 		this.league = new League(data.league);
 		this.trophies = data.trophies;
@@ -47,7 +48,7 @@ export class ClanMember {
 		this.clanRank = data.clanRank;
 		this.previousClanRank = data.previousClanRank;
 		this.donations = data.donations;
-		this.donationsReceived = data.donationsReceived;
+		this.received = data.donationsReceived;
 	}
 
 	/** Fetch detailed clan info for the member's clan. */
