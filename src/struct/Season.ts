@@ -3,8 +3,13 @@ import { Util } from '../util/Util';
 
 /** Represents a player's trophy season. */
 export class Season {
+	/** The season's Id. */
 	public id: string;
+
+	/** The player's rank. */
 	public rank: number;
+
+	/** The player's trophy count. */
 	public trophies: number;
 
 	public constructor(data: APISeason) {
@@ -16,7 +21,10 @@ export class Season {
 
 /** Represents a gold pass season. */
 export class GoldPassSeason {
+	/** The start time of the gold pass season. */
 	public startTime: Date;
+
+	/** The end time of this gold pass season. */
 	public endTime: Date;
 
 	public constructor(data: APIGoldPassSeason) {

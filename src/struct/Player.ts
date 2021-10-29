@@ -1,4 +1,4 @@
-import { HERO_PETS, SIEGE_MACHINES, SUPER_TROOPS } from '../util/Constants';
+import { HERO_PETS, SIEGE_MACHINES } from '../util/Constants';
 import { LegendStatistics } from './LegendStatistics';
 import { Achievement } from './Achievement';
 import { Hero, Spell, Troop } from './Unit';
@@ -59,7 +59,7 @@ export class Player {
 	public received: number;
 
 	/** The player's role in the clan or `null` if not in a clan. */
-	public role: string | null;
+	public role: 'member' | 'elder' | 'coLeader' | 'leader' | null;
 
 	/** Whether the player has selected that they are opted in. This will be `null` if the player is not in a clan. */
 	public warOptedIn: boolean | null;
@@ -105,7 +105,8 @@ export class Player {
 		this.versusBattleWins = data.versusBattleWins ?? null;
 		this.donations = data.donations;
 		this.received = data.donationsReceived;
-		this.role = data.role ?? null;
+		// @ts-expect-error
+		this.role = data.role?.replace('admin', 'elder') ?? null;
 		this.warOptedIn = data.warPreference ? data.warPreference === 'in' : null;
 		this.clan = data.clan ? new PlayerClan(client, data.clan) : null;
 		this.league = data.league ? new League(data.league) : null;
@@ -123,17 +124,28 @@ export class Player {
 		return this.client.getClan(this.clan.tag);
 	}
 
+	/** An array of the player's home base troops. */
 	public get homeTroops() {
-		return this.troops.filter(
-			(entry) =>
-				entry.isHomeBase &&
-				!HERO_PETS.includes(entry.name) &&
-				!SUPER_TROOPS.includes(entry.name) &&
-				!SIEGE_MACHINES.includes(entry.name)
-		);
+		return this.troops.filter((entry) => entry.isHomeBase);
 	}
 
-	public get pets() {
+	/** An array of the player's builder base troops. */
+	public get builderTroops() {
+		return this.troops.filter((entry) => entry.isBuilderBase);
+	}
+
+	/** An array of the player's super troops. */
+	public get superTroops() {
+		return this.troops.filter((entry) => entry.isSuperTroop);
+	}
+
+	/** An array of the player's hero pets. */
+	public get heroPets() {
 		return this.troops.filter((entry) => entry.isHomeBase && HERO_PETS.includes(entry.name));
+	}
+
+	/** An array of the player's siege machines. */
+	public get siegeMachines() {
+		return this.troops.filter((entry) => entry.isHomeBase && SIEGE_MACHINES.includes(entry.name));
 	}
 }

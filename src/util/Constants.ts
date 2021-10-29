@@ -60,53 +60,6 @@ export const HEROES = ['Barbarian King', 'Archer Queen', 'Grand Warden', 'Royal 
 
 export const HERO_PETS = ['L.A.S.S.I', 'Electro Owl', 'Mighty Yak', 'Unicorn'];
 
-export const ACHIEVEMENTS = [
-	// Home Base
-	'Keep Your Account Safe!',
-	'Bigger & Better',
-	'Discover New Troops',
-	'Bigger Coffers',
-	'Gold Grab',
-	'Elixir Escapade',
-	'Heroic Heist',
-	'Well Seasoned',
-	'Nice and Tidy',
-	'Empire Builder',
-	'Clan War Wealth',
-	'Friend in Need',
-	'Sharing is caring',
-	'Siege Sharer',
-	'War Hero',
-	'War League Legend',
-	'Games Champion',
-	'Unbreakable',
-	'Sweet Victory!',
-	'Conqueror',
-	'League All-Star',
-	'Humiliator',
-	'Not So Easy This Time',
-	'Union Buster',
-	'Bust This!',
-	'Wall Buster',
-	'Mortar Mauler',
-	'X-Bow Exterminator',
-	'Firefighter',
-	'Anti-Artillery',
-	'Shattered and Scattered',
-	'Get those Goblins!',
-	'Get those other Goblins!',
-	'Dragon Slayer',
-	'Superb Work',
-
-	// Builder Base
-	'Master Engineering',
-	'Hidden Treasures',
-	'High Gear',
-	'Next Generation Model',
-	'Un-Build It',
-	'Champion Builder'
-];
-
 export const UNRANKED_LEAGUE_DATA = {
 	id: 29000000,
 	name: 'Unranked',
@@ -165,8 +118,6 @@ export const FRIENDLY_WAR_PREPARATION_TIMES = [
 ] as const;
 
 export const EVENTS = {
-	CLAN_MEMBER_JOIN: 'clanMemberJoin',
-	CLAN_MEMBER_LEAVE: 'clanMemberLeave',
 	NEW_SEASON_START: 'newSeasonStart',
 	CLAN_LOOP_START: 'clanLoopStart',
 	CLAN_LOOP_END: 'clanLoopEnd',
@@ -175,5 +126,6 @@ export const EVENTS = {
 	WAR_LOOP_START: 'warLoopEnd',
 	WAR_LOOP_END: 'warLoopEnd',
 	MAINTENANCE_START: 'maintenanceStart',
-	MAINTENANCE_END: 'maintenanceEnd'
+	MAINTENANCE_END: 'maintenanceEnd',
+	ERROR: 'error'
 } as const;

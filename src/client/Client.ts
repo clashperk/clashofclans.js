@@ -272,8 +272,6 @@ export class Client extends EventEmitter {
 }
 
 export interface ClientEvents {
-	[EVENTS.CLAN_MEMBER_JOIN]: [oldClan: Clan, newClan: Clan];
-	[EVENTS.CLAN_MEMBER_LEAVE]: [oldClan: Clan, newClan: Clan];
 	[EVENTS.NEW_SEASON_START]: [season: string];
 	[EVENTS.MAINTENANCE_START]: [];
 	[EVENTS.MAINTENANCE_END]: [duration: number];
@@ -283,6 +281,7 @@ export interface ClientEvents {
 	[EVENTS.PLAYER_LOOP_END]: [];
 	[EVENTS.WAR_LOOP_START]: [];
 	[EVENTS.WAR_LOOP_END]: [];
+	[EVENTS.ERROR]: [error: unknown];
 }
 
 export interface EventTypes {
