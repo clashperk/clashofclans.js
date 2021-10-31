@@ -437,14 +437,8 @@ class Client {
 module.exports = Client;
 
 /**
- * TypeDefs
- * @namespace core
- */
-
-/**
  * Base Client Options
  * @typedef {Object} ClientOptions
- * @memberof core
  * @property {string} keys - Clash of Clans API keys(s)
  * @property {number} timeout - Request timeout in millisecond
  * @property {string} [baseURL] - Clash of Clans API Base URL
@@ -457,7 +451,6 @@ module.exports = Client;
  *
  * **- Name search parameter is interpreted as wild card search, so it may appear anywhere in the clan name.**
  * @typedef {Object} ClanSearchOptions
- * @memberof core
  * @property {string} name - Search clans by name.
  * @property {string} warFrequency - Filter by clan war frequency
  * @property {string} locationId - Filter by clan location identifier. For list of available locations, refer to getLocations operation
@@ -474,7 +467,6 @@ module.exports = Client;
 /**
  * Search Options
  * @typedef {Object} SearchOptions
- * @memberof core
  * @property {number} limit - Limit the number of items returned in the response.
  * @property {string} after - Return only items that occur after this marker. Before marker can be found from the response, inside the 'paging' property. Note that only after or before can be specified for a request, not both.
  * @property {string} before - Return only items that occur before this marker. Before marker can be found from the response, inside the 'paging' property. Note that only after or before can be specified for a request, not both.

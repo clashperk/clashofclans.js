@@ -119,7 +119,6 @@ module.exports = { Extension };
 
 /**
  * Extension client options
- * @memberof core
  * @typedef {Object} ExtensionOptions
  * @param {string} email Developer account Email
  * @param {string} password Developer account Password

@@ -1,16 +1,13 @@
 {
   "name": "clashofclans.js",
-  "version": "1.5.4",
+  "version": "1.5.5",
   "description": "JavaScript library for interacting with the Clash of Clans API",
   "author": "SUVAJIT <suvajit.me@gmail.com>",
   "license": "MIT",
   "main": "src/index.js",
   "types": "src/index.d.ts",
   "scripts": {
-    "test": "eslint --ext .js --ignore-path .gitignore .",
-    "deploy": "gh-pages -b gh-pages -d docs",
-    "docs": "docma && docma serve",
-    "predeploy": "docma"
+    "test": "eslint --ext .js --ignore-path .gitignore ."
   },
   "repository": {
     "type": "git",
@@ -24,7 +21,7 @@
   "bugs": {
     "url": "https://github.com/clashperk/clashofclans.js/issues"
   },
-  "homepage": "https://clashofclans.js.org/api/",
+  "homepage": "https://github.com/clashperk/clashofclans.js",
   "dependencies": {
     "node-fetch": "^2.6.1"
   },
