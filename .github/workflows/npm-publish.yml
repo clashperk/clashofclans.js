@@ -3,6 +3,7 @@ name: Node.js Package
 on:
   release:
     types: [created]
+    branches: [master]
 
 jobs:
   build:
@@ -23,7 +24,10 @@ jobs:
       - name: ESLint
         run: npm test
 
-  publish-npm:
+      - name: Build
+        run: npm run build
+
+  publish:
     name: NPM Publish
     needs: build
     runs-on: ubuntu-latest

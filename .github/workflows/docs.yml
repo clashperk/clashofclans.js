@@ -23,6 +23,9 @@ jobs:
     - name: Update Submodule
       run: git pull --recurse-submodules && git submodule update --remote --recursive --init
 
+    - name: Copy CHANGELOG.md
+      run: cp lib/CHANGELOG.md docs/changelog.md
+
     - name: Install
       run: yarn
 
