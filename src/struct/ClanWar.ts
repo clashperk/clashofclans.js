@@ -216,6 +216,7 @@ export class WarClan {
 	}
 }
 
+/** Represents a Clan War in Clash of Clans. */
 export class ClanWar {
 	public client!: Client;
 

@@ -16,7 +16,7 @@
 
 ### Links
 
--   [Documentation](https://cocjs.suvajit.me/docs/intro)
+-   [Documentation](https://clashofclans.js.org/docs/)
 -   [Clash of Clans Developer Website](https://developer.clashofclans.com/)
 -   [Clash of Clans API Community Discord](https://discord.gg/Eaja7gJ)
 
@@ -44,17 +44,17 @@ const client = new Client({
     throttler: new BatchThrottler(30)
 });
 
-client.events.addClans(['#8P2QG08P', '#2PP']);
+client.events.addClans(['#8P2QG08P']);
 client.events.setEvent({
     type: 'CLAN',
-    name: 'clanMemberChange',
+    name: 'clanDescriptionChange',
     filter: (oldClan, newClan) => {
-        return oldClan.memberCount !== newClan.memberCount;
+        return oldClan.description !== newClan.description;
     }
 });
 
-client.on('clanMemberChange', (oldClan, newClan) => {
-    console.log(oldClan.memberCount, newClan.memberCount);
+client.on('clanDescriptionChange', (oldClan, newClan) => {
+    console.log(oldClan.description, newClan.description);
 });
 
 (async function () {
