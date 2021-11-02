@@ -254,6 +254,43 @@ export class Client extends EventEmitter {
 	}
 
 	// #region typings
+	/* eslint-disable @typescript-eslint/prefer-readonly */
+
+	/**
+	 * Emits when maintenance break starts in the API.
+	 * @public
+	 * @event
+	 */
+	private static maintenanceStart: string;
+
+	/**
+	 * Emits when maintenance break ends in the API.
+	 *
+	 * **Parameters**
+	 *
+	 * | Name | Type | Description |
+	 * | :--: | :--: | :---------: |
+	 * | `duration` | `number` | Duration of the maintenance break in milliseconds. |
+	 * @public
+	 * @event
+	 */
+	private static maintenanceEnd: string;
+
+	/**
+	 * Emits when a new season starts.
+	 *
+	 * **Parameters**
+	 *
+	 * | Name | Type | Description |
+	 * | :--: | :--: | :---------: |
+	 * | `id` | `string` | Id of the new season. |
+	 * @public
+	 * @event
+	 */
+	private static newSeasonStart: string;
+
+	/* eslint-disable @typescript-eslint/prefer-readonly */
+
 	/** @internal */
 	public on<K extends keyof ClientEvents>(event: K, listeners: (...args: ClientEvents[K]) => void): this;
 	/** @internal */ // @ts-expect-error
@@ -272,7 +309,7 @@ export class Client extends EventEmitter {
 }
 
 export interface ClientEvents {
-	[EVENTS.NEW_SEASON_START]: [season: string];
+	[EVENTS.NEW_SEASON_START]: [id: string];
 	[EVENTS.MAINTENANCE_START]: [];
 	[EVENTS.MAINTENANCE_END]: [duration: number];
 	[EVENTS.CLAN_LOOP_START]: [];

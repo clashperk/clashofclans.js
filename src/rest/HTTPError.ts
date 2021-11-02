@@ -8,6 +8,7 @@ const reasons: { [key: string]: string } = {
 	404: 'notFound'
 };
 
+/** Represents an HTTP Error. */
 export class HTTPError extends Error {
 	public method: string;
 	public reason: string;

@@ -6,7 +6,7 @@ import https from 'https';
 
 const agent = new https.Agent({ keepAlive: true });
 
-/** @private */
+/** Represents a Request Handler. */
 export class RequestHandler {
 	/** @internal */
 	#keyIndex = 0; // eslint-disable-line
