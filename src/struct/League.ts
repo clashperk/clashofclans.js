@@ -19,7 +19,7 @@ export class League {
 		this.icon = new Icon(data.iconUrls);
 	}
 
-	/** Position of this League. Starting from 0 (Unranked) */
+	/** Position of this League. Starting from 0 (Un-ranked) */
 	public get position() {
 		return LEAGUES.indexOf(this.id);
 	}

@@ -26,7 +26,7 @@ import {
 	APIWarLeagueList
 } from '../types';
 
-/** Represents a REST Manager. */
+/** Represents a REST Manager of the client. */
 export class RESTManager {
 	public readonly handler: RequestHandler;
 

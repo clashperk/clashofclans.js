@@ -16,7 +16,7 @@ export class PlayerClan {
 	/** Badge of this clan. */
 	public badge: Badge;
 
-	public constructor(private readonly client: Client, data: APIPlayerClan) {
+	public constructor(private readonly _client: Client, data: APIPlayerClan) {
 		this.name = data.name;
 		this.tag = data.tag;
 		this.level = data.clanLevel;
@@ -25,6 +25,6 @@ export class PlayerClan {
 
 	/** Fetch detailed clan info for the player's clan. */
 	public fetch() {
-		return this.client.getClan(this.tag);
+		return this._client.getClan(this.tag);
 	}
 }

@@ -59,11 +59,7 @@ export class RequestHandler {
 		}
 	}
 
-	private async exec<T>(
-		path: string,
-		options: RequestOptions = {},
-		retries = 0
-	): Promise<{ data: T; ok: boolean; status: number; maxAge: number }> {
+	private async exec<T>(path: string, options: RequestOptions = {}, retries = 0): Promise<{ data: T; maxAge: number; status: number }> {
 		const res = await fetch(`${this.baseURL}${path}`, {
 			agent,
 			body: options.body,
@@ -72,19 +68,17 @@ export class RequestHandler {
 			headers: { 'Authorization': `Bearer ${this._key}`, 'Content-Type': 'application/json' }
 		}).catch(() => null);
 
-		const data: T = await res?.json().catch(() => null);
+		const data = await res?.json().catch(() => null);
 		if (!res && retries < (options.retryLimit ?? this.retryLimit)) return this.exec<T>(path, options, ++retries);
 
-		/* eslint-disable-next-line */ // @ts-expect-error
 		if (res?.status === 403 && data?.reason === 'accessDenied.invalidIp' && this.email && this.password) {
 			await this.login();
 			return this.exec<T>(path, options, ++retries);
 		}
-
 		if (!res?.ok) throw new HTTPError(data, res?.status ?? 504, path, options.method);
 
 		const maxAge = res.headers.get('cache-control')?.split('=')?.[1] ?? 0;
-		return { data, ok: res.status === 200, status: res.status, maxAge: Number(maxAge) * 1000 };
+		return { data, maxAge: Number(maxAge) * 1000, status: res.status };
 	}
 
 	public init(options: InitOptions) {

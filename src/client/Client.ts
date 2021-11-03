@@ -94,9 +94,9 @@ export class Client extends EventEmitter {
 
 	/** Get info about currently running war (regular or friendly) in the clan. */
 	public async getClanWar(clanTag: string, options?: OverrideOptions) {
-		const { data } = await this.rest.getCurrentWar(clanTag, options);
+		const { data, maxAge } = await this.rest.getCurrentWar(clanTag, options);
 		if (data.state === 'notInWar') return null;
-		return new ClanWar(this, data, clanTag);
+		return new ClanWar(this, data, { clanTag, maxAge });
 	}
 
 	/** Get info about currently running war in the clan. */
@@ -113,7 +113,7 @@ export class Client extends EventEmitter {
 		return null;
 	}
 
-	/** Get information about a CWL round. */
+	/** Get info about currently running CWL round. */
 	public async getLeagueWar(clanTag: string, warState?: keyof typeof CWLRound) {
 		const state = (warState && CWLRound[warState]) ?? 'inWar'; // eslint-disable-line
 		const data = await this.getClanWarLeagueGroup(clanTag);
@@ -143,10 +143,13 @@ export class Client extends EventEmitter {
 
 	/** @internal */
 	private async _getClanWars(clanTag: string, options?: OverrideOptions) {
+		const date = new Date().getDate();
 		try {
 			const data = await this.getClanWar(clanTag, options);
+			if (!(date >= 1 && date <= 10)) return data ? [data] : [];
 			return data ? [data] : await this._getCurrentLeagueWars(clanTag);
 		} catch (e) {
+			if (!(date >= 1 && date <= 10)) return [];
 			if (e instanceof HTTPError && e.status === 403) {
 				return this._getCurrentLeagueWars(clanTag);
 			}
@@ -163,9 +166,9 @@ export class Client extends EventEmitter {
 	/** Get information about CWL round by WarTag. */
 	public async getClanWarLeagueRound(warTag: string | { warTag: string; clanTag?: string }, options?: OverrideOptions) {
 		const args = typeof warTag === 'string' ? { warTag } : { warTag: warTag.warTag, clanTag: warTag.clanTag };
-		const { data } = await this.rest.getClanWarLeagueRound(args.warTag, options);
+		const { data, maxAge } = await this.rest.getClanWarLeagueRound(args.warTag, options);
 		if (data.state === 'notInWar') return null;
-		return new ClanWar(this, data, args.clanTag, args.warTag);
+		return new ClanWar(this, data, { warTag: args.warTag, clanTag: args.clanTag, maxAge });
 	}
 
 	/** Get information about a player by tag. */
