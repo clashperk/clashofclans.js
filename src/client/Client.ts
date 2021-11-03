@@ -113,7 +113,7 @@ export class Client extends EventEmitter {
 		return null;
 	}
 
-	/** Get information about a CWL round. */
+	/** Get info about currently running CWL round. */
 	public async getLeagueWar(clanTag: string, warState?: keyof typeof CWLRound) {
 		const state = (warState && CWLRound[warState]) ?? 'inWar'; // eslint-disable-line
 		const data = await this.getClanWarLeagueGroup(clanTag);
