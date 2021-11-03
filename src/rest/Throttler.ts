@@ -1,12 +1,18 @@
-const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
+import { Util } from '../util/Util';
 
+/**
+ * Represents a throttler that sleeps for x ms between each request.
+ * @example
+ * const throttler = new QueueThrottler(1000 / 10);
+ * // 10 requests per second or sleep for 100ms between each request.
+ */
 export class QueueThrottler {
 	private lastRun?: number;
 	private readonly sleepTime: number;
 	private readonly promises: DeferredPromise[] = [];
 
-	public constructor(rateLimit = 10) {
-		this.sleepTime = 1000 / rateLimit;
+	public constructor(sleepTime = 100) {
+		this.sleepTime = sleepTime;
 	}
 
 	public get remaining() {
@@ -17,7 +23,7 @@ export class QueueThrottler {
 		if (this.lastRun) {
 			const difference = Date.now() - this.lastRun;
 			const needToSleep = this.sleepTime - difference;
-			if (needToSleep > 0) await delay(needToSleep);
+			if (needToSleep > 0) await Util.delay(needToSleep);
 		}
 
 		this.lastRun = Date.now();
@@ -40,6 +46,12 @@ export class QueueThrottler {
 	}
 }
 
+/**
+ * Represents a throttler that allows x requests per second before sleeping until the next second.
+ * @example
+ * const throttler = new BatchThrottler(30);
+ * // 30 requests every second.
+ */
 export class BatchThrottler {
 	#taskLogs: number[] = []; // eslint-disable-line
 	private readonly rateLimit: number;
@@ -65,7 +77,7 @@ export class BatchThrottler {
 			}
 
 			if (this.#taskLogs.length < this.rateLimit) break;
-			await delay(1000);
+			await Util.delay(1000);
 		}
 		this.#taskLogs.push(Date.now());
 	}

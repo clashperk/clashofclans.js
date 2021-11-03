@@ -171,7 +171,7 @@ export class WarClan {
 	public members: ClanWarMember[];
 
 	/** Total attacks used by this clan. */
-	public attacksUsed: number;
+	public attackCount: number;
 
 	public constructor(war: ClanWar, data: APIWarClan) {
 		Object.defineProperty(this, 'war', { value: war });
@@ -181,7 +181,7 @@ export class WarClan {
 		this.badge = new Badge(data.badgeUrls);
 		this.level = data.clanLevel;
 		this.stars = data.stars;
-		this.attacksUsed = data.attacks;
+		this.attackCount = data.attacks;
 		this.destruction = data.destructionPercentage;
 		this.members = data.members.map((mem) => new ClanWarMember(this, war, mem));
 	}
@@ -198,8 +198,8 @@ export class WarClan {
 
 	/** Average duration of all clan member's attacks. */
 	public get averageAttackDuration() {
-		if (!this.attacksUsed) return 0;
-		return this.attacks.reduce((prev, curr) => prev + curr.duration, 0) / this.attacksUsed;
+		if (!this.attackCount) return 0;
+		return this.attacks.reduce((prev, curr) => prev + curr.duration, 0) / this.attackCount;
 	}
 
 	/** Returns all clan member's attacks. */
@@ -247,19 +247,23 @@ export class ClanWar {
 	/** The war's unique tag. This is `null` unless this is a CWL.  */
 	public warTag: string | null;
 
-	public constructor(client: Client, data: APIClanWar, clanTag?: string, warTag?: string) {
+	/** The timestamp when a fresh version of this data will be available again. */
+	public maxAge: number;
+
+	public constructor(client: Client, data: APIClanWar, extra: { clanTag?: string; warTag?: string; maxAge?: number }) {
 		Object.defineProperty(this, 'client', { value: client });
 
-		this.state = data.state as any;
+		// @ts-expect-error
+		this.state = data.state;
 		this.teamSize = data.teamSize;
 		this.attacksPerMember = data.attacksPerMember;
 		this.preparationStartTime = client.util.parseDate(data.preparationStartTime);
 		this.startTime = client.util.parseDate(data.startTime);
 		this.endTime = client.util.parseDate(data.endTime);
-		this.warTag = warTag ?? null;
+		this.warTag = extra.warTag ?? null;
 
 		let [clan, opponent] = [data.clan, data.opponent];
-		clanTag = clanTag && client.util.parseTag(clanTag);
+		const clanTag = extra.clanTag && client.util.parseTag(extra.clanTag);
 		if (clanTag && [data.clan.tag, data.opponent.tag].includes(clanTag)) {
 			clan = data.clan.tag === clanTag ? data.clan : data.opponent;
 			opponent = data.clan.tag === clan.tag ? data.opponent : data.clan;
@@ -267,6 +271,7 @@ export class ClanWar {
 
 		this.clan = new WarClan(this, clan);
 		this.opponent = new WarClan(this, opponent);
+		this.maxAge = Date.now() + (extra.maxAge ?? 0);
 	}
 
 	/** Return a {@link ClanWarMember} with the tag provided. */

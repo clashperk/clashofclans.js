@@ -1,4 +1,5 @@
 import { APIClanRanking, APIClanVersusRanking, APIPlayerRanking, APIPlayerVersusRanking } from '../types';
+import { UNRANKED_LEAGUE_DATA } from '../util/Constants';
 import { PlayerClan } from './PlayerClan';
 import { Client } from '../client/Client';
 import { Location } from './Location';
@@ -31,10 +32,10 @@ export class RankedPlayer {
 	/** The number of total versus attacks the player has won. If retrieving info for regular leader-boards, this will be `null`. */
 	public versusBattleWins: number | null;
 
-	/** The player's rank in the clan leaderboard. */
+	/** The player's rank in the clan leader-board. */
 	public rank: number;
 
-	/** The player's rank before the last leaderboard change. */
+	/** The player's rank before the last leader-board change. */
 	public previousRank: number;
 
 	/** The player's clan. */
@@ -61,7 +62,7 @@ export class RankedPlayer {
 		this.previousRank = data.previousRank;
 		this.clan = new PlayerClan(client, data.clan);
 		// @ts-expect-error
-		this.league = data.league ? new League(data.league) : null; // eslint-disable-line
+		this.league = data.trophies ? new League(data.league ?? UNRANKED_LEAGUE_DATA) : null; // eslint-disable-line
 	}
 }
 
@@ -91,7 +92,7 @@ export class RankedClan {
 	/** The clan's rank in the leader board. */
 	public rank: number;
 
-	/** The clan's rank in the previous season's leaderboard. */
+	/** The clan's rank in the previous season's leader-board. */
 	public previousRank: number;
 
 	/** The clan's badge. */

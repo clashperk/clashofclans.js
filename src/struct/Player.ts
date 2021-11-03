@@ -1,4 +1,4 @@
-import { HERO_PETS, SIEGE_MACHINES } from '../util/Constants';
+import { HERO_PETS, SIEGE_MACHINES, UNRANKED_LEAGUE_DATA } from '../util/Constants';
 import { LegendStatistics } from './LegendStatistics';
 import { Achievement } from './Achievement';
 import { Hero, Spell, Troop } from './Unit';
@@ -68,7 +68,7 @@ export class Player {
 	public clan: PlayerClan | null;
 
 	/** The player's current League. */
-	public league: League | null;
+	public league: League;
 
 	/** The player's legend statistics, or `null` if they have never been in the legend league. */
 	public legendStatistics: LegendStatistics | null;
@@ -109,7 +109,7 @@ export class Player {
 		this.role = data.role?.replace('admin', 'elder') ?? null;
 		this.warOptedIn = data.warPreference ? data.warPreference === 'in' : null;
 		this.clan = data.clan ? new PlayerClan(client, data.clan) : null;
-		this.league = data.league ? new League(data.league) : null;
+		this.league = new League(data.league ?? UNRANKED_LEAGUE_DATA);
 		this.legendStatistics = data.legendStatistics ? new LegendStatistics(data.legendStatistics) : null;
 		this.achievements = data.achievements.map((data) => new Achievement(data));
 		this.labels = data.labels.map((data) => new Label(data));

@@ -1,3 +1,4 @@
+import { UNRANKED_LEAGUE_DATA } from '../util/Constants';
 import { Client } from '../client/Client';
 import { APIClanMember } from '../types';
 import { League } from './League';
@@ -27,7 +28,7 @@ export class ClanMember {
 	/** The member's rank in the clan. */
 	public clanRank: number;
 
-	/** The member's rank before the last leaderboard change. */
+	/** The member's rank before the last leader-board change. */
 	public previousClanRank: number;
 
 	/** The member's donation count for this season. */
@@ -42,7 +43,8 @@ export class ClanMember {
 		// @ts-expect-error
 		this.role = data.role.replace('admin', 'elder');
 		this.expLevel = data.expLevel;
-		this.league = new League(data.league);
+		// eslint-disable-next-line
+		this.league = new League(data.league ?? UNRANKED_LEAGUE_DATA);
 		this.trophies = data.trophies;
 		this.versusTrophies = data.versusTrophies ?? null;
 		this.clanRank = data.clanRank;

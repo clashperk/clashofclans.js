@@ -7,7 +7,7 @@ import { Badge } from './Badge';
  * Represents War Log Clan.
  *
  * :::caution
- * If this is called via {@link ClanWarLog.opponent}, then {@link WarLogClan.attacksUsed} and {@link WarLogClan.expEarned} will be `null`.
+ * If this is called via {@link ClanWarLog.opponent}, then {@link WarLogClan.attackCount} and {@link WarLogClan.expEarned} will be `null`.
  * For CWL entries {@link WarLogClan.name} and {@link WarLogClan.tag} are `null`.
  * :::
  */
@@ -40,7 +40,7 @@ export class WarLogClan {
 	 * Total attacks used by this clan.
 	 * This property is `null` for the opponent.
 	 */
-	public attacksUsed: number | null;
+	public attackCount: number | null;
 
 	public constructor(data: APIWarLogClan) {
 		this.name = data.name ?? null;
@@ -48,7 +48,7 @@ export class WarLogClan {
 		this.badge = new Badge(data.badgeUrls);
 		this.level = data.clanLevel;
 		this.stars = data.stars;
-		this.attacksUsed = data.attacks ?? null;
+		this.attackCount = data.attacks ?? null;
 		this.destruction = data.destructionPercentage;
 		this.expEarned = data.expEarned ?? null;
 	}
