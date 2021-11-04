@@ -9,16 +9,16 @@ jobs:
     name: ESLint
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout Repository
-      uses: actions/checkout@v2
+      - name: Checkout Repository
+        uses: actions/checkout@v2
 
-    - name: Use Node.js 14
-      uses: actions/setup-node@v2
-      with:
-        node-version: 14
+      - name: Use Node.js 14
+        uses: actions/setup-node@v2
+        with:
+          node-version: 14
 
-    - name: NPM Install
-      run: npm i
+      - name: NPM Install
+        run: npm i
 
-    - name: ESLint
-      run: npm test
+      - name: ESLint
+        run: npm test

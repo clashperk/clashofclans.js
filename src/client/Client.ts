@@ -133,14 +133,12 @@ export class Client extends EventEmitter {
 		return wars.find((war) => war?.state === state) ?? wars.at(0) ?? null;
 	}
 
-	/** @internal */
 	private async _getCurrentLeagueWars(clanTag: string, options?: OverrideOptions) {
 		const data = await this.getClanWarLeagueGroup(clanTag, options);
 		// @ts-expect-error
 		return data._getCurrentWars(clanTag);
 	}
 
-	/** @internal */
 	private async _getClanWars(clanTag: string, options?: OverrideOptions) {
 		const date = new Date().getDate();
 		try {
