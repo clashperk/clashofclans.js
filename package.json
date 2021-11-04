@@ -61,10 +61,17 @@
 		"trailingComma": "none",
 		"overrides": [
 			{
-				"files": "*.md",
+				"files": ["*.md"],
 				"options": {
 					"useTabs": false,
 					"tabWidth": 4
+				}
+			},
+			{
+				"files": ["*.yml"],
+				"options": {
+					"useTabs": false,
+					"tabWidth": 2
 				}
 			}
 		]

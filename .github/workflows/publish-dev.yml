@@ -1,4 +1,5 @@
 name: Publish Dev
+
 on:
   workflow_dispatch:
 
@@ -18,7 +19,7 @@ jobs:
 
       - name: Install Dependencies
         run: npm ci
-        
+
       - name: Build
         run: npm run build
 
