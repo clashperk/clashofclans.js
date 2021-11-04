@@ -1,0 +1,35 @@
+name: Publish Dev
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Install Node v14
+        uses: actions/setup-node@v2
+        with:
+          node-version: 14
+          registry-url: https://registry.npmjs.org/
+
+      - name: Install Dependencies
+        run: npm ci
+        
+      - name: Build
+        run: npm run build
+
+      - name: Deprecate Pre-released Version
+        run: npm deprecate clashofclans.js@"$(npm view clashofclans.js@dev version)" "No longer supported" || true
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Publish
+        run: |
+          npm version --git-tag-version=false $(jq --raw-output '.version' package.json)-dev.$(git rev-parse --short HEAD).$(date +%s)
+          npm publish --tag dev
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
