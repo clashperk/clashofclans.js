@@ -124,15 +124,16 @@ export class RequestHandler {
 			keys.splice(index, 1);
 		}
 
+		// Filter keys for current IP address and specified key name.
+		const matching = keys.filter((key) => key.name === this.keyName && key.cidrRanges.includes(ip));
+		if (matching.length) this.keys.push(...matching.map((key) => key.key).slice(0, this.keyCount));
+
 		// Create keys within limits (maximum of 10 keys per account)
 		while (this.keys.length < this.keyCount && keys.length < 10) {
 			const key = await this.createKey(cookie, ip);
+			this.keys.push(key.key);
 			keys.push(key);
 		}
-
-		// Filter keys for current IP address and specified key name.
-		const validKeys = keys.filter((key) => key.name === this.keyName && key.cidrRanges.includes(ip));
-		if (validKeys.length) this.keys.push(...validKeys.map((key) => key.key).slice(0, this.keyCount));
 
 		if (this.keys.length < this.keyCount && keys.length === 10) {
 			console.warn(

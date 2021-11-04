@@ -2,9 +2,10 @@ import { Util } from '../util/Util';
 
 /**
  * Represents a throttler that sleeps for x ms between each request.
- * @example
+ * ```js
  * const throttler = new QueueThrottler(1000 / 10);
  * // 10 requests per second or sleep for 100ms between each request.
+ * ```
  */
 export class QueueThrottler {
 	private lastRun?: number;
@@ -48,9 +49,10 @@ export class QueueThrottler {
 
 /**
  * Represents a throttler that allows x requests per second before sleeping until the next second.
- * @example
+ * ```js
  * const throttler = new BatchThrottler(30);
  * // 30 requests every second.
+ * ```
  */
 export class BatchThrottler {
 	#taskLogs: number[] = []; // eslint-disable-line
