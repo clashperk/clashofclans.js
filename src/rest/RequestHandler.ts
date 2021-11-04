@@ -8,7 +8,6 @@ const agent = new https.Agent({ keepAlive: true });
 
 /** Represents a Request Handler. */
 export class RequestHandler {
-	/** @internal */
 	#keyIndex = 0; // eslint-disable-line
 
 	private email!: string;
@@ -31,12 +30,10 @@ export class RequestHandler {
 		this.restRequestTimeout = options?.restRequestTimeout ?? 0;
 	}
 
-	/** @internal */
 	private get _keys() {
 		return Array.isArray(this.keys) ? this.keys : [this.keys];
 	}
 
-	/** @internal */
 	private get _key() {
 		const key = this._keys[this.#keyIndex];
 		this.#keyIndex = this.#keyIndex + 1 >= this._keys.length ? 0 : this.#keyIndex + 1;
