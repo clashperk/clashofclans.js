@@ -24,7 +24,6 @@ import {
 
 /**
  * Represents Clash of Clans API Client.
- * @example
  * ```js
  * const { Client } = require('clashofclans.js');
  * const client = new Client({ keys: ['***'] });
