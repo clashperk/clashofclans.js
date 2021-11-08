@@ -52,7 +52,7 @@ export class ClanWarAttack {
 	}
 
 	/** Returns whether the attack is a fresh or first attack on the defender. */
-	public isFresh() {
+	public get isFresh() {
 		if (this.defender.defenses.length === 1) return true;
 		return this.order === Math.min(...this.defender.defenses.map((def) => def.order));
 	}
@@ -61,14 +61,14 @@ export class ClanWarAttack {
 	 * Returns the previous best attack on this opponent village.
 	 * This is useful for calculating the new stars or destruction for new attacks.
 	 */
-	public previousBestAttack() {
-		if (this.isFresh()) return null;
+	public previousBestAttack(): ClanWarAttack | null {
+		if (this.isFresh) return null;
 		return (
 			// Let's not change the original array
 			[...this.clan.attacks]
-				.filter((atk) => atk.defenderTag === this.defenderTag && atk.attackerTag !== this.attackerTag)
+				.filter((atk) => atk.defenderTag === this.defenderTag && atk.order < this.order && atk.attackerTag !== this.attackerTag)
 				.sort((a, b) => b.destruction ** b.stars - a.destruction ** a.stars)
-				.shift() ?? null
+				.at(0) ?? null
 		);
 	}
 }
@@ -89,7 +89,7 @@ export class ClanWarMember {
 	/** The member's tag. */
 	public tag: string;
 
-	/** he member’s map position in the war. */
+	/** The member's map position in the war. */
 	public mapPosition: number;
 
 	/** The member's town hall level. */
@@ -140,7 +140,7 @@ export class ClanWarMember {
 			[...this.defenses]
 				.filter((def) => def.defenderTag === this.tag && def.attackerTag !== this.bestOpponentAttack?.attackerTag)
 				.sort((a, b) => b.destruction ** b.stars - a.destruction ** a.stars)
-				.shift() ?? null
+				.at(0) ?? null
 		);
 	}
 }
@@ -191,11 +191,6 @@ export class WarClan {
 		return this.tag === this.war.opponent.tag;
 	}
 
-	/** Get a member of the clan for the given tag, or `null` if not found. */
-	public getMember(tag: string): ClanWarMember | null {
-		return this.members.find((m) => m.tag === tag) ?? null;
-	}
-
 	/** Average duration of all clan member's attacks. */
 	public get averageAttackDuration() {
 		if (!this.attackCount) return 0;
@@ -207,12 +202,18 @@ export class WarClan {
 		return this.members
 			.filter((m) => m.attacks.length)
 			.map((m) => m.attacks)
-			.flat();
+			.flat()
+			.sort((a, b) => a.order - b.order);
 	}
 
 	/** Returns all clan member's defenses. */
 	public get defenses() {
 		return this.isOpponent ? this.war.clan.attacks : this.war.opponent.attacks;
+	}
+
+	/** Get a member of the clan for the given tag, or `null` if not found. */
+	public getMember(tag: string): ClanWarMember | null {
+		return this.members.find((m) => m.tag === tag) ?? null;
 	}
 }
 
@@ -303,6 +304,7 @@ export class ClanWar {
 	}
 
 	private get _isFriendly() {
-		return FRIENDLY_WAR_PREPARATION_TIMES.includes(this.startTime.getTime() - this.preparationStartTime.getTime());
+		const preparationTime = this.startTime.getTime() - this.preparationStartTime.getTime();
+		return FRIENDLY_WAR_PREPARATION_TIMES.includes(preparationTime);
 	}
 }

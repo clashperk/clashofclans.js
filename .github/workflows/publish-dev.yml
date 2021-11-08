@@ -2,6 +2,8 @@ name: Publish Dev
 
 on:
   workflow_dispatch:
+  push:
+    branches: [master]
 
 jobs:
   build:
@@ -24,13 +26,13 @@ jobs:
         run: npm run build
 
       - name: Deprecate Pre-released Version
-        run: npm deprecate clashofclans.js@"$(npm view clashofclans.js@dev version)" "No longer supported" || true
+        run: npm deprecate clashofclans.js@"$(npm view clashofclans.js@dev version)" "No longer supported"
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Publish
         run: |
-          npm version --git-tag-version=false $(jq --raw-output '.version' package.json)-dev.$(git rev-parse --short HEAD).$(date +%s)
+          npm version --git-tag-version=false $(jq --raw-output '.version' package.json)-dev.$(git rev-parse --short HEAD)
           npm publish --tag dev
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
