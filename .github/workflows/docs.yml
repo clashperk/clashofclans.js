@@ -7,37 +7,22 @@ on:
 
 jobs:
   build:
-    name: Build
+    name: Docs
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
+
+      - name: Trigger Workflow
+        uses: convictional/trigger-workflow-and-wait@v1.3.0
         with:
-          repository: clashperk/clashofclans.js.org
+          ref: master
+          owner: clashperk
+          repo: clashofclans.js.org
 
-      - name: Use Node.js 14
-        uses: actions/setup-node@v2
-        with:
-          node-version: 14
-
-      - name: Update Submodule
-        run: git pull --recurse-submodules && git submodule update --remote --recursive --init
-
-      - name: Copy CHANGELOG.md
-        run: cp lib/CHANGELOG.md docs/changelog.md
-
-      - name: Install
-        run: yarn
-
-      - name: Build
-        run: yarn build
-
-      - name: Commit
-        uses: JamesIves/github-pages-deploy-action@4.1.4
-        with:
-          folder: build
-          branch: gh-pages
-          single-commit: true
-          ssh-key: ${{ secrets.DEPLOY_KEY }}
-          commit-message: Deploying to GitHub Pages
-          repository-name: clashperk/clashofclans.js.org
+          wait_interval: 10
+          wait_workflow: true
+          trigger_workflow: true
+          propagate_failure: false
+          workflow_file_name: node.js.yml
+          github_token: ${{ secrets.GITHUB_PERSONAL_ACCESS_TOKEN }}

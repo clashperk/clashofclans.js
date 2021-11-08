@@ -14,7 +14,7 @@
 	},
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/clashperk/clashofclans.js.git"
+		"url": "https://github.com/clashperk/clashofclans.js.git"
 	},
 	"keywords": [
 		"clash-of-clans-api",
@@ -24,7 +24,7 @@
 	"bugs": {
 		"url": "https://github.com/clashperk/clashofclans.js/issues"
 	},
-	"homepage": "https://clashofclans.js.org/api/",
+	"homepage": "https://clashofclans.js.org",
 	"eslintConfig": {
 		"extends": [
 			"marine/prettier/node",
