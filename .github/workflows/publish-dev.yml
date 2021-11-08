@@ -7,7 +7,7 @@ on:
 
 jobs:
   build:
-    name: Build
+    name: Pre-Release
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
@@ -32,7 +32,7 @@ jobs:
 
       - name: Publish
         run: |
-          npm version --git-tag-version=false $(jq --raw-output '.version' package.json)-dev.$(git rev-parse --short HEAD)
+          npm version --git-tag-version=false $(jq --raw-output '.version' package.json)-$(git rev-parse --short HEAD)
           npm publish --tag dev
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
