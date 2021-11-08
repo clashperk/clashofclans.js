@@ -247,7 +247,7 @@ export class Client extends EventEmitter {
 		return data.items.map((entry) => new Label(entry));
 	}
 
-	/** Get information about gold pass season. */
+	/** Get info about gold pass season. */
 	public async getGoldPassSeason(options?: OverrideOptions) {
 		const { data } = await this.rest.getGoldPassSeason(options);
 		return new GoldPassSeason(data);

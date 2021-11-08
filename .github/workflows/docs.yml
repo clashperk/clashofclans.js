@@ -25,4 +25,4 @@ jobs:
           trigger_workflow: true
           propagate_failure: false
           workflow_file_name: node.js.yml
-          github_token: ${{ secrets.GITHUB_PERSONAL_ACCESS_TOKEN }}
+          github_token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
