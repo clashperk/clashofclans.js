@@ -257,6 +257,19 @@ export class Client extends EventEmitter {
 	/* eslint-disable @typescript-eslint/prefer-readonly */
 
 	/**
+	 * Emits when a new season starts.
+	 *
+	 * **Parameters**
+	 *
+	 * | Name | Type | Description |
+	 * | :--: | :--: | :---------: |
+	 * | `id` | `string` | Id of the new season. |
+	 * @public
+	 * @event
+	 */
+	private static newSeasonStart: string;
+
+	/**
 	 * Emits when maintenance break starts in the API.
 	 * @public
 	 * @event
@@ -275,19 +288,6 @@ export class Client extends EventEmitter {
 	 * @event
 	 */
 	private static maintenanceEnd: string;
-
-	/**
-	 * Emits when a new season starts.
-	 *
-	 * **Parameters**
-	 *
-	 * | Name | Type | Description |
-	 * | :--: | :--: | :---------: |
-	 * | `id` | `string` | Id of the new season. |
-	 * @public
-	 * @event
-	 */
-	private static newSeasonStart: string;
 
 	/* eslint-disable @typescript-eslint/prefer-readonly */
 
