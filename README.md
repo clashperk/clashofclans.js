@@ -4,7 +4,7 @@
 
 ### JavaScript library for interacting with the Clash of Clans API
 
-[![ESLint](https://github.com/clashperk/clashofclans.js/actions/workflows/node.js.yml/badge.svg)](https://github.com/clashperk/clashofclans.js/actions/workflows/node.js.yml)
+[![ESLint](https://github.com/clashperk/clashofclans.js/actions/workflows/eslint.yml/badge.svg)](https://github.com/clashperk/clashofclans.js/actions/workflows/node.js.yml)
 [![Logo](https://img.shields.io/npm/v/clashofclans.js.svg?maxAge=3600)](https://www.npmjs.com/package/clashofclans.js)
 
 </div>
