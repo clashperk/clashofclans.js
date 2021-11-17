@@ -24,5 +24,5 @@ jobs:
           wait_workflow: true
           trigger_workflow: true
           propagate_failure: false
-          workflow_file_name: node.js.yml
+          workflow_file_name: main.yml
           github_token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
