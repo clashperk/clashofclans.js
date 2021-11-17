@@ -3,6 +3,7 @@ import { QueueThrottler, BatchThrottler } from './Throttler';
 import { HTTPError } from './HTTPError';
 import fetch from 'node-fetch';
 import https from 'https';
+import Keyv from 'keyv';
 
 const agent = new https.Agent({ keepAlive: true });
 
@@ -19,6 +20,7 @@ export class RequestHandler {
 	private keys: string[];
 	private readonly baseURL: string;
 	private readonly retryLimit: number;
+	private readonly cached: Keyv | null;
 	private readonly restRequestTimeout: number;
 	private readonly throttler?: QueueThrottler | BatchThrottler | null;
 
@@ -27,6 +29,7 @@ export class RequestHandler {
 		this.retryLimit = options?.retryLimit ?? 0;
 		this.throttler = options?.throttler ?? null;
 		this.baseURL = options?.baseURL ?? API_BASE_URL;
+		this.cached = options?.cache ? new Keyv() : null;
 		this.restRequestTimeout = options?.restRequestTimeout ?? 0;
 	}
 
@@ -46,6 +49,9 @@ export class RequestHandler {
 	}
 
 	public async request<T>(path: string, options: RequestOptions = {}) {
+		const cached = (await this.cached?.get(path)) ?? null;
+		if (cached) return { data: cached as T, maxAge: 0, status: 200 };
+
 		if (!this.throttler || options.ignoreRateLimit) return this.exec<T>(path, options);
 		await this.throttler.wait();
 
@@ -74,8 +80,9 @@ export class RequestHandler {
 		}
 		if (!res?.ok) throw new HTTPError(data, res?.status ?? 504, path, options.method);
 
-		const maxAge = res.headers.get('cache-control')?.split('=')?.[1] ?? 0;
-		return { data, maxAge: Number(maxAge) * 1000, status: res.status };
+		const maxAge = Number(res.headers.get('cache-control')?.split('=')?.[1] ?? 0) * 1000;
+		if (this.cached) await this.cached.set(path, data, maxAge);
+		return { data, maxAge, status: res.status };
 	}
 
 	public init(options: InitOptions) {
@@ -178,6 +185,7 @@ export class RequestHandler {
 
 export interface ClientOptions {
 	keys?: string[];
+	cache?: boolean;
 	baseURL?: string;
 	retryLimit?: number;
 	restRequestTimeout?: number;

@@ -74,7 +74,7 @@ export class ClanWarLog {
 	public opponent: WarLogClan;
 
 	public constructor(public client: Client, data: APIClanWarLogEntry) {
-		this.result = data.result;
+		this.result = data.result ?? null;
 		this.endTime = Util.parseDate(data.endTime);
 		this.teamSize = data.teamSize;
 		this.attacksPerMember = data.attacksPerMember ?? null;

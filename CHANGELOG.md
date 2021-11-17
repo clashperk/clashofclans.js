@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file. See [standa
 
 ## 2.0.0
 
-A totally new version written in TypeScript. Object-oriented, Promise-based, Feature-rich and Flexible.
+This new version is a complete TypeScript rewrite to convert everything from plain (literal JSON) objects to class (constructor) objects and support a lot more features.
 
 ### Features
 
@@ -13,4 +13,3 @@ A totally new version written in TypeScript. Object-oriented, Promise-based, Fea
 -   API Date Parser and Request Retries ([#26](https://github.com/clashperk/clashofclans.js/issues/26)) ([94585f3](https://github.com/clashperk/clashofclans.js/commit/94585f3a84a7175b2d07872f9eb9e42372b95e12))
 -   Override Request Options ([#36](https://github.com/clashperk/clashofclans.js/issues/36)) ([42d7fdd](https://github.com/clashperk/clashofclans.js/commit/42d7fdd36262cc46f23b731f8cffb9daea19d3b0))
 -   QueueThrottler and BatchThrottler ([#34](https://github.com/clashperk/clashofclans.js/issues/34)) ([3a8f051](https://github.com/clashperk/clashofclans.js/commit/3a8f051552e93b98f89bc7d524acdecddf242718))
-
