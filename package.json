@@ -61,14 +61,18 @@
 		"trailingComma": "none",
 		"overrides": [
 			{
-				"files": ["*.md"],
+				"files": [
+					"*.md"
+				],
 				"options": {
 					"useTabs": false,
 					"tabWidth": 4
 				}
 			},
 			{
-				"files": ["*.yml"],
+				"files": [
+					"*.yml"
+				],
 				"options": {
 					"useTabs": false,
 					"tabWidth": 2
@@ -84,9 +88,11 @@
 		}
 	},
 	"dependencies": {
+		"keyv": "^4.0.4",
 		"node-fetch": "^2.6.1"
 	},
 	"devDependencies": {
+		"@types/keyv": "^3.1.3",
 		"@types/node": "^16.10.3",
 		"@types/node-fetch": "^2.5.12",
 		"@typescript-eslint/eslint-plugin": "^5.0.0",

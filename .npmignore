@@ -11,5 +11,4 @@ tsconfig.json
 .vscode
 .github
 src/
-docs/
 .idea/
