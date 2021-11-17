@@ -81,7 +81,7 @@ export class RequestHandler {
 		if (!res?.ok) throw new HTTPError(data, res?.status ?? 504, path, options.method);
 
 		const maxAge = Number(res.headers.get('cache-control')?.split('=')?.[1] ?? 0) * 1000;
-		if (this.cached) await this.cached.set(path, data, maxAge);
+		if (this.cached && maxAge > 0) await this.cached.set(path, data, maxAge);
 		return { data, maxAge, status: res.status };
 	}
 
