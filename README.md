@@ -45,8 +45,7 @@ const client = new Client({
 });
 
 client.events.addClans(['#8P2QG08P']);
-client.events.setEvent({
-    type: 'CLAN',
+client.events.setClanEvent({
     name: 'clanDescriptionChange',
     filter: (oldClan, newClan) => {
         return oldClan.description !== newClan.description;

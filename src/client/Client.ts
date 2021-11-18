@@ -1,5 +1,5 @@
 import { ClanSearchOptions, SearchOptions, ClientOptions, InitOptions, OverrideOptions } from '../rest/RequestHandler';
-import { LEGEND_LEAGUE_ID, EVENTS } from '../util/Constants';
+import { LEGEND_LEAGUE_ID, EVENTS, CWL_ROUNDS } from '../util/Constants';
 import { RESTManager } from '../rest/RESTManager';
 import { EventManager } from './EventManager';
 import { HTTPError } from '../rest/HTTPError';
@@ -113,8 +113,8 @@ export class Client extends EventEmitter {
 	}
 
 	/** Get info about currently running CWL round. */
-	public async getLeagueWar(clanTag: string, warState?: keyof typeof CWLRound) {
-		const state = (warState && CWLRound[warState]) ?? 'inWar'; // eslint-disable-line
+	public async getLeagueWar(clanTag: string, round?: keyof typeof CWL_ROUNDS) {
+		const state = (round && CWL_ROUNDS[round]) ?? 'inWar'; // eslint-disable-line
 		const data = await this.getClanWarLeagueGroup(clanTag);
 
 		const rounds = data.rounds.filter((round) => !round.warTags.includes('#0'));
@@ -320,15 +320,3 @@ export interface ClientEvents {
 	[EVENTS.WAR_LOOP_END]: [];
 	[EVENTS.ERROR]: [error: unknown];
 }
-
-export interface EventTypes {
-	CLAN: [oldClan: Clan, newClan: Clan];
-	PLAYER: [oldPlayer: Player, newPlayer: Player];
-	CLAN_WAR: [oldWar: ClanWar, newWar: ClanWar];
-}
-
-export const CWLRound = {
-	PREVIOUS_WAR: 'warEnded',
-	CURRENT_WAR: 'inWar',
-	NEXT_WAR: 'preparation'
-} as const;
