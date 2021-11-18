@@ -29,7 +29,6 @@ export class RequestHandler {
 		this.retryLimit = options?.retryLimit ?? 0;
 		this.throttler = options?.throttler ?? null;
 		this.baseURL = options?.baseURL ?? API_BASE_URL;
-		this.cached = options?.cache ? new Keyv() : null;
 		this.restRequestTimeout = options?.restRequestTimeout ?? 0;
 		if (options?.cache instanceof Keyv) this.cached = options.cache;
 		else this.cached = options?.cache ? new Keyv() : null;
