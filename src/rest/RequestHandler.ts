@@ -15,7 +15,7 @@ export class RequestHandler {
 	private password!: string;
 	private keyCount!: number;
 	private keyName!: string;
-	private keyDescription!: string;
+	private keyDescription?: string;
 
 	private keys: string[];
 	private readonly baseURL: string;
@@ -31,6 +31,8 @@ export class RequestHandler {
 		this.baseURL = options?.baseURL ?? API_BASE_URL;
 		this.cached = options?.cache ? new Keyv() : null;
 		this.restRequestTimeout = options?.restRequestTimeout ?? 0;
+		if (options?.cache instanceof Keyv) this.cached = options.cache;
+		else this.cached = options?.cache ? new Keyv() : null;
 	}
 
 	private get _keys() {
@@ -50,7 +52,7 @@ export class RequestHandler {
 
 	public async request<T>(path: string, options: RequestOptions = {}) {
 		const cached = (await this.cached?.get(path)) ?? null;
-		if (cached) return { data: cached as T, maxAge: 0, status: 200 };
+		if (cached && options.force !== true) return { data: cached as T, maxAge: 0, status: 200 };
 
 		if (!this.throttler || options.ignoreRateLimit) return this.exec<T>(path, options);
 		await this.throttler.wait();
@@ -81,19 +83,35 @@ export class RequestHandler {
 		if (!res?.ok) throw new HTTPError(data, res?.status ?? 504, path, options.method);
 
 		const maxAge = Number(res.headers.get('cache-control')?.split('=')?.[1] ?? 0) * 1000;
-		if (this.cached && maxAge > 0) await this.cached.set(path, data, maxAge);
+		if (this.cached && maxAge > 0 && options.cache !== false) await this.cached.set(path, data, maxAge);
 		return { data, maxAge, status: res.status };
 	}
 
-	public init(options: InitOptions) {
+	public async init(options: InitOptions) {
 		if (!(options.email && options.password)) throw ReferenceError('Missing email and password.');
 
-		this.keyDescription = options.keyDescription ?? new Date().toUTCString();
+		this.keyDescription = options.keyDescription;
 		this.keyName = options.keyName ?? 'clashofclans.js.keys';
 		this.keyCount = Math.min(options.keyCount ?? 1, 10);
 		this.password = options.password;
 		this.email = options.email;
+
+		await this.reValidateKeys();
 		return this.login();
+	}
+
+	private async reValidateKeys() {
+		for (const key of this.keys) {
+			const res = await fetch(`${this.baseURL}/locations`, {
+				method: 'GET',
+				headers: { 'Authorization': `Bearer ${key}`, 'Content-Type': 'application/json' }
+			});
+			if (res.status === 403) {
+				const index = this.keys.indexOf(key);
+				this.keys.splice(index, 1);
+				console.warn(`[WARN] Pre-defined key #${index + 1} is no longer valid. Removed from the key list.`);
+			}
+		}
 	}
 
 	private async login() {
@@ -129,8 +147,10 @@ export class RequestHandler {
 		}
 
 		// Filter keys for current IP address and specified key name.
-		const matching = keys.filter((key) => key.name === this.keyName && key.cidrRanges.includes(ip));
-		if (matching.length) this.keys.push(...matching.map((key) => key.key).slice(0, this.keyCount));
+		for (const key of keys.filter((key) => key.name === this.keyName && key.cidrRanges.includes(ip))) {
+			if (this.keys.length >= this.keyCount) break;
+			if (!this.keys.includes(key.key)) this.keys.push(key.key);
+		}
 
 		// Create keys within limits (maximum of 10 keys per account)
 		while (this.keys.length < this.keyCount && keys.length < 10) {
@@ -171,7 +191,11 @@ export class RequestHandler {
 		const res = await fetch(`${DEV_SITE_API_BASE_URL}/apikey/create`, {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json', cookie },
-			body: JSON.stringify({ cidrRanges: [ip], name: this.keyName, description: this.keyDescription })
+			body: JSON.stringify({
+				cidrRanges: [ip],
+				name: this.keyName,
+				description: this.keyDescription ?? new Date().toUTCString()
+			})
 		});
 
 		const data = await res.json();
@@ -185,9 +209,9 @@ export class RequestHandler {
 
 export interface ClientOptions {
 	keys?: string[];
-	cache?: boolean;
 	baseURL?: string;
 	retryLimit?: number;
+	cache?: boolean | Keyv;
 	restRequestTimeout?: number;
 	throttler?: QueueThrottler | BatchThrottler;
 }
@@ -199,6 +223,8 @@ export interface SearchOptions extends OverrideOptions {
 }
 
 export interface OverrideOptions {
+	cache?: boolean;
+	force?: boolean;
 	retryLimit?: string;
 	ignoreRateLimit?: boolean;
 	restRequestTimeout?: number;
