@@ -99,12 +99,10 @@ export class EventManager {
 
 	/**
 	 * Set your own custom clan event.
-	 * @param event.name - Name of the event.
-	 * @param event.filter - Filter of this event. Must return a boolean value.
 	 *
 	 * @example
 	 * ```js
-	 * client.events.addClans(['#2PP', '#8QUCPQ']);
+	 * client.events.addClans(['#2PP', '#8QU8J9LP']);
 	 *
 	 * client.events.setClanEvent({
 	 *   name: 'clanMemberUpdate',
@@ -115,7 +113,11 @@ export class EventManager {
 	 *
 	 * client.on('clanMemberUpdate', (oldClan, newClan) => {
 	 *   console.log(oldClan.memberCount, newClan.memberCount);
-	 * })
+	 * });
+	 *
+	 * (async function () {
+	 *   await client.events.init();
+	 * })();
 	 * ```
 	 * @returns
 	 */
@@ -126,8 +128,6 @@ export class EventManager {
 
 	/**
 	 * Set your own custom war event.
-	 * @param event.name - Name of the event.
-	 * @param event.filter - Filter of this event. Must return a boolean value.
 	 */
 	public setWarEvent(event: { name: string; filter: (oldWar: ClanWar, newWar: ClanWar) => boolean }) {
 		this._events.wars.push({ name: event.name, fn: event.filter });
@@ -136,8 +136,6 @@ export class EventManager {
 
 	/**
 	 * Set your own custom player event.
-	 * @param event.name - Name of the event.
-	 * @param event.filter - Filter of this event. Must return a boolean value.
 	 */
 	public setPlayerEvent(event: { name: string; filter: (oldPlayer: Player, newPlayer: Player) => boolean }) {
 		this._events.players.push({ name: event.name, fn: event.filter });

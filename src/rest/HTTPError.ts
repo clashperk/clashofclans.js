@@ -9,13 +9,13 @@ const messages: { [key: string]: string } = {
 };
 
 const reasons: { [key: string]: string } = {
-	504: 'networkTimeout',
-	404: 'notFound',
 	503: 'serviceUnavailable',
 	429: 'tooManyRequests',
 	400: 'badRequest',
 	403: 'forbidden',
-	500: 'unknownError'
+	500: 'unknownError',
+	404: 'notFound',
+	504: 'requestAborted'
 };
 
 /** Represents an HTTP Error. */

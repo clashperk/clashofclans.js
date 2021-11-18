@@ -267,7 +267,7 @@ export interface APILocationList {
 	paging: APIPaging;
 }
 
-/** /locations/{loacationId} */
+/** /locations/{locationId} */
 export interface APILocation {
 	localizedName?: string;
 	id: number;
