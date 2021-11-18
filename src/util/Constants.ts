@@ -129,3 +129,9 @@ export const EVENTS = {
 	MAINTENANCE_END: 'maintenanceEnd',
 	ERROR: 'error'
 } as const;
+
+export const CWL_ROUNDS = {
+	PREVIOUS_ROUND: 'warEnded',
+	CURRENT_ROUND: 'inWar',
+	NEXT_ROUND: 'preparation'
+} as const;

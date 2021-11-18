@@ -1,8 +1,8 @@
 import { Clan, ClanWar, Player } from '../struct';
-import { EventTypes, Client } from './Client';
 import { HTTPError } from '../rest/HTTPError';
 import { EVENTS } from '../util/Constants';
 import { Util } from '../util/Util';
+import { Client } from './Client';
 
 /** Represents Event Manager of the {@link Client} class. */
 export class EventManager {
@@ -17,15 +17,15 @@ export class EventManager {
 	private readonly _events = {
 		clans: [] as {
 			name: string;
-			fn: (...args: EventTypes['CLAN']) => boolean;
+			fn: (oldClan: Clan, newClan: Clan) => boolean;
 		}[],
 		wars: [] as {
 			name: string;
-			fn: (...args: EventTypes['CLAN_WAR']) => boolean;
+			fn: (oldWar: ClanWar, newWar: ClanWar) => boolean;
 		}[],
 		players: [] as {
 			name: string;
-			fn: (...args: EventTypes['PLAYER']) => boolean;
+			fn: (oldPlayer: Player, newPlayer: Player) => boolean;
 		}[]
 	};
 
@@ -49,6 +49,7 @@ export class EventManager {
 		return Promise.resolve(this.client.eventNames());
 	}
 
+	/** Add a clan tag to clan events. */
 	public addClans(...tags: string[]) {
 		for (const tag of tags) {
 			this._clanTags.add(this.client.util.parseTag(tag));
@@ -56,6 +57,7 @@ export class EventManager {
 		return this;
 	}
 
+	/** Delete a clan tag from clan events. */
 	public deleteClans(...tags: string[]) {
 		for (const tag of tags) {
 			this._warTags.delete(this.client.util.parseTag(tag));
@@ -63,6 +65,7 @@ export class EventManager {
 		return this;
 	}
 
+	/** Add a player tag for player events. */
 	public addPlayers(...tags: string[]) {
 		for (const tag of tags) {
 			this._playerTags.add(this.client.util.parseTag(tag));
@@ -70,6 +73,7 @@ export class EventManager {
 		return this;
 	}
 
+	/** Delete a player tag from player events. */
 	public deletePlayers(...tags: string[]) {
 		for (const tag of tags) {
 			this._warTags.delete(this.client.util.parseTag(tag));
@@ -77,6 +81,7 @@ export class EventManager {
 		return this;
 	}
 
+	/** Add a clan tag for war events. */
 	public addWars(...tags: string[]) {
 		for (const tag of tags) {
 			this._warTags.add(this.client.util.parseTag(tag));
@@ -84,6 +89,7 @@ export class EventManager {
 		return this;
 	}
 
+	/** Delete a clan tag from war events. */
 	public deleteWars(...tags: string[]) {
 		for (const tag of tags) {
 			this._warTags.delete(this.client.util.parseTag(tag));
@@ -92,17 +98,15 @@ export class EventManager {
 	}
 
 	/**
-	 * Set your own custom event.
-	 * @param event.type - `CLAN` | `PLAYER` | `CLAN_WAR`
+	 * Set your own custom clan event.
 	 * @param event.name - Name of the event.
 	 * @param event.filter - Filter of this event. Must return a boolean value.
 	 *
 	 * @example
 	 * ```js
-	 * client.events.addClans(['#2PP', '']);
+	 * client.events.addClans(['#2PP', '#8QUCPQ']);
 	 *
-	 * client.events.setEvent({
-	 *   type: 'CLAN',
+	 * client.events.setClanEvent({
 	 *   name: 'clanMemberUpdate',
 	 *   filter: (oldClan, newClan) => {
 	 *     return oldClan.memberCount !== newClan.memberCount;
@@ -115,24 +119,28 @@ export class EventManager {
 	 * ```
 	 * @returns
 	 */
-	public setEvent<K extends keyof EventTypes>(event: { type: K; name: string; filter: (...args: EventTypes[K]) => boolean }) {
-		switch (event.type) {
-			case 'CLAN':
-				// @ts-expect-error
-				this._events.clans.push(event);
-				break;
-			case 'PLAYER':
-				// @ts-expect-error
-				this._events.players.push(event);
-				break;
-			case 'CLAN_WAR':
-				// @ts-expect-error
-				this._events.wars.push(event);
-				break;
-			default:
-				break;
-		}
+	public setClanEvent(event: { name: string; filter: (oldClan: Clan, newClan: Clan) => boolean }) {
+		this._events.clans.push({ name: event.name, fn: event.filter });
+		return this;
+	}
 
+	/**
+	 * Set your own custom war event.
+	 * @param event.name - Name of the event.
+	 * @param event.filter - Filter of this event. Must return a boolean value.
+	 */
+	public setWarEvent(event: { name: string; filter: (oldWar: ClanWar, newWar: ClanWar) => boolean }) {
+		this._events.wars.push({ name: event.name, fn: event.filter });
+		return this;
+	}
+
+	/**
+	 * Set your own custom player event.
+	 * @param event.name - Name of the event.
+	 * @param event.filter - Filter of this event. Must return a boolean value.
+	 */
+	public setPlayerEvent(event: { name: string; filter: (oldPlayer: Player, newPlayer: Player) => boolean }) {
+		this._events.players.push({ name: event.name, fn: event.filter });
 		return this;
 	}
 
@@ -259,4 +267,10 @@ export class EventManager {
 			return this._wars.set(key, war);
 		});
 	}
+}
+
+export interface EventTypes {
+	CLAN: [oldClan: Clan, newClan: Clan];
+	PLAYER: [oldPlayer: Player, newPlayer: Player];
+	CLAN_WAR: [oldWar: ClanWar, newWar: ClanWar];
 }
