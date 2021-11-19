@@ -248,10 +248,10 @@ export class ClanWar {
 	/** The war's unique tag. This is `null` unless this is a CWL.  */
 	public warTag: string | null;
 
-	/** The timestamp when a fresh version of this data will be available again. */
+	/** Maximum number of milliseconds the results can be cached. */
 	public maxAge: number;
 
-	public constructor(client: Client, data: APIClanWar, extra: { clanTag?: string; warTag?: string; maxAge?: number }) {
+	public constructor(client: Client, data: APIClanWar, extra: { clanTag?: string; warTag?: string; maxAge: number }) {
 		Object.defineProperty(this, 'client', { value: client });
 
 		// @ts-expect-error
@@ -272,7 +272,7 @@ export class ClanWar {
 
 		this.clan = new WarClan(this, clan);
 		this.opponent = new WarClan(this, opponent);
-		this.maxAge = Date.now() + (extra.maxAge ?? 0);
+		this.maxAge = extra.maxAge;
 	}
 
 	/** Return a {@link ClanWarMember} with the tag provided. */
