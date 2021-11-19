@@ -91,7 +91,7 @@ export class Client extends EventEmitter {
 		return data.items.map((entry) => new ClanWarLog(this, entry));
 	}
 
-	/** Get info about currently running war (regular or friendly) in the clan. */
+	/** Get info about currently running war (normal or friendly) in the clan. */
 	public async getClanWar(clanTag: string, options?: OverrideOptions) {
 		const { data, maxAge, path, status } = await this.rest.getCurrentWar(clanTag, options);
 		if (data.state === 'notInWar') {
