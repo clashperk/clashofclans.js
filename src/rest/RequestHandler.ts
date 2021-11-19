@@ -1,6 +1,6 @@
 import { API_BASE_URL, DEV_SITE_API_BASE_URL } from '../util/Constants';
 import { QueueThrottler, BatchThrottler } from './Throttler';
-import { HTTPError } from './HTTPError';
+import { HTTPError, privateWarLogError } from './HTTPError';
 import fetch from 'node-fetch';
 import https from 'https';
 import Keyv from 'keyv';
@@ -51,7 +51,7 @@ export class RequestHandler {
 
 	public async request<T>(path: string, options: RequestOptions = {}) {
 		const cached = (await this.cached?.get(path)) ?? null;
-		if (cached && options.force !== true) return { data: cached as T, maxAge: 0, status: 200 };
+		if (cached && options.force !== true) return { data: cached as T, maxAge: 0, status: 200, path };
 
 		if (!this.throttler || options.ignoreRateLimit) return this.exec<T>(path, options);
 		await this.throttler.wait();
@@ -63,7 +63,11 @@ export class RequestHandler {
 		}
 	}
 
-	private async exec<T>(path: string, options: RequestOptions = {}, retries = 0): Promise<{ data: T; maxAge: number; status: number }> {
+	private async exec<T>(
+		path: string,
+		options: RequestOptions = {},
+		retries = 0
+	): Promise<{ data: T; maxAge: number; status: number; path: string }> {
 		const res = await fetch(`${this.baseURL}${path}`, {
 			agent,
 			body: options.body,
@@ -79,11 +83,14 @@ export class RequestHandler {
 			await this.login();
 			return this.exec<T>(path, options, ++retries);
 		}
-		if (!res?.ok) throw new HTTPError(data, res?.status ?? 504, path, options.method);
 
-		const maxAge = Number(res.headers.get('cache-control')?.split('=')?.[1] ?? 0) * 1000;
+		const maxAge = Number(res?.headers.get('cache-control')?.split('=')?.[1] ?? 0) * 1000;
+
+		if (res?.status === 403 && !data?.message) throw new HTTPError(privateWarLogError, res.status, path, maxAge);
+		if (!res?.ok) throw new HTTPError(data, res?.status ?? 504, path, maxAge, options.method);
+
 		if (this.cached && maxAge > 0 && options.cache !== false) await this.cached.set(path, data, maxAge);
-		return { data, maxAge, status: res.status };
+		return { data, maxAge, status: res.status, path };
 	}
 
 	public async init(options: InitOptions) {

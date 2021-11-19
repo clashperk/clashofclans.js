@@ -1,8 +1,8 @@
 import { ClanSearchOptions, SearchOptions, ClientOptions, InitOptions, OverrideOptions } from '../rest/RequestHandler';
 import { LEGEND_LEAGUE_ID, EVENTS, CWL_ROUNDS } from '../util/Constants';
+import { HTTPError, notInWarError } from '../rest/HTTPError';
 import { RESTManager } from '../rest/RESTManager';
 import { EventManager } from './EventManager';
-import { HTTPError } from '../rest/HTTPError';
 import { EventEmitter } from 'events';
 import { Util } from '../util/Util';
 
@@ -93,18 +93,29 @@ export class Client extends EventEmitter {
 
 	/** Get info about currently running war (regular or friendly) in the clan. */
 	public async getClanWar(clanTag: string, options?: OverrideOptions) {
-		const { data, maxAge } = await this.rest.getCurrentWar(clanTag, options);
-		if (data.state === 'notInWar') return null;
+		const { data, maxAge, path, status } = await this.rest.getCurrentWar(clanTag, options);
+		if (data.state === 'notInWar') {
+			throw new HTTPError(notInWarError, status, path, maxAge);
+		}
 		return new ClanWar(this, data, { clanTag, maxAge });
 	}
 
-	/** Get info about currently running war in the clan. */
+	/**
+	 * Get info about currently running war in the clan.
+	 * @example
+	 * ```ts
+	 * await client.getCurrentWar('#8QU8J9LP');
+	 * ```
+	 * @example
+	 * ```ts
+	 * await client.getCurrentWar({ clanTag: '#8QU8J9LP', round: 'PREVIOUS_ROUND' });
+	 * ```
+	 */
 	public async getCurrentWar(clanTag: string | { clanTag: string; round?: keyof typeof CWL_ROUNDS }, options?: OverrideOptions) {
 		const args = typeof clanTag === 'string' ? { clanTag } : { clanTag: clanTag.clanTag, round: clanTag.round };
 
 		try {
-			const data = await this.getClanWar(args.clanTag, options);
-			return data ?? (await this.getLeagueWar({ clanTag: args.clanTag, round: args.round }));
+			return await this.getClanWar(args.clanTag, options);
 		} catch (e) {
 			if (e instanceof HTTPError && e.status === 403) {
 				return this.getLeagueWar({ clanTag: args.clanTag, round: args.round });
@@ -114,7 +125,17 @@ export class Client extends EventEmitter {
 		return null;
 	}
 
-	/** Get info about currently running CWL round. */
+	/**
+	 * Get info about currently running CWL round.
+	 * @example
+	 * ```ts
+	 * await client.getLeagueWar('#8QU8J9LP');
+	 * ```
+	 * @example
+	 * ```ts
+	 * await client.getLeagueWar({ clanTag: '#8QU8J9LP', round: 'PREVIOUS_ROUND' });
+	 * ```
+	 */
 	public async getLeagueWar(clanTag: string | { clanTag: string; round?: keyof typeof CWL_ROUNDS }, options?: OverrideOptions) {
 		const args = typeof clanTag === 'string' ? { clanTag } : { clanTag: clanTag.clanTag, round: clanTag.round };
 
@@ -135,10 +156,10 @@ export class Client extends EventEmitter {
 		);
 
 		if (args.round && args.round in CWL_ROUNDS) {
-			return wars.find((war) => war?.state === state) ?? null;
+			return wars.find((war) => war.state === state) ?? null;
 		}
 
-		return wars.find((war) => war!.state === state) ?? wars.at(0) ?? null;
+		return wars.find((war) => war.state === state) ?? wars.at(0) ?? null;
 	}
 
 	private async _getCurrentLeagueWars(clanTag: string, options?: OverrideOptions) {
@@ -150,12 +171,10 @@ export class Client extends EventEmitter {
 	private async _getClanWars(clanTag: string, options?: OverrideOptions) {
 		const date = new Date().getDate();
 		try {
-			const data = await this.getClanWar(clanTag, options);
-			if (!(date >= 1 && date <= 10)) return data ? [data] : [];
-			return data ? [data] : await this._getCurrentLeagueWars(clanTag);
+			return [await this.getClanWar(clanTag, options)];
 		} catch (e) {
 			if (!(date >= 1 && date <= 10)) return [];
-			if (e instanceof HTTPError && e.status === 403) {
+			if (e instanceof HTTPError && [200, 403].includes(e.status)) {
 				return this._getCurrentLeagueWars(clanTag);
 			}
 			return [];
@@ -171,8 +190,10 @@ export class Client extends EventEmitter {
 	/** Get information about CWL round by WarTag. */
 	public async getClanWarLeagueRound(warTag: string | { warTag: string; clanTag?: string }, options?: OverrideOptions) {
 		const args = typeof warTag === 'string' ? { warTag } : { warTag: warTag.warTag, clanTag: warTag.clanTag };
-		const { data, maxAge } = await this.rest.getClanWarLeagueRound(args.warTag, options);
-		if (data.state === 'notInWar') return null;
+		const { data, maxAge, status, path } = await this.rest.getClanWarLeagueRound(args.warTag, options);
+		if (data.state === 'notInWar') {
+			throw new HTTPError(notInWarError, status, path, maxAge);
+		}
 		return new ClanWar(this, data, { warTag: args.warTag, clanTag: args.clanTag, maxAge });
 	}
 
@@ -269,8 +290,8 @@ export class Client extends EventEmitter {
 	 *
 	 * **Parameters**
 	 *
-	 * | Name | Type | Description |
-	 * | :--: | :--: | :---------: |
+	 * | Name |   Type   | Description           |
+	 * | :--: | :------: | :-------------------: |
 	 * | `id` | `string` | Id of the new season. |
 	 * @public
 	 * @event
@@ -289,8 +310,8 @@ export class Client extends EventEmitter {
 	 *
 	 * **Parameters**
 	 *
-	 * | Name | Type | Description |
-	 * | :--: | :--: | :---------: |
+	 * |    Name    |   Type   |                    Description                     |
+	 * | :--------: | :------: | :------------------------------------------------: |
 	 * | `duration` | `number` | Duration of the maintenance break in milliseconds. |
 	 * @public
 	 * @event
