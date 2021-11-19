@@ -99,13 +99,15 @@ export class Client extends EventEmitter {
 	}
 
 	/** Get info about currently running war in the clan. */
-	public async getCurrentWar(clanTag: string, options?: OverrideOptions): Promise<ClanWar | null> {
+	public async getCurrentWar(clanTag: string | { clanTag: string; round?: keyof typeof CWL_ROUNDS }, options?: OverrideOptions) {
+		const args = typeof clanTag === 'string' ? { clanTag } : { clanTag: clanTag.clanTag, round: clanTag.round };
+
 		try {
-			const data = await this.getClanWar(clanTag, options);
-			return data ?? (await this.getLeagueWar(clanTag));
+			const data = await this.getClanWar(args.clanTag, options);
+			return data ?? (await this.getLeagueWar({ clanTag: args.clanTag, round: args.round }));
 		} catch (e) {
 			if (e instanceof HTTPError && e.status === 403) {
-				return this.getLeagueWar(clanTag);
+				return this.getLeagueWar({ clanTag: args.clanTag, round: args.round });
 			}
 		}
 
@@ -113,9 +115,11 @@ export class Client extends EventEmitter {
 	}
 
 	/** Get info about currently running CWL round. */
-	public async getLeagueWar(clanTag: string, round?: keyof typeof CWL_ROUNDS) {
-		const state = (round && CWL_ROUNDS[round]) ?? 'inWar'; // eslint-disable-line
-		const data = await this.getClanWarLeagueGroup(clanTag);
+	public async getLeagueWar(clanTag: string | { clanTag: string; round?: keyof typeof CWL_ROUNDS }, options?: OverrideOptions) {
+		const args = typeof clanTag === 'string' ? { clanTag } : { clanTag: clanTag.clanTag, round: clanTag.round };
+
+		const state = (args.round && CWL_ROUNDS[args.round]) ?? 'inWar'; // eslint-disable-line
+		const data = await this.getClanWarLeagueGroup(args.clanTag, options);
 
 		const rounds = data.rounds.filter((round) => !round.warTags.includes('#0'));
 		if (!rounds.length) return null;
@@ -127,10 +131,14 @@ export class Client extends EventEmitter {
 			.flat()
 			.reverse();
 		const wars = await this.util.allSettled(
-			warTags.map((warTag) => this.getClanWarLeagueRound({ warTag, clanTag }, { ignoreRateLimit: true }))
+			warTags.map((warTag) => this.getClanWarLeagueRound({ warTag, clanTag: args.clanTag }, { ignoreRateLimit: true }))
 		);
 
-		return wars.find((war) => war?.state === state) ?? wars.at(0) ?? null;
+		if (args.round && args.round in CWL_ROUNDS) {
+			return wars.find((war) => war?.state === state) ?? null;
+		}
+
+		return wars.find((war) => war!.state === state) ?? wars.at(0) ?? null;
 	}
 
 	private async _getCurrentLeagueWars(clanTag: string, options?: OverrideOptions) {

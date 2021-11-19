@@ -38,7 +38,7 @@ export class EventManager {
 	}
 
 	/** Initialize the Event Manager to start pulling. */
-	public async init() {
+	public async init(): Promise<string[]> {
 		this.seasonEndHandler();
 		this.maintenanceHandler();
 
@@ -46,7 +46,7 @@ export class EventManager {
 		this.playerUpdateHandler();
 		this.warUpdateHandler();
 
-		return Promise.resolve(this.client.eventNames());
+		return Promise.resolve(this.client.eventNames() as string[]);
 	}
 
 	/** Add a clan tag to clan events. */
@@ -100,6 +100,8 @@ export class EventManager {
 	/**
 	 * Set your own custom clan event.
 	 *
+	 * In order to emit the custom event, you must have this filter function that returns a boolean.
+	 *
 	 * @example
 	 * ```js
 	 * client.events.addClans(['#2PP', '#8QU8J9LP']);
@@ -128,6 +130,8 @@ export class EventManager {
 
 	/**
 	 * Set your own custom war event.
+	 *
+	 * In order to emit the custom event, you must have this filter function that returns a boolean.
 	 */
 	public setWarEvent(event: { name: string; filter: (oldWar: ClanWar, newWar: ClanWar) => boolean }) {
 		this._events.wars.push({ name: event.name, fn: event.filter });
@@ -136,6 +140,8 @@ export class EventManager {
 
 	/**
 	 * Set your own custom player event.
+	 *
+	 * In order to emit the custom event, you must have this filter function that returns a boolean.
 	 */
 	public setPlayerEvent(event: { name: string; filter: (oldPlayer: Player, newPlayer: Player) => boolean }) {
 		this._events.players.push({ name: event.name, fn: event.filter });
@@ -265,10 +271,4 @@ export class EventManager {
 			return this._wars.set(key, war);
 		});
 	}
-}
-
-export interface EventTypes {
-	CLAN: [oldClan: Clan, newClan: Clan];
-	PLAYER: [oldPlayer: Player, newPlayer: Player];
-	CLAN_WAR: [oldWar: ClanWar, newWar: ClanWar];
 }
