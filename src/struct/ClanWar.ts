@@ -296,15 +296,26 @@ export class ClanWar {
 		return this.opponent.attacks.filter((atk) => atk.defenderTag === defenderTag);
 	}
 
-	/** Returns either `friendly`, `cwl` or `regular`. */
-	public get type(): 'friendly' | 'cwl' | 'regular' {
+	/** Returns either `friendly`, `cwl` or `normal`. */
+	public get type() {
 		if (this._isFriendly) return 'friendly';
 		if (this.warTag) return 'cwl';
-		return 'regular';
+		return 'normal';
 	}
 
 	private get _isFriendly() {
 		const preparationTime = this.startTime.getTime() - this.preparationStartTime.getTime();
 		return FRIENDLY_WAR_PREPARATION_TIMES.includes(preparationTime);
+	}
+
+	/** Returns the war status, based off the home clan. */
+	public get status() {
+		if (this.state === 'preparation') return 'pending';
+		if (this.clan.stars > this.opponent.stars) return 'win';
+		if (this.clan.stars === this.opponent.stars) {
+			if (this.clan.destruction > this.opponent.destruction) return 'win';
+			if (this.clan.destruction === this.opponent.destruction) return 'tie';
+		}
+		return 'lose';
 	}
 }

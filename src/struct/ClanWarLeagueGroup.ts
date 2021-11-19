@@ -103,7 +103,7 @@ export class ClanWarLeagueGroup {
 			warTags.map((warTag) => this.client.getClanWarLeagueRound({ warTag, clanTag }, { ignoreRateLimit: true }))
 		);
 		return wars
-			.filter((res) => res.status === 'fulfilled' && res.value)
+			.filter((res) => res.status === 'fulfilled')
 			.map((res) => (res as PromiseFulfilledResult<ClanWar>).value)
 			.filter((war) => (clanTag ? war.clan.tag === clanTag : true));
 	}
@@ -119,7 +119,7 @@ export class ClanWarLeagueGroup {
 			warTags.map((warTag) => this.client.getClanWarLeagueRound({ warTag, clanTag }, { ignoreRateLimit: true }))
 		);
 		return wars
-			.filter((res) => res.status === 'fulfilled' && res.value)
+			.filter((res) => res.status === 'fulfilled')
 			.map((res) => (res as PromiseFulfilledResult<ClanWar>).value)
 			.filter((war) => war.clan.tag === clanTag);
 	}

@@ -82,10 +82,10 @@ export class ClanWarLog {
 		this.opponent = new WarLogClan(data.opponent);
 	}
 
-	/** Returns either `friendly`, `cwl` or `regular`. */
+	/** Returns either `friendly`, `cwl` or `normal`. */
 	public get type() {
 		if (!this.clan.expEarned) return 'friendly';
 		if (!this.opponent.tag) return 'cwl';
-		return 'regular';
+		return 'normal';
 	}
 }
