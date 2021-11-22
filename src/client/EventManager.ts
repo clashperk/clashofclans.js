@@ -271,10 +271,9 @@ export class EventManager {
 			// check for war end
 			if (state === 1 && cached.warTag !== war.warTag) {
 				const data = await this.client.getLeagueWar({ clanTag: tag, round: 'PREVIOUS_ROUND' }).catch(() => null);
-				if (!data) return;
 				for (const { name, filter } of this._events.wars) {
 					try {
-						if (!filter(cached, data)) continue;
+						if (data && !filter(cached, data)) continue;
 						this.client.emit(name, cached, data);
 					} catch (error) {
 						this.client.emit(EVENTS.ERROR, error);
