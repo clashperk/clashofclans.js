@@ -194,7 +194,7 @@ export class EventManager {
 		for (const tag of this._playerTags) await this.runPlayerUpdate(tag);
 		this.client.emit(EVENTS.PLAYER_LOOP_END);
 
-		setTimeout(this.playerUpdateHandler.bind(this), 10_0000);
+		setTimeout(this.playerUpdateHandler.bind(this), 10_000);
 	}
 
 	private async warUpdateHandler() {
@@ -271,12 +271,14 @@ export class EventManager {
 			// check for war end
 			if (state === 1 && cached.warTag !== war.warTag) {
 				const data = await this.client.getLeagueWar({ clanTag: tag, round: 'PREVIOUS_ROUND' }).catch(() => null);
-				for (const { name, filter } of this._events.wars) {
-					try {
-						if (data && !filter(cached, data)) continue;
-						this.client.emit(name, cached, data);
-					} catch (error) {
-						this.client.emit(EVENTS.ERROR, error);
+				if (data && data.warTag === cached.warTag) {
+					for (const { name, filter } of this._events.wars) {
+						try {
+							if (!filter(cached, data)) continue;
+							this.client.emit(name, cached, data);
+						} catch (error) {
+							this.client.emit(EVENTS.ERROR, error);
+						}
 					}
 				}
 			}

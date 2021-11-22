@@ -51,12 +51,12 @@ export class HTTPError extends Error {
 	}
 }
 
-export const notInWarError = {
+export const NotInWarError = {
 	message: 'Clan is not in war at this moment.',
 	reason: 'notInWar'
 };
 
-export const privateWarLogError = {
+export const PrivateWarLogError = {
 	message: 'Access denied, clan war log is private.',
 	reason: 'privateWarLog'
 };

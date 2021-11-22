@@ -1,6 +1,6 @@
 import { ClanSearchOptions, SearchOptions, ClientOptions, InitOptions, OverrideOptions } from '../rest/RequestHandler';
 import { LEGEND_LEAGUE_ID, EVENTS, CWL_ROUNDS } from '../util/Constants';
-import { HTTPError, notInWarError } from '../rest/HTTPError';
+import { HTTPError, NotInWarError } from '../rest/HTTPError';
 import { RESTManager } from '../rest/RESTManager';
 import { EventManager } from './EventManager';
 import { EventEmitter } from 'events';
@@ -95,7 +95,7 @@ export class Client extends EventEmitter {
 	public async getClanWar(clanTag: string, options?: OverrideOptions) {
 		const { data, maxAge, path, status } = await this.rest.getCurrentWar(clanTag, options);
 		if (data.state === 'notInWar') {
-			throw new HTTPError(notInWarError, status, path, maxAge);
+			throw new HTTPError(NotInWarError, status, path, maxAge);
 		}
 		return new ClanWar(this, data, { clanTag, maxAge });
 	}
@@ -194,7 +194,7 @@ export class Client extends EventEmitter {
 		const args = typeof warTag === 'string' ? { warTag } : { warTag: warTag.warTag, clanTag: warTag.clanTag };
 		const { data, maxAge, status, path } = await this.rest.getClanWarLeagueRound(args.warTag, options);
 		if (data.state === 'notInWar') {
-			throw new HTTPError(notInWarError, status, path, maxAge);
+			throw new HTTPError(NotInWarError, status, path, maxAge);
 		}
 		return new ClanWar(this, data, { warTag: args.warTag, clanTag: args.clanTag, maxAge });
 	}
@@ -345,8 +345,7 @@ export class Client extends EventEmitter {
 	// #endregion typings
 }
 
-/** Client events that can be emitted by the client. */
-export interface ClientEvents {
+interface ClientEvents {
 	[EVENTS.NEW_SEASON_START]: [id: string];
 	[EVENTS.MAINTENANCE_START]: [];
 	[EVENTS.MAINTENANCE_END]: [duration: number];
@@ -359,12 +358,8 @@ export interface ClientEvents {
 	[EVENTS.ERROR]: [error: unknown];
 }
 
-/**
- * Custom events that can be emitted by the client.
- *
- * TypeScript 4.5 now can narrow values that have template string types, and also recognizes template string types as discriminants.
- */
-export interface CustomEvents {
+// TypeScript 4.5 now can narrow values that have template string types, and also recognizes template string types as discriminants.
+interface CustomEvents {
 	[key: `clan${string}`]: [oldClan: Clan, newClan: Clan];
 	[key: `war${string}`]: [oldWar: ClanWar, newWar: ClanWar];
 	[key: `player${string}`]: [oldPlayer: Player, newPlayer: Player];
