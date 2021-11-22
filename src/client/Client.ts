@@ -322,21 +322,28 @@ export class Client extends EventEmitter {
 
 	/** @internal */
 	public on<K extends keyof ClientEvents>(event: K, listeners: (...args: ClientEvents[K]) => void): this;
+	/** @internal */
+	public on<S extends keyof CustomEvents>(event: Exclude<S, keyof ClientEvents>, listeners: (...args: CustomEvents[S]) => void): this;
 	/** @internal */ // @ts-expect-error
 	public on<S extends string | symbol>(event: Exclude<S, keyof ClientEvents>, listeners: (...args: any[]) => void): this;
 
 	/** @internal */
 	public once<K extends keyof ClientEvents>(event: K, listeners: (...args: ClientEvents[K]) => void): this;
+	/** @internal */
+	public once<S extends keyof CustomEvents>(event: Exclude<S, keyof ClientEvents>, listeners: (...args: CustomEvents[S]) => void): this;
 	/** @internal */ // @ts-expect-error
 	public once<S extends string | symbol>(event: Exclude<S, keyof ClientEvents>, listeners: (...args: any[]) => void): this;
 
 	/** @internal */
 	public emit<K extends keyof ClientEvents>(event: K, ...args: ClientEvents[K]): boolean;
+	/** @internal */
+	public emit<S extends keyof CustomEvents>(event: Exclude<S, keyof ClientEvents>, ...args: CustomEvents[S]): this;
 	/** @internal */ // @ts-expect-error
 	public emit<S extends string | symbol>(event: Exclude<S, keyof ClientEvents>, ...args: any[]): boolean;
 	// #endregion typings
 }
 
+/** Client events that can be emitted by the client. */
 export interface ClientEvents {
 	[EVENTS.NEW_SEASON_START]: [id: string];
 	[EVENTS.MAINTENANCE_START]: [];
@@ -348,4 +355,15 @@ export interface ClientEvents {
 	[EVENTS.WAR_LOOP_START]: [];
 	[EVENTS.WAR_LOOP_END]: [];
 	[EVENTS.ERROR]: [error: unknown];
+}
+
+/**
+ * Custom events that can be emitted by the client.
+ *
+ * TypeScript 4.5 now can narrow values that have template string types, and also recognizes template string types as discriminants.
+ */
+export interface CustomEvents {
+	[key: `clan${string}`]: [oldClan: Clan, newClan: Clan];
+	[key: `player${string}`]: [oldClan: Player, newClan: Player];
+	[key: `war${string}`]: [oldClan: ClanWar, newClan: ClanWar];
 }
