@@ -1,6 +1,6 @@
 import { API_BASE_URL, DEV_SITE_API_BASE_URL } from '../util/Constants';
 import { QueueThrottler, BatchThrottler } from './Throttler';
-import { HTTPError, privateWarLogError } from './HTTPError';
+import { HTTPError, PrivateWarLogError } from './HTTPError';
 import fetch from 'node-fetch';
 import https from 'https';
 import Keyv from 'keyv';
@@ -85,8 +85,7 @@ export class RequestHandler {
 		}
 
 		const maxAge = Number(res?.headers.get('cache-control')?.split('=')?.[1] ?? 0) * 1000;
-
-		if (res?.status === 403 && !data?.message) throw new HTTPError(privateWarLogError, res.status, path, maxAge);
+		if (res?.status === 403 && !data?.message) throw new HTTPError(PrivateWarLogError, res.status, path, maxAge);
 		if (!res?.ok) throw new HTTPError(data, res?.status ?? 504, path, maxAge, options.method);
 
 		if (this.cached && maxAge > 0 && options.cache !== false) await this.cached.set(path, data, maxAge);
