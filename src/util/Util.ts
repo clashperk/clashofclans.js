@@ -20,6 +20,7 @@ export class Util extends null {
 	/** Get URL search params. */
 	public static queryString(options = {}) {
 		const query = new URLSearchParams(options);
+		for (const key of ['cache', 'force', 'retryLimit', 'ignoreRateLimit', 'restRequestTimeout']) query.delete(key);
 		return query.toString();
 	}
 
@@ -50,7 +51,7 @@ export class Util extends null {
 
 	public static async allSettled<T>(values: Promise<T>[]) {
 		return (await Promise.allSettled(values))
-			.filter((res) => res.status === 'fulfilled' && res.value)
+			.filter((res) => res.status === 'fulfilled')
 			.map((res) => (res as PromiseFulfilledResult<T>).value);
 	}
 
