@@ -114,7 +114,8 @@ export class ClanWarLeagueGroup {
 		const warTags = rounds
 			.slice(-2)
 			.map((round) => round.warTags)
-			.flat();
+			.flat()
+			.reverse();
 		const wars = await Promise.allSettled(
 			warTags.map((warTag) => this.client.getClanWarLeagueRound({ warTag, clanTag }, { ignoreRateLimit: true }))
 		);

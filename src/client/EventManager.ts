@@ -4,7 +4,7 @@ import { EVENTS } from '../util/Constants';
 import { Util } from '../util/Util';
 import { Client } from './Client';
 
-/** Represents Event Manager of the {@link Client} class. */
+/** Represents Event Manager of the {@link Client}. */
 export class EventManager {
 	private readonly _clanTags = new Set<string>();
 	private readonly _playerTags = new Set<string>();
@@ -17,15 +17,15 @@ export class EventManager {
 	private readonly _events = {
 		clans: [] as {
 			name: string;
-			fn: (oldClan: Clan, newClan: Clan) => boolean;
+			filter: (oldClan: Clan, newClan: Clan) => boolean;
 		}[],
 		wars: [] as {
 			name: string;
-			fn: (oldWar: ClanWar, newWar: ClanWar) => boolean;
+			filter: (oldWar: ClanWar, newWar: ClanWar) => boolean;
 		}[],
 		players: [] as {
 			name: string;
-			fn: (oldPlayer: Player, newPlayer: Player) => boolean;
+			filter: (oldPlayer: Player, newPlayer: Player) => boolean;
 		}[]
 	};
 
@@ -124,7 +124,7 @@ export class EventManager {
 	 * @returns
 	 */
 	public setClanEvent(event: { name: string; filter: (oldClan: Clan, newClan: Clan) => boolean }) {
-		this._events.clans.push({ name: event.name, fn: event.filter });
+		this._events.clans.push(event);
 		return this;
 	}
 
@@ -134,7 +134,7 @@ export class EventManager {
 	 * In order to emit the custom event, you must have this filter function that returns a boolean.
 	 */
 	public setWarEvent(event: { name: string; filter: (oldWar: ClanWar, newWar: ClanWar) => boolean }) {
-		this._events.wars.push({ name: event.name, fn: event.filter });
+		this._events.wars.push(event);
 		return this;
 	}
 
@@ -144,7 +144,7 @@ export class EventManager {
 	 * In order to emit the custom event, you must have this filter function that returns a boolean.
 	 */
 	public setPlayerEvent(event: { name: string; filter: (oldPlayer: Player, newPlayer: Player) => boolean }) {
-		this._events.players.push({ name: event.name, fn: event.filter });
+		this._events.players.push(event);
 		return this;
 	}
 
@@ -214,9 +214,9 @@ export class EventManager {
 		const cached = this._clans.get(clan.tag);
 		if (!cached) return this._clans.set(clan.tag, clan);
 
-		for (const { name, fn } of this._events.clans) {
+		for (const { name, filter } of this._events.clans) {
 			try {
-				if (!fn(cached, clan)) continue;
+				if (!filter(cached, clan)) continue;
 				this.client.emit(name, cached, clan);
 			} catch (error) {
 				this.client.emit(EVENTS.ERROR, error);
@@ -235,9 +235,9 @@ export class EventManager {
 		const cached = this._players.get(player.tag);
 		if (!cached) return this._players.set(player.tag, player);
 
-		for (const { name, fn } of this._events.players) {
+		for (const { name, filter } of this._events.players) {
 			try {
-				if (!fn(cached, player)) continue;
+				if (!filter(cached, player)) continue;
 				this.client.emit(name, cached, player);
 			} catch (error) {
 				this.client.emit(EVENTS.ERROR, error);
@@ -254,17 +254,31 @@ export class EventManager {
 		const clanWars = await this.client._getClanWars(tag).catch(() => null);
 		if (!clanWars?.length) return null;
 
-		clanWars.forEach((war, i) => {
-			const key = `WAR:${i}:${tag}`;
+		clanWars.forEach(async (war, state) => {
+			const key = `${tag}:${state}`;
 			const cached = this._wars.get(key);
 			if (!cached) return this._wars.set(key, war);
 
-			for (const { name, fn } of this._events.wars) {
+			for (const { name, filter } of this._events.wars) {
 				try {
-					if (!fn(cached, war)) continue;
+					if (!filter(cached, war)) continue;
 					this.client.emit(name, cached, war);
 				} catch (error) {
 					this.client.emit(EVENTS.ERROR, error);
+				}
+			}
+
+			// check for war end
+			if (state === 1 && cached.warTag !== war.warTag) {
+				const data = await this.client.getLeagueWar({ clanTag: tag, round: 'PREVIOUS_ROUND' }).catch(() => null);
+				if (!data) return;
+				for (const { name, filter } of this._events.wars) {
+					try {
+						if (!filter(cached, data)) continue;
+						this.client.emit(name, cached, data);
+					} catch (error) {
+						this.client.emit(EVENTS.ERROR, error);
+					}
 				}
 			}
 

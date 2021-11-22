@@ -117,12 +117,11 @@ export class Client extends EventEmitter {
 		try {
 			return await this.getClanWar(args.clanTag, options);
 		} catch (e) {
-			if (e instanceof HTTPError && e.status === 403) {
+			if (e instanceof HTTPError && [200, 403].includes(e.status)) {
 				return this.getLeagueWar({ clanTag: args.clanTag, round: args.round });
 			}
+			throw e;
 		}
-
-		return null;
 	}
 
 	/**
@@ -169,15 +168,18 @@ export class Client extends EventEmitter {
 	}
 
 	private async _getClanWars(clanTag: string, options?: OverrideOptions) {
-		const date = new Date().getDate();
-		try {
+		const date = new Date().getUTCDate();
+		if (!(date >= 1 && date <= 10)) {
 			return [await this.getClanWar(clanTag, options)];
+		}
+
+		try {
+			return this._getCurrentLeagueWars(clanTag);
 		} catch (e) {
-			if (!(date >= 1 && date <= 10)) return [];
-			if (e instanceof HTTPError && [200, 403].includes(e.status)) {
-				return this._getCurrentLeagueWars(clanTag);
+			if (e instanceof HTTPError && [404].includes(e.status)) {
+				return [await this.getClanWar(clanTag)];
 			}
-			return [];
+			throw e;
 		}
 	}
 
@@ -364,6 +366,6 @@ export interface ClientEvents {
  */
 export interface CustomEvents {
 	[key: `clan${string}`]: [oldClan: Clan, newClan: Clan];
-	[key: `player${string}`]: [oldClan: Player, newClan: Player];
-	[key: `war${string}`]: [oldClan: ClanWar, newClan: ClanWar];
+	[key: `war${string}`]: [oldWar: ClanWar, newWar: ClanWar];
+	[key: `player${string}`]: [oldPlayer: Player, newPlayer: Player];
 }
