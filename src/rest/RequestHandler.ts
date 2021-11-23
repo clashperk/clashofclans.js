@@ -54,8 +54,8 @@ export class RequestHandler {
 		if (cached && options.force !== true) return { data: cached.data as T, maxAge: cached.ttl - Date.now(), status: 200, path };
 
 		if (!this.throttler || options.ignoreRateLimit) return this.exec<T>(path, options);
-		await this.throttler.wait();
 
+		await this.throttler.wait();
 		try {
 			return await this.exec<T>(path, options);
 		} finally {
@@ -148,8 +148,7 @@ export class RequestHandler {
 		const keys = (data.keys ?? []) as { id: string; name: string; key: string; cidrRanges: string[] }[];
 
 		// Revoke keys for specified key name but not matching current IP address.
-		const expiredKeys = keys.filter((key) => key.name === this.keyName && !key.cidrRanges.includes(ip));
-		for (const key of expiredKeys) {
+		for (const key of keys.filter((key) => key.name === this.keyName && !key.cidrRanges.includes(ip))) {
 			if (!(await this.revokeKey(key.id, cookie))) continue;
 			const index = keys.findIndex(({ id }) => id === key.id);
 			keys.splice(index, 1);

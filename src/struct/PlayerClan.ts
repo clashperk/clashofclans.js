@@ -1,3 +1,4 @@
+import { OverrideOptions } from '../rest/RequestHandler';
 import { Client } from '../client/Client';
 import { APIPlayerClan } from '../types';
 import { Badge } from './Badge';
@@ -24,7 +25,7 @@ export class PlayerClan {
 	}
 
 	/** Fetch detailed clan info for the player's clan. */
-	public fetch() {
-		return this._client.getClan(this.tag);
+	public fetch(options?: OverrideOptions) {
+		return this._client.getClan(this.tag, options);
 	}
 }

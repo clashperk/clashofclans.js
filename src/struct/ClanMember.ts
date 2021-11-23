@@ -1,4 +1,5 @@
 import { UNRANKED_LEAGUE_DATA } from '../util/Constants';
+import { OverrideOptions } from '../rest/RequestHandler';
 import { Client } from '../client/Client';
 import { APIClanMember } from '../types';
 import { League } from './League';
@@ -54,7 +55,7 @@ export class ClanMember {
 	}
 
 	/** Fetch detailed clan info for the member's clan. */
-	public async fetch() {
-		return this.client.getPlayer(this.tag);
+	public async fetch(options?: OverrideOptions) {
+		return this.client.getPlayer(this.tag, options);
 	}
 }

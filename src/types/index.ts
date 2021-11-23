@@ -1,6 +1,3 @@
-export type APIWarState = 'notInWar' | 'preparation' | 'inWar' | 'warEnded';
-export type APIRole = 'member' | 'admin' | 'coLeader' | 'leader';
-
 export interface APIPaging {
 	cursors?: APICursors;
 }
@@ -75,7 +72,7 @@ export interface APIClan {
 export interface APIClanMember {
 	name: string;
 	tag: string;
-	role: APIRole;
+	role: 'member' | 'admin' | 'coLeader' | 'leader';
 	expLevel: number;
 	league: APILeague;
 	trophies: number;
@@ -94,7 +91,7 @@ export interface APIClanMemberList {
 
 /** /clans/{clanTag}/currentwar and /clanwarleagues/wars/{warTag} */
 export interface APIClanWar {
-	state: APIWarState;
+	state: 'notInWar' | 'preparation' | 'inWar' | 'warEnded';
 	teamSize: number;
 	startTime: string;
 	preparationStartTime: string;

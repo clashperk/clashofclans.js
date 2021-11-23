@@ -48,6 +48,12 @@ export class Client extends EventEmitter {
 		return Util;
 	}
 
+	/** Whether the API is in maintenance break. */
+	public get inMaintenance() {
+		// @ts-expect-error
+		return this.events._inMaintenance;
+	}
+
 	/**
 	 * Initialize the client to create keys.
 	 * @example
@@ -118,7 +124,7 @@ export class Client extends EventEmitter {
 			return await this.getClanWar(args.clanTag, options);
 		} catch (e) {
 			if (e instanceof HTTPError && [200, 403].includes(e.status)) {
-				return this.getLeagueWar({ clanTag: args.clanTag, round: args.round });
+				return this.getLeagueWar({ clanTag: args.clanTag, round: args.round }, options);
 			}
 			throw e;
 		}
@@ -151,7 +157,7 @@ export class Client extends EventEmitter {
 			.flat()
 			.reverse();
 		const wars = await this.util.allSettled(
-			warTags.map((warTag) => this.getClanWarLeagueRound({ warTag, clanTag: args.clanTag }, { ignoreRateLimit: true }))
+			warTags.map((warTag) => this.getClanWarLeagueRound({ warTag, clanTag: args.clanTag }, { ...options, ignoreRateLimit: true }))
 		);
 
 		if (args.round && args.round in CWL_ROUNDS) {
@@ -164,7 +170,7 @@ export class Client extends EventEmitter {
 	private async _getCurrentLeagueWars(clanTag: string, options?: OverrideOptions) {
 		const data = await this.getClanWarLeagueGroup(clanTag, options);
 		// @ts-expect-error
-		return data._getCurrentWars(clanTag);
+		return data._getCurrentWars(clanTag, options);
 	}
 
 	private async _getClanWars(clanTag: string, options?: OverrideOptions) {
@@ -174,10 +180,10 @@ export class Client extends EventEmitter {
 		}
 
 		try {
-			return this._getCurrentLeagueWars(clanTag);
+			return this._getCurrentLeagueWars(clanTag, options);
 		} catch (e) {
 			if (e instanceof HTTPError && [404].includes(e.status)) {
-				return [await this.getClanWar(clanTag)];
+				return [await this.getClanWar(clanTag, options)];
 			}
 			throw e;
 		}

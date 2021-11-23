@@ -1,3 +1,4 @@
+import { OverrideOptions } from '../rest/RequestHandler';
 import { ChatLanguage } from './ChatLanguage';
 import { ClanMember } from './ClanMember';
 import { Client } from '../client/Client';
@@ -105,8 +106,8 @@ export class Clan {
 	}
 
 	/** Get {@link Player} information for every Player in the clan. */
-	public async fetchMembers() {
-		return (await Promise.allSettled(this.members.map((m) => this.client.getPlayer(m.tag, { ignoreRateLimit: true }))))
+	public async fetchMembers(options?: OverrideOptions) {
+		return (await Promise.allSettled(this.members.map((m) => this.client.getPlayer(m.tag, { ...options, ignoreRateLimit: true }))))
 			.filter((res) => res.status === 'fulfilled')
 			.map((res) => (res as PromiseFulfilledResult<Player>).value);
 	}

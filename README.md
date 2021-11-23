@@ -39,9 +39,10 @@ const client = new Client();
 ```js
 const { Client, BatchThrottler } = require('clashofclans.js');
 const client = new Client({
+    cache: true,
     retryLimit: 1,
-    restRequestTimeout: 3000,
-    throttler: new BatchThrottler(30)
+    restRequestTimeout: 5000,
+    throttler: new BatchThrottler(20)
 });
 
 client.events.addClans(['#8QU8J9LP', '#8P2QG08P']);
