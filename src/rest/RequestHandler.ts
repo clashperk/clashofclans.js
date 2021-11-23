@@ -20,9 +20,9 @@ export class RequestHandler {
 	private keys: string[];
 	private readonly baseURL: string;
 	private readonly retryLimit: number;
-	private readonly cached: Keyv | null;
 	private readonly restRequestTimeout: number;
 	private readonly throttler?: QueueThrottler | BatchThrottler | null;
+	private readonly cached: Keyv<{ data: unknown; ttl: number }> | null;
 
 	public constructor(options?: ClientOptions) {
 		this.keys = options?.keys ?? [];
@@ -51,7 +51,7 @@ export class RequestHandler {
 
 	public async request<T>(path: string, options: RequestOptions = {}) {
 		const cached = (await this.cached?.get(path)) ?? null;
-		if (cached && options.force !== true) return { data: cached as T, maxAge: 0, status: 200, path };
+		if (cached && options.force !== true) return { data: cached.data as T, maxAge: cached.ttl - Date.now(), status: 200, path };
 
 		if (!this.throttler || options.ignoreRateLimit) return this.exec<T>(path, options);
 		await this.throttler.wait();
@@ -88,7 +88,9 @@ export class RequestHandler {
 		if (res?.status === 403 && !data?.message) throw new HTTPError(PrivateWarLogError, res.status, path, maxAge);
 		if (!res?.ok) throw new HTTPError(data, res?.status ?? 504, path, maxAge, options.method);
 
-		if (this.cached && maxAge > 0 && options.cache !== false) await this.cached.set(path, data, maxAge);
+		if (this.cached && maxAge > 0 && options.cache !== false) {
+			await this.cached.set(path, { data, ttl: Date.now() + maxAge }, maxAge);
+		}
 		return { data, maxAge, status: res.status, path };
 	}
 
