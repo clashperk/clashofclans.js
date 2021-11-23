@@ -49,50 +49,57 @@ export class EventManager {
 		return Promise.resolve(this.client.eventNames() as string[]);
 	}
 
-	/** Add a clan tag to clan events. */
-	public addClans(...tags: string[]) {
-		for (const tag of tags) {
+	/** Add clan tags to clan events. */
+	public addClans(tags: string[] | string) {
+		for (const tag of Array.isArray(tags) ? tags : [tags]) {
 			this._clanTags.add(this.client.util.parseTag(tag));
 		}
 		return this;
 	}
 
-	/** Delete a clan tag from clan events. */
-	public deleteClans(...tags: string[]) {
-		for (const tag of tags) {
-			this._warTags.delete(this.client.util.parseTag(tag));
+	/** Delete clan tags from clan events. */
+	public deleteClans(tags: string[] | string) {
+		for (const tag of Array.isArray(tags) ? tags : [tags]) {
+			const key = this.client.util.parseTag(tag);
+			this._clans.delete(key);
+			this._clanTags.delete(key);
 		}
 		return this;
 	}
 
-	/** Add a player tag for player events. */
-	public addPlayers(...tags: string[]) {
-		for (const tag of tags) {
+	/** Add player tags for player events. */
+	public addPlayers(tags: string[] | string) {
+		for (const tag of Array.isArray(tags) ? tags : [tags]) {
 			this._playerTags.add(this.client.util.parseTag(tag));
 		}
 		return this;
 	}
 
-	/** Delete a player tag from player events. */
-	public deletePlayers(...tags: string[]) {
-		for (const tag of tags) {
-			this._warTags.delete(this.client.util.parseTag(tag));
+	/** Delete player tags from player events. */
+	public deletePlayers(tags: string[] | string) {
+		for (const tag of Array.isArray(tags) ? tags : [tags]) {
+			const key = this.client.util.parseTag(tag);
+			this._players.delete(key);
+			this._playerTags.delete(key);
 		}
 		return this;
 	}
 
-	/** Add a clan tag for war events. */
-	public addWars(...tags: string[]) {
-		for (const tag of tags) {
+	/** Add clan tags for war events. */
+	public addWars(tags: string[] | string) {
+		for (const tag of Array.isArray(tags) ? tags : [tags]) {
 			this._warTags.add(this.client.util.parseTag(tag));
 		}
 		return this;
 	}
 
-	/** Delete a clan tag from war events. */
-	public deleteWars(...tags: string[]) {
-		for (const tag of tags) {
-			this._warTags.delete(this.client.util.parseTag(tag));
+	/** Delete clan tags from war events. */
+	public deleteWars(tags: string[] | string) {
+		for (const tag of Array.isArray(tags) ? tags : [tags]) {
+			const key = this.client.util.parseTag(tag);
+			this._wars.delete(`${key}:${1}`);
+			this._wars.delete(`${key}:${2}`);
+			this._warTags.delete(key);
 		}
 		return this;
 	}

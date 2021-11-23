@@ -44,7 +44,7 @@ const client = new Client({
     throttler: new BatchThrottler(30)
 });
 
-client.events.addClans(['#8P2QG08P']);
+client.events.addClans(['#8QU8J9LP', '#8P2QG08P']);
 client.events.setClanEvent({
     name: 'clanDescriptionChange',
     filter: (oldClan, newClan) => {
