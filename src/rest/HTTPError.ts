@@ -18,9 +18,7 @@ const reasons: { [key: string]: string } = {
 	504: 'requestAborted'
 };
 
-/**
- * Represents an HTTP Error.
- */
+/** Represents an HTTP Error. */
 export class HTTPError extends Error {
 	/** The message of this error. */
 	public message: string;

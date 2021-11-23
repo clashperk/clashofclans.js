@@ -148,8 +148,7 @@ export class RequestHandler {
 		const keys = (data.keys ?? []) as { id: string; name: string; key: string; cidrRanges: string[] }[];
 
 		// Revoke keys for specified key name but not matching current IP address.
-		const expiredKeys = keys.filter((key) => key.name === this.keyName && !key.cidrRanges.includes(ip));
-		for (const key of expiredKeys) {
+		for (const key of keys.filter((key) => key.name === this.keyName && !key.cidrRanges.includes(ip))) {
 			if (!(await this.revokeKey(key.id, cookie))) continue;
 			const index = keys.findIndex(({ id }) => id === key.id);
 			keys.splice(index, 1);

@@ -1,4 +1,5 @@
 import { APIClanWarLeagueClan, APIClanWarLeagueClanMember, APIClanWarLeagueGroup, APIClanWarLeagueRound } from '../types';
+import { OverrideOptions } from '../rest/RequestHandler';
 import { Client } from '../client/Client';
 import { ClanWar } from './ClanWar';
 import { Player } from './Player';
@@ -48,8 +49,8 @@ export class ClanWarLeagueClan {
 	}
 
 	/** Get {@link Player} information for every members that are in the CWL group. */
-	public async fetchMembers() {
-		return (await Promise.allSettled(this.members.map((m) => this.client.getPlayer(m.tag, { ignoreRateLimit: true }))))
+	public async fetchMembers(options?: OverrideOptions) {
+		return (await Promise.allSettled(this.members.map((m) => this.client.getPlayer(m.tag, { ...options, ignoreRateLimit: true }))))
 			.filter((res) => res.status === 'fulfilled')
 			.map((res) => (res as PromiseFulfilledResult<Player>).value);
 	}
@@ -94,13 +95,13 @@ export class ClanWarLeagueGroup {
 	 * This returns an array of {@link ClanWar} which fetches all wars in parallel.
 	 * @param clanTag Optional clan tag. If present, this will only return wars which belong to this clan.
 	 */
-	public async getWars(clanTag?: string) {
+	public async getWars(clanTag?: string, options?: OverrideOptions) {
 		const rounds = this.rounds.filter((round) => !round.warTags.includes('#0'));
 		if (!rounds.length) return [];
 
 		const warTags = rounds.map((round) => round.warTags).flat();
 		const wars = await Promise.allSettled(
-			warTags.map((warTag) => this.client.getClanWarLeagueRound({ warTag, clanTag }, { ignoreRateLimit: true }))
+			warTags.map((warTag) => this.client.getClanWarLeagueRound({ warTag, clanTag }, { ...options, ignoreRateLimit: true }))
 		);
 		return wars
 			.filter((res) => res.status === 'fulfilled')
@@ -108,7 +109,7 @@ export class ClanWarLeagueGroup {
 			.filter((war) => (clanTag ? war.clan.tag === clanTag : true));
 	}
 
-	private async _getCurrentWars(clanTag: string) {
+	private async _getCurrentWars(clanTag: string, options?: OverrideOptions) {
 		const rounds = this.rounds.filter((round) => !round.warTags.includes('#0'));
 		if (!rounds.length) return [];
 		const warTags = rounds
@@ -117,7 +118,7 @@ export class ClanWarLeagueGroup {
 			.flat()
 			.reverse();
 		const wars = await Promise.allSettled(
-			warTags.map((warTag) => this.client.getClanWarLeagueRound({ warTag, clanTag }, { ignoreRateLimit: true }))
+			warTags.map((warTag) => this.client.getClanWarLeagueRound({ warTag, clanTag }, { ...options, ignoreRateLimit: true }))
 		);
 		return wars
 			.filter((res) => res.status === 'fulfilled')

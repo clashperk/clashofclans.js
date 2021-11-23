@@ -1,4 +1,5 @@
 import { HERO_PETS, SIEGE_MACHINES, UNRANKED_LEAGUE_DATA } from '../util/Constants';
+import { OverrideOptions } from '../rest/RequestHandler';
 import { LegendStatistics } from './LegendStatistics';
 import { Achievement } from './Achievement';
 import { Hero, Spell, Troop } from './Unit';
@@ -119,9 +120,9 @@ export class Player {
 	}
 
 	/** Fetch detailed clan info for the player's clan. */
-	public async fetchClan() {
+	public async fetchClan(options?: OverrideOptions) {
 		if (!this.clan) return null;
-		return this.client.getClan(this.clan.tag);
+		return this.client.getClan(this.clan.tag, options);
 	}
 
 	/** An array of the player's home base troops. */
