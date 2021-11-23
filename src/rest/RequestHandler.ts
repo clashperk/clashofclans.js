@@ -54,8 +54,8 @@ export class RequestHandler {
 		if (cached && options.force !== true) return { data: cached.data as T, maxAge: cached.ttl - Date.now(), status: 200, path };
 
 		if (!this.throttler || options.ignoreRateLimit) return this.exec<T>(path, options);
-		await this.throttler.wait();
 
+		await this.throttler.wait();
 		try {
 			return await this.exec<T>(path, options);
 		} finally {

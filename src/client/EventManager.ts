@@ -131,6 +131,9 @@ export class EventManager {
 	 * @returns
 	 */
 	public setClanEvent(event: { name: string; filter: (oldClan: Clan, newClan: Clan) => boolean }) {
+		if (!event.name) throw new Error('Event name is required.');
+		if (typeof event.filter !== 'function') throw new Error('Filter function is required.');
+
 		this._events.clans.push(event);
 		return this;
 	}
@@ -141,6 +144,9 @@ export class EventManager {
 	 * In order to emit the custom event, you must have this filter function that returns a boolean.
 	 */
 	public setWarEvent(event: { name: string; filter: (oldWar: ClanWar, newWar: ClanWar) => boolean }) {
+		if (!event.name) throw new Error('Event name is required.');
+		if (typeof event.filter !== 'function') throw new Error('Filter function is required.');
+
 		this._events.wars.push(event);
 		return this;
 	}
@@ -151,6 +157,9 @@ export class EventManager {
 	 * In order to emit the custom event, you must have this filter function that returns a boolean.
 	 */
 	public setPlayerEvent(event: { name: string; filter: (oldPlayer: Player, newPlayer: Player) => boolean }) {
+		if (!event.name) throw new Error('Event name is required.');
+		if (typeof event.filter !== 'function') throw new Error('Filter function is required.');
+
 		this._events.players.push(event);
 		return this;
 	}
@@ -161,7 +170,7 @@ export class EventManager {
 			const res = await this.client.rest.getClans({ maxMembers: Math.floor(Math.random() * 40) + 10, limit: 1 });
 			if (res.status === 200 && this._inMaintenance) {
 				this._inMaintenance = Boolean(false);
-				const duration = this._maintenanceStartTime!.getTime() - Date.now();
+				const duration = Date.now() - this._maintenanceStartTime!.getTime();
 				this._maintenanceStartTime = null;
 
 				this.client.emit(EVENTS.MAINTENANCE_END, duration);
@@ -261,8 +270,8 @@ export class EventManager {
 		const clanWars = await this.client._getClanWars(tag).catch(() => null);
 		if (!clanWars?.length) return null;
 
-		clanWars.forEach(async (war, state) => {
-			const key = `${tag}:${state}`;
+		clanWars.forEach(async (war, index) => {
+			const key = `${tag}:${index}`;
 			const cached = this._wars.get(key);
 			if (!cached) return this._wars.set(key, war);
 
@@ -276,7 +285,7 @@ export class EventManager {
 			}
 
 			// check for war end
-			if (state === 1 && cached.warTag !== war.warTag) {
+			if (index === 1 && cached.warTag !== war.warTag) {
 				const data = await this.client.getLeagueWar({ clanTag: tag, round: 'PREVIOUS_ROUND' }).catch(() => null);
 				if (data && data.warTag === cached.warTag) {
 					for (const { name, filter } of this._events.wars) {

@@ -49,6 +49,19 @@ export class Client extends EventEmitter {
 	}
 
 	/**
+	 * Whether the API is in maintenance break.
+	 *
+	 * Only works if {@link EventManager} is initialized.
+	 * ```ts
+	 * await client.events.init();
+	 * ```
+	 */
+	public get inMaintenance() {
+		// @ts-expect-error
+		return this.events._inMaintenance;
+	}
+
+	/**
 	 * Initialize the client to create keys.
 	 * @example
 	 * ```
