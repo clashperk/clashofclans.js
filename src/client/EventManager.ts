@@ -60,7 +60,9 @@ export class EventManager {
 	/** Delete clan tags from clan events. */
 	public deleteClans(tags: string[] | string) {
 		for (const tag of Array.isArray(tags) ? tags : [tags]) {
-			this._clanTags.delete(this.client.util.parseTag(tag));
+			const key = this.client.util.parseTag(tag);
+			this._clans.delete(key);
+			this._clanTags.delete(key);
 		}
 		return this;
 	}
@@ -76,7 +78,9 @@ export class EventManager {
 	/** Delete player tags from player events. */
 	public deletePlayers(tags: string[] | string) {
 		for (const tag of Array.isArray(tags) ? tags : [tags]) {
-			this._playerTags.delete(this.client.util.parseTag(tag));
+			const key = this.client.util.parseTag(tag);
+			this._players.delete(key);
+			this._playerTags.delete(key);
 		}
 		return this;
 	}
@@ -92,7 +96,10 @@ export class EventManager {
 	/** Delete clan tags from war events. */
 	public deleteWars(tags: string[] | string) {
 		for (const tag of Array.isArray(tags) ? tags : [tags]) {
-			this._warTags.delete(this.client.util.parseTag(tag));
+			const key = this.client.util.parseTag(tag);
+			this._wars.delete(`${key}:${1}`);
+			this._wars.delete(`${key}:${2}`);
+			this._warTags.delete(key);
 		}
 		return this;
 	}
