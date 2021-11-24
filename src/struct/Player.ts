@@ -1,4 +1,5 @@
 import { HERO_PETS, SIEGE_MACHINES, UNRANKED_LEAGUE_DATA } from '../util/Constants';
+import { RAW_SUPER_UNITS, RAW_UNITS } from '../util/raw.json';
 import { OverrideOptions } from '../rest/RequestHandler';
 import { LegendStatistics } from './LegendStatistics';
 import { Achievement } from './Achievement';
@@ -8,6 +9,8 @@ import { Client } from '../client/Client';
 import { APIPlayer } from '../types';
 import { League } from './League';
 import { Label } from './Label';
+
+const UNIT_NAMES = [...RAW_UNITS.map((unit) => unit.name), ...RAW_SUPER_UNITS.map((unit) => unit.name)];
 
 /** Represents a Clash of Clans Player. */
 export class Player {
@@ -114,9 +117,10 @@ export class Player {
 		this.legendStatistics = data.legendStatistics ? new LegendStatistics(data.legendStatistics) : null;
 		this.achievements = data.achievements.map((data) => new Achievement(data));
 		this.labels = data.labels.map((data) => new Label(data));
-		this.troops = data.troops.map((data) => new Troop(data));
-		this.spells = data.spells.map((data) => new Spell(data));
-		this.heroes = data.heroes.map((data) => new Hero(data));
+
+		this.troops = data.troops.filter((unit) => UNIT_NAMES.includes(unit.name)).map((unit) => new Troop(data, unit));
+		this.spells = data.spells.filter((unit) => UNIT_NAMES.includes(unit.name)).map((unit) => new Spell(data, unit));
+		this.heroes = data.heroes.filter((unit) => UNIT_NAMES.includes(unit.name)).map((unit) => new Hero(data, unit));
 	}
 
 	/** Fetch detailed clan info for the player's clan. */
