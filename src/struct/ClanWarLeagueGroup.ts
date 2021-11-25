@@ -94,6 +94,7 @@ export class ClanWarLeagueGroup {
 	/**
 	 * This returns an array of {@link ClanWar} which fetches all wars in parallel.
 	 * @param clanTag Optional clan tag. If present, this will only return wars which belong to this clan.
+	 * @param options Override options for the request.
 	 */
 	public async getWars(clanTag?: string, options?: OverrideOptions) {
 		const rounds = this.rounds.filter((round) => !round.warTags.includes('#0'));
@@ -126,7 +127,7 @@ export class ClanWarLeagueGroup {
 			.filter((war) => war.clan.tag === clanTag);
 	}
 
-	/** Returns # (1-7) of the round for the specified warTag. */
+	/** Returns the index of the round for this specified warTag. */
 	public getRoundIndex(warTag: string): number | null {
 		return this.rounds.find((round) => round.warTags.includes(warTag))?.round ?? null;
 	}
