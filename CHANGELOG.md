@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
-## 2.0.0
+## 2.0.0 (2021-11-26)
 
 This new version is a complete TypeScript rewrite to convert everything from plain (literal JSON) objects to class (constructor) objects and support a lot more features.
 
