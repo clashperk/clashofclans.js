@@ -202,7 +202,7 @@ export class EventManager {
 		for (const tag of this._clanTags) await this.runClanUpdate(tag);
 		this.client.emit(EVENTS.CLAN_LOOP_END);
 
-		setTimeout(this.clanUpdateHandler.bind(this), 10_000);
+		setTimeout(this.clanUpdateHandler.bind(this), 10_000).unref();
 	}
 
 	private async playerUpdateHandler() {
@@ -210,7 +210,7 @@ export class EventManager {
 		for (const tag of this._playerTags) await this.runPlayerUpdate(tag);
 		this.client.emit(EVENTS.PLAYER_LOOP_END);
 
-		setTimeout(this.playerUpdateHandler.bind(this), 10_000);
+		setTimeout(this.playerUpdateHandler.bind(this), 10_000).unref();
 	}
 
 	private async warUpdateHandler() {
@@ -218,7 +218,7 @@ export class EventManager {
 		for (const tag of this._warTags) await this.runWarUpdate(tag);
 		this.client.emit(EVENTS.WAR_LOOP_END);
 
-		setTimeout(this.warUpdateHandler.bind(this), 10_000);
+		setTimeout(this.warUpdateHandler.bind(this), 10_000).unref();
 	}
 
 	private async runClanUpdate(tag: string) {
