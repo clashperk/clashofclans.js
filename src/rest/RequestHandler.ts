@@ -49,9 +49,11 @@ export class RequestHandler {
 		return this;
 	}
 
-	public async request<T>(path: string, options: RequestOptions = {}) {
+	public async request<T>(path: string, options: RequestOptions = {}): Promise<Response<T>> {
 		const cached = (await this.cached?.get(path)) ?? null;
-		if (cached && options.force !== true) return { data: cached.data as T, maxAge: cached.ttl - Date.now(), status: 200, path };
+		if (cached && options.force !== true) {
+			return { data: cached.data as T, maxAge: cached.ttl - Date.now(), status: 200, path };
+		}
 
 		if (!this.throttler || options.ignoreRateLimit) return this.exec<T>(path, options);
 
@@ -63,11 +65,7 @@ export class RequestHandler {
 		}
 	}
 
-	private async exec<T>(
-		path: string,
-		options: RequestOptions = {},
-		retries = 0
-	): Promise<{ data: T; maxAge: number; status: number; path: string }> {
+	private async exec<T>(path: string, options: RequestOptions = {}, retries = 0): Promise<Response<T>> {
 		const res = await fetch(`${this.baseURL}${path}`, {
 			agent,
 			body: options.body,
@@ -297,8 +295,25 @@ export interface OverrideOptions {
 }
 
 export interface RequestOptions extends OverrideOptions {
+	/** The request body. */
 	body?: string;
+
+	/** The request method. */
 	method?: string;
+}
+
+export interface Response<T> {
+	/** The response body. */
+	data: T;
+
+	/** Path of the request for this response. */
+	path: string;
+
+	/** HTTP status code of this response. */
+	status: number;
+
+	/** The maxAge of this response. */
+	maxAge: number;
 }
 
 /**
