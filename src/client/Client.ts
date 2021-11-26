@@ -195,7 +195,7 @@ export class Client extends EventEmitter {
 		return new ClanWarLeagueGroup(this, data);
 	}
 
-	/** Get information about CWL round by WarTag. */
+	/** Get info about a CWL round by WarTag. */
 	public async getClanWarLeagueRound(warTag: string | { warTag: string; clanTag?: string }, options?: OverrideOptions) {
 		const args = typeof warTag === 'string' ? { warTag } : { warTag: warTag.warTag, clanTag: warTag.clanTag };
 		const { data, maxAge, status, path } = await this.rest.getClanWarLeagueRound(args.warTag, options);
@@ -213,7 +213,7 @@ export class Client extends EventEmitter {
 
 	/** Verify Player API token that can be found from the Game settings. */
 	public async verifyPlayerToken(playerTag: string, token: string, options?: OverrideOptions) {
-		const { data } = await this.rest.postPlayerToken(playerTag, token, options);
+		const { data } = await this.rest.verifyPlayerToken(playerTag, token, options);
 		return data.status === 'ok';
 	}
 
@@ -260,13 +260,13 @@ export class Client extends EventEmitter {
 		return data.items.map((entry) => new RankedPlayer(this, entry));
 	}
 
-	/** Get clan versus rankings for a specific location */
+	/** Get clan versus rankings for a specific location. */
 	public async getVersusClanRanks(locationId: number | 'global', options?: SearchOptions) {
 		const { data } = await this.rest.getVersusClanRanks(locationId, options);
 		return data.items.map((entry) => new RankedClan(entry));
 	}
 
-	/** Get player versus rankings for a specific location */
+	/** Get player versus rankings for a specific location. */
 	public async getVersusPlayerRanks(locationId: number | 'global', options?: SearchOptions) {
 		const { data } = await this.rest.getVersusPlayerRanks(locationId, options);
 		return data.items.map((entry) => new RankedPlayer(this, entry));

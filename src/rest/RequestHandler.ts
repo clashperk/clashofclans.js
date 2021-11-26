@@ -80,8 +80,8 @@ export class RequestHandler {
 		if (!res && retries < (options.retryLimit ?? this.retryLimit)) return this.exec<T>(path, options, ++retries);
 
 		if (res?.status === 403 && data?.reason === 'accessDenied.invalidIp' && this.email && this.password) {
-			await this.login();
-			return this.exec<T>(path, options, ++retries);
+			const keys = await this.reValidateKeys().then(() => this.login());
+			if (keys.length) return this.exec<T>(path, options, ++retries);
 		}
 
 		const maxAge = Number(res?.headers.get('cache-control')?.split('=')?.[1] ?? 0) * 1000;
@@ -126,6 +126,7 @@ export class RequestHandler {
 	private async login() {
 		const res = await fetch(`${DEV_SITE_API_BASE_URL}/login`, {
 			method: 'POST',
+			timeout: 10_000,
 			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify({ email: this.email, password: this.password })
 		});
@@ -140,6 +141,7 @@ export class RequestHandler {
 		const ip = await this.getIp();
 		const res = await fetch(`${DEV_SITE_API_BASE_URL}/apikey/list`, {
 			method: 'POST',
+			timeout: 10_000,
 			headers: { 'Content-Type': 'application/json', cookie }
 		});
 		const data = await res.json();
@@ -188,6 +190,7 @@ export class RequestHandler {
 	private async revokeKey(keyId: string, cookie: string) {
 		const res = await fetch(`${DEV_SITE_API_BASE_URL}/apikey/revoke`, {
 			method: 'POST',
+			timeout: 10_000,
 			body: JSON.stringify({ id: keyId }),
 			headers: { 'Content-Type': 'application/json', cookie }
 		});
@@ -198,6 +201,7 @@ export class RequestHandler {
 	private async createKey(cookie: string, ip: string) {
 		const res = await fetch(`${DEV_SITE_API_BASE_URL}/apikey/create`, {
 			method: 'POST',
+			timeout: 10_000,
 			headers: { 'Content-Type': 'application/json', cookie },
 			body: JSON.stringify({
 				cidrRanges: [ip],
@@ -211,7 +215,7 @@ export class RequestHandler {
 	}
 
 	private async getIp() {
-		return fetch('https://api.ipify.org/').then((res) => res.text());
+		return fetch('https://api.ipify.org/', { timeout: 10_000 }).then((res) => res.text());
 	}
 }
 
