@@ -118,7 +118,7 @@ export class RequestHandler {
 			if (res?.status === 403) {
 				const index = this.keys.indexOf(key);
 				this.keys.splice(index, 1);
-				console.warn(`[WARN] Pre-defined key #${index + 1} is no longer valid. Removed from the key list.`);
+				process.emitWarning(`Pre-defined key #${index + 1} is no longer valid. Removed from the key list.`);
 			}
 		}
 	}
@@ -147,6 +147,7 @@ export class RequestHandler {
 			headers: { 'Content-Type': 'application/json', cookie }
 		});
 		const data = await res.json();
+		if (!res.ok) throw new Error(`Failed to retrieve the API Keys. ${JSON.stringify(data)}`);
 
 		// Get all available keys from the developer site.
 		const keys = (data.keys ?? []) as { id: string; name: string; key: string; cidrRanges: string[] }[];
@@ -172,8 +173,8 @@ export class RequestHandler {
 		}
 
 		if (this.keys.length < this.keyCount && keys.length === 10) {
-			console.warn(
-				`[WARN] ${this.keyCount} key(s) were requested but failed to create ${this.keyCount - this.keys.length} more key(s).`
+			process.emitWarning(
+				`${this.keyCount} key(s) were requested but failed to create ${this.keyCount - this.keys.length} more key(s).`
 			);
 		}
 
