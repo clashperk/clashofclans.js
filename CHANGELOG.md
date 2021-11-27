@@ -6,7 +6,7 @@ All notable changes to this project will be documented in this file. See [standa
 
 ### Bug Fixes
 
--   IP retrieval method and Event Loop ([#70](https://github.com/clashperk/clashofclans.js/issues/70)) ([82b84ba](https://github.com/
+-   IP retrieval method and Event Loop ([#70](https://github.com/clashperk/clashofclans.js/issues/70)) ([82b84ba](https://github.com/clashperk/clashofclans.js/commit/82b84ba5d96505c43b75e53aa07f547ef0b77778))
 
 ## 2.0.0 (2021-11-26)
 
