@@ -5,6 +5,8 @@ import fetch from 'node-fetch';
 import https from 'https';
 import Keyv from 'keyv';
 
+const IP_REGEX = /\d{1,3}.\d{1,3}.\d{1,3}.\d{1,3}/g;
+
 const agent = new https.Agent({ keepAlive: true });
 
 /** Represents a Request Handler. */
@@ -129,14 +131,16 @@ export class RequestHandler {
 			body: JSON.stringify({ email: this.email, password: this.password })
 		});
 
-		if (res.ok) {
-			return this.getKeys(res.headers.get('set-cookie')!);
-		}
-		throw new ReferenceError('Invalid email or password.');
+		const data = await res.json();
+		if (!res.ok) throw new Error(`Invalid email or password. ${JSON.stringify(data)}`);
+
+		const ip = await this.getIp(data.temporaryAPIToken as string);
+		if (!ip) throw new Error('Failed to get the IP address.');
+
+		return this.getKeys(res.headers.get('set-cookie')!, ip);
 	}
 
-	private async getKeys(cookie: string) {
-		const ip = await this.getIp();
+	private async getKeys(cookie: string, ip: string) {
 		const res = await fetch(`${DEV_SITE_API_BASE_URL}/apikey/list`, {
 			method: 'POST',
 			timeout: 10_000,
@@ -209,11 +213,19 @@ export class RequestHandler {
 		});
 
 		const data = await res.json();
+		if (!res.ok) throw new Error(`Failed to create API Key. ${JSON.stringify(data)}`);
 		return data.key as { id: string; name: string; key: string; cidrRanges: string[] };
 	}
 
-	private async getIp() {
-		return fetch('https://api.ipify.org/', { timeout: 10_000 }).then((res) => res.text());
+	private async getIp(token: string): Promise<string | null> {
+		try {
+			const decoded = JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString());
+			const props = decoded.limits.find((limit: { cidrs: string[] }) => limit.hasOwnProperty('cidrs'));
+			return (props.cidrs[0] as string).match(IP_REGEX)![0];
+		} catch {
+			const body = await fetch('https://api.ipify.org', { timeout: 10_000 }).then((res) => res.text());
+			return body.match(IP_REGEX)?.[0] ?? null;
+		}
 	}
 }
 
