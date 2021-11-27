@@ -189,7 +189,7 @@ export class EventManager {
 		const end = Util.getSeasonEndTime().getTime() - Date.now();
 		// Why this? setTimeout can be up to 24.8 days or 2147483647ms [(2^31 - 1) Max 32bit Integer]
 		if (end > 24 * 60 * 60 * 1000) {
-			setTimeout(this.seasonEndHandler.bind(this), 60 * 60 * 1000).unref();
+			setTimeout(this.seasonEndHandler.bind(this), 60 * 60 * 1000);
 		} else if (end > 0) {
 			setTimeout(() => {
 				this.client.emit(EVENTS.NEW_SEASON_START, Util.getSeasonId());
@@ -202,7 +202,7 @@ export class EventManager {
 		for (const tag of this._clanTags) await this.runClanUpdate(tag);
 		this.client.emit(EVENTS.CLAN_LOOP_END);
 
-		setTimeout(this.clanUpdateHandler.bind(this), 10_000).unref();
+		setTimeout(this.clanUpdateHandler.bind(this), 10_000);
 	}
 
 	private async playerUpdateHandler() {
@@ -210,7 +210,7 @@ export class EventManager {
 		for (const tag of this._playerTags) await this.runPlayerUpdate(tag);
 		this.client.emit(EVENTS.PLAYER_LOOP_END);
 
-		setTimeout(this.playerUpdateHandler.bind(this), 10_000).unref();
+		setTimeout(this.playerUpdateHandler.bind(this), 10_000);
 	}
 
 	private async warUpdateHandler() {
@@ -218,7 +218,7 @@ export class EventManager {
 		for (const tag of this._warTags) await this.runWarUpdate(tag);
 		this.client.emit(EVENTS.WAR_LOOP_END);
 
-		setTimeout(this.warUpdateHandler.bind(this), 10_000).unref();
+		setTimeout(this.warUpdateHandler.bind(this), 10_000);
 	}
 
 	private async runClanUpdate(tag: string) {
