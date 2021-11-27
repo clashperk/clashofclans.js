@@ -10,23 +10,28 @@ const messages: { [key: string]: string } = {
 
 const reasons: { [key: string]: string } = {
 	503: 'serviceUnavailable',
-	429: 'tooManyRequests',
+	429: 'requestThrottled',
 	400: 'badRequest',
-	403: 'forbidden',
-	500: 'unknownError',
+	403: 'accessDenied',
+	500: 'unknownException',
 	404: 'notFound',
 	504: 'requestAborted'
 };
 
 /** Represents an HTTP Error. */
 export class HTTPError extends Error {
-	/** The message of this error. */
+	/** The message of this errored request. */
 	public message: string;
 
 	/** The HTTP method of this request. */
 	public method: string;
 
-	/** The reason of this error. */
+	/**
+	 * The reason of this errored request.
+	 *
+	 * Expected values are `notFound`, `notInWar`, `accessDenied`, `accessDenied.invalidIp`, `privateWarLog`,
+	 * `badRequest`, `requestThrottled`, `serviceUnavailable`, `requestAborted` and `unknownException`.
+	 */
 	public reason: string;
 
 	/** The HTTP status code of this request. */

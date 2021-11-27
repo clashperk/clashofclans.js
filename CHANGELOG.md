@@ -22,13 +22,3 @@ This new version is a complete TypeScript rewrite to convert everything from pla
 -   Internal Caching Options ([#53](https://github.com/clashperk/clashofclans.js/issues/53)) ([984451d](https://github.com/clashperk/clashofclans.js/commit/30ea3240c11866008d0dae514468c0fdbb34ffd0))
 -   Additional Properties for Player Units ([#65](https://github.com/clashperk/clashofclans.js/pull/65)) ([aa1696](https://github.com/clashperk/clashofclans.js/commit/aa1696243d96d4fed0250b4282c60522a6482343))
 
-### Links
-
--   Documentation
-    https://clashofclans.js.org/docs
-
--   Guide
-    https://clashofclans.js.org/guide
-
--   Updating to v2.0.0
-    https://clashofclans.js.org/docs/updating-to-v2
