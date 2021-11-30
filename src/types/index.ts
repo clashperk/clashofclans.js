@@ -306,7 +306,7 @@ export interface APIPlayerRanking {
 	defenseWins: number;
 	rank: number;
 	previousRank: number;
-	clan: APIPlayerClan;
+	clan?: Omit<APIPlayerClan, 'clanLevel'>;
 	league: APILeague;
 }
 
@@ -342,7 +342,7 @@ export interface APIPlayerVersusRanking {
 	versusBattleWins: number;
 	rank: number;
 	previousRank: number;
-	clan: APIPlayerClan;
+	clan?: APIPlayerClan;
 }
 
 // *************** LEAGUES *************** //
