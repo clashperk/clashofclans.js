@@ -6,7 +6,46 @@ import { Location } from './Location';
 import { League } from './League';
 import { Badge } from './Badge';
 
-/** Represents the player of leader-board ranking. */
+/** Represents the Player of seasonal legend league leader-board ranking. */
+export class SeasonRankedPlayer {
+	/** The player's name. */
+	public name: string;
+
+	/** The player's tag. */
+	public tag: string;
+
+	/** The player's experience level. */
+	public expLevel: number;
+
+	/** The player's trophy count. */
+	public trophies: number;
+
+	/** The player's attack wins. */
+	public attackWins: number;
+
+	/** The player's defense wins. */
+	public defenseWins: number;
+
+	/** The player's rank in the clan leader-board. */
+	public rank: number;
+
+	/** The player's clan. */
+	public clan: PlayerClan | null;
+
+	public constructor(client: Client, data: Omit<APIPlayerRanking, 'league'>) {
+		this.name = data.name;
+		this.tag = data.tag;
+		this.rank = data.rank;
+		this.expLevel = data.expLevel;
+		this.trophies = data.trophies;
+		this.attackWins = data.attackWins;
+		this.defenseWins = data.defenseWins;
+		// @ts-expect-error
+		this.clan = data.clan ? new PlayerClan(client, data.clan) : null;
+	}
+}
+
+/** Represents the Player of location based leader-board ranking. */
 export class RankedPlayer {
 	/** The player's name. */
 	public name: string;
@@ -35,11 +74,11 @@ export class RankedPlayer {
 	/** The player's rank in the clan leader-board. */
 	public rank: number;
 
-	/** The player's rank before the last leader-board change. */
-	public previousRank: number;
+	/** The player's rank before the last leader-board change. If retrieving info for legend league season, this will be `null`.  */
+	public previousRank: number | null;
 
 	/** The player's clan. */
-	public clan: PlayerClan;
+	public clan: PlayerClan | null;
 
 	/** The player's league. If retrieving info for versus leader-boards, this will be `null`. */
 	public league!: League | null;
@@ -59,14 +98,15 @@ export class RankedPlayer {
 		// @ts-expect-error
 		this.versusBattleWins = data.versusBattleWins ?? null;
 		this.rank = data.rank;
-		this.previousRank = data.previousRank;
-		this.clan = new PlayerClan(client, data.clan);
+		this.previousRank = data.previousRank ?? null; // eslint-disable-line
+		// @ts-expect-error
+		this.clan = data.clan ? new PlayerClan(client, data.clan) : null;
 		// @ts-expect-error
 		this.league = data.trophies ? new League(data.league ?? UNRANKED_LEAGUE_DATA) : null; // eslint-disable-line
 	}
 }
 
-/** Represents the clan of leader-board ranking. */
+/** Represents the Clan of location based leader-board ranking. */
 export class RankedClan {
 	/** The clan's name. */
 	public name: string;

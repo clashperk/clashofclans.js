@@ -18,6 +18,7 @@ import {
 	RankedClan,
 	RankedPlayer,
 	Label,
+	SeasonRankedPlayer,
 	GoldPassSeason,
 	ClanWarLeagueGroup
 } from '../struct';
@@ -73,13 +74,13 @@ export class Client extends EventEmitter {
 	}
 
 	/** Search all clans by name and/or filtering the results using various criteria. */
-	public async getClans(options: ClanSearchOptions) {
-		const { data } = await this.rest.getClans(options);
+	public async getClans(query: ClanSearchOptions, options?: OverrideOptions) {
+		const { data } = await this.rest.getClans(query, options);
 		// @ts-expect-error
 		return data.items.map((clan) => new Clan(this, clan));
 	}
 
-	/** Get information about a clan. */
+	/** Get info about a clan. */
 	public async getClan(clanTag: string, options?: OverrideOptions) {
 		const { data } = await this.rest.getClan(clanTag, options);
 		return new Clan(this, data);
@@ -189,7 +190,7 @@ export class Client extends EventEmitter {
 		}
 	}
 
-	/** Get information about clan war league. */
+	/** Get info about clan war league. */
 	public async getClanWarLeagueGroup(clanTag: string, options?: OverrideOptions) {
 		const { data } = await this.rest.getClanWarLeagueGroup(clanTag, options);
 		return new ClanWarLeagueGroup(this, data);
@@ -205,7 +206,7 @@ export class Client extends EventEmitter {
 		return new ClanWar(this, data, { warTag: args.warTag, clanTag: args.clanTag, maxAge });
 	}
 
-	/** Get information about a player by tag. */
+	/** Get info about a player by tag. */
 	public async getPlayer(playerTag: string, options?: OverrideOptions) {
 		const { data } = await this.rest.getPlayer(playerTag, options);
 		return new Player(this, data);
@@ -232,8 +233,7 @@ export class Client extends EventEmitter {
 	/** Get Legend League season rankings by season Id. */
 	public async getSeasonRankings(seasonId: string, options?: SearchOptions) {
 		const { data } = await this.rest.getSeasonRankings(LEGEND_LEAGUE_ID, seasonId, options);
-		// @ts-expect-error
-		return data.items.map((entry) => new RankedPlayer(entry));
+		return data.items.map((entry) => new SeasonRankedPlayer(this, entry));
 	}
 
 	/** Get list of Clan War Leagues. */
@@ -248,25 +248,41 @@ export class Client extends EventEmitter {
 		return data.items.map((entry) => new Location(entry));
 	}
 
-	/** Get clan rankings for a specific location. */
+	/**
+	 * Get clan rankings for a specific location.
+	 *
+	 * For global ranking, use `global` as `locationId`.
+	 */
 	public async getClanRanks(locationId: number | 'global', options?: SearchOptions) {
 		const { data } = await this.rest.getClanRanks(locationId, options);
 		return data.items.map((entry) => new RankedClan(entry));
 	}
 
-	/** Get player rankings for a specific location. */
+	/**
+	 * Get player rankings for a specific location.
+	 *
+	 * For global ranking, use `global` as `locationId`.
+	 */
 	public async getPlayerRanks(locationId: number | 'global', options?: SearchOptions) {
 		const { data } = await this.rest.getPlayerRanks(locationId, options);
 		return data.items.map((entry) => new RankedPlayer(this, entry));
 	}
 
-	/** Get clan versus rankings for a specific location. */
+	/**
+	 * Get clan versus rankings for a specific location.
+	 *
+	 * For global ranking, use `global` as `locationId`.
+	 */
 	public async getVersusClanRanks(locationId: number | 'global', options?: SearchOptions) {
 		const { data } = await this.rest.getVersusClanRanks(locationId, options);
 		return data.items.map((entry) => new RankedClan(entry));
 	}
 
-	/** Get player versus rankings for a specific location. */
+	/**
+	 * Get player versus rankings for a specific location.
+	 *
+	 * For global ranking, use `global` as `locationId`.
+	 */
 	public async getVersusPlayerRanks(locationId: number | 'global', options?: SearchOptions) {
 		const { data } = await this.rest.getVersusPlayerRanks(locationId, options);
 		return data.items.map((entry) => new RankedPlayer(this, entry));
