@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## 2.0.2 (2021-11-30)
+
+### Bug Fixes
+
+-   Return `null` for `RankedPlayer.clan` if they are not in the clan. ([#73](https://github.com/clashperk/clashofclans.js/pull/73)) ([ba82327](https://github.com/clashperk/clashofclans.js/commit/ba8232740f4ca9af2bcc7971aca3574612ef25b6))
+-   `OverrideOptions` added for `Client#getClans` and `RESTManager#getClans` ([#73](https://github.com/clashperk/clashofclans.js/pull/73)) ([ba82327](https://github.com/clashperk/clashofclans.js/commit/ba8232740f4ca9af2bcc7971aca3574612ef25b6))
+-   `SeasonRankedPlayer` class for legend league ranking. ([#73](https://github.com/clashperk/clashofclans.js/pull/73)) ([ba82327](https://github.com/clashperk/clashofclans.js/commit/ba8232740f4ca9af2bcc7971aca3574612ef25b6))
+
 ## 2.0.1 (2021-11-27)
 
 ### Bug Fixes
@@ -21,4 +29,3 @@ This new version is a complete TypeScript rewrite to convert everything from pla
 -   Override Request Options ([#36](https://github.com/clashperk/clashofclans.js/issues/36)) ([42d7fdd](https://github.com/clashperk/clashofclans.js/commit/42d7fdd36262cc46f23b731f8cffb9daea19d3b0))
 -   Internal Caching Options ([#53](https://github.com/clashperk/clashofclans.js/issues/53)) ([984451d](https://github.com/clashperk/clashofclans.js/commit/30ea3240c11866008d0dae514468c0fdbb34ffd0))
 -   Additional Properties for Player Units ([#65](https://github.com/clashperk/clashofclans.js/pull/65)) ([aa1696](https://github.com/clashperk/clashofclans.js/commit/aa1696243d96d4fed0250b4282c60522a6482343))
-
