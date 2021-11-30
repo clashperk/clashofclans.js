@@ -105,7 +105,7 @@ export class Clan {
 		this.members = data.memberList?.map((mem) => new ClanMember(this.client, mem)) ?? []; // eslint-disable-line
 	}
 
-	/** Get {@link Player} information for every Player in the clan. */
+	/** Get {@link Player} info for every Player in the clan. */
 	public async fetchMembers(options?: OverrideOptions) {
 		return (await Promise.allSettled(this.members.map((m) => this.client.getPlayer(m.tag, { ...options, ignoreRateLimit: true }))))
 			.filter((res) => res.status === 'fulfilled')

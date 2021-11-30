@@ -3,7 +3,7 @@ import { Client } from '../client/Client';
 import { APIPlayerClan } from '../types';
 import { Badge } from './Badge';
 
-/** Represents a player's clan. */
+/** Represents a Player's clan. */
 export class PlayerClan {
 	/** Name of the clan. */
 	public name: string;
@@ -11,8 +11,12 @@ export class PlayerClan {
 	/** Tag of the clan. */
 	public tag: string;
 
-	/** Level of this clan. */
-	public level: number;
+	/**
+	 * Level of this clan.
+	 *
+	 * This property is not available for ranked player's clan.
+	 */
+	public level: number | null;
 
 	/** Badge of this clan. */
 	public badge: Badge;
@@ -20,7 +24,7 @@ export class PlayerClan {
 	public constructor(private readonly _client: Client, data: APIPlayerClan) {
 		this.name = data.name;
 		this.tag = data.tag;
-		this.level = data.clanLevel;
+		this.level = data.clanLevel ?? null; // eslint-disable-line
 		this.badge = new Badge(data.badgeUrls);
 	}
 
