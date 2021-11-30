@@ -36,12 +36,11 @@ export class RESTManager {
 	}
 
 	/** Search all clans by name and/or filtering the results using various criteria. */
-	public getClans(options: ClanSearchOptions) {
-		const query = Util.queryString(options);
-		return this.handler.request<APIClanList>(`/clans?${query}`);
+	public getClans(query: ClanSearchOptions, options?: OverrideOptions) {
+		return this.handler.request<APIClanList>(`/clans?${Util.queryString(query)}`, options);
 	}
 
-	/** Get information about a clan. */
+	/** Get info about a clan. */
 	public getClan(clanTag: string, options?: OverrideOptions) {
 		return this.handler.request<APIClan>(`/clans/${Util.encodeTag(clanTag)}`, options);
 	}
@@ -63,7 +62,7 @@ export class RESTManager {
 		return this.handler.request<APIClanWar>(`/clans/${Util.encodeTag(clanTag)}/currentwar`, options);
 	}
 
-	/** Get information about clan war league. */
+	/** Get info about clan war league. */
 	public getClanWarLeagueGroup(clanTag: string, options?: OverrideOptions) {
 		return this.handler.request<APIClanWarLeagueGroup>(`/clans/${Util.encodeTag(clanTag)}/currentwar/leaguegroup`, options);
 	}
@@ -73,7 +72,7 @@ export class RESTManager {
 		return this.handler.request<APIClanWar>(`/clanwarleagues/wars/${Util.encodeTag(warTag)}`, options);
 	}
 
-	/** Get information about a player by tag. */
+	/** Get info about a player by tag. */
 	public getPlayer(playerTag: string, options?: OverrideOptions) {
 		return this.handler.request<APIPlayer>(`/players/${Util.encodeTag(playerTag)}`, options);
 	}
