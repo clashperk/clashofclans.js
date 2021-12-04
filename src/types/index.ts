@@ -98,7 +98,8 @@ export interface APIClanWar {
 	endTime: string;
 	clan: APIWarClan;
 	opponent: APIWarClan;
-	attacksPerMember: number;
+	/** This property is not available for CWL */
+	attacksPerMember?: number;
 }
 
 export interface APIWarClan {

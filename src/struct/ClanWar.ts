@@ -257,7 +257,7 @@ export class ClanWar {
 		// @ts-expect-error
 		this.state = data.state;
 		this.teamSize = data.teamSize;
-		this.attacksPerMember = data.attacksPerMember;
+		this.attacksPerMember = data.attacksPerMember ?? extra.warTag ? 1 : 2;
 		this.preparationStartTime = client.util.parseDate(data.preparationStartTime);
 		this.startTime = client.util.parseDate(data.startTime);
 		this.endTime = client.util.parseDate(data.endTime);
