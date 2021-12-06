@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## 2.1.0 (2021-12-06)
+
+### Bug Fixes
+
+-   Consistency of `ClanWar.attacksPerMember` property. ([#75](https://github.com/clashperk/clashofclans.js/pull/75)) ([6e23d2f](https://github.com/clashperk/clashofclans.js/commit/6e23d2fe0373f56268ffa55d5ac2807c9a2dc2fc))
+
+### Features
+
+-   More utility methods added to `Util` class. ([#76](https://github.com/clashperk/clashofclans.js/pull/76)) ([ff41115](https://github.com/clashperk/clashofclans.js/commit/ff4111530d6293ef1fc54aa916436130fc30a09c))
+
 ## 2.0.2 (2021-11-30)
 
 ### Bug Fixes
