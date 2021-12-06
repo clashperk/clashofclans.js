@@ -11,6 +11,10 @@ All notable changes to this project will be documented in this file. See [standa
 ### Features
 
 -   More utility methods added to `Util` class. ([#76](https://github.com/clashperk/clashofclans.js/pull/76)) ([ff41115](https://github.com/clashperk/clashofclans.js/commit/ff4111530d6293ef1fc54aa916436130fc30a09c))
+    -  `Util.formatTag(tag: string)`
+    -  `Util.formatDate(date: string)`
+    -  `Util.encodeTagToId(tag: string)`
+    -  `Util.decodeIdToTag(id: string)`
 
 ## 2.0.2 (2021-11-30)
 
