@@ -17,15 +17,15 @@ export class EventManager {
 	private readonly _events = {
 		clans: [] as {
 			name: string;
-			filter: (oldClan: Clan, newClan: Clan) => boolean;
+			filter: (oldClan: Clan, newClan: Clan) => Promise<boolean> | boolean;
 		}[],
 		wars: [] as {
 			name: string;
-			filter: (oldWar: ClanWar, newWar: ClanWar) => boolean;
+			filter: (oldWar: ClanWar, newWar: ClanWar) => Promise<boolean> | boolean;
 		}[],
 		players: [] as {
 			name: string;
-			filter: (oldPlayer: Player, newPlayer: Player) => boolean;
+			filter: (oldPlayer: Player, newPlayer: Player) => Promise<boolean> | boolean;
 		}[]
 	};
 
@@ -232,7 +232,7 @@ export class EventManager {
 
 		for (const { name, filter } of this._events.clans) {
 			try {
-				if (!filter(cached, clan)) continue;
+				if (!(await filter(cached, clan))) continue;
 				this.client.emit(name, cached, clan);
 			} catch (error) {
 				this.client.emit(EVENTS.ERROR, error);
@@ -253,7 +253,7 @@ export class EventManager {
 
 		for (const { name, filter } of this._events.players) {
 			try {
-				if (!filter(cached, player)) continue;
+				if (!(await filter(cached, player))) continue;
 				this.client.emit(name, cached, player);
 			} catch (error) {
 				this.client.emit(EVENTS.ERROR, error);
@@ -277,7 +277,7 @@ export class EventManager {
 
 			for (const { name, filter } of this._events.wars) {
 				try {
-					if (!filter(cached, war)) continue;
+					if (!(await filter(cached, war))) continue;
 					this.client.emit(name, cached, war);
 				} catch (error) {
 					this.client.emit(EVENTS.ERROR, error);
@@ -290,7 +290,7 @@ export class EventManager {
 				if (data && data.warTag === cached.warTag) {
 					for (const { name, filter } of this._events.wars) {
 						try {
-							if (!filter(cached, data)) continue;
+							if (!(await filter(cached, data))) continue;
 							this.client.emit(name, cached, data);
 						} catch (error) {
 							this.client.emit(EVENTS.ERROR, error);
