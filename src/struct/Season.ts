@@ -28,7 +28,7 @@ export class GoldPassSeason {
 	public endTime: Date;
 
 	public constructor(data: APIGoldPassSeason) {
-		this.startTime = Util.parseDate(data.startTime);
-		this.endTime = Util.parseDate(data.endTime);
+		this.startTime = Util.formatDate(data.startTime);
+		this.endTime = Util.formatDate(data.endTime);
 	}
 }

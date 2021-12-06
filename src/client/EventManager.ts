@@ -52,7 +52,7 @@ export class EventManager {
 	/** Add clan tags to clan events. */
 	public addClans(tags: string[] | string) {
 		for (const tag of Array.isArray(tags) ? tags : [tags]) {
-			this._clanTags.add(this.client.util.parseTag(tag));
+			this._clanTags.add(this.client.util.formatTag(tag));
 		}
 		return this;
 	}
@@ -60,7 +60,7 @@ export class EventManager {
 	/** Delete clan tags from clan events. */
 	public deleteClans(tags: string[] | string) {
 		for (const tag of Array.isArray(tags) ? tags : [tags]) {
-			const key = this.client.util.parseTag(tag);
+			const key = this.client.util.formatTag(tag);
 			this._clans.delete(key);
 			this._clanTags.delete(key);
 		}
@@ -70,7 +70,7 @@ export class EventManager {
 	/** Add player tags for player events. */
 	public addPlayers(tags: string[] | string) {
 		for (const tag of Array.isArray(tags) ? tags : [tags]) {
-			this._playerTags.add(this.client.util.parseTag(tag));
+			this._playerTags.add(this.client.util.formatTag(tag));
 		}
 		return this;
 	}
@@ -78,7 +78,7 @@ export class EventManager {
 	/** Delete player tags from player events. */
 	public deletePlayers(tags: string[] | string) {
 		for (const tag of Array.isArray(tags) ? tags : [tags]) {
-			const key = this.client.util.parseTag(tag);
+			const key = this.client.util.formatTag(tag);
 			this._players.delete(key);
 			this._playerTags.delete(key);
 		}
@@ -88,7 +88,7 @@ export class EventManager {
 	/** Add clan tags for war events. */
 	public addWars(tags: string[] | string) {
 		for (const tag of Array.isArray(tags) ? tags : [tags]) {
-			this._warTags.add(this.client.util.parseTag(tag));
+			this._warTags.add(this.client.util.formatTag(tag));
 		}
 		return this;
 	}
@@ -96,7 +96,7 @@ export class EventManager {
 	/** Delete clan tags from war events. */
 	public deleteWars(tags: string[] | string) {
 		for (const tag of Array.isArray(tags) ? tags : [tags]) {
-			const key = this.client.util.parseTag(tag);
+			const key = this.client.util.formatTag(tag);
 			this._wars.delete(`${key}:${1}`);
 			this._wars.delete(`${key}:${2}`);
 			this._warTags.delete(key);

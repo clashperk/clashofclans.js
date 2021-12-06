@@ -258,13 +258,13 @@ export class ClanWar {
 		this.state = data.state;
 		this.teamSize = data.teamSize;
 		this.attacksPerMember = data.attacksPerMember ?? extra.warTag ? 1 : 2;
-		this.preparationStartTime = client.util.parseDate(data.preparationStartTime);
-		this.startTime = client.util.parseDate(data.startTime);
-		this.endTime = client.util.parseDate(data.endTime);
+		this.preparationStartTime = client.util.formatDate(data.preparationStartTime);
+		this.startTime = client.util.formatDate(data.startTime);
+		this.endTime = client.util.formatDate(data.endTime);
 		this.warTag = extra.warTag ?? null;
 
 		let [clan, opponent] = [data.clan, data.opponent];
-		const clanTag = extra.clanTag && client.util.parseTag(extra.clanTag);
+		const clanTag = extra.clanTag && client.util.formatTag(extra.clanTag);
 		if (clanTag && [data.clan.tag, data.opponent.tag].includes(clanTag)) {
 			clan = data.clan.tag === clanTag ? data.clan : data.opponent;
 			opponent = data.clan.tag === clan.tag ? data.opponent : data.clan;
