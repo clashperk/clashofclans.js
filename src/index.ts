@@ -7,3 +7,4 @@ export * from './rest/Throttler';
 export * from './util/Util';
 export * from './struct';
 export * from './types';
+export * from './util/Constants';

@@ -1,5 +1,4 @@
-import { HERO_PETS, SIEGE_MACHINES, UNRANKED_LEAGUE_DATA } from '../util/Constants';
-import { RAW_SUPER_UNITS, RAW_UNITS } from '../util/raw.json';
+import { HERO_PETS, SIEGE_MACHINES, UNRANKED_LEAGUE_DATA, SUPER_TROOPS, BUILDER_TROOPS, HOME_TROOPS } from '../util/Constants';
 import { OverrideOptions } from '../rest/RequestHandler';
 import { LegendStatistics } from './LegendStatistics';
 import { Achievement } from './Achievement';
@@ -9,8 +8,6 @@ import { Client } from '../client/Client';
 import { APIPlayer } from '../types';
 import { League } from './League';
 import { Label } from './Label';
-
-const UNIT_NAMES = [...RAW_UNITS.map((unit) => unit.name), ...RAW_SUPER_UNITS.map((unit) => unit.name)];
 
 /** Represents a Clash of Clans Player. */
 export class Player {
@@ -83,13 +80,13 @@ export class Player {
 	/** An array of player's labels. */
 	public labels: Label[];
 
-	/** An array of player's troops. */
+	/** An array of player's troops (including pets and seige machines). */
 	public troops: Troop[];
 
 	/** An array of player's spells. */
 	public spells: Spell[];
 
-	/** An array of player's heroes. */
+	/** An array of player's heroes (both home base and build base). */
 	public heroes: Hero[];
 
 	public constructor(public client: Client, data: APIPlayer) {
@@ -118,9 +115,9 @@ export class Player {
 		this.achievements = data.achievements.map((data) => new Achievement(data));
 		this.labels = data.labels.map((data) => new Label(data));
 
-		this.troops = data.troops.filter((unit) => UNIT_NAMES.includes(unit.name)).map((unit) => new Troop(data, unit));
-		this.spells = data.spells.filter((unit) => UNIT_NAMES.includes(unit.name)).map((unit) => new Spell(data, unit));
-		this.heroes = data.heroes.filter((unit) => UNIT_NAMES.includes(unit.name)).map((unit) => new Hero(data, unit));
+		this.troops = data.troops.map((unit) => new Troop(data, unit));
+		this.spells = data.spells.map((unit) => new Spell(data, unit));
+		this.heroes = data.heroes.map((unit) => new Hero(data, unit));
 	}
 
 	/** Fetch detailed clan info for the player's clan. */
@@ -131,26 +128,36 @@ export class Player {
 
 	/** An array of the player's home base troops. */
 	public get homeTroops() {
-		return this.troops.filter((entry) => entry.isHomeBase);
+		return this.troops
+			.filter((entry) => HOME_TROOPS.includes(entry.name))
+			.sort((a, b) => HOME_TROOPS.indexOf(a.name) - HOME_TROOPS.indexOf(b.name));
 	}
 
 	/** An array of the player's builder base troops. */
 	public get builderTroops() {
-		return this.troops.filter((entry) => entry.isBuilderBase);
+		return this.troops
+			.filter((entry) => BUILDER_TROOPS.includes(entry.name))
+			.sort((a, b) => BUILDER_TROOPS.indexOf(a.name) - BUILDER_TROOPS.indexOf(b.name));
 	}
 
 	/** An array of the player's super troops. */
 	public get superTroops() {
-		return this.troops.filter((entry) => entry.isSuperTroop);
+		return this.troops
+			.filter((entry) => SUPER_TROOPS.includes(entry.name))
+			.sort((a, b) => SUPER_TROOPS.indexOf(a.name) - SUPER_TROOPS.indexOf(b.name));
 	}
 
 	/** An array of the player's hero pets. */
 	public get heroPets() {
-		return this.troops.filter((entry) => entry.isHomeBase && HERO_PETS.includes(entry.name));
+		return this.troops
+			.filter((entry) => HERO_PETS.includes(entry.name))
+			.sort((a, b) => HERO_PETS.indexOf(a.name) - HERO_PETS.indexOf(b.name));
 	}
 
 	/** An array of the player's siege machines. */
 	public get siegeMachines() {
-		return this.troops.filter((entry) => entry.isHomeBase && SIEGE_MACHINES.includes(entry.name));
+		return this.troops
+			.filter((entry) => SIEGE_MACHINES.includes(entry.name))
+			.sort((a, b) => SIEGE_MACHINES.indexOf(a.name) - SIEGE_MACHINES.indexOf(b.name));
 	}
 }
