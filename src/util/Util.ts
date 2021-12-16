@@ -18,10 +18,11 @@ export class Util extends null {
 	}
 
 	/** Encodes a tag as a valid component of a URI. */
-	public static encodeTag(tag: string) {
+	public static encodeURI(tag: string) {
 		return encodeURIComponent(this.formatTag(tag));
 	}
 
+	/** Verify a tag using RegExp. (`/^#?[0289PYLQGRJCUV]$/`) */
 	public static isValidTag(tag: string) {
 		return /^#?[0289PYLQGRJCUV]{3,}$/.test(tag);
 	}
@@ -29,31 +30,31 @@ export class Util extends null {
 	/**
 	 * Encode tag string into 64bit unsigned integer string.
 	 * ```ts
-	 * Util.encodeTagToId('#PCCVQQG0'); // '510915076'
+	 * Util.encodeTag('#PCCVQQG0'); // '510915076'
 	 * ```
 	 */
-	public static encodeTagToId(tag: string) {
+	public static encodeTag(tag: string) {
 		const formatted = this.formatTag(tag).substring(1);
 		if (!this.isValidTag(formatted)) {
 			throw new Error(`Failed to encode tag ${formatted}. RegExp matching failed.`);
 		}
 
-		const result = formatted.split('').reduce((sum, char) => sum * 14n + BigInt(TAG_CHARACTERS.indexOf(char)), 0n);
+		const result = formatted.split('').reduce((sum, char) => sum * BigInt(14) + BigInt(TAG_CHARACTERS.indexOf(char)), BigInt(0));
 		return result.toString();
 	}
 
 	/**
 	 * Decode 64bit unsigned integer string into tag string with hash.
 	 * ```ts
-	 * Util.decodeTagToId('510915076'); // '#PCCVQQG0'
+	 * Util.decodeTag('510915076'); // '#PCCVQQG0'
 	 * ```
 	 */
-	public static decodeIdToTag(id: string) {
+	public static decodeTag(id: string) {
 		let [bigint, tag] = [BigInt(id), ''];
-		while (bigint !== 0n) {
-			const index = Number(bigint % 14n);
+		while (bigint !== BigInt(0)) {
+			const index = Number(bigint % BigInt(14));
 			tag = TAG_CHARACTERS[index] + tag;
-			bigint /= 14n;
+			bigint /= BigInt(14);
 		}
 
 		return `#${tag}`;
