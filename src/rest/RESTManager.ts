@@ -42,45 +42,45 @@ export class RESTManager {
 
 	/** Get info about a clan. */
 	public getClan(clanTag: string, options?: OverrideOptions) {
-		return this.handler.request<APIClan>(`/clans/${Util.encodeTag(clanTag)}`, options);
+		return this.handler.request<APIClan>(`/clans/${Util.encodeURI(clanTag)}`, options);
 	}
 
 	/** Get list of clan members. */
 	public getClanMembers(clanTag: string, options?: SearchOptions) {
 		const query = Util.queryString(options);
-		return this.handler.request<APIClanMemberList>(`/clans/${Util.encodeTag(clanTag)}/members?${query}`, options);
+		return this.handler.request<APIClanMemberList>(`/clans/${Util.encodeURI(clanTag)}/members?${query}`, options);
 	}
 
 	/** Get clan war log. */
 	public getClanWarLog(clanTag: string, options?: SearchOptions) {
 		const query = Util.queryString(options);
-		return this.handler.request<APIClanWarLog>(`/clans/${Util.encodeTag(clanTag)}/warlog?${query}`, options);
+		return this.handler.request<APIClanWarLog>(`/clans/${Util.encodeURI(clanTag)}/warlog?${query}`, options);
 	}
 
 	/** Get info about currently running war in the clan. */
 	public getCurrentWar(clanTag: string, options?: OverrideOptions) {
-		return this.handler.request<APIClanWar>(`/clans/${Util.encodeTag(clanTag)}/currentwar`, options);
+		return this.handler.request<APIClanWar>(`/clans/${Util.encodeURI(clanTag)}/currentwar`, options);
 	}
 
 	/** Get info about clan war league. */
 	public getClanWarLeagueGroup(clanTag: string, options?: OverrideOptions) {
-		return this.handler.request<APIClanWarLeagueGroup>(`/clans/${Util.encodeTag(clanTag)}/currentwar/leaguegroup`, options);
+		return this.handler.request<APIClanWarLeagueGroup>(`/clans/${Util.encodeURI(clanTag)}/currentwar/leaguegroup`, options);
 	}
 
 	/** Get info about a CWL round by WarTag. */
 	public getClanWarLeagueRound(warTag: string, options?: OverrideOptions) {
-		return this.handler.request<APIClanWar>(`/clanwarleagues/wars/${Util.encodeTag(warTag)}`, options);
+		return this.handler.request<APIClanWar>(`/clanwarleagues/wars/${Util.encodeURI(warTag)}`, options);
 	}
 
 	/** Get info about a player by tag. */
 	public getPlayer(playerTag: string, options?: OverrideOptions) {
-		return this.handler.request<APIPlayer>(`/players/${Util.encodeTag(playerTag)}`, options);
+		return this.handler.request<APIPlayer>(`/players/${Util.encodeURI(playerTag)}`, options);
 	}
 
 	/** Verify Player API token that can be found from the Game settings. */
 	public verifyPlayerToken(playerTag: string, token: string, options?: OverrideOptions) {
 		const opts = { method: 'POST', body: JSON.stringify({ token }), ...options };
-		return this.handler.request<APIVerifyToken>(`/players/${Util.encodeTag(playerTag)}/verifytoken`, opts);
+		return this.handler.request<APIVerifyToken>(`/players/${Util.encodeURI(playerTag)}/verifytoken`, opts);
 	}
 
 	/** Get list of Leagues. */
