@@ -73,8 +73,9 @@ export class Util extends null {
 		return query.toString();
 	}
 
-	private static getSeasonEnd(month: number, autoFix = true): Date {
+	private static getSeasonEnd(month: number, year: number, autoFix = true): Date {
 		const now = new Date();
+		now.setUTCFullYear(year);
 		now.setUTCMonth(month, 0);
 		now.setUTCHours(5, 0, 0, 0);
 
@@ -82,7 +83,7 @@ export class Util extends null {
 		now.setUTCDate(newDate);
 
 		if (Date.now() >= now.getTime() && autoFix) {
-			return this.getSeasonEnd(month + 1);
+			return this.getSeasonEnd(month + 1, year);
 		}
 
 		return now;
@@ -93,9 +94,11 @@ export class Util extends null {
 		return this.getSeasonEndTime().toISOString().substring(0, 7);
 	}
 
-	/** Get current trophy season end date. */
-	public static getSeasonEndTime(date = new Date()) {
-		return this.getSeasonEnd(date.getUTCMonth() + 1);
+	/** Get trophy season end timestamp. */
+	public static getSeasonEndTime(timestamp?: Date) {
+		const autoFix = !(timestamp instanceof Date);
+		const date = timestamp instanceof Date ? timestamp : new Date();
+		return this.getSeasonEnd(date.getUTCMonth() + 1, date.getUTCFullYear(), autoFix);
 	}
 
 	public static async allSettled<T>(values: Promise<T>[]) {
