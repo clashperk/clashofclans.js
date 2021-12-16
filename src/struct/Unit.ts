@@ -2,7 +2,7 @@ import { RAW_SUPER_UNITS, RAW_UNITS } from '../util/raw.json';
 import { SUPER_TROOPS } from '../util/Constants';
 import { APIPlayerItem, APIPlayer } from '../types';
 
-/** Represents a player's unit. */
+/** Represents a Player's Unit. */
 export class Unit {
 	/** The name of this unit. */
 	public name: string;
@@ -17,6 +17,9 @@ export class Unit {
 	public village: 'home' | 'builderBase';
 
 	// #region static
+
+	/** Whether the Game data has been loaded for this unit. */
+	public isLoaded: boolean;
 
 	/** Id of this unit. */
 	public id!: number;
@@ -54,6 +57,11 @@ export class Unit {
 	/** Upgrade time of this unit. */
 	public upgradeTime!: number;
 
+	/** Whether the unit is seasonal. */
+	public seasonal: boolean;
+
+	/** @internal */
+	public boostable!: boolean | null;
 	/** @internal */
 	public minOriginalLevel!: number | null;
 	/** @internal */
@@ -88,6 +96,7 @@ export class Unit {
 			const origin = data.troops.find((troop) => troop.village === 'home' && troop.name === original.name)!;
 			this.level = origin.level;
 			this.maxLevel = origin.maxLevel;
+			this.boostable = data.townHallLevel >= 11 && origin.level >= rawSuperUnit.minOriginalLevel;
 
 			this.upgradeCost = original.upgrade.cost[origin.level - 1] ?? 0;
 			this.upgradeResource = original.upgrade.resource;
@@ -109,6 +118,9 @@ export class Unit {
 			this.upgradeTime = rawUnit.upgrade.time[this.level - 1] ?? 0;
 			this.hallMaxLevel = rawUnit.levels[(this.village === 'home' ? data.townHallLevel : data.builderHallLevel!) - 1];
 		}
+
+		this.seasonal = Boolean(rawUnit?.seasonal);
+		this.isLoaded = Boolean(rawUnit ?? rawSuperUnit);
 	}
 
 	/** Whether the unit belongs to the home base. */
@@ -128,11 +140,11 @@ export class Unit {
 
 	/** Icon of this unit. */
 	public get iconURL() {
-		return `https://supercell.vercel.app/assets/troops/icons/${this.name.replace(/ /gi, '_')}.png`;
+		return `https://clashofclans.js.org/assets/${this.name.replace(/ /gi, '_')}.png`;
 	}
 }
 
-/** Represents a player's troop. */
+/** Represents a Player's Troop. */
 export class Troop extends Unit {
 	public name!: string;
 
@@ -145,12 +157,16 @@ export class Troop extends Unit {
 	/** Origin troop's name of this super troop. */
 	public originalName!: string | null;
 
+	/** Whether the player can boost this super troop. */
+	public boostable!: boolean | null;
+
 	public constructor(data: APIPlayer, unit: APIPlayerItem) {
 		super(data, unit);
 
 		this.originalName = this.originalName ?? null;
 		this.isActive = unit.superTroopIsActive ?? false;
 		this.minOriginalLevel = this.minOriginalLevel ?? null;
+		this.boostable = this.boostable ?? null;
 	}
 
 	/** Whether this troop is a Super Troop. */
