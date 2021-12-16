@@ -24,7 +24,7 @@ export const DARK_ELIXIR_TROOPS = ['Minion', 'Hog Rider', 'Valkyrie', 'Golem', '
 
 export const HOME_TROOPS = [...ELIXIR_TROOPS, ...DARK_ELIXIR_TROOPS];
 
-export const SIEGE_MACHINES = ['Wall Wrecker', 'Battle Blimp', 'Stone Slammer', 'Siege Barracks', 'Log Launcher'];
+export const SIEGE_MACHINES = ['Wall Wrecker', 'Battle Blimp', 'Stone Slammer', 'Siege Barracks', 'Log Launcher', 'Flame Flinger'];
 
 export const SUPER_TROOPS = [
 	'Super Barbarian',
@@ -34,6 +34,7 @@ export const SUPER_TROOPS = [
 	'Super Wall Breaker',
 	'Rocket Balloon',
 	'Super Wizard',
+	'Super Dragon',
 	'Inferno Dragon',
 	'Super Minion',
 	'Super Valkyrie',
@@ -55,6 +56,20 @@ export const ELIXIR_SPELLS = [
 export const DARK_ELIXIR_SPELLS = ['Poison Spell', 'Earthquake Spell', 'Haste Spell', 'Skeleton Spell', 'Bat Spell'];
 
 export const SPELLS = [...ELIXIR_SPELLS, ...DARK_ELIXIR_SPELLS];
+
+export const BUILDER_TROOPS = [
+	'Raged Barbarian',
+	'Sneaky Archer',
+	'Boxer Giant',
+	'Beta Minion',
+	'Bomber',
+	'Baby Dragon',
+	'Cannon Cart',
+	'Night Witch',
+	'Drop Ship',
+	'Super P.E.K.K.A',
+	'Hog Glider'
+];
 
 export const HEROES = ['Barbarian King', 'Archer Queen', 'Grand Warden', 'Royal Champion', 'Battle Machine'];
 
