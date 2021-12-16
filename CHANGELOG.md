@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## 2.3.0 (2021-12-17)
+
+### Features
+
+-   BigInt literals issue fixed. ([#84](https://github.com/clashperk/clashofclans.js/pull/84))
+-   Some Utility methods renamed. ([#84](https://github.com/clashperk/clashofclans.js/pull/84))
+    -   `Util.encodeTag()` to `Util.encodeURI()`
+    -   `Util.encodeTagToId()` to `Util.encodeTag()`
+    -   `Util.decodeIdToTag()` to `Util.decodeTag()`
+-   Added `dps`, `resourceType`, `trainingTime` and `regenerationTime` to the `Unit` class. ([#85](https://github.com/clashperk/clashofclans.js/pull/85))
+
 ## 2.2.0 (2021-12-16)
 
 ### Bug Fixes
@@ -27,8 +38,8 @@ All notable changes to this project will be documented in this file. See [standa
     -   `Util.formatTag(tag: string): string`
     -   `Util.formatDate(date: string): Date`
     -   `Util.isValidTag(tag: string): boolean`
-    -   `Util.encodeTagToId(tag: string): string`
-    -   `Util.decodeIdToTag(id: string): string`
+    -   `Util.encodeTagToId(tag: string): string` (Removed on 2.3.0)
+    -   `Util.decodeIdToTag(id: string): string` (Removed on 2.3.0)
 
 -   Support of async/await for custom events ([#79](https://github.com/clashperk/clashofclans.js/pull/79)) ([ff41115](https://github.com/clashperk/clashofclans.js/commit/a23db3786bcca44b8547c70f27773bdb1216f990))
 

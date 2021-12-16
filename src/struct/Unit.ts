@@ -60,6 +60,17 @@ export class Unit {
 	/** Whether the unit is seasonal. */
 	public seasonal: boolean;
 
+	/** Damage per second of this unit. */
+	public dps!: number;
+
+	/** Resource type of this unit. */
+	public resourceType!: string;
+
+	/** Training time of this unit. */
+	public trainingTime!: number;
+
+	/** @internal */
+	public regenerationTime!: number | null;
 	/** @internal */
 	public boostable!: boolean | null;
 	/** @internal */
@@ -93,6 +104,10 @@ export class Unit {
 			this.unlockBuilding = original.unlock.building;
 			this.unlockBuildingLevel = original.unlock.buildingLevel;
 
+			this.dps = rawUnit!.dps[this.level - 1];
+			this.resourceType = rawSuperUnit.resource;
+			this.trainingTime = rawUnit!.trainingTime;
+
 			const origin = data.troops.find((troop) => troop.village === 'home' && troop.name === original.name)!;
 			this.level = origin.level;
 			this.maxLevel = origin.maxLevel;
@@ -102,9 +117,7 @@ export class Unit {
 			this.upgradeResource = original.upgrade.resource;
 			this.upgradeTime = original.upgrade.time[origin.level - 1] ?? 0;
 			this.hallMaxLevel = original.levels[data.townHallLevel - 1];
-		}
-
-		if (rawUnit) {
+		} else if (rawUnit) {
 			this.id = rawUnit.id;
 			this.housingSpace = rawUnit.housingSpace;
 			this.unlockCost = rawUnit.unlock.cost;
@@ -116,6 +129,10 @@ export class Unit {
 			this.upgradeResource = rawUnit.upgrade.resource;
 			this.upgradeCost = rawUnit.upgrade.cost[this.level - 1] ?? 0;
 			this.upgradeTime = rawUnit.upgrade.time[this.level - 1] ?? 0;
+			this.dps = rawUnit.dps[this.level - 1];
+			this.resourceType = rawUnit.resourceType;
+			this.trainingTime = rawUnit.trainingTime;
+			if (rawUnit.category === 'hero') this.regenerationTime = rawUnit.regenerationTimes[this.level - 1];
 			this.hallMaxLevel = rawUnit.levels[(this.village === 'home' ? data.townHallLevel : data.builderHallLevel!) - 1];
 		}
 
@@ -175,8 +192,11 @@ export class Troop extends Unit {
 	}
 }
 
-/** Represents a player's spell. */
+/** Represents a Player's Spell. */
 export class Spell extends Unit {}
 
-/** Represents a player's hero. */
-export class Hero extends Unit {}
+/** Represents a Player's Hero. */
+export class Hero extends Unit {
+	/** Regeneration time of this hero. */
+	public regenerationTime!: number;
+}
