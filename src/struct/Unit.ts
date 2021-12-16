@@ -70,7 +70,7 @@ export class Unit {
 	public trainingTime!: number;
 
 	/** @internal */
-	public regenerationTime!: number;
+	public regenerationTime!: number | null;
 	/** @internal */
 	public boostable!: boolean | null;
 	/** @internal */
