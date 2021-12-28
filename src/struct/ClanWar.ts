@@ -133,6 +133,8 @@ export class ClanWarMember {
 	/**
 	 * Returns the previous best opponent attack on this village.
 	 * This is useful for calculating the new stars or destruction for new attacks.
+	 *
+	 * @deprecated `order` is affecting this method. Use {@link ClanWarAttack#previousBestAttack} instead.
 	 */
 	public previousBestOpponentAttack() {
 		return (
