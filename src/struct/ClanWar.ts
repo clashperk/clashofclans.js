@@ -133,6 +133,8 @@ export class ClanWarMember {
 	/**
 	 * Returns the previous best opponent attack on this village.
 	 * This is useful for calculating the new stars or destruction for new attacks.
+	 *
+	 * @deprecated `order` is affecting this method. Use {@link ClanWarAttack#previousBestAttack} instead.
 	 */
 	public previousBestOpponentAttack() {
 		return (
@@ -298,14 +300,20 @@ export class ClanWar {
 
 	/** Returns either `friendly`, `cwl` or `normal`. */
 	public get type() {
-		if (this._isFriendly) return 'friendly';
+		if (this.isFriendly) return 'friendly';
 		if (this.warTag) return 'cwl';
 		return 'normal';
 	}
 
-	private get _isFriendly() {
+	/** Whether this is a friendly war. */
+	public get isFriendly() {
 		const preparationTime = this.startTime.getTime() - this.preparationStartTime.getTime();
 		return FRIENDLY_WAR_PREPARATION_TIMES.includes(preparationTime);
+	}
+
+	/** Whether this is a CWL. */
+	public get isCWL() {
+		return typeof this.warTag === 'string';
 	}
 
 	/** Returns the war status, based off the home clan. */
@@ -317,5 +325,11 @@ export class ClanWar {
 			if (this.clan.destruction === this.opponent.destruction) return 'tie';
 		}
 		return 'lose';
+	}
+
+	/** Returns the Clan War League Group. */
+	public getClanWarLeagueGroup() {
+		if (!this.isCWL) return null;
+		return this.client.getClanWarLeagueGroup(this.clan.tag);
 	}
 }

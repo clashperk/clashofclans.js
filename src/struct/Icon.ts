@@ -2,33 +2,32 @@ import { APIIcon } from '../types';
 
 /** Represents a Clash of Clans Icon. */
 export class Icon {
-	private readonly _data!: APIIcon;
-
 	/** The default icon URL. */
 	public url: string;
 
-	public constructor(data: APIIcon) {
-		Object.defineProperty(this, '_data', { value: data });
-		this.url = data.medium ?? data.small;
-	}
-
 	/** The medium icon URL. */
-	public get medium() {
-		return this._data.medium ?? this._data.small;
-	}
-
-	/** The tiny icon URL. */
-	public get tiny() {
-		return this._data.tiny ?? this._data.small;
-	}
+	public medium!: string;
 
 	/** The small icon URL. */
-	public get small() {
-		return this._data.small;
+	public small!: string;
+
+	/** The tiny icon URL. */
+	public tiny!: string;
+
+	public constructor(data: APIIcon) {
+		this.url = data.medium ?? data.small;
+		Object.defineProperty(this, 'medium', { value: data.medium ?? data.small });
+		Object.defineProperty(this, 'tiny', { value: data.tiny ?? data.small });
+		Object.defineProperty(this, 'small', { value: data.small });
 	}
 
-	/** Get unique hash of this Badge. */
-	public get hash(): string {
+	/** Get unique file name of this Icon. */
+	public get fileName(): string {
 		return this.url.split('/').pop()!;
+	}
+
+	/** Sizes of this Icon. */
+	public get sizes(): string[] {
+		return [this.medium, this.small, this.tiny].map((url) => /\/(\d+)\//g.exec(url)![1]);
 	}
 }

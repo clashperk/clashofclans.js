@@ -21,17 +21,19 @@ export class RequestHandler {
 
 	private keys: string[];
 	private readonly baseURL: string;
+	private readonly rejectIfNotValid: boolean;
 	private readonly retryLimit: number;
 	private readonly restRequestTimeout: number;
 	private readonly throttler?: QueueThrottler | BatchThrottler | null;
-	private readonly cached: Keyv<{ data: unknown; ttl: number }> | null;
+	private readonly cached: Keyv<{ data: unknown; ttl: number; status: number }> | null;
 
-	public constructor(options?: ClientOptions) {
+	public constructor(options?: RESTOptions) {
 		this.keys = options?.keys ?? [];
 		this.retryLimit = options?.retryLimit ?? 0;
 		this.throttler = options?.throttler ?? null;
 		this.baseURL = options?.baseURL ?? API_BASE_URL;
 		this.restRequestTimeout = options?.restRequestTimeout ?? 0;
+		this.rejectIfNotValid = options?.rejectIfNotValid ?? true;
 		if (options?.cache instanceof Keyv) this.cached = options.cache;
 		else this.cached = options?.cache ? new Keyv() : null;
 	}
@@ -54,7 +56,7 @@ export class RequestHandler {
 	public async request<T>(path: string, options: RequestOptions = {}): Promise<Response<T>> {
 		const cached = (await this.cached?.get(path)) ?? null;
 		if (cached && options.force !== true) {
-			return { data: cached.data as T, maxAge: cached.ttl - Date.now(), status: 200, path };
+			return { data: cached.data as T, maxAge: cached.ttl - Date.now(), status: cached.status, path, ok: cached.status === 200 };
 		}
 
 		if (!this.throttler || options.ignoreRateLimit) return this.exec<T>(path, options);
@@ -85,13 +87,18 @@ export class RequestHandler {
 		}
 
 		const maxAge = Number(res?.headers.get('cache-control')?.split('=')?.[1] ?? 0) * 1000;
-		if (res?.status === 403 && !data?.message) throw new HTTPError(PrivateWarLogError, res.status, path, maxAge);
-		if (!res?.ok) throw new HTTPError(data, res?.status ?? 504, path, maxAge, options.method);
+
+		if (res?.status === 403 && !data?.message && this.rejectIfNotValid) {
+			throw new HTTPError(PrivateWarLogError, res.status, path, maxAge);
+		}
+		if (!res?.ok && this.rejectIfNotValid) {
+			throw new HTTPError(data, res?.status ?? 504, path, maxAge, options.method);
+		}
 
 		if (this.cached && maxAge > 0 && options.cache !== false) {
-			await this.cached.set(path, { data, ttl: Date.now() + maxAge }, maxAge);
+			await this.cached.set(path, { data, ttl: Date.now() + maxAge, status: res?.status ?? 504 }, maxAge);
 		}
-		return { data, maxAge, status: res.status, path };
+		return { data, maxAge, status: res?.status ?? 504, path, ok: res?.status === 200 };
 	}
 
 	public async init(options: InitOptions) {
@@ -230,7 +237,7 @@ export class RequestHandler {
 	}
 }
 
-/** Options for a client. */
+/** Options for a Client. */
 export interface ClientOptions {
 	/** Keys from Clash of Clans API developer site. */
 	keys?: string[];
@@ -267,6 +274,12 @@ export interface ClientOptions {
 	 * ```
 	 */
 	throttler?: QueueThrottler | BatchThrottler;
+}
+
+/** Options for a RESTManager. */
+export interface RESTOptions extends ClientOptions {
+	/** Set this `false` to use `res.ok` property. */
+	rejectIfNotValid?: boolean;
 }
 
 /** Search options for request. */
@@ -316,6 +329,9 @@ export interface RequestOptions extends OverrideOptions {
 }
 
 export interface Response<T> {
+	/** Whether the response is ok. */
+	ok: boolean;
+
 	/** The response body. */
 	data: T;
 
