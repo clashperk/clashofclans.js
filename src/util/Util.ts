@@ -1,4 +1,19 @@
+import { ClanSearchOptions, SearchOptions } from '../types';
 const TAG_CHARACTERS = '0289PYLQGRJCUV' as const;
+
+const params = [
+	'name',
+	'minMembers',
+	'maxMembers',
+	'minClanPoints',
+	'minClanLevel',
+	'warFrequency',
+	'locationId',
+	'labelIds',
+	'limit',
+	'after',
+	'before'
+];
 
 /** Contains various general-purpose utility methods. */
 export class Util extends null {
@@ -68,10 +83,9 @@ export class Util extends null {
 	}
 
 	/** Returns a string containing a query string suitable for use in a URL. */
-	public static queryString(options = {}) {
-		const query = new URLSearchParams(options);
-		for (const key of ['cache', 'force', 'retryLimit', 'ignoreRateLimit', 'restRequestTimeout']) query.delete(key);
-		return query.toString();
+	public static queryString(options: SearchOptions | ClanSearchOptions = {}) {
+		const query = new URLSearchParams(Object.entries(options).filter(([key]) => params.includes(key))).toString();
+		return query.length ? `?${query}` : query;
 	}
 
 	private static getSeasonEnd(month: number, year: number, autoFix = true): Date {
