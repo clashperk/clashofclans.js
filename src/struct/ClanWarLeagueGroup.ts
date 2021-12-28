@@ -1,5 +1,4 @@
-import { APIClanWarLeagueClan, APIClanWarLeagueClanMember, APIClanWarLeagueGroup, APIClanWarLeagueRound } from '../types';
-import { OverrideOptions } from '../rest/RequestHandler';
+import { APIClanWarLeagueClan, APIClanWarLeagueClanMember, APIClanWarLeagueGroup, APIClanWarLeagueRound, OverrideOptions } from '../types';
 import { Client } from '../client/Client';
 import { ClanWar } from './ClanWar';
 import { Player } from './Player';

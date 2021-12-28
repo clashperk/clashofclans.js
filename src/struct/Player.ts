@@ -1,11 +1,10 @@
 import { HERO_PETS, SIEGE_MACHINES, UNRANKED_LEAGUE_DATA, SUPER_TROOPS, BUILDER_TROOPS, HOME_TROOPS } from '../util/Constants';
-import { OverrideOptions } from '../rest/RequestHandler';
+import { APIPlayer, OverrideOptions } from '../types';
 import { LegendStatistics } from './LegendStatistics';
 import { Achievement } from './Achievement';
 import { Hero, Spell, Troop } from './Unit';
 import { PlayerClan } from './PlayerClan';
 import { Client } from '../client/Client';
-import { APIPlayer } from '../types';
 import { League } from './League';
 import { Label } from './Label';
 
