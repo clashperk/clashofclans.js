@@ -237,7 +237,7 @@ export class RequestHandler {
 	}
 }
 
-/** Options for a client. */
+/** Options for a Client. */
 export interface ClientOptions {
 	/** Keys from Clash of Clans API developer site. */
 	keys?: string[];
@@ -276,7 +276,9 @@ export interface ClientOptions {
 	throttler?: QueueThrottler | BatchThrottler;
 }
 
+/** Options for a RESTManager. */
 export interface RESTOptions extends ClientOptions {
+	/** Set this `false` to use `res.ok` property. */
 	rejectIfNotValid?: boolean;
 }
 
