@@ -1,4 +1,4 @@
-import { RequestHandler, SearchOptions, ClanSearchOptions, ClientOptions, OverrideOptions } from './RequestHandler';
+import { RequestHandler, SearchOptions, ClanSearchOptions, RESTOptions, OverrideOptions } from './RequestHandler';
 import { Util } from '../util/Util';
 
 import {
@@ -31,7 +31,7 @@ export class RESTManager {
 	/** Request Handler for the RESTManager. */
 	public readonly handler: RequestHandler;
 
-	public constructor(options?: ClientOptions) {
+	public constructor(options?: RESTOptions) {
 		this.handler = new RequestHandler(options);
 	}
 
