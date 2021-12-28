@@ -28,7 +28,8 @@ import {
 	SearchOptions,
 	ClanSearchOptions,
 	RESTOptions,
-	OverrideOptions
+	OverrideOptions,
+	LoginOptions
 } from '../types';
 
 /** Represents a REST Manager of the client. */
@@ -40,9 +41,32 @@ export class RESTManager {
 		this.handler = new RequestHandler(options);
 	}
 
+	/** Contains various general-purpose utility methods. */
+	public get util(): typeof Util {
+		return Util;
+	}
+
+	/**
+	 * Initialize the client to create keys.
+	 * @example
+	 * ```
+	 * const rest = new RESTManager();
+	 * rest.login({ email: 'developer@email.com', password: '***' });
+	 * ```
+	 */
+	public login(options: LoginOptions) {
+		return this.handler.init(options);
+	}
+
+	/** Set Clash of Clans API keys. */
+	public setKeys(keys: string[]) {
+		this.handler.setKeys(keys);
+		return this;
+	}
+
 	/** Search all clans by name and/or filtering the results using various criteria. */
 	public getClans(query: ClanSearchOptions, options?: OverrideOptions) {
-		return this.handler.request<APIClanList>(`/clans?${Util.queryString(query)}`, options);
+		return this.handler.request<APIClanList>(`/clans${Util.queryString(query)}`, options);
 	}
 
 	/** Get info about a clan. */
@@ -53,13 +77,13 @@ export class RESTManager {
 	/** Get list of clan members. */
 	public getClanMembers(clanTag: string, options?: SearchOptions) {
 		const query = Util.queryString(options);
-		return this.handler.request<APIClanMemberList>(`/clans/${Util.encodeURI(clanTag)}/members?${query}`, options);
+		return this.handler.request<APIClanMemberList>(`/clans/${Util.encodeURI(clanTag)}/members${query}`, options);
 	}
 
 	/** Get clan war log. */
 	public getClanWarLog(clanTag: string, options?: SearchOptions) {
 		const query = Util.queryString(options);
-		return this.handler.request<APIClanWarLog>(`/clans/${Util.encodeURI(clanTag)}/warlog?${query}`, options);
+		return this.handler.request<APIClanWarLog>(`/clans/${Util.encodeURI(clanTag)}/warlog${query}`, options);
 	}
 
 	/** Get info about currently running war in the clan. */
@@ -91,7 +115,7 @@ export class RESTManager {
 	/** Get list of Leagues. */
 	public getLeagues(options?: SearchOptions) {
 		const query = Util.queryString(options);
-		return this.handler.request<APILeagueList>(`/leagues?${query}`, options);
+		return this.handler.request<APILeagueList>(`/leagues${query}`, options);
 	}
 
 	/** Get a League info. */
@@ -102,19 +126,19 @@ export class RESTManager {
 	/** Get Legend League season Ids. */
 	public getLeagueSeasons(leagueId: number, options?: SearchOptions) {
 		const query = Util.queryString(options);
-		return this.handler.request<APILeagueSeasonList>(`/leagues/${leagueId}/seasons?${query}`, options);
+		return this.handler.request<APILeagueSeasonList>(`/leagues/${leagueId}/seasons${query}`, options);
 	}
 
 	/** Get Legend League season rankings by season Id. */
 	public getSeasonRankings(leagueId: number, seasonId: string, options?: SearchOptions) {
 		const query = Util.queryString(options);
-		return this.handler.request<APIPlayerSeasonRankingList>(`/leagues/${leagueId}/seasons/${seasonId}?${query}`, options);
+		return this.handler.request<APIPlayerSeasonRankingList>(`/leagues/${leagueId}/seasons/${seasonId}${query}`, options);
 	}
 
 	/** Get list of Clan War Leagues. */
 	public getWarLeagues(options?: SearchOptions) {
 		const query = Util.queryString(options);
-		return this.handler.request<APIWarLeagueList>(`/warleagues?${query}`, options);
+		return this.handler.request<APIWarLeagueList>(`/warleagues${query}`, options);
 	}
 
 	/** Get info about a Clan War League. */
@@ -125,7 +149,7 @@ export class RESTManager {
 	/** Get list of Locations. */
 	public getLocations(options?: SearchOptions) {
 		const query = Util.queryString(options);
-		return this.handler.request<APILocationList>(`/locations?${query}`, options);
+		return this.handler.request<APILocationList>(`/locations${query}`, options);
 	}
 
 	/** Get info about a Location. */
@@ -136,37 +160,37 @@ export class RESTManager {
 	/** Get clan rankings for a specific location. */
 	public getClanRanks(locationId: number | string, options?: SearchOptions) {
 		const query = Util.queryString(options);
-		return this.handler.request<APIClanRankingList>(`/locations/${locationId}/rankings/clans?${query}`, options);
+		return this.handler.request<APIClanRankingList>(`/locations/${locationId}/rankings/clans${query}`, options);
 	}
 
 	/** Get player rankings for a specific location. */
 	public getPlayerRanks(locationId: number | string, options?: SearchOptions) {
 		const query = Util.queryString(options);
-		return this.handler.request<APIPlayerRankingList>(`/locations/${locationId}/rankings/players?${query}`, options);
+		return this.handler.request<APIPlayerRankingList>(`/locations/${locationId}/rankings/players${query}`, options);
 	}
 
 	/** Get clan versus rankings for a specific location. */
 	public getVersusClanRanks(locationId: number | string, options?: SearchOptions) {
 		const query = Util.queryString(options);
-		return this.handler.request<APIClanVersusRankingList>(`/locations/${locationId}/rankings/clans-versus?${query}`, options);
+		return this.handler.request<APIClanVersusRankingList>(`/locations/${locationId}/rankings/clans-versus${query}`, options);
 	}
 
 	/** Get player versus rankings for a specific location. */
 	public getVersusPlayerRanks(locationId: number | string, options?: SearchOptions) {
 		const query = Util.queryString(options);
-		return this.handler.request<APIPlayerVersusRankingList>(`/locations/${locationId}/rankings/players-versus?${query}`, options);
+		return this.handler.request<APIPlayerVersusRankingList>(`/locations/${locationId}/rankings/players-versus${query}`, options);
 	}
 
 	/** Get list of clan labels. */
 	public getClanLabels(options?: SearchOptions) {
 		const query = Util.queryString(options);
-		return this.handler.request<APILabelList>(`/labels/clans?${query}`, options);
+		return this.handler.request<APILabelList>(`/labels/clans${query}`, options);
 	}
 
 	/** Get list of player labels. */
 	public getPlayerLabels(options?: SearchOptions) {
 		const query = Util.queryString(options);
-		return this.handler.request<APILabelList>(`/labels/players?${query}`, options);
+		return this.handler.request<APILabelList>(`/labels/players${query}`, options);
 	}
 
 	/** Get info about gold pass season. */
