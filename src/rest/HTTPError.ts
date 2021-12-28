@@ -30,7 +30,7 @@ export class HTTPError extends Error {
 	 * The reason of this errored request.
 	 *
 	 * Expected values are `notFound`, `notInWar`, `accessDenied`, `accessDenied.invalidIp`, `privateWarLog`,
-	 * `badRequest`, `requestThrottled`, `serviceUnavailable`, `requestAborted` and `unknownException`.
+	 * `badRequest`, `requestThrottled`, `inMaintenance`, `requestAborted` and `unknownException`.
 	 */
 	public reason: string;
 
