@@ -1,4 +1,4 @@
-import { ClanSearchOptions, SearchOptions, ClientOptions, InitOptions, OverrideOptions } from '../rest/RequestHandler';
+import { ClanSearchOptions, SearchOptions, ClientOptions, LoginOptions, OverrideOptions } from '../types';
 import { LEGEND_LEAGUE_ID, EVENTS, CWL_ROUNDS } from '../util/Constants';
 import { HTTPError, NotInWarError } from '../rest/HTTPError';
 import { RESTManager } from '../rest/RESTManager';
@@ -63,7 +63,7 @@ export class Client extends EventEmitter {
 	 * client.login({ email: 'developer@email.com', password: '***' });
 	 * ```
 	 */
-	public login(options: InitOptions) {
+	public login(options: LoginOptions) {
 		return this.rest.handler.init(options);
 	}
 

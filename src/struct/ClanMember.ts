@@ -1,7 +1,6 @@
+import { APIClanMember, OverrideOptions } from '../types';
 import { UNRANKED_LEAGUE_DATA } from '../util/Constants';
-import { OverrideOptions } from '../rest/RequestHandler';
 import { Client } from '../client/Client';
-import { APIClanMember } from '../types';
 import { League } from './League';
 
 export class ClanMember {

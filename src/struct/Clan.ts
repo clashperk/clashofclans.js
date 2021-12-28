@@ -1,11 +1,10 @@
-import { OverrideOptions } from '../rest/RequestHandler';
+import { APIClan, OverrideOptions } from '../types';
 import { ChatLanguage } from './ChatLanguage';
 import { ClanMember } from './ClanMember';
 import { Client } from '../client/Client';
 import { WarLeague } from './WarLeague';
 import type { Player } from './Player';
 import { Location } from './Location';
-import { APIClan } from '../types';
 import { Label } from './Label';
 import { Badge } from './Badge';
 

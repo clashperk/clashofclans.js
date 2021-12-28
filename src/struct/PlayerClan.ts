@@ -1,6 +1,5 @@
-import { OverrideOptions } from '../rest/RequestHandler';
+import { OverrideOptions, APIPlayerClan } from '../types';
 import { Client } from '../client/Client';
-import { APIPlayerClan } from '../types';
 import { Badge } from './Badge';
 
 /** Represents a Player's clan. */

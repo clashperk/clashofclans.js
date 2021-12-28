@@ -6,10 +6,8 @@ import { Badge } from './Badge';
 /**
  * Represents War Log Clan.
  *
- * :::caution
  * If this is called via {@link ClanWarLog.opponent}, then {@link WarLogClan.attackCount} and {@link WarLogClan.expEarned} will be `null`.
  * For CWL entries {@link WarLogClan.name} and {@link WarLogClan.tag} are `null`.
- * :::
  */
 export class WarLogClan {
 	/** The clan's name. This property is `null` CWL entries. */

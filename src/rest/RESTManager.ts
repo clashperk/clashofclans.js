@@ -1,4 +1,4 @@
-import { RequestHandler, SearchOptions, ClanSearchOptions, RESTOptions, OverrideOptions } from './RequestHandler';
+import { RequestHandler } from './RequestHandler';
 import { Util } from '../util/Util';
 
 import {
@@ -23,7 +23,12 @@ import {
 	APIPlayerVersusRankingList,
 	APIVerifyToken,
 	APIWarLeague,
-	APIWarLeagueList
+	APIWarLeagueList,
+	//
+	SearchOptions,
+	ClanSearchOptions,
+	RESTOptions,
+	OverrideOptions
 } from '../types';
 
 /** Represents a REST Manager of the client. */
