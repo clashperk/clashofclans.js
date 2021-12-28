@@ -324,4 +324,10 @@ export class ClanWar {
 		}
 		return 'lose';
 	}
+
+	/** Returns the Clan War League Group. */
+	public getClanWarLeagueGroup() {
+		if (!this.isCWL) return null;
+		return this.client.getClanWarLeagueGroup(this.clan.tag);
+	}
 }
