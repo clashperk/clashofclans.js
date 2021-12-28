@@ -298,14 +298,20 @@ export class ClanWar {
 
 	/** Returns either `friendly`, `cwl` or `normal`. */
 	public get type() {
-		if (this._isFriendly) return 'friendly';
+		if (this.isFriendly) return 'friendly';
 		if (this.warTag) return 'cwl';
 		return 'normal';
 	}
 
-	private get _isFriendly() {
+	/** Whether this is a friendly war. */
+	public get isFriendly() {
 		const preparationTime = this.startTime.getTime() - this.preparationStartTime.getTime();
 		return FRIENDLY_WAR_PREPARATION_TIMES.includes(preparationTime);
+	}
+
+	/** Whether this is a CWL. */
+	public get isCWL() {
+		return typeof this.warTag === 'string';
 	}
 
 	/** Returns the war status, based off the home clan. */
