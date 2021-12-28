@@ -2,29 +2,23 @@ import { APIBadge } from '../types';
 
 /** Represents a Clash of Clans Badge. */
 export class Badge {
-	private readonly _data!: APIBadge;
-
 	/** The default badge URL. */
 	public url: string;
 
-	public constructor(data: APIBadge) {
-		Object.defineProperty(this, '_data', { value: data });
-		this.url = data.large;
-	}
-
 	/** The large badge URL. */
-	public get large() {
-		return this._data.large;
-	}
+	public large!: string;
 
 	/** The medium badge URL. */
-	public get medium() {
-		return this._data.medium;
-	}
+	public medium!: string;
 
 	/** The small badge URL. */
-	public get small() {
-		return this._data.small;
+	public small!: string;
+
+	public constructor(data: APIBadge) {
+		this.url = data.large;
+		Object.defineProperty(this, 'large', { value: data.large });
+		Object.defineProperty(this, 'medium', { value: data.medium });
+		Object.defineProperty(this, 'small', { value: data.small });
 	}
 
 	/** Get unique hash of this Badge. */
