@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## 2.5.0 (2021-12-29)
+
+### Bug Fixes
+
+-   Fix caching issue with unnecessary/invalid query params. ([#91](https://github.com/clashperk/clashofclans.js/pull/91))
+-   Added necessary methods to `RESTManager` class. ([#92](https://github.com/clashperk/clashofclans.js/pull/92))
+
 ## 2.4.0 (2021-12-28)
 
 ### Features
