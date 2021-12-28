@@ -21,8 +21,13 @@ export class Badge {
 		Object.defineProperty(this, 'small', { value: data.small });
 	}
 
-	/** Get unique hash of this Badge. */
-	public get hash(): string {
+	/** Get unique file name of this Badge. */
+	public get fileName(): string {
 		return this.url.split('/').pop()!;
+	}
+
+	/** Sizes of this Badge. */
+	public get sizes(): string[] {
+		return [this.large, this.medium, this.small].map((url) => /\/(\d+)\//g.exec(url)![1]);
 	}
 }

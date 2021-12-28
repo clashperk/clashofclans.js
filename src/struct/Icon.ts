@@ -8,11 +8,11 @@ export class Icon {
 	/** The medium icon URL. */
 	public medium!: string;
 
-	/** The tiny icon URL. */
-	public tiny!: string;
-
 	/** The small icon URL. */
 	public small!: string;
+
+	/** The tiny icon URL. */
+	public tiny!: string;
 
 	public constructor(data: APIIcon) {
 		this.url = data.medium ?? data.small;
@@ -21,8 +21,13 @@ export class Icon {
 		Object.defineProperty(this, 'small', { value: data.small });
 	}
 
-	/** Get unique hash of this Badge. */
+	/** Get unique file name of this Icon. */
 	public get fileName(): string {
 		return this.url.split('/').pop()!;
+	}
+
+	/** Sizes of this Icon. */
+	public get sizes(): string[] {
+		return [this.medium, this.small, this.tiny].map((url) => /\/(\d+)\//g.exec(url)![1]);
 	}
 }
