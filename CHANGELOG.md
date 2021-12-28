@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## 2.4.0 (2021-12-28)
+
+### Features
+
+-   `ClanWar.getClanWarLeague`, `ClanWar.isCWL` and `ClanWar.isFriendly` are now available. ([#87](https://github.com/clashperk/clashofclans.js/pull/87))
+-   `RESTOptions.rejectIfNotValid` added to perform `res.ok` operations over `RESTManager` class. ([#87](https://github.com/clashperk/clashofclans.js/pull/87))
+-   `Icon.fileName` and `Icon.sizes` are now available in `Icon` class. ([#87](https://github.com/clashperk/clashofclans.js/pull/87))
+-   `Badge.fileName` and `Badge.sizes` are now available in `Badge` class. ([#87](https://github.com/clashperk/clashofclans.js/pull/87))
+
+### Deprecations
+
+-   `ClanWarMember.previousBestOpponentAttack` has been deprecated. Use `ClanWarAttack.previousBestAttack` instead. ([#87](https://github.com/clashperk/clashofclans.js/pull/87))
+
 ## 2.3.0 (2021-12-17)
 
 ### Features
