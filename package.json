@@ -1,6 +1,6 @@
 {
 	"name": "clashofclans.js",
-	"version": "2.4.0",
+	"version": "2.5.0",
 	"description": "JavaScript library for interacting with the Clash of Clans API",
 	"author": "SUVAJIT <suvajit.me@gmail.com>",
 	"license": "MIT",
@@ -22,7 +22,9 @@
 	"keywords": [
 		"clash-of-clans-api",
 		"clash-of-clans",
-		"clash-api"
+		"clash-api",
+		"supercell",
+		"coc"
 	],
 	"bugs": {
 		"url": "https://github.com/clashperk/clashofclans.js/issues"

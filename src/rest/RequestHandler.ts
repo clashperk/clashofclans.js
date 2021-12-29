@@ -96,8 +96,8 @@ export class RequestHandler {
 			throw new HTTPError(data, res?.status ?? 504, path, maxAge, options.method);
 		}
 
-		if (this.cached && maxAge > 0 && options.cache !== false) {
-			await this.cached.set(path, { data, ttl: Date.now() + maxAge, status: res?.status ?? 504 }, maxAge);
+		if (this.cached && maxAge > 0 && options.cache !== false && res?.ok) {
+			await this.cached.set(path, { data, ttl: Date.now() + maxAge, status: res.status }, maxAge);
 		}
 		return { data, maxAge, status: res?.status ?? 504, path, ok: res?.status === 200 };
 	}
