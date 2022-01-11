@@ -160,7 +160,7 @@ export interface APIClanWarLog {
 
 /** /clans/{clanTag}/currentwar/leaguegroup */
 export interface APIClanWarLeagueGroup {
-	state: 'preparation' | 'inWar' | 'warEnded';
+	state: 'preparation' | 'inWar' | 'ended';
 	season: string;
 	clans: APIClanWarLeagueClan[];
 	rounds: APIClanWarLeagueRound[];
