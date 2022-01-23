@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## 2.5.2 (2022-01-23)
+
+### Bug Fixes
+
+-   Fix `ClanWar#attacksPerMembers` property ([#97](https://github.com/clashperk/clashofclans.js/pull/97))
+-   Bump `node-fetch` from 2.6.6 to 2.6.7 ([#96](https://github.com/clashperk/clashofclans.js/pull/96))
+
 ## 2.5.1 (2022-01-11)
 
 ### Bug Fixes
