@@ -2,7 +2,6 @@ import { Store } from '../types';
 
 export interface CacheOptions {
 	sweepInterval?: number;
-	maxSize?: number;
 	ttl?: number;
 }
 
@@ -14,9 +13,8 @@ export class CacheStore<T> implements Store {
 
 	public constructor(options?: CacheOptions) {
 		this.ttl = options?.ttl ?? 0;
-		this.maxSize = options?.maxSize;
 		this.sweepInterval = options?.sweepInterval ?? 10 * 60 * 1000;
-		if (this.sweepInterval > 0) this._sweep(); // sweep expired cache every 10 minutes
+		if (this.sweepInterval > 0) this._sweep(); // sweep expired cache
 	}
 
 	private _sweep() {
@@ -31,12 +29,9 @@ export class CacheStore<T> implements Store {
 
 	public async set(key: string, value: T, ttl?: number) {
 		const expires = ttl && ttl > 0 ? Date.now() + ttl : this.ttl > 0 ? Date.now() + this.ttl : 0;
-		return Promise.resolve()
-			.then(() => {
-				this.store.set(key, { value, expires, key });
-				return this.store.get(key);
-			})
-			.then(() => true);
+		return Promise.resolve().then(() => {
+			return this.store.set(key, { value, expires, key });
+		});
 	}
 
 	public async get(key: string) {
