@@ -1,5 +1,12 @@
 import { QueueThrottler, BatchThrottler } from '../rest/Throttler';
 
+export interface Store<T = any> {
+	get(key: string): T | Promise<T | null> | null;
+	set(key: string, value: T, ttl?: number): boolean | Promise<boolean>;
+	delete(key: string): boolean | Promise<boolean>;
+	clear(): void | Promise<void>;
+}
+
 /** Options for a Client. */
 export interface ClientOptions {
 	/** Keys from Clash of Clans API developer site. */
@@ -20,7 +27,7 @@ export interface ClientOptions {
 	 * const client = new Client({ cache: true });
 	 * ```
 	 */
-	cache?: boolean | any;
+	cache?: boolean | Store;
 
 	/** Time to wait before cancelling a REST request, in milliseconds. */
 	restRequestTimeout?: number;

@@ -8,4 +8,4 @@ export * from './util/Util';
 export * from './struct';
 export * from './types';
 export * from './util/Constants';
-export * from './rest/Store';
+export * from './util/Store';
