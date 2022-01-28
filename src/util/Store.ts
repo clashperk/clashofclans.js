@@ -5,11 +5,10 @@ export interface CacheOptions {
 	ttl?: number;
 }
 
-export class CacheStore<T> implements Store {
+export class CacheStore<T = any> implements Store<T> {
 	private readonly ttl: number;
-	private readonly maxSize?: number;
 	private readonly sweepInterval?: number;
-	private readonly store = new Map<string, { value: unknown; expires: number; key: string }>();
+	private readonly store = new Map<string, { value: T; expires: number; key: string }>();
 
 	public constructor(options?: CacheOptions) {
 		this.ttl = options?.ttl ?? 0;
@@ -27,35 +26,28 @@ export class CacheStore<T> implements Store {
 		}, this.sweepInterval);
 	}
 
-	public async set(key: string, value: T, ttl?: number) {
-		const expires = ttl && ttl > 0 ? Date.now() + ttl : this.ttl > 0 ? Date.now() + this.ttl : 0;
-		return Promise.resolve().then(() => {
-			return this.store.set(key, { value, expires, key });
-		});
+	public set(key: string, value: T, ttl = 0) {
+		const expires = ttl > 0 ? Date.now() + ttl : this.ttl > 0 ? Date.now() + this.ttl : 0;
+		this.store.set(key, { value, expires, key });
+		return true;
 	}
 
-	public async get(key: string) {
-		return Promise.resolve().then(() => {
-			const data = this.store.get(key);
-			if (!data) return null;
+	public get(key: string) {
+		const data = this.store.get(key);
+		if (!data) return null;
 
-			if (data.expires > 0 && Date.now() > data.expires) {
-				this.store.delete(key);
-				return null;
-			}
-			return data.value as T;
-		});
+		if (data.expires > 0 && Date.now() > data.expires) {
+			this.store.delete(key);
+			return null;
+		}
+		return data.value;
 	}
 
-	public async delete(key: string) {
-		return Promise.resolve().then(() => {
-			return this.store.delete(key);
-		});
+	public delete(key: string) {
+		return this.store.delete(key);
 	}
 
-	public async clear() {
-		return Promise.resolve().then(() => {
-			return this.store.clear();
-		});
+	public clear() {
+		return this.store.clear();
 	}
 }
