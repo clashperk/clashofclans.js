@@ -2,9 +2,9 @@ import { RESTOptions, Response, RequestOptions, LoginOptions } from '../types';
 import { API_BASE_URL, DEV_SITE_API_BASE_URL } from '../util/Constants';
 import { QueueThrottler, BatchThrottler } from './Throttler';
 import { HTTPError, PrivateWarLogError } from './HTTPError';
+import { Store } from './Store';
 import fetch from 'node-fetch';
 import https from 'https';
-import Keyv from 'keyv';
 
 const IP_REGEX = /\d{1,3}.\d{1,3}.\d{1,3}.\d{1,3}/g;
 
@@ -26,7 +26,7 @@ export class RequestHandler {
 	private readonly retryLimit: number;
 	private readonly restRequestTimeout: number;
 	private readonly throttler?: QueueThrottler | BatchThrottler | null;
-	private readonly cached: Keyv<{ data: unknown; ttl: number; status: number }> | null;
+	private readonly cached: Store | any;
 
 	public constructor(options?: RESTOptions) {
 		this.keys = options?.keys ?? [];
@@ -35,8 +35,7 @@ export class RequestHandler {
 		this.baseURL = options?.baseURL ?? API_BASE_URL;
 		this.restRequestTimeout = options?.restRequestTimeout ?? 0;
 		this.rejectIfNotValid = options?.rejectIfNotValid ?? true;
-		if (options?.cache instanceof Keyv) this.cached = options.cache;
-		else this.cached = options?.cache ? new Keyv() : null;
+		this.cached = options?.cache === true ? new Store() : options?.cache ?? null;
 	}
 
 	private get _keys() {
@@ -55,7 +54,7 @@ export class RequestHandler {
 	}
 
 	public async request<T>(path: string, options: RequestOptions = {}): Promise<Response<T>> {
-		const cached = (await this.cached?.get(path)) ?? null;
+		const cached = (await this.cached?.get?.(path)) ?? null;
 		if (cached && options.force !== true) {
 			return { data: cached.data as T, maxAge: cached.ttl - Date.now(), status: cached.status, path, ok: cached.status === 200 };
 		}
@@ -97,7 +96,7 @@ export class RequestHandler {
 		}
 
 		if (this.cached && maxAge > 0 && options.cache !== false && res?.ok) {
-			await this.cached.set(path, { data, ttl: Date.now() + maxAge, status: res.status }, maxAge);
+			await this.cached.set?.(path, { data, ttl: Date.now() + maxAge, status: res.status }, maxAge);
 		}
 		return { data, maxAge, status: res?.status ?? 504, path, ok: res?.status === 200 };
 	}

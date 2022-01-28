@@ -1,5 +1,4 @@
 import { QueueThrottler, BatchThrottler } from '../rest/Throttler';
-import Keyv from 'keyv';
 
 /** Options for a Client. */
 export interface ClientOptions {
@@ -21,7 +20,7 @@ export interface ClientOptions {
 	 * const client = new Client({ cache: true });
 	 * ```
 	 */
-	cache?: boolean | Keyv;
+	cache?: boolean | any;
 
 	/** Time to wait before cancelling a REST request, in milliseconds. */
 	restRequestTimeout?: number;
