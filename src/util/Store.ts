@@ -1,7 +1,19 @@
 import { Store } from '../types';
 
 export interface CacheOptions {
+	/**
+	 * How frequently to remove data from cache that are older than the lifetime/ttl (in milliseconds, 0 for never)
+	 *
+	 * To prevent high CPU usage, set a higher value (30-60 seconds recommended)
+	 *
+	 * @default 120000 (2 minutes)
+	 */
 	sweepInterval?: number;
+	/**
+	 * How long a data should stay in the cache until it is considered sweepable (in milliseconds, 0 for forever)
+	 *
+	 * @default 0
+	 */
 	ttl?: number;
 }
 
@@ -12,7 +24,7 @@ export class CacheStore<T = any> implements Store<T> {
 
 	public constructor(options?: CacheOptions) {
 		this.ttl = options?.ttl ?? 0;
-		this.sweepInterval = options?.sweepInterval ?? 10 * 60 * 1000;
+		this.sweepInterval = options?.sweepInterval ?? 2 * 60 * 1000;
 		if (this.sweepInterval > 0) this._sweep(); // sweep expired cache
 	}
 
@@ -23,7 +35,7 @@ export class CacheStore<T = any> implements Store<T> {
 					this.store.delete(cache.key);
 				}
 			}
-		}, this.sweepInterval);
+		}, Math.max(this.sweepInterval!, 30 * 1000));
 	}
 
 	public set(key: string, value: T, ttl = 0) {
