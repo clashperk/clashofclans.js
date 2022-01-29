@@ -2,6 +2,7 @@ name: Docs
 
 on:
   workflow_dispatch:
+
   push:
     branches: [master]
 
@@ -9,6 +10,7 @@ jobs:
   build:
     name: Docs
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
@@ -19,10 +21,10 @@ jobs:
           ref: master
           owner: clashperk
           repo: clashofclans.js.org
-
           wait_interval: 10
           wait_workflow: true
           trigger_workflow: true
           propagate_failure: false
           workflow_file_name: main.yml
+          inputs: '{"ref":"${{github.ref}}"}'
           github_token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}

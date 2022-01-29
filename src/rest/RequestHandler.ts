@@ -1,10 +1,10 @@
-import { RESTOptions, Response, RequestOptions, LoginOptions } from '../types';
+import { RESTOptions, Response, RequestOptions, LoginOptions, Store } from '../types';
 import { API_BASE_URL, DEV_SITE_API_BASE_URL } from '../util/Constants';
 import { QueueThrottler, BatchThrottler } from './Throttler';
 import { HTTPError, PrivateWarLogError } from './HTTPError';
+import { CacheStore } from '../util/Store';
 import fetch from 'node-fetch';
 import https from 'https';
-import Keyv from 'keyv';
 
 const IP_REGEX = /\d{1,3}.\d{1,3}.\d{1,3}.\d{1,3}/g;
 
@@ -26,7 +26,7 @@ export class RequestHandler {
 	private readonly retryLimit: number;
 	private readonly restRequestTimeout: number;
 	private readonly throttler?: QueueThrottler | BatchThrottler | null;
-	private readonly cached: Keyv<{ data: unknown; ttl: number; status: number }> | null;
+	private readonly cached: Store<{ data: unknown; ttl: number; status: number }> | null;
 
 	public constructor(options?: RESTOptions) {
 		this.keys = options?.keys ?? [];
@@ -35,8 +35,8 @@ export class RequestHandler {
 		this.baseURL = options?.baseURL ?? API_BASE_URL;
 		this.restRequestTimeout = options?.restRequestTimeout ?? 0;
 		this.rejectIfNotValid = options?.rejectIfNotValid ?? true;
-		if (options?.cache instanceof Keyv) this.cached = options.cache;
-		else this.cached = options?.cache ? new Keyv() : null;
+		if (typeof options?.cache === 'object') this.cached = options.cache;
+		else this.cached = options?.cache === true ? new CacheStore() : null;
 	}
 
 	private get _keys() {

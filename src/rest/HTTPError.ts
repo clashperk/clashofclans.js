@@ -9,7 +9,7 @@ const messages: { [key: string]: string } = {
 };
 
 const reasons: { [key: string]: string } = {
-	503: 'serviceUnavailable',
+	503: 'inMaintenance',
 	429: 'requestThrottled',
 	400: 'badRequest',
 	403: 'accessDenied',

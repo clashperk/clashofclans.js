@@ -1,5 +1,11 @@
 import { QueueThrottler, BatchThrottler } from '../rest/Throttler';
-import Keyv from 'keyv';
+
+export interface Store<T = any> {
+	set(key: string, value: T, ttl?: number): boolean | Promise<boolean>;
+	get(key: string): T | null | Promise<T | null>;
+	delete(key: string): boolean | Promise<boolean>;
+	clear(): void | Promise<void>;
+}
 
 /** Options for a Client. */
 export interface ClientOptions {
@@ -21,7 +27,7 @@ export interface ClientOptions {
 	 * const client = new Client({ cache: true });
 	 * ```
 	 */
-	cache?: boolean | Keyv;
+	cache?: boolean | Store;
 
 	/** Time to wait before cancelling a REST request, in milliseconds. */
 	restRequestTimeout?: number;
