@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## 2.6.0
+
+## Features
+
+-   Replaced Keyv with customizable cache store ([#99](https://github.com/clashperk/clashofclans.js/pull/99))
+-   Guide for [Internal Caching](https://clashofclans.js.org/guide/internal-caching)
+
 ## 2.5.2 (2022-01-23)
 
 ### Bug Fixes
