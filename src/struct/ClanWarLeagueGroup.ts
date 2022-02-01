@@ -72,7 +72,7 @@ export class ClanWarLeagueRound {
 /** Represents a CWL Group. */
 export class ClanWarLeagueGroup {
 	/** The CWL group's current war state. */
-	public state: 'notInWar' | 'preparation' | 'inWar' | 'ended';
+	public state: 'preparation' | 'inWar' | 'ended';
 
 	/** Season Id of this CWL group. */
 	public season: string;
@@ -84,6 +84,7 @@ export class ClanWarLeagueGroup {
 	public rounds: ClanWarLeagueRound[];
 
 	public constructor(private readonly client: Client, data: APIClanWarLeagueGroup) {
+		// @ts-expect-error
 		this.state = data.state;
 		this.season = data.season;
 		this.clans = data.clans.map((clan) => new ClanWarLeagueClan(client, clan));
