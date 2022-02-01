@@ -72,7 +72,7 @@ export class ClanWarLeagueRound {
 /** Represents a CWL Group. */
 export class ClanWarLeagueGroup {
 	/** The CWL group's current war state. */
-	public state: 'preparation' | 'inWar' | 'ended';
+	public state: 'notInWar' | 'preparation' | 'inWar' | 'ended';
 
 	/** Season Id of this CWL group. */
 	public season: string;
