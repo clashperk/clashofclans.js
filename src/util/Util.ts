@@ -29,7 +29,10 @@ export class Util extends null {
 
 	/** @internal */
 	public static parseTag(tag: string) {
-		return `#${tag.toUpperCase().replace(/O/g, '0').replace(/^#/g, '').replace(/\s/g, '')}`;
+		if (tag && typeof tag === 'string') {
+			return `#${tag.toUpperCase().replace(/O/g, '0').replace(/^#/g, '').replace(/\s/g, '')}`;
+		}
+		throw new TypeError('The "tag" argument must be of type string.');
 	}
 
 	/** Encodes a tag as a valid component of a URI. */
@@ -51,7 +54,7 @@ export class Util extends null {
 	public static encodeTag(tag: string) {
 		const formatted = this.formatTag(tag).substring(1);
 		if (!this.isValidTag(formatted)) {
-			throw new Error(`Failed to encode tag ${formatted}. RegExp matching failed.`);
+			throw new TypeError(`Failed to encode tag ${formatted}. RegExp matching failed.`);
 		}
 
 		const result = formatted.split('').reduce((sum, char) => sum * BigInt(14) + BigInt(TAG_CHARACTERS.indexOf(char)), BigInt(0));

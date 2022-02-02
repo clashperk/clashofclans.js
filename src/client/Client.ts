@@ -40,7 +40,7 @@ export class Client extends EventEmitter {
 	public constructor(options?: ClientOptions) {
 		super();
 
-		this.rest = new RESTManager(options);
+		this.rest = new RESTManager({ ...options, rejectIfNotValid: true });
 		this.events = new EventManager(this);
 	}
 

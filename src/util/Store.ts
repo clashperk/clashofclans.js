@@ -17,9 +17,9 @@ export interface CacheOptions {
 	ttl?: number;
 }
 
-export class CacheStore<T = any> implements Store<T> {
+export class CacheStore<T> implements Store<T> {
 	private readonly ttl: number;
-	private readonly sweepInterval?: number;
+	private readonly sweepInterval: number;
 	private readonly store = new Map<string, { value: T; expires: number; key: string }>();
 
 	public constructor(options?: CacheOptions) {
@@ -35,7 +35,7 @@ export class CacheStore<T = any> implements Store<T> {
 					this.store.delete(cache.key);
 				}
 			}
-		}, Math.max(this.sweepInterval!, 30 * 1000));
+		}, Math.max(this.sweepInterval, 30 * 1000));
 	}
 
 	public set(key: string, value: T, ttl = 0) {
