@@ -81,7 +81,7 @@ export interface OverrideOptions {
 	force?: boolean;
 
 	/** How many times to retry on 5XX errors. */
-	retryLimit?: string;
+	retryLimit?: number;
 
 	/** Whether to ignore throttlers. */
 	ignoreRateLimit?: boolean;

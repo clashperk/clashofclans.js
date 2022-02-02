@@ -54,6 +54,10 @@ export class RequestHandler {
 		return this;
 	}
 
+	private get creds() {
+		return Boolean(this.email && this.password);
+	}
+
 	public async request<T>(path: string, options: RequestOptions = {}): Promise<Response<T>> {
 		const cached = (await this.cached?.get(path)) ?? null;
 		if (cached && options.force !== true) {
@@ -82,8 +86,13 @@ export class RequestHandler {
 		const data = await res?.json().catch(() => null);
 		if (!res && retries < (options.retryLimit ?? this.retryLimit)) return this.exec<T>(path, options, ++retries);
 
-		if (res?.status === 403 && data?.reason === 'accessDenied.invalidIp' && this.email && this.password) {
-			const keys = await this.reValidateKeys().then(() => this.login());
+		if (
+			this.creds &&
+			res?.status === 403 &&
+			data?.reason === 'accessDenied.invalidIp' &&
+			retries < (options.retryLimit ?? this.retryLimit)
+		) {
+			const keys = await this.reValidateKeys().then(() => () => this.login());
 			if (keys.length) return this.exec<T>(path, options, ++retries);
 		}
 
@@ -126,7 +135,7 @@ export class RequestHandler {
 			if (res?.status === 403) {
 				const index = this.keys.indexOf(key);
 				this.keys.splice(index, 1);
-				process.emitWarning(`Pre-defined key #${index + 1} is no longer valid. Removed from the key list.`);
+				process.emitWarning(`Key #${index + 1} is no longer valid. Removed from the key list.`);
 			}
 		}
 	}
@@ -158,17 +167,17 @@ export class RequestHandler {
 		if (!res.ok) throw new Error(`Failed to retrieve the API Keys. ${JSON.stringify(data)}`);
 
 		// Get all available keys from the developer site.
-		const keys = (data.keys ?? []) as { id: string; name: string; key: string; cidrRanges: string[] }[];
+		const keys = (data.keys ?? []) as { id: string; name: string; key: string; cidrRanges?: string[] }[];
 
 		// Revoke keys for specified key name but not matching current IP address.
-		for (const key of keys.filter((key) => key.name === this.keyName && !key.cidrRanges.includes(ip))) {
+		for (const key of keys.filter((key) => key.name === this.keyName && !key.cidrRanges?.includes(ip))) {
 			if (!(await this.revokeKey(key.id, cookie))) continue;
 			const index = keys.findIndex(({ id }) => id === key.id);
 			keys.splice(index, 1);
 		}
 
 		// Filter keys for current IP address and specified key name.
-		for (const key of keys.filter((key) => key.name === this.keyName && key.cidrRanges.includes(ip))) {
+		for (const key of keys.filter((key) => key.name === this.keyName && key.cidrRanges?.includes(ip))) {
 			if (this.keys.length >= this.keyCount) break;
 			if (!this.keys.includes(key.key)) this.keys.push(key.key);
 		}
@@ -223,7 +232,7 @@ export class RequestHandler {
 
 		const data = await res.json();
 		if (!res.ok) throw new Error(`Failed to create API Key. ${JSON.stringify(data)}`);
-		return data.key as { id: string; name: string; key: string; cidrRanges: string[] };
+		return data.key as { id: string; name: string; key: string; cidrRanges?: string[] };
 	}
 
 	private async getIp(token: string): Promise<string | null> {

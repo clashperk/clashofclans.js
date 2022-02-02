@@ -84,6 +84,7 @@ export class ClanWarLeagueGroup {
 	public rounds: ClanWarLeagueRound[];
 
 	public constructor(private readonly client: Client, data: APIClanWarLeagueGroup) {
+		// @ts-expect-error
 		this.state = data.state;
 		this.season = data.season;
 		this.clans = data.clans.map((clan) => new ClanWarLeagueClan(client, clan));

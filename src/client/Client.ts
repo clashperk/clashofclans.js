@@ -192,7 +192,10 @@ export class Client extends EventEmitter {
 
 	/** Get info about clan war league. */
 	public async getClanWarLeagueGroup(clanTag: string, options?: OverrideOptions) {
-		const { data } = await this.rest.getClanWarLeagueGroup(clanTag, options);
+		const { data, status, path, maxAge } = await this.rest.getClanWarLeagueGroup(clanTag, options);
+		if (data.state === 'notInWar') {
+			throw new HTTPError(NotInWarError, status, path, maxAge);
+		}
 		return new ClanWarLeagueGroup(this, data);
 	}
 
