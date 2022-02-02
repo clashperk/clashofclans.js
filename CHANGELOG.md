@@ -2,7 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
-## 2.6.0
+# 2.6.1 (2022-02-03)
+
+Bug Fixes
+
+-   New value and typings `notInWar` added for `ClanWarLeagueGroup#state` ([#101](https://github.com/clashperk/clashofclans.js/pull/101))
+-   Throw error if `Util.formatTag` / `Util.parseTag` is called with invalid argument ([#102](https://github.com/clashperk/clashofclans.js/pull/101))
+
+## 2.6.0 (2022-01-29)
 
 ## Features
 
