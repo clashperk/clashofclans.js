@@ -20,8 +20,6 @@ export class PlayerClan {
 	/** Badge of this clan. */
 	public badge: Badge;
 
-	/** Formatted link of this clan to open clan in-game. */
-
 	public constructor(private readonly _client: Client, data: APIPlayerClan) {
 		this.name = data.name;
 		this.tag = data.tag;

@@ -127,8 +127,6 @@ export class RankedClan {
 	/** The clan's level. */
 	public level: number;
 
-	/** The clan's formatted link to open clan in-game. */
-
 	/** The clan's trophy count. If retrieving info for versus leader-boards, this will be `null`.  */
 	public points: number | null;
 

@@ -52,8 +52,8 @@ export class WarLogClan {
 	}
 
 	/** Get clan's formatted link to open clan in-game. */
-	public get shareLink() {
-		return this.tag && `https://link.clashofclans.com/en?action=OpenClanProfile&tag=${this.tag.replace(/#/g, '')}`;
+	public get shareLink(): string | null {
+		return this.tag ? `https://link.clashofclans.com/en?action=OpenClanProfile&tag=${this.tag.replace(/#/g, '')}` : null;
 	}
 }
 
