@@ -130,6 +130,11 @@ export class ClanWarMember {
 		return this.war.getAttack(this._bestOpponentAttackerTag, this.tag);
 	}
 
+	/** Get member's formatted link to open member in-game. */
+	public get shareLink() {
+		return `https://link.clashofclans.com/en?action=OpenPlayerProfile&tag=${this.tag.replace(/#/g, '')}`;
+	}
+
 	/**
 	 * Returns the previous best opponent attack on this village.
 	 * This is useful for calculating the new stars or destruction for new attacks.
@@ -216,6 +221,11 @@ export class WarClan {
 	/** Get a member of the clan for the given tag, or `null` if not found. */
 	public getMember(tag: string): ClanWarMember | null {
 		return this.members.find((m) => m.tag === tag) ?? null;
+	}
+
+	/** Get clan's formatted link to open clan in-game. */
+	public get shareLink() {
+		return `https://link.clashofclans.com/en?action=OpenClanProfile&tag=${this.tag.replace(/#/g, '')}`;
 	}
 }
 

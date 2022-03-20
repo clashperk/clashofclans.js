@@ -20,6 +20,8 @@ export class PlayerClan {
 	/** Badge of this clan. */
 	public badge: Badge;
 
+	/** Formatted link of this clan to open clan in-game. */
+
 	public constructor(private readonly _client: Client, data: APIPlayerClan) {
 		this.name = data.name;
 		this.tag = data.tag;
@@ -30,5 +32,10 @@ export class PlayerClan {
 	/** Fetch detailed clan info for the player's clan. */
 	public fetch(options?: OverrideOptions) {
 		return this._client.getClan(this.tag, options);
+	}
+
+	/** Get clan's formatted link to open clan in-game. */
+	public get shareLink() {
+		return `https://link.clashofclans.com/en?action=OpenClanProfile&tag=${this.tag.replace(/#/g, '')}`;
 	}
 }

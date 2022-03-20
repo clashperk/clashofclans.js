@@ -110,4 +110,9 @@ export class Clan {
 			.filter((res) => res.status === 'fulfilled')
 			.map((res) => (res as PromiseFulfilledResult<Player>).value);
 	}
+
+	/** Get clan's formatted link to open clan in-game. */
+	public get shareLink() {
+		return `https://link.clashofclans.com/en?action=OpenClanProfile&tag=${this.tag.replace(/#/g, '')}`;
+	}
 }

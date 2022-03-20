@@ -50,6 +50,11 @@ export class WarLogClan {
 		this.destruction = data.destructionPercentage;
 		this.expEarned = data.expEarned ?? null;
 	}
+
+	/** Get clan's formatted link to open clan in-game. */
+	public get shareLink() {
+		return this.tag && `https://link.clashofclans.com/en?action=OpenClanProfile&tag=${this.tag.replace(/#/g, '')}`;
+	}
 }
 
 export class ClanWarLog {

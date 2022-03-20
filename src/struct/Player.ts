@@ -159,4 +159,9 @@ export class Player {
 			.filter((entry) => SIEGE_MACHINES.includes(entry.name))
 			.sort((a, b) => SIEGE_MACHINES.indexOf(a.name) - SIEGE_MACHINES.indexOf(b.name));
 	}
+
+	/** Get player's formatted link to open player in-game. */
+	public get shareLink() {
+		return `https://link.clashofclans.com/en?action=OpenPlayerProfile&tag=${this.tag.replace(/#/g, '')}`;
+	}
 }
