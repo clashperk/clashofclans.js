@@ -20,6 +20,11 @@ export class ClanWarLeagueClanMember {
 		this.tag = data.tag;
 		this.townHallLevel = data.townHallLevel;
 	}
+
+	/** Get member's formatted link to open member in-game. */
+	public get shareLink() {
+		return `https://link.clashofclans.com/en?action=OpenPlayerProfile&tag=${this.tag.replace(/#/g, '')}`;
+	}
 }
 
 /** Represents a Clan of CWL Group. */
@@ -52,6 +57,11 @@ export class ClanWarLeagueClan {
 		return (await Promise.allSettled(this.members.map((m) => this.client.getPlayer(m.tag, { ...options, ignoreRateLimit: true }))))
 			.filter((res) => res.status === 'fulfilled')
 			.map((res) => (res as PromiseFulfilledResult<Player>).value);
+	}
+
+	/** Get clan's formatted link to open clan in-game. */
+	public get shareLink() {
+		return `https://link.clashofclans.com/en?action=OpenClanProfile&tag=${this.tag.replace(/#/g, '')}`;
 	}
 }
 

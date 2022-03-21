@@ -31,4 +31,9 @@ export class PlayerClan {
 	public fetch(options?: OverrideOptions) {
 		return this._client.getClan(this.tag, options);
 	}
+
+	/** Get clan's formatted link to open clan in-game. */
+	public get shareLink() {
+		return `https://link.clashofclans.com/en?action=OpenClanProfile&tag=${this.tag.replace(/#/g, '')}`;
+	}
 }

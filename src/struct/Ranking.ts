@@ -43,6 +43,11 @@ export class SeasonRankedPlayer {
 		// @ts-expect-error
 		this.clan = data.clan ? new PlayerClan(client, data.clan) : null;
 	}
+
+	/** Get player's formatted link to open player in-game. */
+	public get shareLink() {
+		return `https://link.clashofclans.com/en?action=OpenPlayerProfile&tag=${this.tag.replace(/#/g, '')}`;
+	}
 }
 
 /** Represents the Player of location based leader-board ranking. */
@@ -104,6 +109,11 @@ export class RankedPlayer {
 		// @ts-expect-error
 		this.league = data.trophies ? new League(data.league ?? UNRANKED_LEAGUE_DATA) : null; // eslint-disable-line
 	}
+
+	/** Get player's formatted link to open player in-game. */
+	public get shareLink() {
+		return `https://link.clashofclans.com/en?action=OpenPlayerProfile&tag=${this.tag.replace(/#/g, '')}`;
+	}
 }
 
 /** Represents the Clan of location based leader-board ranking. */
@@ -151,5 +161,10 @@ export class RankedClan {
 		this.rank = data.rank;
 		this.previousRank = data.previousRank;
 		this.badge = new Badge(data.badgeUrls);
+	}
+
+	/** Get clan's formatted link to open clan in-game. */
+	public get shareLink() {
+		return `https://link.clashofclans.com/en?action=OpenClanProfile&tag=${this.tag.replace(/#/g, '')}`;
 	}
 }
