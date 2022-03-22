@@ -43,6 +43,9 @@ export class Clan {
 	/** The minimum trophies required to apply to this clan. */
 	public requiredTrophies: number;
 
+	/** The minimum versus trophies required to apply to this clan. */
+	public requiredVersusTrophies: number | null;
+
 	/** The minimum hall level required to apply to this clan. */
 	public requiredTownHallLevel: number | null;
 
@@ -92,6 +95,7 @@ export class Clan {
 		this.versusPoints = data.clanVersusPoints;
 		this.requiredTrophies = data.requiredTrophies;
 		this.requiredTownHallLevel = data.requiredTownhallLevel ?? null;
+		this.requiredVersusTrophies = data.requiredVersusTrophies ?? null;
 		this.warFrequency = data.warFrequency;
 		this.warWinStreak = data.warWinStreak;
 		this.warWins = data.warWins;

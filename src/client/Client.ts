@@ -73,8 +73,13 @@ export class Client extends EventEmitter {
 		return this;
 	}
 
-	/** Search all clans by name and/or filtering the results using various criteria. */
-	public async getClans(query: ClanSearchOptions, options?: OverrideOptions) {
+	/** Search clans by name and/or filtering parameters or get clans by their tags (fetches in parallel). */
+	public async getClans(query: ClanSearchOptions | string[], options?: OverrideOptions) {
+		if (Array.isArray(query)) {
+			return (await Promise.allSettled(query.map((tag) => this.getClan(tag, options))))
+				.filter((res) => res.status === 'fulfilled')
+				.map((res) => (res as PromiseFulfilledResult<Clan>).value);
+		}
 		const { data } = await this.rest.getClans(query, options);
 		// @ts-expect-error
 		return data.items.map((clan) => new Clan(this, clan));
@@ -213,6 +218,13 @@ export class Client extends EventEmitter {
 	public async getPlayer(playerTag: string, options?: OverrideOptions) {
 		const { data } = await this.rest.getPlayer(playerTag, options);
 		return new Player(this, data);
+	}
+
+	/** Get info about some players by their tags (fetches in parallel). */
+	public async getPlayers(playerTags: string[], options?: OverrideOptions) {
+		return (await Promise.allSettled(playerTags.map((tag) => this.getPlayer(tag, options))))
+			.filter((res) => res.status === 'fulfilled')
+			.map((res) => (res as PromiseFulfilledResult<Player>).value);
 	}
 
 	/** Verify Player API token that can be found from the Game settings. */

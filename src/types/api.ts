@@ -57,6 +57,7 @@ export interface APIClan {
 	clanVersusPoints: number;
 	requiredTrophies: number;
 	requiredTownhallLevel?: number;
+	requiredVersusTrophies?: number;
 	warFrequency: 'always' | 'moreThanOncePerWeek' | 'oncePerWeek' | 'lessThanOncePerWeek' | 'never' | 'unknown';
 	warWinStreak: number;
 	warWins: number;
@@ -202,6 +203,7 @@ export interface APIPlayer {
 	versusTrophies?: number;
 	bestVersusTrophies?: number;
 	versusBattleWins?: number;
+	versusBattleWinCount?: number;
 	donations: number;
 	donationsReceived: number;
 	role?: string;

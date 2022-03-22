@@ -101,6 +101,10 @@ export class ClanWarLeagueGroup {
 		this.rounds = data.rounds.map((round, i) => new ClanWarLeagueRound(round, i));
 	}
 
+	public get totalRounds() {
+		return this.clans.length - 1;
+	}
+
 	/**
 	 * This returns an array of {@link ClanWar} which fetches all wars in parallel.
 	 * @param clanTag Optional clan tag. If present, this will only return wars which belong to this clan.
