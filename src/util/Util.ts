@@ -143,4 +143,26 @@ export class Util extends null {
 			return !newMembers.includes(member.tag);
 		});
 	}
+
+	public static donationChanges(oldClan: Clan, newClan: Clan) {
+		const oldData: { [key: string]: { donations: number; received: number } } = {};
+		const donationChanges: { player: ClanMember; newDonations: number; newReceived: number }[] = [];
+
+		// add player tag as key dynamically to access data easily
+		// since we only need donations and receives to compare
+		oldClan.members.forEach((member) => (oldData[member.tag] = { donations: member.donations, received: member.received }));
+
+		newClan.members.forEach((player) => {
+			const { donations, received } = oldData[player.tag];
+
+			!donations && !received
+				? donationChanges.push({ player, newDonations: player.donations, newReceived: player.received })
+				: donationChanges.push({
+						player,
+						newDonations: player.donations > donations ? player.donations - donations : player.donations,
+						newReceived: player.received > received ? player.received - received : player.received
+				  });
+		});
+		return donationChanges;
+	}
 }
