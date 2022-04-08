@@ -159,6 +159,7 @@ export class Util extends null {
 				? donationChanges.push({ player, newDonations: player.donations, newReceived: player.received })
 				: donationChanges.push({
 						player,
+						// prevent negative value, will happen during season change
 						newDonations: player.donations > donations ? player.donations - donations : player.donations,
 						newReceived: player.received > received ? player.received - received : player.received
 				  });
