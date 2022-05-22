@@ -53,6 +53,22 @@ export class ClanMember {
 		this.received = data.donationsReceived;
 	}
 
+	public get isMember() {
+		return this.role === 'member';
+	}
+
+	public get isElder() {
+		return this.role === 'elder';
+	}
+
+	public get isCoLeader() {
+		return this.role === 'coLeader';
+	}
+
+	public get isLeader() {
+		return this.role === 'leader';
+	}
+
 	/** Fetch detailed clan info for the member's clan. */
 	public async fetch(options?: OverrideOptions) {
 		return this.client.getPlayer(this.tag, options);

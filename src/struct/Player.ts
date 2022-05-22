@@ -119,6 +119,26 @@ export class Player {
 		this.heroes = data.heroes.map((unit) => new Hero(data, unit));
 	}
 
+	public get inClan() {
+		return this.clan !== null;
+	}
+
+	public get isMember() {
+		return this.clan ? this.role === 'member' : null;
+	}
+
+	public get isLeader() {
+		return this.clan ? this.role === 'leader' : null;
+	}
+
+	public get isCoLeader() {
+		return this.clan ? this.role === 'coLeader' : null;
+	}
+
+	public get isElder() {
+		return this.clan ? this.role === 'elder' : null;
+	}
+
 	/** Fetch detailed clan info for the player's clan. */
 	public async fetchClan(options?: OverrideOptions) {
 		if (!this.clan) return null;

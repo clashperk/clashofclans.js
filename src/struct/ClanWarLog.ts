@@ -91,4 +91,16 @@ export class ClanWarLog {
 		if (!this.opponent.tag) return 'cwl';
 		return 'normal';
 	}
+
+	public get isFriendly() {
+		return this.type === 'friendly';
+	}
+
+	public get isCWL() {
+		return this.type === 'cwl';
+	}
+
+	public get isNormal() {
+		return this.type === 'normal';
+	}
 }

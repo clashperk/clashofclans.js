@@ -308,6 +308,18 @@ export class ClanWar {
 		return this.opponent.attacks.filter((atk) => atk.defenderTag === defenderTag);
 	}
 
+	public get isBattleDay() {
+		return this.state === 'inWar';
+	}
+
+	public get isPreparationDay() {
+		return this.state === 'preparation';
+	}
+
+	public get isWarEnded() {
+		return this.state === 'warEnded';
+	}
+
 	/** Returns either `friendly`, `cwl` or `normal`. */
 	public get type() {
 		if (this.isFriendly) return 'friendly';
@@ -324,6 +336,11 @@ export class ClanWar {
 	/** Whether this is a CWL. */
 	public get isCWL() {
 		return typeof this.warTag === 'string';
+	}
+
+	/** Whether this is a normal war. */
+	public get isNormal() {
+		return !this.isCWL && !this.isFriendly;
 	}
 
 	/** Returns the war status, based off the home clan. */
