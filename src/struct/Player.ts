@@ -119,22 +119,27 @@ export class Player {
 		this.heroes = data.heroes.map((unit) => new Hero(data, unit));
 	}
 
+	/** Whether this clan member is in the clan. */
 	public get inClan() {
 		return this.clan !== null;
 	}
 
+	/** Whether this clan member is in the clan. */
 	public get isMember() {
 		return this.clan ? this.role === 'member' : null;
 	}
 
+	/** Whether this clan member is a Leader. */
 	public get isLeader() {
 		return this.clan ? this.role === 'leader' : null;
 	}
 
+	/** Whether this clan member is a Co-Leader. */
 	public get isCoLeader() {
 		return this.clan ? this.role === 'coLeader' : null;
 	}
 
+	/** Whether this clan member is an Elder. */
 	public get isElder() {
 		return this.clan ? this.role === 'elder' : null;
 	}

@@ -308,14 +308,17 @@ export class ClanWar {
 		return this.opponent.attacks.filter((atk) => atk.defenderTag === defenderTag);
 	}
 
+	/** Whether this is a Battle Day. */
 	public get isBattleDay() {
 		return this.state === 'inWar';
 	}
 
+	/** Whether this is a Preparation Day. */
 	public get isPreparationDay() {
 		return this.state === 'preparation';
 	}
 
+	/** Whether this War has Ended. */
 	public get isWarEnded() {
 		return this.state === 'warEnded';
 	}

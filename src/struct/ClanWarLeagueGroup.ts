@@ -101,6 +101,7 @@ export class ClanWarLeagueGroup {
 		this.rounds = data.rounds.map((round, i) => new ClanWarLeagueRound(round, i));
 	}
 
+	/** Total number of rounds for this CWL. */
 	public get totalRounds() {
 		return this.clans.length - 1;
 	}
