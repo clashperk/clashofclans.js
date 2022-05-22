@@ -53,18 +53,22 @@ export class ClanMember {
 		this.received = data.donationsReceived;
 	}
 
+	/** Whether this clan member is in the clan. */
 	public get isMember() {
 		return this.role === 'member';
 	}
 
+	/** Whether this clan member is an Elder. */
 	public get isElder() {
 		return this.role === 'elder';
 	}
 
+	/** Whether this clan member is a Co-Leader. */
 	public get isCoLeader() {
 		return this.role === 'coLeader';
 	}
 
+	/** Whether this clan member is a Leader. */
 	public get isLeader() {
 		return this.role === 'leader';
 	}

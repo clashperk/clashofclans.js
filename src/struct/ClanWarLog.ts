@@ -92,14 +92,17 @@ export class ClanWarLog {
 		return 'normal';
 	}
 
+	/** Whether this is a friendly war. */
 	public get isFriendly() {
 		return this.type === 'friendly';
 	}
 
+	/** Whether this is a CWL. */
 	public get isCWL() {
 		return this.type === 'cwl';
 	}
 
+	/** Whether this is a normal war. */
 	public get isNormal() {
 		return this.type === 'normal';
 	}

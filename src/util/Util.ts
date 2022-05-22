@@ -1,4 +1,3 @@
-import { Clan, ClanMember } from '../struct';
 import { ClanSearchOptions, SearchOptions } from '../types';
 const TAG_CHARACTERS = '0289PYLQGRJCUV' as const;
 
@@ -128,19 +127,5 @@ export class Util extends null {
 
 	public static async delay(ms: number) {
 		return new Promise((res) => setTimeout(res, ms));
-	}
-
-	public static joinedMembers(oldClan: Clan, newClan: Clan): ClanMember[] {
-		const oldMembers = oldClan.members.map((member) => member.tag);
-		return newClan.members.filter((member) => {
-			return !oldMembers.includes(member.tag);
-		});
-	}
-
-	public static leftMembers(oldClan: Clan, newClan: Clan): ClanMember[] {
-		const newMembers = newClan.members.map((member) => member.tag);
-		return oldClan.members.filter((member) => {
-			return !newMembers.includes(member.tag);
-		});
 	}
 }
