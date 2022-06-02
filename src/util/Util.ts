@@ -131,25 +131,28 @@ export class Util extends null {
 
 	/** Parse In game army link into troops and spells into count with their id's*/
 	public static parseArmyLink(link: string) {
-		const units: { troopId: number; count: number }[] = [];
-		const spells: { spellId: number; count: number }[] = [];
+		let units: { id: number; total: number }[] = [];
+		let spells: { id: number; total: number }[] = [];
 
 		const matches = link.matchAll(/u(?<units>[\d+x-]+)|s(?<spells>[\d+x-]+)/g);
 
 		for (const match of matches) {
-			if (match.groups?.units) {
-				for (const unit of match.groups.units.split('-')) {
-					const [count, troopId] = unit.split('x').map(Number);
-					units.push({ count, troopId });
-				}
-			}
+			const unitsPart = (match.groups?.unit as string | null)?.split('-') ?? [];
+			const spellParts = (match.groups?.spells as string | null)?.split('-') ?? [];
 
-			if (match.groups?.spells) {
-				for (const spell of match.groups.spells.split('-')) {
-					const [count, spellId] = spell.split('x').map(Number);
-					spells.push({ count, spellId });
-				}
-			}
+			units = unitsPart
+				.map((parts) => parts.split(/x/))
+				.map((parts) => ({
+					id: Number(parts[1]),
+					total: Number(parts[0])
+				}));
+
+			spells = spellParts
+				.map((parts) => parts.split(/x/))
+				.map((parts) => ({
+					id: Number(parts[1]),
+					total: Number(parts[0])
+				}));
 		}
 
 		return { units, spells };
