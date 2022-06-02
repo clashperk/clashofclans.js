@@ -129,7 +129,7 @@ export class Util extends null {
 		return new Promise((res) => setTimeout(res, ms));
 	}
 
-	/** Parse In game army link into troops and spells into count with their id's*/
+	/** Parse in game army link into troops and spells count with respective id's. */
 	public static parseArmyLink(link: string) {
 		let units: { id: number; total: number }[] = [];
 		let spells: { id: number; total: number }[] = [];
