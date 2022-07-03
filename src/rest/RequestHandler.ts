@@ -67,11 +67,7 @@ export class RequestHandler {
 		if (!this.throttler || options.ignoreRateLimit) return this.exec<T>(path, options);
 
 		await this.throttler.wait();
-		try {
-			return await this.exec<T>(path, options);
-		} finally {
-			await this.throttler.throttle();
-		}
+		return this.exec<T>(path, options);
 	}
 
 	private async exec<T>(path: string, options: RequestOptions = {}, retries = 0): Promise<Response<T>> {
