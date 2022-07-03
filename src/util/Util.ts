@@ -1,4 +1,6 @@
 import { ClanSearchOptions, SearchOptions } from '../types';
+import { RAW_DATA } from '../util/Constants';
+
 const TAG_CHARACTERS = '0289PYLQGRJCUV' as const;
 
 const params = [
@@ -129,7 +131,7 @@ export class Util extends null {
 		return new Promise((res) => setTimeout(res, ms));
 	}
 
-	/** Parse in game army link into troops and spells count with respective id's. */
+	/** Parse in-game army link into troops and spells count with respective Id's. */
 	public static parseArmyLink(link: string) {
 		const unitsMatches = link.match(/u(?<units>[\d+x-]+)/);
 		const spellsMatches = link.match(/s(?<spells>[\d+x-]+)/);
@@ -151,6 +153,15 @@ export class Util extends null {
 				total: Number(parts[0])
 			}));
 
-		return { units, spells };
+		return {
+			units: units.map((unit) => {
+				const _unit = RAW_DATA.RAW_UNITS.find((raw) => raw.category === 'troop' && raw.id === unit.id);
+				return { name: _unit?.name ?? null, count: unit.total, id: unit.id };
+			}),
+			spells: spells.map((spell) => {
+				const _spell = RAW_DATA.RAW_UNITS.find((raw) => raw.category === 'spell' && raw.id === spell.id);
+				return { name: _spell?.name ?? null, count: spell.total, id: spell.id };
+			})
+		};
 	}
 }
