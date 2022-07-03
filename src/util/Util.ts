@@ -128,4 +128,29 @@ export class Util extends null {
 	public static async delay(ms: number) {
 		return new Promise((res) => setTimeout(res, ms));
 	}
+
+	/** Parse in game army link into troops and spells count with respective id's. */
+	public static parseArmyLink(link: string) {
+		const unitsMatches = link.match(/u(?<units>[\d+x-]+)/);
+		const spellsMatches = link.match(/s(?<spells>[\d+x-]+)/);
+
+		const unitsPart = (unitsMatches?.groups?.unit as string | null)?.split('-') ?? [];
+		const spellParts = (spellsMatches?.groups?.spells as string | null)?.split('-') ?? [];
+
+		const units = unitsPart
+			.map((parts) => parts.split(/x/))
+			.map((parts) => ({
+				id: Number(parts[1]),
+				total: Number(parts[0])
+			}));
+
+		const spells = spellParts
+			.map((parts) => parts.split(/x/))
+			.map((parts) => ({
+				id: Number(parts[1]),
+				total: Number(parts[0])
+			}));
+
+		return { units, spells };
+	}
 }
