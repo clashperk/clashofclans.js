@@ -1,4 +1,4 @@
-import { RESTOptions, Response, RequestOptions, LoginOptions, Store } from '../types';
+import { Response, RequestOptions, LoginOptions, Store, RequestHandlerOptions } from '../types';
 import { API_BASE_URL, DEV_SITE_API_BASE_URL } from '../util/Constants';
 import { QueueThrottler, BatchThrottler } from './Throttler';
 import { HTTPError, PrivateWarLogError } from './HTTPError';
@@ -28,7 +28,7 @@ export class RequestHandler {
 	private readonly throttler?: QueueThrottler | BatchThrottler | null;
 	private readonly cached: Store<{ data: unknown; ttl: number; status: number }> | null;
 
-	public constructor(options?: RESTOptions) {
+	public constructor(options?: RequestHandlerOptions) {
 		this.keys = options?.keys ?? [];
 		this.retryLimit = options?.retryLimit ?? 0;
 		this.throttler = options?.throttler ?? null;
@@ -59,7 +59,7 @@ export class RequestHandler {
 	}
 
 	public async request<T>(path: string, options: RequestOptions = {}): Promise<Response<T>> {
-		const cached = (await this.cached?.get(path)) ?? null;
+		const cached = this.cached ? (await this.cached.get(path)) ?? null : null;
 		if (cached && options.force !== true) {
 			return { data: cached.data as T, maxAge: cached.ttl - Date.now(), status: cached.status, path, ok: cached.status === 200 };
 		}

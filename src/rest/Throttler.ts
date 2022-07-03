@@ -18,7 +18,7 @@ export class QueueThrottler {
 	private async *init() {
 		// eslint-disable-next-line
 		while (true) {
-			await Util.delay(this.sleepTime);
+			if (this.sleepTime > 0) await Util.delay(this.sleepTime);
 			yield;
 		}
 	}
@@ -50,7 +50,7 @@ export class BatchThrottler {
 		// eslint-disable-next-line
 		while (true) {
 			if (count++ >= this.rateLimit) {
-				await Util.delay(this.sleepTime);
+				if (this.sleepTime > 0) await Util.delay(this.sleepTime);
 				count = 0;
 			}
 			yield;

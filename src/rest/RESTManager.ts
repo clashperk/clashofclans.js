@@ -35,7 +35,7 @@ import {
 /** Represents a REST Manager of the client. */
 export class RESTManager {
 	/** Request Handler for the RESTManager. */
-	public readonly handler: RequestHandler;
+	public handler: RequestHandler;
 
 	public constructor(options?: RESTOptions) {
 		this.handler = new RequestHandler(options);

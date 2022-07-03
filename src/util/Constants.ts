@@ -143,7 +143,8 @@ export const EVENTS = {
 	WAR_LOOP_END: 'warLoopEnd',
 	MAINTENANCE_START: 'maintenanceStart',
 	MAINTENANCE_END: 'maintenanceEnd',
-	ERROR: 'error'
+	ERROR: 'error',
+	DEBUG: 'debug'
 } as const;
 
 export const CWL_ROUNDS = {

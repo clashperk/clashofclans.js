@@ -7,7 +7,7 @@ export interface Store<T = any> {
 	clear(): void | Promise<void>;
 }
 
-/** Options for a Client. */
+/** Options for a {@link Client} */
 export interface ClientOptions {
 	/** Keys from Clash of Clans API developer site. */
 	keys?: string[];
@@ -43,11 +43,17 @@ export interface ClientOptions {
 	 * const client = new Client({ throttler: new BatchThrottler(30) });
 	 * ```
 	 */
-	throttler?: QueueThrottler | BatchThrottler;
+	throttler?: QueueThrottler | BatchThrottler | null;
 }
 
-/** Options for a RESTManager. */
+/** Options for a {@link RESTManager} */
 export interface RESTOptions extends ClientOptions {
+	/** Set this `false` to use `res.ok` property. */
+	rejectIfNotValid?: boolean;
+}
+
+/** Options for a {@link RequestHandler} */
+export interface RequestHandlerOptions extends ClientOptions {
 	/** Set this `false` to use `res.ok` property. */
 	rejectIfNotValid?: boolean;
 }
