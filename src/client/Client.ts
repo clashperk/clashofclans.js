@@ -167,10 +167,10 @@ export class Client extends EventEmitter {
 		);
 
 		if (args.round && args.round in CWL_ROUNDS) {
-			return wars.find((war) => war.state === state) ?? null;
+			return wars.find((war) => war.clan.tag === args.clanTag && war.state === state) ?? null;
 		}
 
-		return wars.find((war) => war.state === state) ?? wars.at(0) ?? null;
+		return wars.find((war) => war.clan.tag === args.clanTag && war.state === state) ?? wars.at(0) ?? null;
 	}
 
 	private async _getCurrentLeagueWars(clanTag: string, options?: OverrideOptions) {
