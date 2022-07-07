@@ -16,9 +16,14 @@ export class QueueThrottler {
 	}
 
 	private async *init() {
+		let lastRan = 0;
 		// eslint-disable-next-line
 		while (true) {
-			if (this.sleepTime > 0) await Util.delay(this.sleepTime);
+			const difference = Date.now() - lastRan;
+			const needToSleep = this.sleepTime - difference;
+			if (needToSleep > 0) await Util.delay(needToSleep);
+
+			lastRan = Date.now();
 			yield;
 		}
 	}
