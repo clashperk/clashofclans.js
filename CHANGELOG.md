@@ -2,11 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## 2.8.0 (2022-07-22)
+
+### Features
+
+-   Better Throttler with JS generator function. ([#111](https://github.com/clashperk/clashofclans.js/pull/111))
+-   Updated raw data from game files. ([#111](https://github.com/clashperk/clashofclans.js/pull/111))
+-   New method Util#parseArmyLink has been added. ([#110](https://github.com/clashperk/clashofclans.js/pull/110))
+
 ## 2.7.0 (2022-05-22)
 
 ### Features
 
-- Some useful QOL methods have been added. ([#106](https://github.com/clashperk/clashofclans.js/pull/106))
+-   Some useful QOL methods have been added. ([#106](https://github.com/clashperk/clashofclans.js/pull/106))
 
 ## 2.6.1 (2022-02-03)
 
