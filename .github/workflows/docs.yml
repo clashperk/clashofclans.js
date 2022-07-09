@@ -2,13 +2,13 @@ name: Docs
 
 on:
   workflow_dispatch:
-
   push:
-    branches: [main]
+    branches: [stable]
 
 jobs:
   build:
-    name: Docs
+    if: github.ref == 'refs/heads/stable'
+    name: Docs (Stable)
     runs-on: ubuntu-latest
 
     steps:
