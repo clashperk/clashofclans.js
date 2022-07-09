@@ -125,7 +125,8 @@ export class ClanWarLeagueGroup {
 			.filter((war) => (clanTag ? war.clan.tag === clanTag : true));
 	}
 
-	private async _getCurrentWars(clanTag: string, options?: OverrideOptions) {
+	/** Returns active wars (last 2) of the CWL group. */
+	public async getCurrentWars(clanTag: string, options?: OverrideOptions) {
 		const rounds = this.rounds.filter((round) => !round.warTags.includes('#0'));
 		if (!rounds.length) return [];
 		const warTags = rounds
