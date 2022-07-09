@@ -1,5 +1,6 @@
-export const API_BASE_URL = 'https://api.clashofclans.com/v1';
+import RAW from '../util/raw.json';
 
+export const API_BASE_URL = 'https://api.clashofclans.com/v1';
 export const DEV_SITE_API_BASE_URL = 'https://developer.clashofclans.com/api';
 
 export const ELIXIR_TROOPS = [
@@ -142,7 +143,8 @@ export const EVENTS = {
 	WAR_LOOP_END: 'warLoopEnd',
 	MAINTENANCE_START: 'maintenanceStart',
 	MAINTENANCE_END: 'maintenanceEnd',
-	ERROR: 'error'
+	ERROR: 'error',
+	DEBUG: 'debug'
 } as const;
 
 export const CWL_ROUNDS = {
@@ -150,3 +152,8 @@ export const CWL_ROUNDS = {
 	CURRENT_ROUND: 'inWar',
 	NEXT_ROUND: 'preparation'
 } as const;
+
+export const RAW_DATA = {
+	RAW_UNITS: RAW.RAW_UNITS,
+	RAW_SUPER_UNITS: RAW.RAW_SUPER_UNITS
+};

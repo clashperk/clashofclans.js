@@ -32,10 +32,10 @@ import {
  */
 export class Client extends EventEmitter {
 	/** Event Manager for the client. */
-	public readonly events: EventManager;
+	public events: EventManager;
 
 	/** REST Handler of the client. */
-	public readonly rest: RESTManager;
+	public rest: RESTManager;
 
 	public constructor(options?: ClientOptions) {
 		super();
@@ -167,10 +167,10 @@ export class Client extends EventEmitter {
 		);
 
 		if (args.round && args.round in CWL_ROUNDS) {
-			return wars.find((war) => war.state === state) ?? null;
+			return wars.find((war) => war.clan.tag === args.clanTag && war.state === state) ?? null;
 		}
 
-		return wars.find((war) => war.state === state) ?? wars.at(0) ?? null;
+		return wars.find((war) => war.clan.tag === args.clanTag && war.state === state) ?? wars.at(0) ?? null;
 	}
 
 	private async _getCurrentLeagueWars(clanTag: string, options?: OverrideOptions) {
@@ -393,6 +393,7 @@ interface ClientEvents {
 	[EVENTS.WAR_LOOP_START]: [];
 	[EVENTS.WAR_LOOP_END]: [];
 	[EVENTS.ERROR]: [error: unknown];
+	[EVENTS.DEBUG]: [path: string, status: string, message: string];
 }
 
 // TypeScript 4.5 now can narrow values that have template string types, and also recognizes template string types as discriminants.
