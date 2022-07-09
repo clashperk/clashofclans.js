@@ -173,20 +173,21 @@ export class Client extends EventEmitter {
 		return wars.find((war) => war.clan.tag === args.clanTag && war.state === state) ?? wars.at(0) ?? null;
 	}
 
-	private async _getCurrentLeagueWars(clanTag: string, options?: OverrideOptions) {
+	/** Returns active wars (last 2) of the CWL group. */
+	public async getLeagueWars(clanTag: string, options?: OverrideOptions) {
 		const data = await this.getClanWarLeagueGroup(clanTag, options);
-		// @ts-expect-error
-		return data._getCurrentWars(clanTag, options);
+		return data.getCurrentWars(clanTag, options);
 	}
 
-	private async _getClanWars(clanTag: string, options?: OverrideOptions) {
+	/** Returns active wars (last 2 for CWL) of the clan. */
+	public async getWars(clanTag: string, options?: OverrideOptions) {
 		const date = new Date().getUTCDate();
 		if (!(date >= 1 && date <= 10)) {
 			return [await this.getClanWar(clanTag, options)];
 		}
 
 		try {
-			return this._getCurrentLeagueWars(clanTag, options);
+			return this.getLeagueWars(clanTag, options);
 		} catch (e) {
 			if (e instanceof HTTPError && [404].includes(e.status)) {
 				return [await this.getClanWar(clanTag, options)];

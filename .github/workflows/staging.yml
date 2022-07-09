@@ -3,7 +3,6 @@ name: CI
 on:
   workflow_dispatch:
   push:
-  pull_request:
 
 jobs:
   build:
@@ -34,6 +33,7 @@ jobs:
         uses: amondnet/vercel-action@v20
         with:
           working-directory: ./build
+          vercel-args: '--prod'
           vercel-token: ${{ secrets.VERCEL_TOKEN }}
           vercel-org-id: ${{ secrets.ORG_ID }}
           vercel-project-id: ${{ secrets.PROJECT_ID }}
