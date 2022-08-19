@@ -113,12 +113,12 @@ export const Leagues = [
 	LegendLeagueId
 ];
 
-export const WarLeague = [
+export const WarLeagues = [
 	48000000, 48000001, 48000002, 48000003, 48000004, 48000005, 48000006, 48000007, 48000008, 48000009, 48000010, 48000011, 48000012,
 	48000013, 48000014, 48000015, 48000016, 48000017, 48000018
 ];
 
-export const FriendlyWarPreparationTime = [
+export const FriendlyWarPreparationTimes = [
 	1000 * 60 * 60 * 24,
 	1000 * 60 * 60 * 20,
 	1000 * 60 * 60 * 16,

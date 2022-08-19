@@ -1,5 +1,5 @@
 import { APIClanMember, OverrideOptions } from '../types';
-import { UNRANKED_LEAGUE_DATA } from '../util/Constants';
+import { UnrankedLeagueData } from '../util/Constants';
 import { Client } from '../client/Client';
 import { League } from './League';
 
@@ -44,7 +44,7 @@ export class ClanMember {
 		this.role = data.role.replace('admin', 'elder');
 		this.expLevel = data.expLevel;
 		// eslint-disable-next-line
-		this.league = new League(data.league ?? UNRANKED_LEAGUE_DATA);
+		this.league = new League(data.league ?? UnrankedLeagueData);
 		this.trophies = data.trophies;
 		this.versusTrophies = data.versusTrophies ?? null;
 		this.clanRank = data.clanRank;

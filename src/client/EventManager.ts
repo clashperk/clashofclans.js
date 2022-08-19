@@ -1,6 +1,6 @@
 import { Clan, ClanWar, Player } from '../struct';
 import { HTTPError } from '../rest/HTTPError';
-import { EVENTS } from '../util/Constants';
+import { Events } from '../util/Constants';
 import { Util } from '../util/Util';
 import { Client } from './Client';
 
@@ -173,14 +173,14 @@ export class EventManager {
 				const duration = Date.now() - this._maintenanceStartTime!.getTime();
 				this._maintenanceStartTime = null;
 
-				this.client.emit(EVENTS.MAINTENANCE_END, duration);
+				this.client.emit(Events.MAINTENANCE_END, duration);
 			}
 		} catch (error) {
 			if (error instanceof HTTPError && error.status === 503 && !this._inMaintenance) {
 				this._inMaintenance = Boolean(true);
 				this._maintenanceStartTime = new Date();
 
-				this.client.emit(EVENTS.MAINTENANCE_START);
+				this.client.emit(Events.MAINTENANCE_START);
 			}
 		}
 	}
@@ -192,31 +192,31 @@ export class EventManager {
 			setTimeout(this.seasonEndHandler.bind(this), 60 * 60 * 1000);
 		} else if (end > 0) {
 			setTimeout(() => {
-				this.client.emit(EVENTS.NEW_SEASON_START, Util.getSeasonId());
+				this.client.emit(Events.NEW_SEASON_START, Util.getSeasonId());
 			}, end + 100).unref();
 		}
 	}
 
 	private async clanUpdateHandler() {
-		this.client.emit(EVENTS.CLAN_LOOP_START);
+		this.client.emit(Events.CLAN_LOOP_START);
 		for (const tag of this._clanTags) await this.runClanUpdate(tag);
-		this.client.emit(EVENTS.CLAN_LOOP_END);
+		this.client.emit(Events.CLAN_LOOP_END);
 
 		setTimeout(this.clanUpdateHandler.bind(this), 10_000);
 	}
 
 	private async playerUpdateHandler() {
-		this.client.emit(EVENTS.PLAYER_LOOP_START);
+		this.client.emit(Events.PLAYER_LOOP_START);
 		for (const tag of this._playerTags) await this.runPlayerUpdate(tag);
-		this.client.emit(EVENTS.PLAYER_LOOP_END);
+		this.client.emit(Events.PLAYER_LOOP_END);
 
 		setTimeout(this.playerUpdateHandler.bind(this), 10_000);
 	}
 
 	private async warUpdateHandler() {
-		this.client.emit(EVENTS.WAR_LOOP_START);
+		this.client.emit(Events.WAR_LOOP_START);
 		for (const tag of this._warTags) await this.runWarUpdate(tag);
-		this.client.emit(EVENTS.WAR_LOOP_END);
+		this.client.emit(Events.WAR_LOOP_END);
 
 		setTimeout(this.warUpdateHandler.bind(this), 10_000);
 	}
@@ -235,7 +235,7 @@ export class EventManager {
 				if (!(await filter(cached, clan))) continue;
 				this.client.emit(name, cached, clan);
 			} catch (error) {
-				this.client.emit(EVENTS.ERROR, error);
+				this.client.emit(Events.ERROR, error);
 			}
 		}
 
@@ -256,7 +256,7 @@ export class EventManager {
 				if (!(await filter(cached, player))) continue;
 				this.client.emit(name, cached, player);
 			} catch (error) {
-				this.client.emit(EVENTS.ERROR, error);
+				this.client.emit(Events.ERROR, error);
 			}
 		}
 
@@ -279,7 +279,7 @@ export class EventManager {
 					if (!(await filter(cached, war))) continue;
 					this.client.emit(name, cached, war);
 				} catch (error) {
-					this.client.emit(EVENTS.ERROR, error);
+					this.client.emit(Events.ERROR, error);
 				}
 			}
 
@@ -292,7 +292,7 @@ export class EventManager {
 							if (!(await filter(cached, data))) continue;
 							this.client.emit(name, cached, data);
 						} catch (error) {
-							this.client.emit(EVENTS.ERROR, error);
+							this.client.emit(Events.ERROR, error);
 						}
 					}
 				}
