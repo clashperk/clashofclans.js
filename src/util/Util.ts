@@ -155,11 +155,11 @@ export class Util extends null {
 
 		return {
 			units: units.map((unit) => {
-				const _unit = RawData.RAW_UNITS.find((raw) => raw.category === 'troop' && raw.id === unit.id);
+				const _unit = RawData.RawUnits.find((raw) => raw.category === 'troop' && raw.id === unit.id);
 				return { name: _unit?.name ?? null, count: unit.total, id: unit.id };
 			}),
 			spells: spells.map((spell) => {
-				const _spell = RawData.RAW_UNITS.find((raw) => raw.category === 'spell' && raw.id === spell.id);
+				const _spell = RawData.RawUnits.find((raw) => raw.category === 'spell' && raw.id === spell.id);
 				return { name: _spell?.name ?? null, count: spell.total, id: spell.id };
 			})
 		};

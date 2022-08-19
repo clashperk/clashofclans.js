@@ -134,26 +134,26 @@ export const FriendlyWarPreparationTimes = [
 ] as const;
 
 export const Events = {
-	NEW_SEASON_START: 'newSeasonStart',
-	CLAN_LOOP_START: 'clanLoopStart',
-	CLAN_LOOP_END: 'clanLoopEnd',
-	PLAYER_LOOP_START: 'playerLoopStart',
-	PLAYER_LOOP_END: 'playerLoopEnd',
-	WAR_LOOP_START: 'warLoopEnd',
-	WAR_LOOP_END: 'warLoopEnd',
-	MAINTENANCE_START: 'maintenanceStart',
-	MAINTENANCE_END: 'maintenanceEnd',
-	ERROR: 'error',
-	DEBUG: 'debug'
+	NewSeasonStart: 'newSeasonStart',
+	ClanLoopStart: 'clanLoopStart',
+	ClanLoopEnd: 'clanLoopEnd',
+	PlayerLoopStart: 'playerLoopStart',
+	PlayerLoopEnd: 'playerLoopEnd',
+	WarLoopStart: 'warLoopEnd',
+	WarLoopEnd: 'warLoopEnd',
+	MaintenanceStart: 'maintenanceStart',
+	MaintenanceEnd: 'maintenanceEnd',
+	Error: 'error',
+	Debug: 'debug'
 } as const;
 
 export const CwlRounds = {
-	PREVIOUS_ROUND: 'warEnded',
-	CURRENT_ROUND: 'inWar',
-	NEXT_ROUND: 'preparation'
+	PreviousRound: 'warEnded',
+	CurrentRound: 'inWar',
+	NextRound: 'preparation'
 } as const;
 
 export const RawData = {
-	RAW_UNITS: RAW.RAW_UNITS,
-	RAW_SUPER_UNITS: RAW.RAW_SUPER_UNITS
+	RawUnits: RAW.RAW_UNITS,
+	RawSuperUnits: RAW.RAW_SUPER_UNITS
 };

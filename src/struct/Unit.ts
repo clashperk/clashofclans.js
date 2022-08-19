@@ -85,8 +85,8 @@ export class Unit {
 		this.maxLevel = unit.maxLevel;
 		this.village = unit.village;
 
-		const rawSuperUnit = RawData.RAW_SUPER_UNITS.find((unit) => unit.name === this.name && this.isHomeBase);
-		const rawUnit = RawData.RAW_UNITS.find((unit) => unit.name === this.name && unit.village === this.village);
+		const rawSuperUnit = RawData.RawSuperUnits.find((unit) => unit.name === this.name && this.isHomeBase);
+		const rawUnit = RawData.RawUnits.find((unit) => unit.name === this.name && unit.village === this.village);
 
 		if (rawSuperUnit) {
 			this.id = rawSuperUnit.id;
@@ -95,7 +95,7 @@ export class Unit {
 			this.originalName = rawSuperUnit.original;
 			this.minOriginalLevel = rawSuperUnit.minOriginalLevel;
 
-			const original = RawData.RAW_UNITS.find((unit) => unit.village === 'home' && unit.name === rawSuperUnit.original)!;
+			const original = RawData.RawUnits.find((unit) => unit.village === 'home' && unit.name === rawSuperUnit.original)!;
 			this.unlockHallLevel = original.levels.findIndex((level) => level >= rawSuperUnit.minOriginalLevel) + 1;
 			this.unlockCost = original.unlock.cost;
 			this.unlockTime = original.unlock.time;

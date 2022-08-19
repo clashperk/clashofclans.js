@@ -173,14 +173,14 @@ export class EventManager {
 				const duration = Date.now() - this._maintenanceStartTime!.getTime();
 				this._maintenanceStartTime = null;
 
-				this.client.emit(Events.MAINTENANCE_END, duration);
+				this.client.emit(Events.MaintenanceEnd, duration);
 			}
 		} catch (error) {
 			if (error instanceof HTTPError && error.status === 503 && !this._inMaintenance) {
 				this._inMaintenance = Boolean(true);
 				this._maintenanceStartTime = new Date();
 
-				this.client.emit(Events.MAINTENANCE_START);
+				this.client.emit(Events.MaintenanceStart);
 			}
 		}
 	}
@@ -192,31 +192,31 @@ export class EventManager {
 			setTimeout(this.seasonEndHandler.bind(this), 60 * 60 * 1000);
 		} else if (end > 0) {
 			setTimeout(() => {
-				this.client.emit(Events.NEW_SEASON_START, Util.getSeasonId());
+				this.client.emit(Events.NewSeasonStart, Util.getSeasonId());
 			}, end + 100).unref();
 		}
 	}
 
 	private async clanUpdateHandler() {
-		this.client.emit(Events.CLAN_LOOP_START);
+		this.client.emit(Events.ClanLoopStart);
 		for (const tag of this._clanTags) await this.runClanUpdate(tag);
-		this.client.emit(Events.CLAN_LOOP_END);
+		this.client.emit(Events.ClanLoopEnd);
 
 		setTimeout(this.clanUpdateHandler.bind(this), 10_000);
 	}
 
 	private async playerUpdateHandler() {
-		this.client.emit(Events.PLAYER_LOOP_START);
+		this.client.emit(Events.PlayerLoopStart);
 		for (const tag of this._playerTags) await this.runPlayerUpdate(tag);
-		this.client.emit(Events.PLAYER_LOOP_END);
+		this.client.emit(Events.PlayerLoopEnd);
 
 		setTimeout(this.playerUpdateHandler.bind(this), 10_000);
 	}
 
 	private async warUpdateHandler() {
-		this.client.emit(Events.WAR_LOOP_START);
+		this.client.emit(Events.WarLoopStart);
 		for (const tag of this._warTags) await this.runWarUpdate(tag);
-		this.client.emit(Events.WAR_LOOP_END);
+		this.client.emit(Events.WarLoopEnd);
 
 		setTimeout(this.warUpdateHandler.bind(this), 10_000);
 	}
@@ -235,7 +235,7 @@ export class EventManager {
 				if (!(await filter(cached, clan))) continue;
 				this.client.emit(name, cached, clan);
 			} catch (error) {
-				this.client.emit(Events.ERROR, error);
+				this.client.emit(Events.Error, error);
 			}
 		}
 
@@ -256,7 +256,7 @@ export class EventManager {
 				if (!(await filter(cached, player))) continue;
 				this.client.emit(name, cached, player);
 			} catch (error) {
-				this.client.emit(Events.ERROR, error);
+				this.client.emit(Events.Error, error);
 			}
 		}
 
@@ -279,20 +279,20 @@ export class EventManager {
 					if (!(await filter(cached, war))) continue;
 					this.client.emit(name, cached, war);
 				} catch (error) {
-					this.client.emit(Events.ERROR, error);
+					this.client.emit(Events.Error, error);
 				}
 			}
 
 			// check for war end
 			if (index === 1 && cached.warTag !== war.warTag) {
-				const data = await this.client.getLeagueWar({ clanTag: tag, round: 'PREVIOUS_ROUND' }).catch(() => null);
+				const data = await this.client.getLeagueWar({ clanTag: tag, round: 'PreviousRound' }).catch(() => null);
 				if (data && data.warTag === cached.warTag) {
 					for (const { name, filter } of this._events.wars) {
 						try {
 							if (!(await filter(cached, data))) continue;
 							this.client.emit(name, cached, data);
 						} catch (error) {
-							this.client.emit(Events.ERROR, error);
+							this.client.emit(Events.Error, error);
 						}
 					}
 				}

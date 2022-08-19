@@ -384,17 +384,17 @@ export class Client extends EventEmitter {
 }
 
 interface ClientEvents {
-	[Events.NEW_SEASON_START]: [id: string];
-	[Events.MAINTENANCE_START]: [];
-	[Events.MAINTENANCE_END]: [duration: number];
-	[Events.CLAN_LOOP_START]: [];
-	[Events.CLAN_LOOP_END]: [];
-	[Events.PLAYER_LOOP_START]: [];
-	[Events.PLAYER_LOOP_END]: [];
-	[Events.WAR_LOOP_START]: [];
-	[Events.WAR_LOOP_END]: [];
-	[Events.ERROR]: [error: unknown];
-	[Events.DEBUG]: [path: string, status: string, message: string];
+	[Events.NewSeasonStart]: [id: string];
+	[Events.MaintenanceStart]: [];
+	[Events.MaintenanceEnd]: [duration: number];
+	[Events.ClanLoopStart]: [];
+	[Events.ClanLoopEnd]: [];
+	[Events.PlayerLoopStart]: [];
+	[Events.PlayerLoopEnd]: [];
+	[Events.WarLoopStart]: [];
+	[Events.WarLoopEnd]: [];
+	[Events.Error]: [error: unknown];
+	[Events.Debug]: [path: string, status: string, message: string];
 }
 
 // TypeScript 4.5 now can narrow values that have template string types, and also recognizes template string types as discriminants.
