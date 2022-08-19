@@ -1,5 +1,5 @@
 import { ClanSearchOptions, SearchOptions } from '../types';
-import { RAW_DATA } from '../util/Constants';
+import { RawData } from '../util/Constants';
 
 const TAG_CHARACTERS = '0289PYLQGRJCUV' as const;
 
@@ -155,11 +155,11 @@ export class Util extends null {
 
 		return {
 			units: units.map((unit) => {
-				const _unit = RAW_DATA.RAW_UNITS.find((raw) => raw.category === 'troop' && raw.id === unit.id);
+				const _unit = RawData.RAW_UNITS.find((raw) => raw.category === 'troop' && raw.id === unit.id);
 				return { name: _unit?.name ?? null, count: unit.total, id: unit.id };
 			}),
 			spells: spells.map((spell) => {
-				const _spell = RAW_DATA.RAW_UNITS.find((raw) => raw.category === 'spell' && raw.id === spell.id);
+				const _spell = RawData.RAW_UNITS.find((raw) => raw.category === 'spell' && raw.id === spell.id);
 				return { name: _spell?.name ?? null, count: spell.total, id: spell.id };
 			})
 		};
