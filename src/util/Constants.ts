@@ -1,7 +1,7 @@
 import RAW from '../util/raw.json';
 
-export const API_BASE_URL = 'https://api.clashofclans.com/v1';
-export const DEV_SITE_API_BASE_URL = 'https://developer.clashofclans.com/api';
+export const ApiBaseUrl = 'https://api.clashofclans.com/v1';
+export const DevSiteApiBaseUrl = 'https://developer.clashofclans.com/api';
 
 export const ElixirTroops = [
 	'Barbarian',

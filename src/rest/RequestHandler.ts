@@ -1,5 +1,5 @@
 import { Response, RequestOptions, LoginOptions, Store, RequestHandlerOptions } from '../types';
-import { API_BASE_URL, DEV_SITE_API_BASE_URL } from '../util/Constants';
+import { ApiBaseUrl, DevSiteApiBaseUrl } from '../util/Constants';
 import { QueueThrottler, BatchThrottler } from './Throttler';
 import { HTTPError, PrivateWarLogError } from './HTTPError';
 import { CacheStore } from '../util/Store';
@@ -32,7 +32,7 @@ export class RequestHandler {
 		this.keys = options?.keys ?? [];
 		this.retryLimit = options?.retryLimit ?? 0;
 		this.throttler = options?.throttler ?? null;
-		this.baseURL = options?.baseURL ?? API_BASE_URL;
+		this.baseURL = options?.baseURL ?? ApiBaseUrl;
 		this.restRequestTimeout = options?.restRequestTimeout ?? 0;
 		this.rejectIfNotValid = options?.rejectIfNotValid ?? true;
 		if (typeof options?.cache === 'object') this.cached = options.cache;
@@ -137,7 +137,7 @@ export class RequestHandler {
 	}
 
 	private async login() {
-		const res = await fetch(`${DEV_SITE_API_BASE_URL}/login`, {
+		const res = await fetch(`${DevSiteApiBaseUrl}/login`, {
 			method: 'POST',
 			timeout: 10_000,
 			headers: { 'Content-Type': 'application/json' },
@@ -154,7 +154,7 @@ export class RequestHandler {
 	}
 
 	private async getKeys(cookie: string, ip: string) {
-		const res = await fetch(`${DEV_SITE_API_BASE_URL}/apikey/list`, {
+		const res = await fetch(`${DevSiteApiBaseUrl}/apikey/list`, {
 			method: 'POST',
 			timeout: 10_000,
 			headers: { 'Content-Type': 'application/json', cookie }
@@ -204,7 +204,7 @@ export class RequestHandler {
 	}
 
 	private async revokeKey(keyId: string, cookie: string) {
-		const res = await fetch(`${DEV_SITE_API_BASE_URL}/apikey/revoke`, {
+		const res = await fetch(`${DevSiteApiBaseUrl}/apikey/revoke`, {
 			method: 'POST',
 			timeout: 10_000,
 			body: JSON.stringify({ id: keyId }),
@@ -215,7 +215,7 @@ export class RequestHandler {
 	}
 
 	private async createKey(cookie: string, ip: string) {
-		const res = await fetch(`${DEV_SITE_API_BASE_URL}/apikey/create`, {
+		const res = await fetch(`${DevSiteApiBaseUrl}/apikey/create`, {
 			method: 'POST',
 			timeout: 10_000,
 			headers: { 'Content-Type': 'application/json', cookie },
