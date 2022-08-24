@@ -1,7 +1,7 @@
 import RAW from '../util/raw.json';
 
-export const ApiBaseUrl = 'https://api.clashofclans.com/v1';
-export const DevSiteApiBaseUrl = 'https://developer.clashofclans.com/api';
+export const APIBaseURL = 'https://api.clashofclans.com/v1';
+export const DevSiteAPIBaseURL = 'https://developer.clashofclans.com/api';
 
 export const ElixirTroops = [
 	'Barbarian',
@@ -56,7 +56,7 @@ export const ElixirSpells = [
 
 export const DarkElixirSpells = ['Poison Spell', 'Earthquake Spell', 'Haste Spell', 'Skeleton Spell', 'Bat Spell'];
 
-export const SPELLS = [...ElixirSpells, ...DarkElixirSpells];
+export const Spells = [...ElixirSpells, ...DarkElixirSpells];
 
 export const BuilderTroops = [
 	'Raged Barbarian',
@@ -147,7 +147,7 @@ export const Events = {
 	Debug: 'debug'
 } as const;
 
-export const CwlRounds = {
+export const CWLRounds = {
 	PreviousRound: 'warEnded',
 	CurrentRound: 'inWar',
 	NextRound: 'preparation'
