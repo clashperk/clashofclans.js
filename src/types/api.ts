@@ -68,6 +68,7 @@ export interface APIClan {
 	members: number;
 	labels: APILabel[];
 	memberList: APIClanMember[];
+	clanCapital: APIClanCapital[];
 }
 
 export interface APIClanMember {
@@ -82,6 +83,11 @@ export interface APIClanMember {
 	previousClanRank: number;
 	donations: number;
 	donationsReceived: number;
+}
+
+export interface APIClanCapital {
+	capitalHallLevel: number;
+	districts: { id: number; name: string; districtHallLevel: number }[];
 }
 
 /** /clans/{clanTag}/members */
@@ -206,6 +212,7 @@ export interface APIPlayer {
 	versusBattleWinCount?: number;
 	donations: number;
 	donationsReceived: number;
+	clanCapitalContributions: number;
 	role?: string;
 	warPreference?: 'in' | 'out';
 	clan?: APIPlayerClan;
