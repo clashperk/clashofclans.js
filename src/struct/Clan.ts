@@ -1,4 +1,4 @@
-import { APIClan, APIClanCapital, OverrideOptions } from '../types';
+import { APIClan, OverrideOptions } from '../types';
 import { ChatLanguage } from './ChatLanguage';
 import { ClanMember } from './ClanMember';
 import { Client } from '../client/Client';
@@ -7,6 +7,7 @@ import type { Player } from './Player';
 import { Location } from './Location';
 import { Label } from './Label';
 import { Badge } from './Badge';
+import { ClanCapital } from './ClanCapital';
 
 /** Represents a Clan. */
 export class Clan {
@@ -77,7 +78,7 @@ export class Clan {
 	public labels: Label[];
 
 	/** The clan's Clan Capital information */
-	public clanCapital: APIClanCapital;
+	public clanCapital: ClanCapital | null;
 
 	/**
 	 * List of clan members.
@@ -108,8 +109,8 @@ export class Clan {
 		this.warLeague = data.warLeague ? new WarLeague(data.warLeague) : null;
 		this.memberCount = data.members;
 		this.labels = data.labels.map((label) => new Label(label));
-		this.clanCapital = data.clanCapital;
-		this.members = data.memberList?.map((mem) => new ClanMember(this.client, mem)) ?? []; // eslint-disable-line
+		this.clanCapital = Object.keys(data.clanCapital).length > 0 ? new ClanCapital(data.clanCapital) : null;
+        this.members = data.memberList?.map((mem) => new ClanMember(this.client, mem)) ?? []; // eslint-disable-line
 	}
 
 	/** Get {@link Player} info for every Player in the clan. */
