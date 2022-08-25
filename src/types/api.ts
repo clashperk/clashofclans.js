@@ -86,8 +86,8 @@ export interface APIClanMember {
 }
 
 export interface APIClanCapital {
-	capitalHallLevel: number;
-	districts: { id: number; name: string; districtHallLevel: number }[];
+	capitalHallLevel?: number;
+	districts?: { id: number; name: string; districtHallLevel: number }[];
 }
 
 /** /clans/{clanTag}/members */
