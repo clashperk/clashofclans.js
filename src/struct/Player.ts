@@ -58,6 +58,9 @@ export class Player {
 	/** The player's donation received count for this season. */
 	public received: number;
 
+	/** The player's total Clan Capital contribution */
+	public clanCapitalContributions: number;
+
 	/** The player's role in the clan or `null` if not in a clan. */
 	public role: 'member' | 'elder' | 'coLeader' | 'leader' | null;
 
@@ -105,6 +108,7 @@ export class Player {
 		this.versusBattleWins = data.versusBattleWins ?? null;
 		this.donations = data.donations;
 		this.received = data.donationsReceived;
+		this.clanCapitalContributions = data.clanCapitalContributions;
 		// @ts-expect-error
 		this.role = data.role?.replace('admin', 'elder') ?? null;
 		this.warOptedIn = data.warPreference ? data.warPreference === 'in' : null;

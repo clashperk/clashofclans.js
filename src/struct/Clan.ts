@@ -1,4 +1,4 @@
-import { APIClan, OverrideOptions } from '../types';
+import { APIClan, APIClanCapital, OverrideOptions } from '../types';
 import { ChatLanguage } from './ChatLanguage';
 import { ClanMember } from './ClanMember';
 import { Client } from '../client/Client';
@@ -76,6 +76,9 @@ export class Clan {
 	/** An array of {@link Label} that the clan has. */
 	public labels: Label[];
 
+	/** The clan's Clan Capital information */
+	public clanCapital: APIClanCapital;
+
 	/**
 	 * List of clan members.
 	 * - This property returns empty array for {@link Client.getClans} method.
@@ -105,6 +108,7 @@ export class Clan {
 		this.warLeague = data.warLeague ? new WarLeague(data.warLeague) : null;
 		this.memberCount = data.members;
 		this.labels = data.labels.map((label) => new Label(label));
+		this.clanCapital = data.clanCapital;
 		this.members = data.memberList?.map((mem) => new ClanMember(this.client, mem)) ?? []; // eslint-disable-line
 	}
 
