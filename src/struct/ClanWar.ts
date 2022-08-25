@@ -1,5 +1,5 @@
 import { APIClanWar, APIClanWarAttack, APIClanWarMember, APIWarClan } from '../types';
-import { FRIENDLY_WAR_PREPARATION_TIMES } from '../util/Constants';
+import { FriendlyWarPreparationTimes } from '../util/Constants';
 import { Client } from '../client/Client';
 import { Badge } from './Badge';
 
@@ -333,7 +333,7 @@ export class ClanWar {
 	/** Whether this is a friendly war. */
 	public get isFriendly() {
 		const preparationTime = this.startTime.getTime() - this.preparationStartTime.getTime();
-		return FRIENDLY_WAR_PREPARATION_TIMES.includes(preparationTime);
+		return FriendlyWarPreparationTimes.includes(preparationTime);
 	}
 
 	/** Whether this is a CWL. */

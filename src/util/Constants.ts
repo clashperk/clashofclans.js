@@ -1,9 +1,9 @@
 import RAW from '../util/raw.json';
 
-export const API_BASE_URL = 'https://api.clashofclans.com/v1';
-export const DEV_SITE_API_BASE_URL = 'https://developer.clashofclans.com/api';
+export const APIBaseURL = 'https://api.clashofclans.com/v1';
+export const DevSiteAPIBaseURL = 'https://developer.clashofclans.com/api';
 
-export const ELIXIR_TROOPS = [
+export const ElixirTroops = [
 	'Barbarian',
 	'Archer',
 	'Giant',
@@ -21,13 +21,13 @@ export const ELIXIR_TROOPS = [
 	'Dragon Rider'
 ];
 
-export const DARK_ELIXIR_TROOPS = ['Minion', 'Hog Rider', 'Valkyrie', 'Golem', 'Witch', 'Lava Hound', 'Bowler', 'Ice Golem', 'Headhunter'];
+export const DarkElixirTroops = ['Minion', 'Hog Rider', 'Valkyrie', 'Golem', 'Witch', 'Lava Hound', 'Bowler', 'Ice Golem', 'Headhunter'];
 
-export const HOME_TROOPS = [...ELIXIR_TROOPS, ...DARK_ELIXIR_TROOPS];
+export const HomeTroops = [...ElixirTroops, ...DarkElixirTroops];
 
-export const SIEGE_MACHINES = ['Wall Wrecker', 'Battle Blimp', 'Stone Slammer', 'Siege Barracks', 'Log Launcher', 'Flame Flinger'];
+export const SiegeMachines = ['Wall Wrecker', 'Battle Blimp', 'Stone Slammer', 'Siege Barracks', 'Log Launcher', 'Flame Flinger'];
 
-export const SUPER_TROOPS = [
+export const SuperTroops = [
 	'Super Barbarian',
 	'Super Archer',
 	'Super Giant',
@@ -44,7 +44,7 @@ export const SUPER_TROOPS = [
 	'Super Bowler'
 ];
 
-export const ELIXIR_SPELLS = [
+export const ElixirSpells = [
 	'Lightning Spell',
 	'Healing Spell',
 	'Rage Spell',
@@ -54,11 +54,11 @@ export const ELIXIR_SPELLS = [
 	'Invisibility Spell'
 ];
 
-export const DARK_ELIXIR_SPELLS = ['Poison Spell', 'Earthquake Spell', 'Haste Spell', 'Skeleton Spell', 'Bat Spell'];
+export const DarkElixirSpells = ['Poison Spell', 'Earthquake Spell', 'Haste Spell', 'Skeleton Spell', 'Bat Spell'];
 
-export const SPELLS = [...ELIXIR_SPELLS, ...DARK_ELIXIR_SPELLS];
+export const Spells = [...ElixirSpells, ...DarkElixirSpells];
 
-export const BUILDER_TROOPS = [
+export const BuilderTroops = [
 	'Raged Barbarian',
 	'Sneaky Archer',
 	'Boxer Giant',
@@ -72,11 +72,11 @@ export const BUILDER_TROOPS = [
 	'Hog Glider'
 ];
 
-export const HEROES = ['Barbarian King', 'Archer Queen', 'Grand Warden', 'Royal Champion', 'Battle Machine'];
+export const Heroes = ['Barbarian King', 'Archer Queen', 'Grand Warden', 'Royal Champion', 'Battle Machine'];
 
-export const HERO_PETS = ['L.A.S.S.I', 'Electro Owl', 'Mighty Yak', 'Unicorn'];
+export const HeroPets = ['L.A.S.S.I', 'Electro Owl', 'Mighty Yak', 'Unicorn'];
 
-export const UNRANKED_LEAGUE_DATA = {
+export const UnrankedLeagueData = {
 	id: 29000000,
 	name: 'Unranked',
 	iconUrls: {
@@ -85,9 +85,9 @@ export const UNRANKED_LEAGUE_DATA = {
 	}
 };
 
-export const LEGEND_LEAGUE_ID = 29000022;
+export const LegendLeagueId = 29000022;
 
-export const LEAGUES = [
+export const Leagues = [
 	29000000,
 	29000001,
 	29000002,
@@ -110,15 +110,15 @@ export const LEAGUES = [
 	29000019,
 	29000020,
 	29000021,
-	LEGEND_LEAGUE_ID
+	LegendLeagueId
 ];
 
-export const WAR_LEAGUES = [
+export const WarLeagues = [
 	48000000, 48000001, 48000002, 48000003, 48000004, 48000005, 48000006, 48000007, 48000008, 48000009, 48000010, 48000011, 48000012,
 	48000013, 48000014, 48000015, 48000016, 48000017, 48000018
 ];
 
-export const FRIENDLY_WAR_PREPARATION_TIMES = [
+export const FriendlyWarPreparationTimes = [
 	1000 * 60 * 60 * 24,
 	1000 * 60 * 60 * 20,
 	1000 * 60 * 60 * 16,
@@ -133,27 +133,27 @@ export const FRIENDLY_WAR_PREPARATION_TIMES = [
 	1000 * 60 * 5
 ] as const;
 
-export const EVENTS = {
-	NEW_SEASON_START: 'newSeasonStart',
-	CLAN_LOOP_START: 'clanLoopStart',
-	CLAN_LOOP_END: 'clanLoopEnd',
-	PLAYER_LOOP_START: 'playerLoopStart',
-	PLAYER_LOOP_END: 'playerLoopEnd',
-	WAR_LOOP_START: 'warLoopEnd',
-	WAR_LOOP_END: 'warLoopEnd',
-	MAINTENANCE_START: 'maintenanceStart',
-	MAINTENANCE_END: 'maintenanceEnd',
-	ERROR: 'error',
-	DEBUG: 'debug'
+export const Events = {
+	NewSeasonStart: 'newSeasonStart',
+	ClanLoopStart: 'clanLoopStart',
+	ClanLoopEnd: 'clanLoopEnd',
+	PlayerLoopStart: 'playerLoopStart',
+	PlayerLoopEnd: 'playerLoopEnd',
+	WarLoopStart: 'warLoopEnd',
+	WarLoopEnd: 'warLoopEnd',
+	MaintenanceStart: 'maintenanceStart',
+	MaintenanceEnd: 'maintenanceEnd',
+	Error: 'error',
+	Debug: 'debug'
 } as const;
 
-export const CWL_ROUNDS = {
-	PREVIOUS_ROUND: 'warEnded',
-	CURRENT_ROUND: 'inWar',
-	NEXT_ROUND: 'preparation'
+export const CWLRounds = {
+	PreviousRound: 'warEnded',
+	CurrentRound: 'inWar',
+	NextRound: 'preparation'
 } as const;
 
-export const RAW_DATA = {
-	RAW_UNITS: RAW.RAW_UNITS,
-	RAW_SUPER_UNITS: RAW.RAW_SUPER_UNITS
+export const RawData = {
+	RawUnits: RAW.RAW_UNITS,
+	RawSuperUnits: RAW.RAW_SUPER_UNITS
 };

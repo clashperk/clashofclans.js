@@ -1,5 +1,5 @@
 import { ClanSearchOptions, SearchOptions, ClientOptions, LoginOptions, OverrideOptions } from '../types';
-import { LEGEND_LEAGUE_ID, EVENTS, CWL_ROUNDS } from '../util/Constants';
+import { LegendLeagueId, Events, CWLRounds } from '../util/Constants';
 import { HTTPError, NotInWarError } from '../rest/HTTPError';
 import { RESTManager } from '../rest/RESTManager';
 import { EventManager } from './EventManager';
@@ -123,7 +123,7 @@ export class Client extends EventEmitter {
 	 * await client.getCurrentWar({ clanTag: '#8QU8J9LP', round: 'PREVIOUS_ROUND' });
 	 * ```
 	 */
-	public async getCurrentWar(clanTag: string | { clanTag: string; round?: keyof typeof CWL_ROUNDS }, options?: OverrideOptions) {
+	public async getCurrentWar(clanTag: string | { clanTag: string; round?: keyof typeof CWLRounds }, options?: OverrideOptions) {
 		const args = typeof clanTag === 'string' ? { clanTag } : { clanTag: clanTag.clanTag, round: clanTag.round };
 
 		try {
@@ -147,10 +147,10 @@ export class Client extends EventEmitter {
 	 * await client.getLeagueWar({ clanTag: '#8QU8J9LP', round: 'PREVIOUS_ROUND' });
 	 * ```
 	 */
-	public async getLeagueWar(clanTag: string | { clanTag: string; round?: keyof typeof CWL_ROUNDS }, options?: OverrideOptions) {
+	public async getLeagueWar(clanTag: string | { clanTag: string; round?: keyof typeof CWLRounds }, options?: OverrideOptions) {
 		const args = typeof clanTag === 'string' ? { clanTag } : { clanTag: clanTag.clanTag, round: clanTag.round };
 
-		const state = (args.round && CWL_ROUNDS[args.round]) ?? 'inWar'; // eslint-disable-line
+		const state = (args.round && CWLRounds[args.round]) ?? 'inWar'; // eslint-disable-line
 		const data = await this.getClanWarLeagueGroup(args.clanTag, options);
 
 		const rounds = data.rounds.filter((round) => !round.warTags.includes('#0'));
@@ -166,7 +166,7 @@ export class Client extends EventEmitter {
 			warTags.map((warTag) => this.getClanWarLeagueRound({ warTag, clanTag: args.clanTag }, { ...options, ignoreRateLimit: true }))
 		);
 
-		if (args.round && args.round in CWL_ROUNDS) {
+		if (args.round && args.round in CWLRounds) {
 			return wars.find((war) => war.clan.tag === args.clanTag && war.state === state) ?? null;
 		}
 
@@ -242,13 +242,13 @@ export class Client extends EventEmitter {
 
 	/** Get Legend League season Ids. */
 	public async getLeagueSeasons(options?: SearchOptions) {
-		const { data } = await this.rest.getLeagueSeasons(LEGEND_LEAGUE_ID, options);
+		const { data } = await this.rest.getLeagueSeasons(LegendLeagueId, options);
 		return data.items.map((league) => league.id);
 	}
 
 	/** Get Legend League season rankings by season Id. */
 	public async getSeasonRankings(seasonId: string, options?: SearchOptions) {
-		const { data } = await this.rest.getSeasonRankings(LEGEND_LEAGUE_ID, seasonId, options);
+		const { data } = await this.rest.getSeasonRankings(LegendLeagueId, seasonId, options);
 		return data.items.map((entry) => new SeasonRankedPlayer(this, entry));
 	}
 
@@ -384,17 +384,17 @@ export class Client extends EventEmitter {
 }
 
 interface ClientEvents {
-	[EVENTS.NEW_SEASON_START]: [id: string];
-	[EVENTS.MAINTENANCE_START]: [];
-	[EVENTS.MAINTENANCE_END]: [duration: number];
-	[EVENTS.CLAN_LOOP_START]: [];
-	[EVENTS.CLAN_LOOP_END]: [];
-	[EVENTS.PLAYER_LOOP_START]: [];
-	[EVENTS.PLAYER_LOOP_END]: [];
-	[EVENTS.WAR_LOOP_START]: [];
-	[EVENTS.WAR_LOOP_END]: [];
-	[EVENTS.ERROR]: [error: unknown];
-	[EVENTS.DEBUG]: [path: string, status: string, message: string];
+	[Events.NewSeasonStart]: [id: string];
+	[Events.MaintenanceStart]: [];
+	[Events.MaintenanceEnd]: [duration: number];
+	[Events.ClanLoopStart]: [];
+	[Events.ClanLoopEnd]: [];
+	[Events.PlayerLoopStart]: [];
+	[Events.PlayerLoopEnd]: [];
+	[Events.WarLoopStart]: [];
+	[Events.WarLoopEnd]: [];
+	[Events.Error]: [error: unknown];
+	[Events.Debug]: [path: string, status: string, message: string];
 }
 
 // TypeScript 4.5 now can narrow values that have template string types, and also recognizes template string types as discriminants.

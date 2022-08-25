@@ -1,4 +1,4 @@
-import { SUPER_TROOPS, RAW_DATA } from '../util/Constants';
+import { RawData, SuperTroops } from '../util/Constants';
 import { APIPlayerItem, APIPlayer } from '../types';
 
 /** Represents a Player's Unit. */
@@ -85,8 +85,8 @@ export class Unit {
 		this.maxLevel = unit.maxLevel;
 		this.village = unit.village;
 
-		const rawSuperUnit = RAW_DATA.RAW_SUPER_UNITS.find((unit) => unit.name === this.name && this.isHomeBase);
-		const rawUnit = RAW_DATA.RAW_UNITS.find((unit) => unit.name === this.name && unit.village === this.village);
+		const rawSuperUnit = RawData.RawSuperUnits.find((unit) => unit.name === this.name && this.isHomeBase);
+		const rawUnit = RawData.RawUnits.find((unit) => unit.name === this.name && unit.village === this.village);
 
 		if (rawSuperUnit) {
 			this.id = rawSuperUnit.id;
@@ -95,7 +95,7 @@ export class Unit {
 			this.originalName = rawSuperUnit.original;
 			this.minOriginalLevel = rawSuperUnit.minOriginalLevel;
 
-			const original = RAW_DATA.RAW_UNITS.find((unit) => unit.village === 'home' && unit.name === rawSuperUnit.original)!;
+			const original = RawData.RawUnits.find((unit) => unit.village === 'home' && unit.name === rawSuperUnit.original)!;
 			this.unlockHallLevel = original.levels.findIndex((level) => level >= rawSuperUnit.minOriginalLevel) + 1;
 			this.unlockCost = original.unlock.cost;
 			this.unlockTime = original.unlock.time;
@@ -187,7 +187,7 @@ export class Troop extends Unit {
 
 	/** Whether this troop is a Super Troop. */
 	public get isSuperTroop() {
-		return this.isActive || (this.isHomeBase && SUPER_TROOPS.includes(this.name));
+		return this.isActive || (this.isHomeBase && SuperTroops.includes(this.name));
 	}
 }
 

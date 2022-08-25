@@ -1,4 +1,4 @@
-import { LEAGUES } from '../util/Constants';
+import { Leagues } from '../util/Constants';
 import { APILeague } from '../types';
 import { Icon } from './Icon';
 
@@ -21,6 +21,6 @@ export class League {
 
 	/** Position of this League. Starting from 0 (Un-ranked) */
 	public get position() {
-		return LEAGUES.indexOf(this.id);
+		return Leagues.indexOf(this.id);
 	}
 }
