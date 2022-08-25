@@ -68,7 +68,7 @@ export interface APIClan {
 	members: number;
 	labels: APILabel[];
 	memberList: APIClanMember[];
-	clanCapital: APIClanCapital;
+	clanCapital: Record<string, never> | APIClanCapital;
 }
 
 export interface APIClanMember {
