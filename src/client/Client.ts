@@ -1,8 +1,7 @@
 import { ClanSearchOptions, SearchOptions, ClientOptions, LoginOptions, OverrideOptions } from '../types';
-import { LegendLeagueId, Events, CWLRounds } from '../util/Constants';
+import { LegendLeagueId, CWLRounds } from '../util/Constants';
 import { HTTPError, NotInWarError } from '../rest/HTTPError';
 import { RESTManager } from '../rest/RESTManager';
-import { EventManager } from './EventManager';
 import { EventEmitter } from 'events';
 import { Util } from '../util/Util';
 
@@ -31,9 +30,6 @@ import {
  * ```
  */
 export class Client extends EventEmitter {
-	/** Event Manager for the client. */
-	public events: EventManager;
-
 	/** REST Handler of the client. */
 	public rest: RESTManager;
 
@@ -41,18 +37,11 @@ export class Client extends EventEmitter {
 		super();
 
 		this.rest = new RESTManager({ ...options, rejectIfNotValid: true });
-		this.events = new EventManager(this);
 	}
 
 	/** Contains various general-purpose utility methods. */
 	public get util(): typeof Util {
 		return Util;
-	}
-
-	/** Whether the API is in maintenance break. */
-	public get inMaintenance() {
-		// @ts-expect-error
-		return this.events._inMaintenance;
 	}
 
 	/**
@@ -150,7 +139,7 @@ export class Client extends EventEmitter {
 	public async getLeagueWar(clanTag: string | { clanTag: string; round?: keyof typeof CWLRounds }, options?: OverrideOptions) {
 		const args = typeof clanTag === 'string' ? { clanTag } : { clanTag: clanTag.clanTag, round: clanTag.round };
 
-		const state = (args.round && CWLRounds[args.round]) ?? 'inWar'; // eslint-disable-line
+        const state = (args.round && CWLRounds[args.round]) ?? 'inWar'; // eslint-disable-line
 		const data = await this.getClanWarLeagueGroup(args.clanTag, options);
 
 		const rounds = data.rounds.filter((round) => !round.warTags.includes('#0'));
@@ -321,85 +310,4 @@ export class Client extends EventEmitter {
 		const { data } = await this.rest.getGoldPassSeason(options);
 		return new GoldPassSeason(data);
 	}
-
-	// #region typings
-	/* eslint-disable @typescript-eslint/prefer-readonly */
-
-	/**
-	 * Emits when a new season starts.
-	 *
-	 * **Parameters**
-	 *
-	 * | Name |   Type   | Description           |
-	 * | :--: | :------: | :-------------------: |
-	 * | `id` | `string` | Id of the new season. |
-	 * @public
-	 * @event
-	 */
-	private static newSeasonStart: string;
-
-	/**
-	 * Emits when maintenance break starts in the API.
-	 * @public
-	 * @event
-	 */
-	private static maintenanceStart: string;
-
-	/**
-	 * Emits when maintenance break ends in the API.
-	 *
-	 * **Parameters**
-	 *
-	 * |    Name    |   Type   |                    Description                     |
-	 * | :--------: | :------: | :------------------------------------------------: |
-	 * | `duration` | `number` | Duration of the maintenance break in milliseconds. |
-	 * @public
-	 * @event
-	 */
-	private static maintenanceEnd: string;
-
-	/* eslint-disable @typescript-eslint/prefer-readonly */
-
-	/** @internal */
-	public on<K extends keyof ClientEvents>(event: K, listeners: (...args: ClientEvents[K]) => void): this;
-	/** @internal */
-	public on<S extends keyof CustomEvents>(event: Exclude<S, keyof ClientEvents>, listeners: (...args: CustomEvents[S]) => void): this;
-	/** @internal */ // @ts-expect-error
-	public on<S extends string | symbol>(event: Exclude<S, keyof ClientEvents>, listeners: (...args: any[]) => void): this;
-
-	/** @internal */
-	public once<K extends keyof ClientEvents>(event: K, listeners: (...args: ClientEvents[K]) => void): this;
-	/** @internal */
-	public once<S extends keyof CustomEvents>(event: Exclude<S, keyof ClientEvents>, listeners: (...args: CustomEvents[S]) => void): this;
-	/** @internal */ // @ts-expect-error
-	public once<S extends string | symbol>(event: Exclude<S, keyof ClientEvents>, listeners: (...args: any[]) => void): this;
-
-	/** @internal */
-	public emit<K extends keyof ClientEvents>(event: K, ...args: ClientEvents[K]): boolean;
-	/** @internal */
-	public emit<S extends keyof CustomEvents>(event: Exclude<S, keyof ClientEvents>, ...args: CustomEvents[S]): this;
-	/** @internal */ // @ts-expect-error
-	public emit<S extends string | symbol>(event: Exclude<S, keyof ClientEvents>, ...args: any[]): boolean;
-	// #endregion typings
-}
-
-interface ClientEvents {
-	[Events.NewSeasonStart]: [id: string];
-	[Events.MaintenanceStart]: [];
-	[Events.MaintenanceEnd]: [duration: number];
-	[Events.ClanLoopStart]: [];
-	[Events.ClanLoopEnd]: [];
-	[Events.PlayerLoopStart]: [];
-	[Events.PlayerLoopEnd]: [];
-	[Events.WarLoopStart]: [];
-	[Events.WarLoopEnd]: [];
-	[Events.Error]: [error: unknown];
-	[Events.Debug]: [path: string, status: string, message: string];
-}
-
-// TypeScript 4.5 now can narrow values that have template string types, and also recognizes template string types as discriminants.
-interface CustomEvents {
-	[key: `clan${string}`]: [oldClan: Clan, newClan: Clan];
-	[key: `war${string}`]: [oldWar: ClanWar, newWar: ClanWar];
-	[key: `player${string}`]: [oldPlayer: Player, newPlayer: Player];
 }
