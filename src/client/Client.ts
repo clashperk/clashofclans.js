@@ -44,12 +44,6 @@ export class Client extends EventEmitter {
 		return Util;
 	}
 
-	/** Whether the API is in maintenance break. */
-	public get inMaintenance() {
-		// @ts-expect-error
-		return this.events._inMaintenance;
-	}
-
 	/**
 	 * Initialize the client to create keys.
 	 * @example

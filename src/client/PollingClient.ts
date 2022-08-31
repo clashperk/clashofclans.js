@@ -20,6 +20,12 @@ export class PollingClient extends Client {
 		this.pollingEvents = new PollingEventManager(this);
 	}
 
+	/** Whether the API is in maintenance break. */
+	public get inMaintenance() {
+		// @ts-expect-error
+		return this.events._inMaintenance;
+	}
+
 	// #region typings
 	/* eslint-disable @typescript-eslint/prefer-readonly */
 

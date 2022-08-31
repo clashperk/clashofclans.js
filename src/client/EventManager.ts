@@ -2,7 +2,7 @@ import { Clan, ClanWar, Player } from '../struct';
 import { HTTPError } from '../rest/HTTPError';
 import { PollingEvents } from '../util/Constants';
 import { Util } from '../util/Util';
-import { Client } from './Client';
+import { PollingClient } from './PollingClient';
 
 /** Represents PollingEvent Manager of the {@link Client}. */
 export class PollingEventManager {
@@ -32,7 +32,7 @@ export class PollingEventManager {
 	private _inMaintenance: boolean;
 	private _maintenanceStartTime: Date | null;
 
-	public constructor(private readonly client: Client) {
+	public constructor(private readonly client: PollingClient) {
 		this._inMaintenance = Boolean(false);
 		this._maintenanceStartTime = null;
 	}
