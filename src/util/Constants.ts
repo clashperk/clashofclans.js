@@ -133,7 +133,7 @@ export const FriendlyWarPreparationTimes = [
 	1000 * 60 * 5
 ] as const;
 
-export const Events = {
+export const PollingEvents = {
 	NewSeasonStart: 'newSeasonStart',
 	ClanLoopStart: 'clanLoopStart',
 	ClanLoopEnd: 'clanLoopEnd',
