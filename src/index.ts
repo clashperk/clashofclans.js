@@ -1,4 +1,5 @@
 export * from './client/Client';
+export * from './client/PollingClient';
 export * from './rest/RESTManager';
 export * from './rest/RequestHandler';
 export * from './rest/HTTPError';
