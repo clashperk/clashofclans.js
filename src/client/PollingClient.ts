@@ -5,13 +5,14 @@ import { Client } from './Client';
 import { PollingEventManager } from './EventManager';
 
 /**
- * Represents Clash of Clans Polling Client.
+ * Represents Clash of Clans Polling Event Client.
  * ```js
  * const { PollingClient } = require('clashofclans.js');
  * const client = new PollingClient({ keys: ['***'] });
  * ```
  */
 export class PollingClient extends Client {
+	/** Polling Event Manager for the client. */
 	public pollingEvents: PollingEventManager;
 
 	public constructor(options?: ClientOptions) {
