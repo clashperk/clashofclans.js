@@ -1,8 +1,8 @@
 import type { Clan, ClanWar, Player } from '../struct';
 import type { ClientOptions } from '../types';
 import type { PollingEvents } from '../util/Constants';
-import { Client } from './Client.js';
-import { PollingEventManager } from './EventManager.js';
+import { Client } from './Client';
+import { PollingEventManager } from './EventManager';
 
 /**
  * Represents Clash of Clans Polling Event Client.
@@ -34,7 +34,7 @@ export class PollingClient extends Client {
     // #region typings
     /* eslint-disable @typescript-eslint/prefer-readonly */
     /* eslint-disable jsdoc/valid-types */
-	/* eslint-disable tsdoc/syntax */
+    /* eslint-disable tsdoc/syntax */
 
     /**
      * Emits when a new season starts.
@@ -122,22 +122,22 @@ export class PollingClient extends Client {
 }
 
 type ClientPollingEvents = {
-	[PollingEvents.NewSeasonStart]: [id: string];
-	[PollingEvents.MaintenanceStart]: [];
-	[PollingEvents.MaintenanceEnd]: [duration: number];
-	[PollingEvents.ClanLoopStart]: [];
-	[PollingEvents.ClanLoopEnd]: [];
-	[PollingEvents.PlayerLoopStart]: [];
-	[PollingEvents.PlayerLoopEnd]: [];
-	[PollingEvents.WarLoopStart]: [];
-	[PollingEvents.WarLoopEnd]: [];
-	[PollingEvents.Error]: [error: unknown];
-	[PollingEvents.Debug]: [path: string, status: string, message: string];
-}
+    [PollingEvents.NewSeasonStart]: [id: string];
+    [PollingEvents.MaintenanceStart]: [];
+    [PollingEvents.MaintenanceEnd]: [duration: number];
+    [PollingEvents.ClanLoopStart]: [];
+    [PollingEvents.ClanLoopEnd]: [];
+    [PollingEvents.PlayerLoopStart]: [];
+    [PollingEvents.PlayerLoopEnd]: [];
+    [PollingEvents.WarLoopStart]: [];
+    [PollingEvents.WarLoopEnd]: [];
+    [PollingEvents.Error]: [error: unknown];
+    [PollingEvents.Debug]: [path: string, status: string, message: string];
+};
 
 // TypeScript 4.5 now can narrow values that have template string types, and also recognizes template string types as discriminants.
 type CustomEvents = {
-	[key: `clan${string}`]: [oldClan: Clan, newClan: Clan];
-	[key: `war${string}`]: [oldWar: ClanWar, newWar: ClanWar];
-	[key: `player${string}`]: [oldPlayer: Player, newPlayer: Player];
-}
+    [key: `clan${string}`]: [oldClan: Clan, newClan: Clan];
+    [key: `war${string}`]: [oldWar: ClanWar, newWar: ClanWar];
+    [key: `player${string}`]: [oldPlayer: Player, newPlayer: Player];
+};

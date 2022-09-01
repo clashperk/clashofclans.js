@@ -6,7 +6,7 @@ import type {
     APIClanWarLeagueRound,
     OverrideOptions
 } from '../types';
-import { Badge } from './Badge.js';
+import { Badge } from './Badge';
 import type { ClanWar } from './ClanWar';
 import type { Player } from './Player';
 
@@ -85,7 +85,9 @@ export class ClanWarLeagueClan {
      */
     public async fetchMembers(options?: OverrideOptions) {
         return (
-            await Promise.allSettled(this.members.map(async (member) => this.client.getPlayer(member.tag, { ...options, ignoreRateLimit: true })))
+            await Promise.allSettled(
+                this.members.map(async (member) => this.client.getPlayer(member.tag, { ...options, ignoreRateLimit: true }))
+            )
         )
             .filter((res) => res.status === 'fulfilled')
             .map((res) => (res as PromiseFulfilledResult<Player>).value);

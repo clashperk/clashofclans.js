@@ -1,5 +1,5 @@
 import type { APILabel } from '../types';
-import { Icon } from './Icon.js';
+import { Icon } from './Icon';
 
 /**
  * Represents a Clan or Player Label.

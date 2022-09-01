@@ -1,10 +1,10 @@
 import type { Client } from '../client/Client';
 import type { APIClanRanking, APIClanVersusRanking, APIPlayerRanking, APIPlayerVersusRanking } from '../types';
-import { UnrankedLeagueData } from '../util/Constants.js';
-import { Badge } from './Badge.js';
-import { League } from './League.js';
-import { Location } from './Location.js';
-import { PlayerClan } from './PlayerClan.js';
+import { UnrankedLeagueData } from '../util/Constants';
+import { Badge } from './Badge';
+import { League } from './League';
+import { Location } from './Location';
+import { PlayerClan } from './PlayerClan';
 
 /**
  * Represents the Player of seasonal legend league leader-board ranking.

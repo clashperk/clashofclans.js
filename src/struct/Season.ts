@@ -1,5 +1,5 @@
 import type { APIGoldPassSeason, APISeason } from '../types';
-import { Util } from '../util/Util.js';
+import { Util } from '../util/Util';
 
 /**
  * Represents a player's trophy season.

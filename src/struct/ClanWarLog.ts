@@ -1,7 +1,7 @@
 import type { Client } from '../client/Client';
 import type { APIClanWarLogEntry, APIWarLogClan } from '../types';
-import { Util } from '../util/Util.js';
-import { Badge } from './Badge.js';
+import { Util } from '../util/Util';
+import { Badge } from './Badge';
 
 /**
  * Represents War Log Clan.

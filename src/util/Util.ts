@@ -1,7 +1,7 @@
 import { setTimeout } from 'node:timers';
 import { URLSearchParams } from 'node:url';
 import type { ClanSearchOptions, SearchOptions } from '../types';
-import { RawData } from '../util/Constants.js';
+import { RawData } from '../util/Constants';
 
 const TAG_CHARACTERS = '0289PYLQGRJCUV' as const;
 
@@ -104,7 +104,7 @@ export class Util extends null {
      * Returns a string containing a query string suitable for use in a URL.
      */
     public static queryString(options: ClanSearchOptions | SearchOptions = {}) {
-		// @ts-expect-error something to write
+        // @ts-expect-error something to write
         const query = new URLSearchParams(Object.entries(options).filter(([key]) => params.includes(key))).toString();
         return query.length ? `?${query}` : query;
     }

@@ -1,5 +1,5 @@
 import type { APILegendStatistics } from '../types';
-import { Season } from './Season.js';
+import { Season } from './Season';
 
 /**
  * Represents the Legend Statistics.

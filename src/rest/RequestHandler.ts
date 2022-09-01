@@ -3,9 +3,9 @@ import https from 'node:https';
 import process from 'node:process';
 import fetch from 'node-fetch';
 import type { Response, RequestOptions, LoginOptions, Store, RequestHandlerOptions } from '../types';
-import { APIBaseURL, DevSiteAPIBaseURL } from '../util/Constants.js';
-import { CacheStore } from '../util/Store.js';
-import { HTTPError, PrivateWarLogError } from './HTTPError.js';
+import { APIBaseURL, DevSiteAPIBaseURL } from '../util/Constants';
+import { CacheStore } from '../util/Store';
+import { HTTPError, PrivateWarLogError } from './HTTPError';
 import type { QueueThrottler, BatchThrottler } from './Throttler';
 
 const IP_REGEX = /(?:\d{1,3}.){3}\d{1,3}/g;

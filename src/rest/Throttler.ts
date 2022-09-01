@@ -1,4 +1,4 @@
-import { Util } from '../util/Util.js';
+import { Util } from '../util/Util';
 
 /**
  * Represents a throttler that sleeps for x ms between each request.
@@ -8,29 +8,29 @@ import { Util } from '../util/Util.js';
  * ```
  */
 export class QueueThrottler {
-	private readonly sleepTime: number;
+    private readonly sleepTime: number;
 
-	private readonly generator = this.init();
+    private readonly generator = this.init();
 
-	public constructor(sleepTime = 100) {
-		this.sleepTime = sleepTime;
-	}
+    public constructor(sleepTime = 100) {
+        this.sleepTime = sleepTime;
+    }
 
-	private async *init() {
-		let lastRan = 0;
-		while (true) {
-			const difference = Date.now() - lastRan;
-			const needToSleep = this.sleepTime - difference;
-			if (needToSleep > 0) await Util.delay(needToSleep);
+    private async *init() {
+        let lastRan = 0;
+        while (true) {
+            const difference = Date.now() - lastRan;
+            const needToSleep = this.sleepTime - difference;
+            if (needToSleep > 0) await Util.delay(needToSleep);
 
-			lastRan = Date.now();
-			yield;
-		}
-	}
+            lastRan = Date.now();
+            yield;
+        }
+    }
 
-	public async wait() {
-		return this.generator.next();
-	}
+    public async wait() {
+        return this.generator.next();
+    }
 }
 
 /**
@@ -41,30 +41,30 @@ export class QueueThrottler {
  * ```
  */
 export class BatchThrottler {
-	private readonly rateLimit: number;
+    private readonly rateLimit: number;
 
-	private readonly sleepTime: number;
+    private readonly sleepTime: number;
 
-	private readonly generator = this.init();
+    private readonly generator = this.init();
 
-	public constructor(rateLimit = 15, sleepTime = 1_000) {
-		this.rateLimit = rateLimit;
-		this.sleepTime = sleepTime;
-	}
+    public constructor(rateLimit = 15, sleepTime = 1_000) {
+        this.rateLimit = rateLimit;
+        this.sleepTime = sleepTime;
+    }
 
-	private async *init() {
-		let count = 0;
-		while (true) {
-			if (count++ >= this.rateLimit) {
-				if (this.sleepTime > 0) await Util.delay(this.sleepTime);
-				count = 0;
-			}
+    private async *init() {
+        let count = 0;
+        while (true) {
+            if (count++ >= this.rateLimit) {
+                if (this.sleepTime > 0) await Util.delay(this.sleepTime);
+                count = 0;
+            }
 
-			yield;
-		}
-	}
+            yield;
+        }
+    }
 
-	public async wait() {
-		return this.generator.next();
-	}
+    public async wait() {
+        return this.generator.next();
+    }
 }

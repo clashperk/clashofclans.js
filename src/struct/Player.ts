@@ -1,12 +1,12 @@
 import type { Client } from '../client/Client';
 import type { APIPlayer, OverrideOptions } from '../types';
-import { HeroPets, SiegeMachines, UnrankedLeagueData, SuperTroops, BuilderTroops, HomeTroops } from '../util/Constants.js';
-import { Achievement } from './Achievement.js';
-import { Label } from './Label.js';
-import { League } from './League.js';
-import { LegendStatistics } from './LegendStatistics.js';
-import { PlayerClan } from './PlayerClan.js';
-import { Hero, Spell, Troop } from './Unit.js';
+import { HeroPets, SiegeMachines, UnrankedLeagueData, SuperTroops, BuilderTroops, HomeTroops } from '../util/Constants';
+import { Achievement } from './Achievement';
+import { Label } from './Label';
+import { League } from './League';
+import { LegendStatistics } from './LegendStatistics';
+import { PlayerClan } from './PlayerClan';
+import { Hero, Spell, Troop } from './Unit';
 
 /**
  * Represents a Clash of Clans Player.

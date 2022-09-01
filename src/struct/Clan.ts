@@ -1,13 +1,13 @@
 import type { Client } from '../client/Client';
 import type { APIClan, OverrideOptions } from '../types';
-import { Badge } from './Badge.js';
-import { ChatLanguage } from './ChatLanguage.js';
-import { ClanCapital } from './ClanCapital.js';
-import { ClanMember } from './ClanMember.js';
-import { Label } from './Label.js';
-import { Location } from './Location.js';
-import type { Player } from './Player.js';
-import { WarLeague } from './WarLeague.js';
+import { Badge } from './Badge';
+import { ChatLanguage } from './ChatLanguage';
+import { ClanCapital } from './ClanCapital';
+import { ClanMember } from './ClanMember';
+import { Label } from './Label';
+import { Location } from './Location';
+import type { Player } from './Player';
+import { WarLeague } from './WarLeague';
 
 /**
  * Represents a Clan.

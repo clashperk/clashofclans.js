@@ -1,25 +1,25 @@
 import { EventEmitter } from 'node:events';
-import { HTTPError, NotInWarError } from '../rest/HTTPError.js';
-import { RESTManager } from '../rest/RESTManager.js';
+import { HTTPError, NotInWarError } from '../rest/HTTPError';
+import { RESTManager } from '../rest/RESTManager';
 import {
-	Clan,
-	ClanMember,
-	ClanWar,
-	ClanWarLog,
-	League,
-	Location,
-	Player,
-	WarLeague,
-	RankedClan,
-	RankedPlayer,
-	Label,
-	SeasonRankedPlayer,
-	GoldPassSeason,
-	ClanWarLeagueGroup
-} from '../struct/index.js';
+    Clan,
+    ClanMember,
+    ClanWar,
+    ClanWarLog,
+    League,
+    Location,
+    Player,
+    WarLeague,
+    RankedClan,
+    RankedPlayer,
+    Label,
+    SeasonRankedPlayer,
+    GoldPassSeason,
+    ClanWarLeagueGroup
+} from '../struct';
 import type { ClanSearchOptions, SearchOptions, ClientOptions, LoginOptions, OverrideOptions } from '../types';
-import { LegendLeagueId, CWLRounds } from '../util/Constants.js';
-import { Util } from '../util/Util.js';
+import { LegendLeagueId, CWLRounds } from '../util/Constants';
+import { Util } from '../util/Util';
 
 /**
  * Represents Clash of Clans API Client.
@@ -29,338 +29,340 @@ import { Util } from '../util/Util.js';
  * ```
  */
 export class Client extends EventEmitter {
-	/**
-	 * REST Handler of the client.
-	 */
-	public rest: RESTManager;
+    /**
+     * REST Handler of the client.
+     */
+    public rest: RESTManager;
 
-	public constructor(options?: ClientOptions) {
-		super();
+    public constructor(options?: ClientOptions) {
+        super();
 
-		this.rest = new RESTManager({ ...options, rejectIfNotValid: true });
-	}
+        this.rest = new RESTManager({ ...options, rejectIfNotValid: true });
+    }
 
-	/**
-	 * Contains various general-purpose utility methods.
-	 */
-	public get util(): typeof Util {
-		return Util;
-	}
+    /**
+     * Contains various general-purpose utility methods.
+     */
+    public get util(): typeof Util {
+        return Util;
+    }
 
-	/**
-	 * Initialize the client to create keys.
-	 *
-	 * @example
-	 * ```
-	 * const client = new Client();
-	 * client.login({ email: 'developer@email.com', password: '***' });
-	 * ```
-	 */
-	public async login(options: LoginOptions) {
-		return this.rest.handler.init(options);
-	}
+    /**
+     * Initialize the client to create keys.
+     *
+     * @example
+     * ```
+     * const client = new Client();
+     * client.login({ email: 'developer@email.com', password: '***' });
+     * ```
+     */
+    public async login(options: LoginOptions) {
+        return this.rest.handler.init(options);
+    }
 
-	/**
-	 * Set Clash of Clans API keys.
-	 */
-	public setKeys(keys: string[]) {
-		this.rest.handler.setKeys(keys);
-		return this;
-	}
+    /**
+     * Set Clash of Clans API keys.
+     */
+    public setKeys(keys: string[]) {
+        this.rest.handler.setKeys(keys);
+        return this;
+    }
 
-	/**
-	 * Search clans by name and/or filtering parameters or get clans by their tags (fetches in parallel).
-	 */
-	public async getClans(query: ClanSearchOptions | string[], options?: OverrideOptions) {
-		if (Array.isArray(query)) {
-			return (await Promise.allSettled(query.map(async (tag) => this.getClan(tag, options))))
-				.filter((res) => res.status === 'fulfilled')
-				.map((res) => (res as PromiseFulfilledResult<Clan>).value);
-		}
+    /**
+     * Search clans by name and/or filtering parameters or get clans by their tags (fetches in parallel).
+     */
+    public async getClans(query: ClanSearchOptions | string[], options?: OverrideOptions) {
+        if (Array.isArray(query)) {
+            return (await Promise.allSettled(query.map(async (tag) => this.getClan(tag, options))))
+                .filter((res) => res.status === 'fulfilled')
+                .map((res) => (res as PromiseFulfilledResult<Clan>).value);
+        }
 
-		const { data } = await this.rest.getClans(query, options);
-		// @ts-expect-error something to write
-		return data.items.map((clan) => new Clan(this, clan));
-	}
+        const { data } = await this.rest.getClans(query, options);
+        // @ts-expect-error something to write
+        return data.items.map((clan) => new Clan(this, clan));
+    }
 
-	/**
-	 * Get info about a clan.
-	 */
-	public async getClan(clanTag: string, options?: OverrideOptions) {
-		const { data } = await this.rest.getClan(clanTag, options);
-		return new Clan(this, data);
-	}
+    /**
+     * Get info about a clan.
+     */
+    public async getClan(clanTag: string, options?: OverrideOptions) {
+        const { data } = await this.rest.getClan(clanTag, options);
+        return new Clan(this, data);
+    }
 
-	/**
-	 * Get list of clan members.
-	 */
-	public async getClanMembers(clanTag: string, options?: SearchOptions) {
-		const { data } = await this.rest.getClanMembers(clanTag, options);
-		return data.items.map((entry) => new ClanMember(this, entry));
-	}
+    /**
+     * Get list of clan members.
+     */
+    public async getClanMembers(clanTag: string, options?: SearchOptions) {
+        const { data } = await this.rest.getClanMembers(clanTag, options);
+        return data.items.map((entry) => new ClanMember(this, entry));
+    }
 
-	/**
-	 * Get clan war log.
-	 */
-	public async getClanWarLog(clanTag: string, options?: SearchOptions) {
-		const { data } = await this.rest.getClanWarLog(clanTag, options);
-		return data.items.map((entry) => new ClanWarLog(this, entry));
-	}
+    /**
+     * Get clan war log.
+     */
+    public async getClanWarLog(clanTag: string, options?: SearchOptions) {
+        const { data } = await this.rest.getClanWarLog(clanTag, options);
+        return data.items.map((entry) => new ClanWarLog(this, entry));
+    }
 
-	/**
-	 * Get info about currently running war (normal or friendly) in the clan.
-	 */
-	public async getClanWar(clanTag: string, options?: OverrideOptions) {
-		const { data, maxAge, path, status } = await this.rest.getCurrentWar(clanTag, options);
-		if (data.state === 'notInWar') {
-			throw new HTTPError(NotInWarError, status, path, maxAge);
-		}
+    /**
+     * Get info about currently running war (normal or friendly) in the clan.
+     */
+    public async getClanWar(clanTag: string, options?: OverrideOptions) {
+        const { data, maxAge, path, status } = await this.rest.getCurrentWar(clanTag, options);
+        if (data.state === 'notInWar') {
+            throw new HTTPError(NotInWarError, status, path, maxAge);
+        }
 
-		return new ClanWar(this, data, { clanTag, maxAge });
-	}
+        return new ClanWar(this, data, { clanTag, maxAge });
+    }
 
-	/**
-	 * Get info about currently running war in the clan.
-	 *
-	 * @example
-	 * ```ts
-	 * await client.getCurrentWar('#8QU8J9LP');
-	 * ```
-	 * @example
-	 * ```ts
-	 * await client.getCurrentWar({ clanTag: '#8QU8J9LP', round: 'PREVIOUS_ROUND' });
-	 * ```
-	 */
-	public async getCurrentWar(clanTag: string | { clanTag: string; round?: keyof typeof CWLRounds }, options?: OverrideOptions) {
-		const args = typeof clanTag === 'string' ? { clanTag } : { clanTag: clanTag.clanTag, round: clanTag.round };
+    /**
+     * Get info about currently running war in the clan.
+     *
+     * @example
+     * ```ts
+     * await client.getCurrentWar('#8QU8J9LP');
+     * ```
+     * @example
+     * ```ts
+     * await client.getCurrentWar({ clanTag: '#8QU8J9LP', round: 'PREVIOUS_ROUND' });
+     * ```
+     */
+    public async getCurrentWar(clanTag: string | { clanTag: string; round?: keyof typeof CWLRounds }, options?: OverrideOptions) {
+        const args = typeof clanTag === 'string' ? { clanTag } : { clanTag: clanTag.clanTag, round: clanTag.round };
 
-		try {
-			return await this.getClanWar(args.clanTag, options);
-		} catch (error) {
-			if (error instanceof HTTPError && [200, 403].includes(error.status)) {
-				return this.getLeagueWar({ clanTag: args.clanTag, round: args.round }, options);
-			}
+        try {
+            return await this.getClanWar(args.clanTag, options);
+        } catch (error) {
+            if (error instanceof HTTPError && [200, 403].includes(error.status)) {
+                return this.getLeagueWar({ clanTag: args.clanTag, round: args.round }, options);
+            }
 
-			throw error;
-		}
-	}
+            throw error;
+        }
+    }
 
-	/**
-	 * Get info about currently running CWL round.
-	 *
-	 * @example
-	 * ```ts
-	 * await client.getLeagueWar('#8QU8J9LP');
-	 * ```
-	 * @example
-	 * ```ts
-	 * await client.getLeagueWar({ clanTag: '#8QU8J9LP', round: 'PREVIOUS_ROUND' });
-	 * ```
-	 */
-	public async getLeagueWar(clanTag: string | { clanTag: string; round?: keyof typeof CWLRounds }, options?: OverrideOptions) {
-		const args = typeof clanTag === 'string' ? { clanTag } : { clanTag: clanTag.clanTag, round: clanTag.round };
+    /**
+     * Get info about currently running CWL round.
+     *
+     * @example
+     * ```ts
+     * await client.getLeagueWar('#8QU8J9LP');
+     * ```
+     * @example
+     * ```ts
+     * await client.getLeagueWar({ clanTag: '#8QU8J9LP', round: 'PREVIOUS_ROUND' });
+     * ```
+     */
+    public async getLeagueWar(clanTag: string | { clanTag: string; round?: keyof typeof CWLRounds }, options?: OverrideOptions) {
+        const args = typeof clanTag === 'string' ? { clanTag } : { clanTag: clanTag.clanTag, round: clanTag.round };
 
         const state = (args.round && CWLRounds[args.round]) ?? 'inWar';
-		const data = await this.getClanWarLeagueGroup(args.clanTag, options);
+        const data = await this.getClanWarLeagueGroup(args.clanTag, options);
 
-		const rounds = data.rounds.filter((round) => !round.warTags.includes('#0'));
-		if (!rounds.length) return null;
+        const rounds = data.rounds.filter((round) => !round.warTags.includes('#0'));
+        if (!rounds.length) return null;
 
-		const num = state === 'preparation' ? -1 : state === 'warEnded' ? -3 : -2;
-		const warTags = rounds
-			.slice(num)
-			.flatMap((round) => round.warTags)
-			.reverse();
-		const wars = await this.util.allSettled(
-			warTags.map(async (warTag) => this.getClanWarLeagueRound({ warTag, clanTag: args.clanTag }, { ...options, ignoreRateLimit: true }))
-		);
+        const num = state === 'preparation' ? -1 : state === 'warEnded' ? -3 : -2;
+        const warTags = rounds
+            .slice(num)
+            .flatMap((round) => round.warTags)
+            .reverse();
+        const wars = await this.util.allSettled(
+            warTags.map(async (warTag) =>
+                this.getClanWarLeagueRound({ warTag, clanTag: args.clanTag }, { ...options, ignoreRateLimit: true })
+            )
+        );
 
-		if (args.round && args.round in CWLRounds) {
-			return wars.find((war) => war.clan.tag === args.clanTag && war.state === state) ?? null;
-		}
+        if (args.round && args.round in CWLRounds) {
+            return wars.find((war) => war.clan.tag === args.clanTag && war.state === state) ?? null;
+        }
 
-		return wars.find((war) => war.clan.tag === args.clanTag && war.state === state) ?? wars.at(0) ?? null;
-	}
+        return wars.find((war) => war.clan.tag === args.clanTag && war.state === state) ?? wars.at(0) ?? null;
+    }
 
-	/**
-	 * Returns active wars (last 2) of the CWL group.
-	 */
-	public async getLeagueWars(clanTag: string, options?: OverrideOptions) {
-		const data = await this.getClanWarLeagueGroup(clanTag, options);
-		return data.getCurrentWars(clanTag, options);
-	}
+    /**
+     * Returns active wars (last 2) of the CWL group.
+     */
+    public async getLeagueWars(clanTag: string, options?: OverrideOptions) {
+        const data = await this.getClanWarLeagueGroup(clanTag, options);
+        return data.getCurrentWars(clanTag, options);
+    }
 
-	/**
-	 * Returns active wars (last 2 for CWL) of the clan.
-	 */
-	public async getWars(clanTag: string, options?: OverrideOptions) {
-		const date = new Date().getUTCDate();
-		if (!(date >= 1 && date <= 10)) {
-			return [await this.getClanWar(clanTag, options)];
-		}
+    /**
+     * Returns active wars (last 2 for CWL) of the clan.
+     */
+    public async getWars(clanTag: string, options?: OverrideOptions) {
+        const date = new Date().getUTCDate();
+        if (!(date >= 1 && date <= 10)) {
+            return [await this.getClanWar(clanTag, options)];
+        }
 
-		try {
-			return await this.getLeagueWars(clanTag, options);
-		} catch (error) {
-			if (error instanceof HTTPError && [404].includes(error.status)) {
-				return [await this.getClanWar(clanTag, options)];
-			}
+        try {
+            return await this.getLeagueWars(clanTag, options);
+        } catch (error) {
+            if (error instanceof HTTPError && [404].includes(error.status)) {
+                return [await this.getClanWar(clanTag, options)];
+            }
 
-			throw error;
-		}
-	}
+            throw error;
+        }
+    }
 
-	/**
-	 * Get info about clan war league.
-	 */
-	public async getClanWarLeagueGroup(clanTag: string, options?: OverrideOptions) {
-		const { data, status, path, maxAge } = await this.rest.getClanWarLeagueGroup(clanTag, options);
-		if (data.state === 'notInWar') {
-			throw new HTTPError(NotInWarError, status, path, maxAge);
-		}
+    /**
+     * Get info about clan war league.
+     */
+    public async getClanWarLeagueGroup(clanTag: string, options?: OverrideOptions) {
+        const { data, status, path, maxAge } = await this.rest.getClanWarLeagueGroup(clanTag, options);
+        if (data.state === 'notInWar') {
+            throw new HTTPError(NotInWarError, status, path, maxAge);
+        }
 
-		return new ClanWarLeagueGroup(this, data);
-	}
+        return new ClanWarLeagueGroup(this, data);
+    }
 
-	/**
-	 * Get info about a CWL round by WarTag.
-	 */
-	public async getClanWarLeagueRound(warTag: string | { clanTag?: string, warTag: string; }, options?: OverrideOptions) {
-		const args = typeof warTag === 'string' ? { warTag } : { warTag: warTag.warTag, clanTag: warTag.clanTag };
-		const { data, maxAge, status, path } = await this.rest.getClanWarLeagueRound(args.warTag, options);
-		if (data.state === 'notInWar') {
-			throw new HTTPError(NotInWarError, status, path, maxAge);
-		}
+    /**
+     * Get info about a CWL round by WarTag.
+     */
+    public async getClanWarLeagueRound(warTag: string | { clanTag?: string; warTag: string }, options?: OverrideOptions) {
+        const args = typeof warTag === 'string' ? { warTag } : { warTag: warTag.warTag, clanTag: warTag.clanTag };
+        const { data, maxAge, status, path } = await this.rest.getClanWarLeagueRound(args.warTag, options);
+        if (data.state === 'notInWar') {
+            throw new HTTPError(NotInWarError, status, path, maxAge);
+        }
 
-		return new ClanWar(this, data, { warTag: args.warTag, clanTag: args.clanTag, maxAge });
-	}
+        return new ClanWar(this, data, { warTag: args.warTag, clanTag: args.clanTag, maxAge });
+    }
 
-	/**
-	 * Get info about a player by tag.
-	 */
-	public async getPlayer(playerTag: string, options?: OverrideOptions) {
-		const { data } = await this.rest.getPlayer(playerTag, options);
-		return new Player(this, data);
-	}
+    /**
+     * Get info about a player by tag.
+     */
+    public async getPlayer(playerTag: string, options?: OverrideOptions) {
+        const { data } = await this.rest.getPlayer(playerTag, options);
+        return new Player(this, data);
+    }
 
-	/**
-	 * Get info about some players by their tags (fetches in parallel).
-	 */
-	public async getPlayers(playerTags: string[], options?: OverrideOptions) {
-		return (await Promise.allSettled(playerTags.map(async (tag) => this.getPlayer(tag, options))))
-			.filter((res) => res.status === 'fulfilled')
-			.map((res) => (res as PromiseFulfilledResult<Player>).value);
-	}
+    /**
+     * Get info about some players by their tags (fetches in parallel).
+     */
+    public async getPlayers(playerTags: string[], options?: OverrideOptions) {
+        return (await Promise.allSettled(playerTags.map(async (tag) => this.getPlayer(tag, options))))
+            .filter((res) => res.status === 'fulfilled')
+            .map((res) => (res as PromiseFulfilledResult<Player>).value);
+    }
 
-	/**
-	 * Verify Player API token that can be found from the Game settings.
-	 */
-	public async verifyPlayerToken(playerTag: string, token: string, options?: OverrideOptions) {
-		const { data } = await this.rest.verifyPlayerToken(playerTag, token, options);
-		return data.status === 'ok';
-	}
+    /**
+     * Verify Player API token that can be found from the Game settings.
+     */
+    public async verifyPlayerToken(playerTag: string, token: string, options?: OverrideOptions) {
+        const { data } = await this.rest.verifyPlayerToken(playerTag, token, options);
+        return data.status === 'ok';
+    }
 
-	/**
-	 * Get list of Leagues.
-	 */
-	public async getLeagues(options?: SearchOptions) {
-		const { data } = await this.rest.getLeagues(options);
-		return data.items.map((entry) => new League(entry));
-	}
+    /**
+     * Get list of Leagues.
+     */
+    public async getLeagues(options?: SearchOptions) {
+        const { data } = await this.rest.getLeagues(options);
+        return data.items.map((entry) => new League(entry));
+    }
 
-	/**
-	 * Get Legend League season Ids.
-	 */
-	public async getLeagueSeasons(options?: SearchOptions) {
-		const { data } = await this.rest.getLeagueSeasons(LegendLeagueId, options);
-		return data.items.map((league) => league.id);
-	}
+    /**
+     * Get Legend League season Ids.
+     */
+    public async getLeagueSeasons(options?: SearchOptions) {
+        const { data } = await this.rest.getLeagueSeasons(LegendLeagueId, options);
+        return data.items.map((league) => league.id);
+    }
 
-	/**
-	 * Get Legend League season rankings by season Id.
-	 */
-	public async getSeasonRankings(seasonId: string, options?: SearchOptions) {
-		const { data } = await this.rest.getSeasonRankings(LegendLeagueId, seasonId, options);
-		return data.items.map((entry) => new SeasonRankedPlayer(this, entry));
-	}
+    /**
+     * Get Legend League season rankings by season Id.
+     */
+    public async getSeasonRankings(seasonId: string, options?: SearchOptions) {
+        const { data } = await this.rest.getSeasonRankings(LegendLeagueId, seasonId, options);
+        return data.items.map((entry) => new SeasonRankedPlayer(this, entry));
+    }
 
-	/**
-	 * Get list of Clan War Leagues.
-	 */
-	public async getWarLeagues(options?: SearchOptions) {
-		const { data } = await this.rest.getWarLeagues(options);
-		return data.items.map((entry) => new WarLeague(entry));
-	}
+    /**
+     * Get list of Clan War Leagues.
+     */
+    public async getWarLeagues(options?: SearchOptions) {
+        const { data } = await this.rest.getWarLeagues(options);
+        return data.items.map((entry) => new WarLeague(entry));
+    }
 
-	/**
-	 * Get list of Locations.
-	 */
-	public async getLocations(options?: SearchOptions) {
-		const { data } = await this.rest.getLocations(options);
-		return data.items.map((entry) => new Location(entry));
-	}
+    /**
+     * Get list of Locations.
+     */
+    public async getLocations(options?: SearchOptions) {
+        const { data } = await this.rest.getLocations(options);
+        return data.items.map((entry) => new Location(entry));
+    }
 
-	/**
-	 * Get clan rankings for a specific location.
-	 *
-	 * For global ranking, use `global` as `locationId`.
-	 */
-	public async getClanRanks(locationId: number | 'global', options?: SearchOptions) {
-		const { data } = await this.rest.getClanRanks(locationId, options);
-		return data.items.map((entry) => new RankedClan(entry));
-	}
+    /**
+     * Get clan rankings for a specific location.
+     *
+     * For global ranking, use `global` as `locationId`.
+     */
+    public async getClanRanks(locationId: number | 'global', options?: SearchOptions) {
+        const { data } = await this.rest.getClanRanks(locationId, options);
+        return data.items.map((entry) => new RankedClan(entry));
+    }
 
-	/**
-	 * Get player rankings for a specific location.
-	 *
-	 * For global ranking, use `global` as `locationId`.
-	 */
-	public async getPlayerRanks(locationId: number | 'global', options?: SearchOptions) {
-		const { data } = await this.rest.getPlayerRanks(locationId, options);
-		return data.items.map((entry) => new RankedPlayer(this, entry));
-	}
+    /**
+     * Get player rankings for a specific location.
+     *
+     * For global ranking, use `global` as `locationId`.
+     */
+    public async getPlayerRanks(locationId: number | 'global', options?: SearchOptions) {
+        const { data } = await this.rest.getPlayerRanks(locationId, options);
+        return data.items.map((entry) => new RankedPlayer(this, entry));
+    }
 
-	/**
-	 * Get clan versus rankings for a specific location.
-	 *
-	 * For global ranking, use `global` as `locationId`.
-	 */
-	public async getVersusClanRanks(locationId: number | 'global', options?: SearchOptions) {
-		const { data } = await this.rest.getVersusClanRanks(locationId, options);
-		return data.items.map((entry) => new RankedClan(entry));
-	}
+    /**
+     * Get clan versus rankings for a specific location.
+     *
+     * For global ranking, use `global` as `locationId`.
+     */
+    public async getVersusClanRanks(locationId: number | 'global', options?: SearchOptions) {
+        const { data } = await this.rest.getVersusClanRanks(locationId, options);
+        return data.items.map((entry) => new RankedClan(entry));
+    }
 
-	/**
-	 * Get player versus rankings for a specific location.
-	 *
-	 * For global ranking, use `global` as `locationId`.
-	 */
-	public async getVersusPlayerRanks(locationId: number | 'global', options?: SearchOptions) {
-		const { data } = await this.rest.getVersusPlayerRanks(locationId, options);
-		return data.items.map((entry) => new RankedPlayer(this, entry));
-	}
+    /**
+     * Get player versus rankings for a specific location.
+     *
+     * For global ranking, use `global` as `locationId`.
+     */
+    public async getVersusPlayerRanks(locationId: number | 'global', options?: SearchOptions) {
+        const { data } = await this.rest.getVersusPlayerRanks(locationId, options);
+        return data.items.map((entry) => new RankedPlayer(this, entry));
+    }
 
-	/**
-	 * Get list of clan labels.
-	 */
-	public async getClanLabels(options?: SearchOptions) {
-		const { data } = await this.rest.getClanLabels(options);
-		return data.items.map((entry) => new Label(entry));
-	}
+    /**
+     * Get list of clan labels.
+     */
+    public async getClanLabels(options?: SearchOptions) {
+        const { data } = await this.rest.getClanLabels(options);
+        return data.items.map((entry) => new Label(entry));
+    }
 
-	/**
-	 * Get list of player labels.
-	 */
-	public async getPlayerLabels(options?: SearchOptions) {
-		const { data } = await this.rest.getPlayerLabels(options);
-		return data.items.map((entry) => new Label(entry));
-	}
+    /**
+     * Get list of player labels.
+     */
+    public async getPlayerLabels(options?: SearchOptions) {
+        const { data } = await this.rest.getPlayerLabels(options);
+        return data.items.map((entry) => new Label(entry));
+    }
 
-	/**
-	 * Get info about gold pass season.
-	 */
-	public async getGoldPassSeason(options?: OverrideOptions) {
-		const { data } = await this.rest.getGoldPassSeason(options);
-		return new GoldPassSeason(data);
-	}
+    /**
+     * Get info about gold pass season.
+     */
+    public async getGoldPassSeason(options?: OverrideOptions) {
+        const { data } = await this.rest.getGoldPassSeason(options);
+        return new GoldPassSeason(data);
+    }
 }

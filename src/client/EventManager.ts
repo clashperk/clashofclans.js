@@ -1,8 +1,8 @@
 import { setTimeout } from 'node:timers';
-import { HTTPError } from '../rest/HTTPError.js';
+import { HTTPError } from '../rest/HTTPError';
 import type { Clan, ClanWar, Player } from '../struct';
-import { PollingEvents } from '../util/Constants.js';
-import { Util } from '../util/Util.js';
+import { PollingEvents } from '../util/Constants';
+import { Util } from '../util/Util';
 import type { PollingClient } from './PollingClient';
 
 /**

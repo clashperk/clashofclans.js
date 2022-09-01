@@ -1,6 +1,6 @@
 import type { APILeague } from '../types';
-import { Leagues } from '../util/Constants.js';
-import { Icon } from './Icon.js';
+import { Leagues } from '../util/Constants';
+import { Icon } from './Icon';
 
 /**
  * Represents a Player's League.

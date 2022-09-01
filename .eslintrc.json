@@ -5,6 +5,7 @@
         "project": "./tsconfig.eslint.json"
     },
     "rules": {
+				"import/extensions": 0,
         "no-process-env": 0,
         "no-inline-comments": 0,
         "no-warning-comments": 0,

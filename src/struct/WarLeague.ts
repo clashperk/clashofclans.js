@@ -1,5 +1,5 @@
 import type { APIWarLeague } from '../types';
-import { WarLeagues } from '../util/Constants.js';
+import { WarLeagues } from '../util/Constants';
 
 /**
  * Represents a Clan's War League.

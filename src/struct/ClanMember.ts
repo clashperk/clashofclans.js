@@ -1,7 +1,7 @@
 import type { Client } from '../client/Client';
 import type { APIClanMember, OverrideOptions } from '../types';
-import { UnrankedLeagueData } from '../util/Constants.js';
-import { League } from './League.js';
+import { UnrankedLeagueData } from '../util/Constants';
+import { League } from './League';
 
 export class ClanMember {
     /**
