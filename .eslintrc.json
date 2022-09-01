@@ -1,0 +1,20 @@
+{
+    "root": true,
+    "extends": ["neon/common", "neon/node", "neon/typescript", "neon/prettier"],
+    "parserOptions": {
+        "project": "./tsconfig.eslint.json"
+    },
+    "rules": {
+        "no-process-env": 0,
+        "no-inline-comments": 0,
+        "no-warning-comments": 0,
+        "comma-dangle": ["error", "never"],
+        "@typescript-eslint/naming-convention": 0,
+        "@typescript-eslint/no-floating-promises": 0,
+        "@typescript-eslint/no-misused-promises": 0
+    },
+    "ignorePatterns": ["dist/*", "docs/*"],
+    "env": {
+        "jest": true
+    }
+}
