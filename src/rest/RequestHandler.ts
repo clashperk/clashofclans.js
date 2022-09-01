@@ -253,7 +253,8 @@ export class RequestHandler {
     private async getIp(token: string): Promise<string | null> {
         try {
             const decoded = JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString());
-            const props = decoded.limits.find((limit: { cidrs: string[] }) => limit.hasOwnProperty('cidrs'));
+            // eslint-disable-next-line prefer-object-has-own
+            const props = decoded.limits.find((limit: { cidrs: string[] }) => Object.prototype.hasOwnProperty.call(limit, 'cidrs'));
             return (props.cidrs[0] as string).match(IP_REGEX)![0];
         } catch {
             const body = await fetch('https://api.ipify.org', { timeout: 10_000 }).then(async (res) => res.text());

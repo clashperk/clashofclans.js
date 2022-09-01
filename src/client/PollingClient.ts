@@ -12,111 +12,113 @@ import { PollingEventManager } from './EventManager.js';
  * ```
  */
 export class PollingClient extends Client {
-	/**
-	 * Polling Event Manager for the client.
-	 */
-	public pollingEvents: PollingEventManager;
+    /**
+     * Polling Event Manager for the client.
+     */
+    public pollingEvents: PollingEventManager;
 
-	public constructor(options?: ClientOptions) {
-		super(options);
+    public constructor(options?: ClientOptions) {
+        super(options);
 
-		this.pollingEvents = new PollingEventManager(this);
-	}
+        this.pollingEvents = new PollingEventManager(this);
+    }
 
-	/**
-	 * Whether the API is in maintenance break.
-	 */
-	public get inMaintenance() {
-		// @ts-expect-error something to write
-		return this.events._inMaintenance;
-	}
+    /**
+     * Whether the API is in maintenance break.
+     */
+    public get inMaintenance() {
+        // @ts-expect-error something to write
+        return this.events._inMaintenance;
+    }
 
-	// #region typings
-	/* eslint-disable @typescript-eslint/prefer-readonly */
+    // #region typings
+    /* eslint-disable @typescript-eslint/prefer-readonly */
+    /* eslint-disable jsdoc/valid-types */
+	/* eslint-disable tsdoc/syntax */
 
-	/**
-	 * Emits when a new season starts.
-	 *
-	 * **Parameters**
-	 *
-	 * | Name |   Type   | Description           |
-	 * | :--: | :------: | :-------------------: |
-	 * | `id` | `string` | Id of the new season. |
-	 *
-	 * @public
-	 * @event
-	 */
-	private static newSeasonStart: string;
+    /**
+     * Emits when a new season starts.
+     *
+     * **Parameters**
+     *
+     * | Name |   Type   | Description           |
+     * | :--: | :------: | :-------------------: |
+     * | `id` | `string` | Id of the new season. |
+     *
+     * @public
+     * @event
+     */
+    private static newSeasonStart: string;
 
-	/**
-	 * Emits when maintenance break starts in the API.
-	 *
-	 * @public
-	 * @event
-	 */
-	private static maintenanceStart: string;
+    /**
+     * Emits when maintenance break starts in the API.
+     *
+     * @public
+     * @event
+     */
+    private static maintenanceStart: string;
 
-	/**
-	 * Emits when maintenance break ends in the API.
-	 *
-	 * **Parameters**
-	 *
-	 * |    Name    |   Type   |                    Description                     |
-	 * | :--------: | :------: | :------------------------------------------------: |
-	 * | `duration` | `number` | Duration of the maintenance break in milliseconds. |
-	 *
-	 * @public
-	 * @event
-	 */
-	private static maintenanceEnd: string;
+    /**
+     * Emits when maintenance break ends in the API.
+     *
+     * **Parameters**
+     *
+     * |    Name    |   Type   |                    Description                     |
+     * | :--------: | :------: | :------------------------------------------------: |
+     * | `duration` | `number` | Duration of the maintenance break in milliseconds. |
+     *
+     * @public
+     * @event
+     */
+    private static maintenanceEnd: string;
 
-	/* eslint-disable @typescript-eslint/prefer-readonly */
+    /* eslint-disable @typescript-eslint/prefer-readonly */
 
-	/**
-	 * @internal
-	 */
-	public on<K extends keyof ClientPollingEvents>(event: K, listeners: (...args: ClientPollingEvents[K]) => void): this;
-	/**
-	 * @internal
-	 */
-	public on<S extends keyof CustomEvents>(
-		event: Exclude<S, keyof ClientPollingEvents>,
-		listeners: (...args: CustomEvents[S]) => void
-	): this;
-	/**
-	 * @internal
-	 */ // @ts-expect-error something to write
-	public on<S extends string | symbol>(event: Exclude<S, keyof ClientPollingEvents>, listeners: (...args: any[]) => void): this;
+    /**
+     * @internal
+     */
+    public on<K extends keyof ClientPollingEvents>(event: K, listeners: (...args: ClientPollingEvents[K]) => void): this;
+    /**
+     * @internal
+     */
+    public on<S extends keyof CustomEvents>(
+        event: Exclude<S, keyof ClientPollingEvents>,
+        listeners: (...args: CustomEvents[S]) => void
+    ): this;
+    /**
+     * @internal
+     */ // @ts-expect-error something to write
+    public on<S extends string | symbol>(event: Exclude<S, keyof ClientPollingEvents>, listeners: (...args: any[]) => void): this;
 
-	/**
-	 * @internal
-	 */
-	public once<K extends keyof ClientPollingEvents>(event: K, listeners: (...args: ClientPollingEvents[K]) => void): this;
-	/**
-	 * @internal
-	 */
-	public once<S extends keyof CustomEvents>(
-		event: Exclude<S, keyof ClientPollingEvents>,
-		listeners: (...args: CustomEvents[S]) => void
-	): this;
-	/**
-	 * @internal
-	 */ // @ts-expect-error something to write
-	public once<S extends string | symbol>(event: Exclude<S, keyof ClientPollingEvents>, listeners: (...args: any[]) => void): this;
+    /**
+     * @internal
+     */
+    public once<K extends keyof ClientPollingEvents>(event: K, listeners: (...args: ClientPollingEvents[K]) => void): this;
+    /**
+     * @internal
+     */
+    public once<S extends keyof CustomEvents>(
+        event: Exclude<S, keyof ClientPollingEvents>,
+        listeners: (...args: CustomEvents[S]) => void
+    ): this;
+    /**
+     * @internal
+     */ // @ts-expect-error something to write
+    public once<S extends string | symbol>(event: Exclude<S, keyof ClientPollingEvents>, listeners: (...args: any[]) => void): this;
 
-	/**
-	 * @internal
-	 */
-	public emit<K extends keyof ClientPollingEvents>(event: K, ...args: ClientPollingEvents[K]): boolean;
-	/**
-	 * @internal
-	 */
-	public emit<S extends keyof CustomEvents>(event: Exclude<S, keyof ClientPollingEvents>, ...args: CustomEvents[S]): this;
-	/**
-	 * @internal
-	 */ // @ts-expect-error something to write
-	public emit<S extends string | symbol>(event: Exclude<S, keyof ClientPollingEvents>, ...args: any[]): boolean;
-	// #endregion typings
+    /**
+     * @internal
+     */
+    public emit<K extends keyof ClientPollingEvents>(event: K, ...args: ClientPollingEvents[K]): boolean;
+    /**
+     * @internal
+     */
+    public emit<S extends keyof CustomEvents>(event: Exclude<S, keyof ClientPollingEvents>, ...args: CustomEvents[S]): this;
+    /**
+     * @internal
+     */ // @ts-expect-error something to write
+    public emit<S extends string | symbol>(event: Exclude<S, keyof ClientPollingEvents>, ...args: any[]): boolean;
+    // #endregion typings
 }
 
 type ClientPollingEvents = {

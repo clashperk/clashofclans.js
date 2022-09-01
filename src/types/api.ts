@@ -36,7 +36,7 @@ export type APISeason = {
 // **************** CLANS **************** //
 
 /**
- * /clans?name={name}&limit={limit}
+ * /clans?name=\{name\}&limit=\{limit\}
  */
 export type APIClanList = {
 	items: Omit<APIClan, 'memberList'>[];
@@ -50,7 +50,7 @@ export type APIChatLanguage = {
 }
 
 /**
- * /clans/{clanTag}
+ * /clans/\{clanTag\}
  */
 export type APIClan = {
     badgeUrls: APIBadge;
@@ -99,7 +99,7 @@ export type APIClanCapital = {
 }
 
 /**
- * /clans/{clanTag}/members
+ * /clans/\{clanTag\}/members
  */
 export type APIClanMemberList = {
 	items: APIClanMember[];
@@ -107,7 +107,7 @@ export type APIClanMemberList = {
 }
 
 /**
- * /clans/{clanTag}/currentwar and /clanwarleagues/wars/{warTag}
+ * /clans/\{clanTag\}/currentwar and /clanwarleagues/wars/\{warTag\}
  */
 export type APIClanWar = {
 	/**
@@ -174,7 +174,7 @@ export type APIClanWarLogEntry = {
 }
 
 /**
- * /clans/{clanTag}/warlog
+ * /clans/\{clanTag\}/warlog
  */
 export type APIClanWarLog = {
 	items: APIClanWarLogEntry[];
@@ -182,7 +182,7 @@ export type APIClanWarLog = {
 }
 
 /**
- * /clans/{clanTag}/currentwar/leaguegroup
+ * /clans/\{clanTag\}/currentwar/leaguegroup
  */
 export type APIClanWarLeagueGroup = {
 	clans: APIClanWarLeagueClan[];
@@ -212,7 +212,7 @@ export type APIClanWarLeagueRound = {
 // *************** PLAYERS *************** //
 
 /**
- * /players/{playerTag}
+ * /players/\{playerTag\}
  */
 export type APIPlayer = {
 	achievements: APIPlayerAchievement[];
@@ -280,7 +280,7 @@ export type APIPlayerItem = {
 }
 
 /**
- * /players/{playerTag}/verifytoken
+ * /players/\{playerTag\}/verifytoken
  */
 export type APIVerifyToken = {
 	status: 'invalid' | 'ok';
@@ -299,7 +299,7 @@ export type APILocationList = {
 }
 
 /**
- * /locations/{locationId}
+ * /locations/\{locationId\}
  */
 export type APILocation = {
 	countryCode?: string;
@@ -310,7 +310,7 @@ export type APILocation = {
 }
 
 /**
- * /locations/{locationId}/rankings/clans
+ * /locations/\{locationId\}/rankings/clans
  */
 export type APIClanRankingList = {
 	items: APIClanRanking[];
@@ -330,7 +330,7 @@ export type APIClanRanking = {
 }
 
 /**
- * /locations/{locationId}/rankings/players
+ * /locations/\{locationId\}/rankings/players
  */
 export type APIPlayerRankingList = {
 	items: APIPlayerRanking[];
@@ -351,7 +351,7 @@ export type APIPlayerRanking = {
 }
 
 /**
- * /locations/{locationId}/rankings/clans-versus
+ * /locations/\{locationId\}/rankings/clans-versus
  */
 export type APIClanVersusRankingList = {
 	items: APIClanVersusRanking[];
@@ -371,7 +371,7 @@ export type APIClanVersusRanking = {
 }
 
 /**
- * /locations/{locationId}/rankings/players-versus
+ * /locations/\{locationId\}/rankings/players-versus
  */
 export type APIPlayerVersusRankingList = {
 	items: APIPlayerVersusRanking[];
@@ -400,7 +400,7 @@ export type APILeagueList = {
 }
 
 /**
- * /leagues/{leagueId}
+ * /leagues/\{leagueId\}
  */
 export type APILeague = {
 	iconUrls: APIIcon;
@@ -409,7 +409,7 @@ export type APILeague = {
 }
 
 /**
- * /leagues/{leagueId}/seasons/{seasonId}
+ * /leagues/\{leagueId\}/seasons/\{seasonId\}
  */
 export type APIPlayerSeasonRankingList = {
 	items: Omit<APIPlayerRanking, 'league'>[];
@@ -417,7 +417,7 @@ export type APIPlayerSeasonRankingList = {
 }
 
 /**
- * /leagues/{leagueId}/seasons
+ * /leagues/\{leagueId\}/seasons
  */
 export type APILeagueSeasonList = {
 	items: {
@@ -435,7 +435,7 @@ export type APIWarLeagueList = {
 }
 
 /**
- * /warleagues/{leagueId}
+ * /warleagues/\{leagueId\}
  */
 export type APIWarLeague = {
 	id: number;

@@ -104,6 +104,7 @@ export class Util extends null {
      * Returns a string containing a query string suitable for use in a URL.
      */
     public static queryString(options: ClanSearchOptions | SearchOptions = {}) {
+		// @ts-expect-error something to write
         const query = new URLSearchParams(Object.entries(options).filter(([key]) => params.includes(key))).toString();
         return query.length ? `?${query}` : query;
     }

@@ -5,7 +5,7 @@ export type CacheOptions = {
     /**
      * How frequently to remove data from cache that are older than the lifetime/ttl (in milliseconds, 0 for never)
      *
-     * To prevent high CPU usage, set a higher value (>= 30 seconds)
+     * To prevent high CPU usage, set a higher value (\>= 30 seconds)
      *
      * @default 120000 (2 minutes)
      */
