@@ -18,12 +18,18 @@ const reasons: { [key: string]: string } = {
 	504: 'requestAborted'
 };
 
-/** Represents an HTTP Error. */
+/**
+ * Represents an HTTP Error.
+ */
 export class HTTPError extends Error {
-	/** The message of this errored request. */
+	/**
+	 * The message of this errored request.
+	 */
 	public message: string;
 
-	/** The HTTP method of this request. */
+	/**
+	 * The HTTP method of this request.
+	 */
 	public method: string;
 
 	/**
@@ -34,13 +40,19 @@ export class HTTPError extends Error {
 	 */
 	public reason: string;
 
-	/** The HTTP status code of this request. */
+	/**
+	 * The HTTP status code of this request.
+	 */
 	public status: number;
 
-	/** The path of this request. */
+	/**
+	 * The path of this request.
+	 */
 	public path: string;
 
-	/** Maximum number of milliseconds the results can be cached. */
+	/**
+	 * Maximum number of milliseconds the results can be cached.
+	 */
 	public maxAge: number;
 
 	public constructor(error: any, status: number, path: string, maxAge: number, method?: string) {

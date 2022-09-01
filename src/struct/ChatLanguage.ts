@@ -1,14 +1,22 @@
-import { APIChatLanguage } from '../types';
+import type { APIChatLanguage } from '../types';
 
-/** Represents a Clan's Chat Language. */
+/**
+ * Represents a Clan's Chat Language.
+ */
 export class ChatLanguage {
-	/** The language's unique Id. */
+	/**
+	 * The language's unique Id.
+	 */
 	public id: number;
 
-	/** The language's full name. */
+	/**
+	 * The language's full name.
+	 */
 	public name: string;
 
-	/** The language's code. */
+	/**
+	 * The language's code.
+	 */
 	public code: string;
 
 	public constructor(data: APIChatLanguage) {

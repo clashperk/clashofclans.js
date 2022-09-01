@@ -1,26 +1,42 @@
-import { APIPlayerAchievement } from '../types';
+import type { APIPlayerAchievement } from '../types';
 
-/** Represents a Clash of Clans Achievement. */
+/**
+ * Represents a Clash of Clans Achievement.
+ */
 export class Achievement {
-	/** The name of the achievement. */
+	/**
+	 * The name of the achievement.
+	 */
 	public name: string;
 
-	/** The current stars achieved for the achievement. */
+	/**
+	 * The current stars achieved for the achievement.
+	 */
 	public stars: number;
 
-	/** The number of X things attained for this achievement. */
+	/**
+	 * The number of X things attained for this achievement.
+	 */
 	public value: number;
 
-	/** The number of X things required to complete this achievement. */
+	/**
+	 * The number of X things required to complete this achievement.
+	 */
 	public target: number;
 
-	/** Information regarding the achievement. */
+	/**
+	 * Information regarding the achievement.
+	 */
 	public info: string;
 
-	/** The village this achievement belongs to.  */
-	public village: 'home' | 'builderBase';
+	/**
+	 * The village this achievement belongs to.
+	 */
+	public village: 'builderBase' | 'home';
 
-	/** Information regarding completion of the achievement. */
+	/**
+	 * Information regarding completion of the achievement.
+	 */
 	public completionInfo: string | null;
 
 	public constructor(data: APIPlayerAchievement) {
@@ -33,17 +49,23 @@ export class Achievement {
 		this.completionInfo = data.completionInfo ?? null;
 	}
 
-	/** Whether achievement belongs to the home base. */
+	/**
+	 * Whether achievement belongs to the home base.
+	 */
 	public get isHomeBase() {
 		return this.village === 'home';
 	}
 
-	/** Whether the achievement belongs to the builder base. */
+	/**
+	 * Whether the achievement belongs to the builder base.
+	 */
 	public get isBuilderBase() {
 		return this.village === 'builderBase';
 	}
 
-	/** Whether the achievement is completed. */
+	/**
+	 * Whether the achievement is completed.
+	 */
 	public get isCompleted() {
 		return this.stars === 3;
 	}

@@ -1,119 +1,62 @@
 {
-	"name": "clashofclans.js",
-	"version": "2.8.0",
-	"description": "JavaScript library for interacting with the Clash of Clans API",
-	"author": "SUVAJIT <suvajit.me@gmail.com>",
-	"license": "MIT",
-	"main": "dist/index.js",
-	"exports": {
-		"import": "./dist/index.mjs",
-		"require": "./dist/index.js",
-		"types": "./dist/index.d.ts"
-	},
-	"scripts": {
-		"build": "tsc && gen-esm-wrapper dist/index.js dist/index.mjs",
-		"prepare": "rimraf dist && npm run build",
-		"test": "eslint --ext .ts --ignore-path .gitignore .",
-		"lint": "eslint --fix --ext .ts --ignore-path .gitignore ."
-	},
-	"files": [
-		"dist"
-	],
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/clashperk/clashofclans.js.git"
-	},
-	"keywords": [
-		"clash-of-clans-api",
-		"clash-of-clans",
-		"clash-api",
-		"supercell",
-		"coc"
-	],
-	"bugs": {
-		"url": "https://github.com/clashperk/clashofclans.js/issues"
-	},
-	"homepage": "https://clashofclans.js.org",
-	"eslintConfig": {
-		"extends": [
-			"marine/prettier/node",
-			"plugin:prettier/recommended"
-		],
-		"plugins": [
-			"prettier"
-		],
-		"ignorePatterns": [
-			"dist/*",
-			"docs/*"
-		],
-		"parser": "@typescript-eslint/parser",
-		"rules": {
-			"no-process-env": 0,
-			"no-inline-comments": 0,
-			"no-warning-comments": 0,
-			"comma-dangle": [
-				"error",
-				"never"
-			],
-			"@typescript-eslint/naming-convention": 0,
-			"@typescript-eslint/no-floating-promises": 0,
-			"@typescript-eslint/no-misused-promises": 0
-		}
-	},
-	"prettier": {
-		"semi": true,
-		"tabWidth": 4,
-		"printWidth": 140,
-		"singleQuote": true,
-		"quoteProps": "consistent",
-		"bracketSpacing": true,
-		"trailingComma": "none",
-		"overrides": [
-			{
-				"files": [
-					"*.md"
-				],
-				"options": {
-					"useTabs": false,
-					"tabWidth": 4
-				}
-			},
-			{
-				"files": [
-					"*.yml"
-				],
-				"options": {
-					"useTabs": false,
-					"tabWidth": 2
-				}
-			}
-		]
-	},
-	"standard-version": {
-		"skip": {
-			"changelog": false,
-			"commit": true,
-			"tag": true
-		}
-	},
-	"dependencies": {
-		"node-fetch": "^2.6.7"
-	},
-	"devDependencies": {
-		"@types/node": "^16.10.3",
-		"@types/node-fetch": "^2.5.12",
-		"@typescript-eslint/eslint-plugin": "^5.4.0",
-		"@typescript-eslint/parser": "^5.4.0",
-		"eslint": "^8.3.0",
-		"eslint-config-marine": "^9.0.6",
-		"eslint-config-prettier": "^8.3.0",
-		"eslint-plugin-prettier": "^4.0.0",
-		"gen-esm-wrapper": "^1.1.3",
-		"prettier": "^2.4.1",
-		"rimraf": "^3.0.2",
-		"typescript": "^4.5.2"
-	},
-	"engines": {
-		"node": ">=14.x"
-	}
+    "name": "clashofclans.js",
+    "version": "2.8.0",
+    "description": "JavaScript library for interacting with the Clash of Clans API",
+    "author": "SUVAJIT <suvajit.me@gmail.com>",
+    "license": "MIT",
+    "main": "dist/index.js",
+    "exports": {
+        "import": "./dist/index.mjs",
+        "require": "./dist/index.js",
+        "types": "./dist/index.d.ts"
+    },
+    "scripts": {
+        "build": "tsc && gen-esm-wrapper dist/index.js dist/index.mjs",
+        "prepare": "rimraf dist && npm run build",
+        "test": "eslint src --ext ts",
+        "lint": "eslint src --fix --ext .ts"
+    },
+    "files": [
+        "dist"
+    ],
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/clashperk/clashofclans.js.git"
+    },
+    "keywords": [
+        "clash-of-clans-api",
+        "clash-of-clans",
+        "clash-api",
+        "supercell",
+        "coc"
+    ],
+    "bugs": {
+        "url": "https://github.com/clashperk/clashofclans.js/issues"
+    },
+    "homepage": "https://clashofclans.js.org",
+    "standard-version": {
+        "skip": {
+            "changelog": false,
+            "commit": true,
+            "tag": true
+        }
+    },
+    "dependencies": {
+        "node-fetch": "^2.6.7"
+    },
+    "devDependencies": {
+        "@types/node": "^16.10.3",
+        "@types/node-fetch": "^2.5.12",
+        "@typescript-eslint/eslint-plugin": "^5.4.0",
+        "@typescript-eslint/parser": "^5.4.0",
+        "eslint": "^8.3.0",
+        "eslint-config-neon": "^0.1.13",
+        "gen-esm-wrapper": "^1.1.3",
+        "prettier": "^2.4.1",
+        "rimraf": "^3.0.2",
+        "typescript": "^4.5.2"
+    },
+    "engines": {
+        "node": ">=14.x"
+    }
 }
