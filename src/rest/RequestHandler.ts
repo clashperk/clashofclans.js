@@ -8,6 +8,7 @@ import { CacheStore } from '../util/Store';
 import { HTTPError, PrivateWarLogError } from './HTTPError';
 import type { QueueThrottler, BatchThrottler } from './Throttler';
 
+// eslint-disable-next-line unicorn/no-unsafe-regex
 const IP_REGEX = /(?:\d{1,3}.){3}\d{1,3}/g;
 
 const agent = new https.Agent({ keepAlive: true });

@@ -291,6 +291,7 @@ export class PollingEventManager {
         return this._players.set(player.tag, player);
     }
 
+    // eslint-disable-next-line consistent-return
     private async runWarUpdate(tag: string) {
         if (this._inMaintenance) return null;
 
