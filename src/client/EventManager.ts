@@ -1,304 +1,332 @@
-import { Clan, ClanWar, Player } from '../struct';
-import { HTTPError } from '../rest/HTTPError';
-import { PollingEvents } from '../util/Constants';
-import { Util } from '../util/Util';
-import { PollingClient } from './PollingClient';
+import { setTimeout } from 'node:timers';
+import { HTTPError } from '../rest/HTTPError.js';
+import type { Clan, ClanWar, Player } from '../struct';
+import { PollingEvents } from '../util/Constants.js';
+import { Util } from '../util/Util.js';
+import type { PollingClient } from './PollingClient';
 
-/** Represents PollingEvent Manager of the {@link PollingClient}. */
+/**
+ * Represents PollingEvent Manager of the {@link PollingClient}.
+ */
 export class PollingEventManager {
-	private readonly _clanTags = new Set<string>();
-	private readonly _playerTags = new Set<string>();
-	private readonly _warTags = new Set<string>();
+    private readonly _clanTags = new Set<string>();
 
-	private readonly _clans = new Map<string, Clan>();
-	private readonly _players = new Map<string, Player>();
-	private readonly _wars = new Map<string, ClanWar>();
+    private readonly _playerTags = new Set<string>();
 
-	private readonly _pollingEvents = {
-		clans: [] as {
-			name: string;
-			filter: (oldClan: Clan, newClan: Clan) => Promise<boolean> | boolean;
-		}[],
-		wars: [] as {
-			name: string;
-			filter: (oldWar: ClanWar, newWar: ClanWar) => Promise<boolean> | boolean;
-		}[],
-		players: [] as {
-			name: string;
-			filter: (oldPlayer: Player, newPlayer: Player) => Promise<boolean> | boolean;
-		}[]
-	};
+    private readonly _warTags = new Set<string>();
 
-	private _inMaintenance: boolean;
-	private _maintenanceStartTime: Date | null;
+    private readonly _clans = new Map<string, Clan>();
 
-	public constructor(private readonly pollingClient: PollingClient) {
-		this._inMaintenance = Boolean(false);
-		this._maintenanceStartTime = null;
-	}
+    private readonly _players = new Map<string, Player>();
 
-	/** Initialize the PollingEvent Manager to start pulling the data by polling api. */
-	public async init(): Promise<string[]> {
-		this.seasonEndHandler();
-		this.maintenanceHandler();
+    private readonly _wars = new Map<string, ClanWar>();
 
-		this.clanUpdateHandler();
-		this.playerUpdateHandler();
-		this.warUpdateHandler();
+    private readonly _pollingEvents = {
+        clans: [] as {
+            filter(oldClan: Clan, newClan: Clan): Promise<boolean> | boolean;
+            name: string;
+        }[],
+        wars: [] as {
+            filter(oldWar: ClanWar, newWar: ClanWar): Promise<boolean> | boolean;
+            name: string;
+        }[],
+        players: [] as {
+            filter(oldPlayer: Player, newPlayer: Player): Promise<boolean> | boolean;
+            name: string;
+        }[]
+    };
 
-		return Promise.resolve(this.pollingClient.eventNames() as string[]);
-	}
+    private _inMaintenance: boolean;
 
-	/** Add clan tags to clan polling events. */
-	public addClans(tags: string[] | string) {
-		for (const tag of Array.isArray(tags) ? tags : [tags]) {
-			this._clanTags.add(this.pollingClient.util.formatTag(tag));
-		}
-		return this;
-	}
+    private _maintenanceStartTime: Date | null;
 
-	/** Delete clan tags from clan polling events. */
-	public deleteClans(tags: string[] | string) {
-		for (const tag of Array.isArray(tags) ? tags : [tags]) {
-			const key = this.pollingClient.util.formatTag(tag);
-			this._clans.delete(key);
-			this._clanTags.delete(key);
-		}
-		return this;
-	}
+    public constructor(private readonly pollingClient: PollingClient) {
+        this._inMaintenance = Boolean(false);
+        this._maintenanceStartTime = null;
+    }
 
-	/** Add player tags for player polling events. */
-	public addPlayers(tags: string[] | string) {
-		for (const tag of Array.isArray(tags) ? tags : [tags]) {
-			this._playerTags.add(this.pollingClient.util.formatTag(tag));
-		}
-		return this;
-	}
+    /**
+     * Initialize the PollingEvent Manager to start pulling the data by polling api.
+     */
+    public async init(): Promise<string[]> {
+        this.seasonEndHandler();
+        this.maintenanceHandler();
 
-	/** Delete player tags from player polling events. */
-	public deletePlayers(tags: string[] | string) {
-		for (const tag of Array.isArray(tags) ? tags : [tags]) {
-			const key = this.pollingClient.util.formatTag(tag);
-			this._players.delete(key);
-			this._playerTags.delete(key);
-		}
-		return this;
-	}
+        this.clanUpdateHandler();
+        this.playerUpdateHandler();
+        this.warUpdateHandler();
 
-	/** Add clan tags for war polling events. */
-	public addWars(tags: string[] | string) {
-		for (const tag of Array.isArray(tags) ? tags : [tags]) {
-			this._warTags.add(this.pollingClient.util.formatTag(tag));
-		}
-		return this;
-	}
+        return this.pollingClient.eventNames() as string[];
+    }
 
-	/** Delete clan tags from war polling events. */
-	public deleteWars(tags: string[] | string) {
-		for (const tag of Array.isArray(tags) ? tags : [tags]) {
-			const key = this.pollingClient.util.formatTag(tag);
-			this._wars.delete(`${key}:${1}`);
-			this._wars.delete(`${key}:${2}`);
-			this._warTags.delete(key);
-		}
-		return this;
-	}
+    /**
+     * Add clan tags to clan polling events.
+     */
+    public addClans(tags: string[] | string) {
+        for (const tag of Array.isArray(tags) ? tags : [tags]) {
+            this._clanTags.add(this.pollingClient.util.formatTag(tag));
+        }
 
-	/**
-	 * Set your own custom clan polling event.
-	 *
-	 * In order to emit the custom polling event, you must have this filter function that returns a boolean.
-	 *
-	 * @example
-	 * ```js
-	 * client.pollingEvents.addClans(['#2PP', '#8QU8J9LP']);
-	 *
-	 * client.pollingEvents.setClanEvent({
-	 *   name: 'clanMemberUpdate',
-	 *   filter: (oldClan, newClan) => {
-	 *     return oldClan.memberCount !== newClan.memberCount;
-	 *   }
-	 * });
-	 *
-	 * client.on('clanMemberUpdate', (oldClan, newClan) => {
-	 *   console.log(oldClan.memberCount, newClan.memberCount);
-	 * });
-	 *
-	 * (async function () {
-	 *   await client.pollingEvents.init();
-	 * })();
-	 * ```
-	 * @returns
-	 */
-	public setClanEvent(event: { name: string; filter: (oldClan: Clan, newClan: Clan) => boolean }) {
-		if (!event.name) throw new Error('Event name is required.');
-		if (typeof event.filter !== 'function') throw new Error('Filter function is required.');
+        return this;
+    }
 
-		this._pollingEvents.clans.push(event);
-		return this;
-	}
+    /**
+     * Delete clan tags from clan polling events.
+     */
+    public deleteClans(tags: string[] | string) {
+        for (const tag of Array.isArray(tags) ? tags : [tags]) {
+            const key = this.pollingClient.util.formatTag(tag);
+            this._clans.delete(key);
+            this._clanTags.delete(key);
+        }
 
-	/**
-	 * Set your own custom war event.
-	 *
-	 * In order to emit the custom event, you must have this filter function that returns a boolean.
-	 */
-	public setWarEvent(event: { name: string; filter: (oldWar: ClanWar, newWar: ClanWar) => boolean }) {
-		if (!event.name) throw new Error('Event name is required.');
-		if (typeof event.filter !== 'function') throw new Error('Filter function is required.');
+        return this;
+    }
 
-		this._pollingEvents.wars.push(event);
-		return this;
-	}
+    /**
+     * Add player tags for player polling events.
+     */
+    public addPlayers(tags: string[] | string) {
+        for (const tag of Array.isArray(tags) ? tags : [tags]) {
+            this._playerTags.add(this.pollingClient.util.formatTag(tag));
+        }
 
-	/**
-	 * Set your own custom player event.
-	 *
-	 * In order to emit the custom event, you must have this filter function that returns a boolean.
-	 */
-	public setPlayerEvent(event: { name: string; filter: (oldPlayer: Player, newPlayer: Player) => boolean }) {
-		if (!event.name) throw new Error('Event name is required.');
-		if (typeof event.filter !== 'function') throw new Error('Filter function is required.');
+        return this;
+    }
 
-		this._pollingEvents.players.push(event);
-		return this;
-	}
+    /**
+     * Delete player tags from player polling events.
+     */
+    public deletePlayers(tags: string[] | string) {
+        for (const tag of Array.isArray(tags) ? tags : [tags]) {
+            const key = this.pollingClient.util.formatTag(tag);
+            this._players.delete(key);
+            this._playerTags.delete(key);
+        }
 
-	private async maintenanceHandler() {
-		setTimeout(this.maintenanceHandler.bind(this), 10_000).unref();
-		try {
-			const res = await this.pollingClient.rest.getClans({ maxMembers: Math.floor(Math.random() * 40) + 10, limit: 1 });
-			if (res.status === 200 && this._inMaintenance) {
-				this._inMaintenance = Boolean(false);
-				const duration = Date.now() - this._maintenanceStartTime!.getTime();
-				this._maintenanceStartTime = null;
+        return this;
+    }
 
-				this.pollingClient.emit(PollingEvents.MaintenanceEnd, duration);
-			}
-		} catch (error) {
-			if (error instanceof HTTPError && error.status === 503 && !this._inMaintenance) {
-				this._inMaintenance = Boolean(true);
-				this._maintenanceStartTime = new Date();
+    /**
+     * Add clan tags for war polling events.
+     */
+    public addWars(tags: string[] | string) {
+        for (const tag of Array.isArray(tags) ? tags : [tags]) {
+            this._warTags.add(this.pollingClient.util.formatTag(tag));
+        }
 
-				this.pollingClient.emit(PollingEvents.MaintenanceStart);
-			}
-		}
-	}
+        return this;
+    }
 
-	private seasonEndHandler() {
-		const end = Util.getSeasonEndTime().getTime() - Date.now();
-		// Why this? setTimeout can be up to 24.8 days or 2147483647ms [(2^31 - 1) Max 32bit Integer]
-		if (end > 24 * 60 * 60 * 1000) {
-			setTimeout(this.seasonEndHandler.bind(this), 60 * 60 * 1000);
-		} else if (end > 0) {
-			setTimeout(() => {
-				this.pollingClient.emit(PollingEvents.NewSeasonStart, Util.getSeasonId());
-			}, end + 100).unref();
-		}
-	}
+    /**
+     * Delete clan tags from war polling events.
+     */
+    public deleteWars(tags: string[] | string) {
+        for (const tag of Array.isArray(tags) ? tags : [tags]) {
+            const key = this.pollingClient.util.formatTag(tag);
+            this._wars.delete(`${key}:${1}`);
+            this._wars.delete(`${key}:${2}`);
+            this._warTags.delete(key);
+        }
 
-	private async clanUpdateHandler() {
-		this.pollingClient.emit(PollingEvents.ClanLoopStart);
-		for (const tag of this._clanTags) await this.runClanUpdate(tag);
-		this.pollingClient.emit(PollingEvents.ClanLoopEnd);
+        return this;
+    }
 
-		setTimeout(this.clanUpdateHandler.bind(this), 10_000);
-	}
+    /**
+     * Set your own custom clan polling event.
+     *
+     * In order to emit the custom polling event, you must have this filter function that returns a boolean.
+     *
+     * @example
+     * ```js
+     * client.pollingEvents.addClans(['#2PP', '#8QU8J9LP']);
+     *
+     * client.pollingEvents.setClanEvent({
+     *   name: 'clanMemberUpdate',
+     *   filter: (oldClan, newClan) => {
+     *     return oldClan.memberCount !== newClan.memberCount;
+     *   }
+     * });
+     *
+     * client.on('clanMemberUpdate', (oldClan, newClan) => {
+     *   console.log(oldClan.memberCount, newClan.memberCount);
+     * });
+     *
+     * (async function () {
+     *   await client.pollingEvents.init();
+     * })();
+     * ```
+     * @returns
+     */
+    public setClanEvent(event: { filter(oldClan: Clan, newClan: Clan): boolean; name: string }) {
+        if (!event.name) throw new Error('Event name is required.');
+        if (typeof event.filter !== 'function') throw new Error('Filter function is required.');
 
-	private async playerUpdateHandler() {
-		this.pollingClient.emit(PollingEvents.PlayerLoopStart);
-		for (const tag of this._playerTags) await this.runPlayerUpdate(tag);
-		this.pollingClient.emit(PollingEvents.PlayerLoopEnd);
+        this._pollingEvents.clans.push(event);
+        return this;
+    }
 
-		setTimeout(this.playerUpdateHandler.bind(this), 10_000);
-	}
+    /**
+     * Set your own custom war event.
+     *
+     * In order to emit the custom event, you must have this filter function that returns a boolean.
+     */
+    public setWarEvent(event: { filter(oldWar: ClanWar, newWar: ClanWar): boolean; name: string }) {
+        if (!event.name) throw new Error('Event name is required.');
+        if (typeof event.filter !== 'function') throw new Error('Filter function is required.');
 
-	private async warUpdateHandler() {
-		this.pollingClient.emit(PollingEvents.WarLoopStart);
-		for (const tag of this._warTags) await this.runWarUpdate(tag);
-		this.pollingClient.emit(PollingEvents.WarLoopEnd);
+        this._pollingEvents.wars.push(event);
+        return this;
+    }
 
-		setTimeout(this.warUpdateHandler.bind(this), 10_000);
-	}
+    /**
+     * Set your own custom player event.
+     *
+     * In order to emit the custom event, you must have this filter function that returns a boolean.
+     */
+    public setPlayerEvent(event: { filter(oldPlayer: Player, newPlayer: Player): boolean; name: string }) {
+        if (!event.name) throw new Error('Event name is required.');
+        if (typeof event.filter !== 'function') throw new Error('Filter function is required.');
 
-	private async runClanUpdate(tag: string) {
-		if (this._inMaintenance) return null;
+        this._pollingEvents.players.push(event);
+        return this;
+    }
 
-		const clan = await this.pollingClient.getClan(tag).catch(() => null);
-		if (!clan) return null;
+    private async maintenanceHandler() {
+        setTimeout(this.maintenanceHandler.bind(this), 10_000).unref();
+        try {
+            const res = await this.pollingClient.rest.getClans({ maxMembers: Math.floor(Math.random() * 40) + 10, limit: 1 });
+            if (res.status === 200 && this._inMaintenance) {
+                this._inMaintenance = Boolean(false);
+                const duration = Date.now() - this._maintenanceStartTime!.getTime();
+                this._maintenanceStartTime = null;
 
-		const cached = this._clans.get(clan.tag);
-		if (!cached) return this._clans.set(clan.tag, clan);
+                this.pollingClient.emit(PollingEvents.MaintenanceEnd, duration);
+            }
+        } catch (error) {
+            if (error instanceof HTTPError && error.status === 503 && !this._inMaintenance) {
+                this._inMaintenance = Boolean(true);
+                this._maintenanceStartTime = new Date();
 
-		for (const { name, filter } of this._pollingEvents.clans) {
-			try {
-				if (!(await filter(cached, clan))) continue;
-				this.pollingClient.emit(name, cached, clan);
-			} catch (error) {
-				this.pollingClient.emit(PollingEvents.Error, error);
-			}
-		}
+                this.pollingClient.emit(PollingEvents.MaintenanceStart);
+            }
+        }
+    }
 
-		return this._clans.set(clan.tag, clan);
-	}
+    private seasonEndHandler() {
+        const end = Util.getSeasonEndTime().getTime() - Date.now();
+        // Why this? setTimeout can be up to 24.8 days or 2147483647ms [(2^31 - 1) Max 32bit Integer]
+        if (end > 24 * 60 * 60 * 1_000) {
+            setTimeout(this.seasonEndHandler.bind(this), 60 * 60 * 1_000);
+        } else if (end > 0) {
+            setTimeout(() => {
+                this.pollingClient.emit(PollingEvents.NewSeasonStart, Util.getSeasonId());
+            }, end + 100).unref();
+        }
+    }
 
-	private async runPlayerUpdate(tag: string) {
-		if (this._inMaintenance) return null;
+    private async clanUpdateHandler() {
+        this.pollingClient.emit(PollingEvents.ClanLoopStart);
+        for (const tag of this._clanTags) await this.runClanUpdate(tag);
+        this.pollingClient.emit(PollingEvents.ClanLoopEnd);
 
-		const player = await this.pollingClient.getPlayer(tag).catch(() => null);
-		if (!player) return null;
+        setTimeout(this.clanUpdateHandler.bind(this), 10_000);
+    }
 
-		const cached = this._players.get(player.tag);
-		if (!cached) return this._players.set(player.tag, player);
+    private async playerUpdateHandler() {
+        this.pollingClient.emit(PollingEvents.PlayerLoopStart);
+        for (const tag of this._playerTags) await this.runPlayerUpdate(tag);
+        this.pollingClient.emit(PollingEvents.PlayerLoopEnd);
 
-		for (const { name, filter } of this._pollingEvents.players) {
-			try {
-				if (!(await filter(cached, player))) continue;
-				this.pollingClient.emit(name, cached, player);
-			} catch (error) {
-				this.pollingClient.emit(PollingEvents.Error, error);
-			}
-		}
+        setTimeout(this.playerUpdateHandler.bind(this), 10_000);
+    }
 
-		return this._players.set(player.tag, player);
-	}
+    private async warUpdateHandler() {
+        this.pollingClient.emit(PollingEvents.WarLoopStart);
+        for (const tag of this._warTags) await this.runWarUpdate(tag);
+        this.pollingClient.emit(PollingEvents.WarLoopEnd);
 
-	private async runWarUpdate(tag: string) {
-		if (this._inMaintenance) return null;
+        setTimeout(this.warUpdateHandler.bind(this), 10_000);
+    }
 
-		const clanWars = await this.pollingClient.getWars(tag).catch(() => null);
-		if (!clanWars?.length) return null;
+    private async runClanUpdate(tag: string) {
+        if (this._inMaintenance) return null;
 
-		clanWars.forEach(async (war, index) => {
-			const key = `${tag}:${index}`;
-			const cached = this._wars.get(key);
-			if (!cached) return this._wars.set(key, war);
+        const clan = await this.pollingClient.getClan(tag).catch(() => null);
+        if (!clan) return null;
 
-			for (const { name, filter } of this._pollingEvents.wars) {
-				try {
-					if (!(await filter(cached, war))) continue;
-					this.pollingClient.emit(name, cached, war);
-				} catch (error) {
-					this.pollingClient.emit(PollingEvents.Error, error);
-				}
-			}
+        const cached = this._clans.get(clan.tag);
+        if (!cached) return this._clans.set(clan.tag, clan);
 
-			// check for war end
-			if (index === 1 && cached.warTag !== war.warTag) {
-				const data = await this.pollingClient.getLeagueWar({ clanTag: tag, round: 'PreviousRound' }).catch(() => null);
-				if (data && data.warTag === cached.warTag) {
-					for (const { name, filter } of this._pollingEvents.wars) {
-						try {
-							if (!(await filter(cached, data))) continue;
-							this.pollingClient.emit(name, cached, data);
-						} catch (error) {
-							this.pollingClient.emit(PollingEvents.Error, error);
-						}
-					}
-				}
-			}
+        for (const { name, filter } of this._pollingEvents.clans) {
+            try {
+                if (!(await filter(cached, clan))) continue;
+                this.pollingClient.emit(name, cached, clan);
+            } catch (error) {
+                this.pollingClient.emit(PollingEvents.Error, error);
+            }
+        }
 
-			return this._wars.set(key, war);
-		});
-	}
+        return this._clans.set(clan.tag, clan);
+    }
+
+    private async runPlayerUpdate(tag: string) {
+        if (this._inMaintenance) return null;
+
+        const player = await this.pollingClient.getPlayer(tag).catch(() => null);
+        if (!player) return null;
+
+        const cached = this._players.get(player.tag);
+        if (!cached) return this._players.set(player.tag, player);
+
+        for (const { name, filter } of this._pollingEvents.players) {
+            try {
+                if (!(await filter(cached, player))) continue;
+                this.pollingClient.emit(name, cached, player);
+            } catch (error) {
+                this.pollingClient.emit(PollingEvents.Error, error);
+            }
+        }
+
+        return this._players.set(player.tag, player);
+    }
+
+    private async runWarUpdate(tag: string) {
+        if (this._inMaintenance) return null;
+
+        const clanWars = await this.pollingClient.getWars(tag).catch(() => null);
+        if (!clanWars?.length) return null;
+
+        clanWars.forEach(async (war, index) => {
+            const key = `${tag}:${index}`;
+            const cached = this._wars.get(key);
+            if (!cached) return this._wars.set(key, war);
+
+            for (const { name, filter } of this._pollingEvents.wars) {
+                try {
+                    if (!(await filter(cached, war))) continue;
+                    this.pollingClient.emit(name, cached, war);
+                } catch (error) {
+                    this.pollingClient.emit(PollingEvents.Error, error);
+                }
+            }
+
+            // check for war end
+            if (index === 1 && cached.warTag !== war.warTag) {
+                const data = await this.pollingClient.getLeagueWar({ clanTag: tag, round: 'PreviousRound' }).catch(() => null);
+                if (data && data.warTag === cached.warTag) {
+                    for (const { name, filter } of this._pollingEvents.wars) {
+                        try {
+                            if (!(await filter(cached, data))) continue;
+                            this.pollingClient.emit(name, cached, data);
+                        } catch (error) {
+                            this.pollingClient.emit(PollingEvents.Error, error);
+                        }
+                    }
+                }
+            }
+
+            return this._wars.set(key, war);
+        });
+    }
 }

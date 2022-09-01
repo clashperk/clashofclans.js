@@ -16,7 +16,7 @@ import {
 	SeasonRankedPlayer,
 	GoldPassSeason,
 	ClanWarLeagueGroup
-} from '../struct';
+} from '../struct/index.js';
 import type { ClanSearchOptions, SearchOptions, ClientOptions, LoginOptions, OverrideOptions } from '../types';
 import { LegendLeagueId, CWLRounds } from '../util/Constants.js';
 import { Util } from '../util/Util.js';

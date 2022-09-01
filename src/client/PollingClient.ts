@@ -1,8 +1,8 @@
-import { Clan, ClanWar, Player } from '../struct';
-import { ClientOptions } from '../types';
-import { PollingEvents } from '../util/Constants';
-import { Client } from './Client';
-import { PollingEventManager } from './EventManager';
+import type { Clan, ClanWar, Player } from '../struct';
+import type { ClientOptions } from '../types';
+import type { PollingEvents } from '../util/Constants';
+import { Client } from './Client.js';
+import { PollingEventManager } from './EventManager.js';
 
 /**
  * Represents Clash of Clans Polling Event Client.
@@ -12,7 +12,9 @@ import { PollingEventManager } from './EventManager';
  * ```
  */
 export class PollingClient extends Client {
-	/** Polling Event Manager for the client. */
+	/**
+	 * Polling Event Manager for the client.
+	 */
 	public pollingEvents: PollingEventManager;
 
 	public constructor(options?: ClientOptions) {
@@ -21,9 +23,11 @@ export class PollingClient extends Client {
 		this.pollingEvents = new PollingEventManager(this);
 	}
 
-	/** Whether the API is in maintenance break. */
+	/**
+	 * Whether the API is in maintenance break.
+	 */
 	public get inMaintenance() {
-		// @ts-expect-error
+		// @ts-expect-error something to write
 		return this.events._inMaintenance;
 	}
 
@@ -38,6 +42,7 @@ export class PollingClient extends Client {
 	 * | Name |   Type   | Description           |
 	 * | :--: | :------: | :-------------------: |
 	 * | `id` | `string` | Id of the new season. |
+	 *
 	 * @public
 	 * @event
 	 */
@@ -45,6 +50,7 @@ export class PollingClient extends Client {
 
 	/**
 	 * Emits when maintenance break starts in the API.
+	 *
 	 * @public
 	 * @event
 	 */
@@ -58,6 +64,7 @@ export class PollingClient extends Client {
 	 * |    Name    |   Type   |                    Description                     |
 	 * | :--------: | :------: | :------------------------------------------------: |
 	 * | `duration` | `number` | Duration of the maintenance break in milliseconds. |
+	 *
 	 * @public
 	 * @event
 	 */
@@ -65,36 +72,54 @@ export class PollingClient extends Client {
 
 	/* eslint-disable @typescript-eslint/prefer-readonly */
 
-	/** @internal */
+	/**
+	 * @internal
+	 */
 	public on<K extends keyof ClientPollingEvents>(event: K, listeners: (...args: ClientPollingEvents[K]) => void): this;
-	/** @internal */
+	/**
+	 * @internal
+	 */
 	public on<S extends keyof CustomEvents>(
 		event: Exclude<S, keyof ClientPollingEvents>,
 		listeners: (...args: CustomEvents[S]) => void
 	): this;
-	/** @internal */ // @ts-expect-error
+	/**
+	 * @internal
+	 */ // @ts-expect-error something to write
 	public on<S extends string | symbol>(event: Exclude<S, keyof ClientPollingEvents>, listeners: (...args: any[]) => void): this;
 
-	/** @internal */
+	/**
+	 * @internal
+	 */
 	public once<K extends keyof ClientPollingEvents>(event: K, listeners: (...args: ClientPollingEvents[K]) => void): this;
-	/** @internal */
+	/**
+	 * @internal
+	 */
 	public once<S extends keyof CustomEvents>(
 		event: Exclude<S, keyof ClientPollingEvents>,
 		listeners: (...args: CustomEvents[S]) => void
 	): this;
-	/** @internal */ // @ts-expect-error
+	/**
+	 * @internal
+	 */ // @ts-expect-error something to write
 	public once<S extends string | symbol>(event: Exclude<S, keyof ClientPollingEvents>, listeners: (...args: any[]) => void): this;
 
-	/** @internal */
+	/**
+	 * @internal
+	 */
 	public emit<K extends keyof ClientPollingEvents>(event: K, ...args: ClientPollingEvents[K]): boolean;
-	/** @internal */
+	/**
+	 * @internal
+	 */
 	public emit<S extends keyof CustomEvents>(event: Exclude<S, keyof ClientPollingEvents>, ...args: CustomEvents[S]): this;
-	/** @internal */ // @ts-expect-error
+	/**
+	 * @internal
+	 */ // @ts-expect-error something to write
 	public emit<S extends string | symbol>(event: Exclude<S, keyof ClientPollingEvents>, ...args: any[]): boolean;
 	// #endregion typings
 }
 
-interface ClientPollingEvents {
+type ClientPollingEvents = {
 	[PollingEvents.NewSeasonStart]: [id: string];
 	[PollingEvents.MaintenanceStart]: [];
 	[PollingEvents.MaintenanceEnd]: [duration: number];
@@ -109,7 +134,7 @@ interface ClientPollingEvents {
 }
 
 // TypeScript 4.5 now can narrow values that have template string types, and also recognizes template string types as discriminants.
-interface CustomEvents {
+type CustomEvents = {
 	[key: `clan${string}`]: [oldClan: Clan, newClan: Clan];
 	[key: `war${string}`]: [oldWar: ClanWar, newWar: ClanWar];
 	[key: `player${string}`]: [oldPlayer: Player, newPlayer: Player];

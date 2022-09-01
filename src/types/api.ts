@@ -1,29 +1,33 @@
-export interface APIPaging {
+export type APIPaging = {
 	cursors?: APICursors;
 }
 
-export interface APICursors {
+export type APICursors = {
 	after?: string;
 	before?: string;
 }
 
-export interface APIIcon {
+export type APIIcon = {
+	/**
+	 * Medium Icon is not available for Unranked Icon.
+	 */
+	medium?: string;
+
 	small: string;
 
-	/** Tiny Icon is not available for Labels. */
+	/**
+	 * Tiny Icon is not available for Labels.
+	 */
 	tiny?: string;
-
-	/** Medium Icon is not available for Unranked Icon. */
-	medium?: string;
 }
 
-export interface APIBadge {
-	small: string;
+export type APIBadge = {
 	large: string;
 	medium: string;
+	small: string;
 }
 
-export interface APISeason {
+export type APISeason = {
 	id: string;
 	rank: number;
 	trophies: number;
@@ -31,389 +35,435 @@ export interface APISeason {
 
 // **************** CLANS **************** //
 
-/** /clans?name={name}&limit={limit} */
-export interface APIClanList {
+/**
+ * /clans?name={name}&limit={limit}
+ */
+export type APIClanList = {
 	items: Omit<APIClan, 'memberList'>[];
 	paging: APIPaging;
 }
 
-export interface APIChatLanguage {
-	name: string;
+export type APIChatLanguage = {
 	id: number;
 	languageCode: string;
+	name: string;
 }
 
-/** /clans/{clanTag} */
-export interface APIClan {
-	tag: string;
-	name: string;
-	type: 'open' | 'inviteOnly' | 'closed';
-	description: string;
-	location?: APILocation;
-	chatLanguage?: APIChatLanguage;
-	badgeUrls: APIBadge;
-	clanLevel: number;
-	clanPoints: number;
-	clanVersusPoints: number;
-	requiredTrophies: number;
-	requiredTownhallLevel?: number;
-	requiredVersusTrophies?: number;
-	warFrequency: 'always' | 'moreThanOncePerWeek' | 'oncePerWeek' | 'lessThanOncePerWeek' | 'never' | 'unknown';
-	warWinStreak: number;
-	warWins: number;
-	warTies?: number;
-	warLosses?: number;
-	isWarLogPublic: boolean;
-	warLeague?: APIWarLeague;
-	members: number;
-	labels: APILabel[];
-	memberList: APIClanMember[];
-	clanCapital: APIClanCapital;
-}
+/**
+ * /clans/{clanTag}
+ */
+export type APIClan = {
+    badgeUrls: APIBadge;
+    chatLanguage?: APIChatLanguage;
+    clanCapital: APIClanCapital;
+    clanLevel: number;
+    clanPoints: number;
+    clanVersusPoints: number;
+    description: string;
+    isWarLogPublic: boolean;
+    labels: APILabel[];
+    location?: APILocation;
+    memberList: APIClanMember[];
+    members: number;
+    name: string;
+    requiredTownhallLevel?: number;
+    requiredTrophies: number;
+    requiredVersusTrophies?: number;
+    tag: string;
+    type: 'closed' | 'inviteOnly' | 'open';
+    warFrequency: 'always' | 'lessThanOncePerWeek' | 'moreThanOncePerWeek' | 'never' | 'oncePerWeek' | 'unknown';
+    warLeague?: APIWarLeague;
+    warLosses?: number;
+    warTies?: number;
+    warWinStreak: number;
+    warWins: number;
+};
 
-export interface APIClanMember {
-	name: string;
-	tag: string;
-	role: 'member' | 'admin' | 'coLeader' | 'leader';
-	expLevel: number;
-	league: APILeague;
-	trophies: number;
-	versusTrophies?: number;
+export type APIClanMember = {
 	clanRank: number;
-	previousClanRank: number;
 	donations: number;
 	donationsReceived: number;
+	expLevel: number;
+	league: APILeague;
+	name: string;
+	previousClanRank: number;
+	role: 'admin' | 'coLeader' | 'leader' | 'member';
+	tag: string;
+	trophies: number;
+	versusTrophies?: number;
 }
 
-export interface APIClanCapital {
+export type APIClanCapital = {
 	capitalHallLevel?: number;
-	districts?: { id: number; name: string; districtHallLevel: number }[];
+	districts?: { districtHallLevel: number, id: number; name: string; }[];
 }
 
-/** /clans/{clanTag}/members */
-export interface APIClanMemberList {
+/**
+ * /clans/{clanTag}/members
+ */
+export type APIClanMemberList = {
 	items: APIClanMember[];
 	paging: APIPaging;
 }
 
-/** /clans/{clanTag}/currentwar and /clanwarleagues/wars/{warTag} */
-export interface APIClanWar {
-	state: 'notInWar' | 'preparation' | 'inWar' | 'warEnded';
-	teamSize: number;
-	startTime: string;
-	preparationStartTime: string;
-	endTime: string;
-	clan: APIWarClan;
-	opponent: APIWarClan;
-	/** This property is not available for CWL */
+/**
+ * /clans/{clanTag}/currentwar and /clanwarleagues/wars/{warTag}
+ */
+export type APIClanWar = {
+	/**
+	 * This property is not available for CWL
+	 */
 	attacksPerMember?: number;
+	clan: APIWarClan;
+	endTime: string;
+	opponent: APIWarClan;
+	preparationStartTime: string;
+	startTime: string;
+	state: 'inWar' | 'notInWar' | 'preparation' | 'warEnded';
+	teamSize: number;
 }
 
-export interface APIWarClan {
-	tag: string;
-	name: string;
+export type APIWarClan = {
+	attacks: number;
 	badgeUrls: APIBadge;
 	clanLevel: number;
-	attacks: number;
-	stars: number;
 	destructionPercentage: number;
 	members: APIClanWarMember[];
-}
-
-export interface APIClanWarMember {
-	tag: string;
 	name: string;
-	mapPosition: number;
-	townhallLevel: number;
-	opponentAttacks: number;
-	bestOpponentAttack?: APIClanWarAttack;
-	attacks?: APIClanWarAttack[];
+	stars: number;
+	tag: string;
 }
 
-export interface APIClanWarAttack {
-	order: number;
+export type APIClanWarMember = {
+	attacks?: APIClanWarAttack[];
+	bestOpponentAttack?: APIClanWarAttack;
+	mapPosition: number;
+	name: string;
+	opponentAttacks: number;
+	tag: string;
+	townhallLevel: number;
+}
+
+export type APIClanWarAttack = {
 	attackerTag: string;
 	defenderTag: string;
-	stars: number;
-	duration: number;
 	destructionPercentage: number;
+	duration: number;
+	order: number;
+	stars: number;
 }
 
-export interface APIWarLogClan {
-	tag?: string;
-	name?: string;
+export type APIWarLogClan = {
+	attacks?: number;
 	badgeUrls: APIBadge;
 	clanLevel: number;
-	attacks?: number;
-	stars: number;
 	destructionPercentage: number;
 	expEarned?: number;
+	name?: string;
+	stars: number;
+	tag?: string;
 }
 
-export interface APIClanWarLogEntry {
-	result: 'win' | 'lose' | 'tie' | null;
-	endTime: string;
-	teamSize: number;
+export type APIClanWarLogEntry = {
 	attacksPerMember?: number;
 	clan: APIWarLogClan;
+	endTime: string;
 	opponent: APIWarLogClan;
+	result: 'lose' | 'tie' | 'win' | null;
+	teamSize: number;
 }
 
-/** /clans/{clanTag}/warlog */
-export interface APIClanWarLog {
+/**
+ * /clans/{clanTag}/warlog
+ */
+export type APIClanWarLog = {
 	items: APIClanWarLogEntry[];
 	paging: APIPaging;
 }
 
-/** /clans/{clanTag}/currentwar/leaguegroup */
-export interface APIClanWarLeagueGroup {
-	state: 'notInWar' | 'preparation' | 'inWar' | 'ended';
-	season: string;
+/**
+ * /clans/{clanTag}/currentwar/leaguegroup
+ */
+export type APIClanWarLeagueGroup = {
 	clans: APIClanWarLeagueClan[];
 	rounds: APIClanWarLeagueRound[];
+	season: string;
+	state: 'ended' | 'inWar' | 'notInWar' | 'preparation';
 }
 
-export interface APIClanWarLeagueClan {
+export type APIClanWarLeagueClan = {
+	badgeUrls: APIBadge;
+	clanLevel: number;
+	members: APIClanWarLeagueClanMember[];
 	name: string;
 	tag: string;
-	clanLevel: number;
-	badgeUrls: APIBadge;
-	members: APIClanWarLeagueClanMember[];
 }
 
-export interface APIClanWarLeagueClanMember {
+export type APIClanWarLeagueClanMember = {
 	name: string;
 	tag: string;
 	townHallLevel: number;
 }
 
-export interface APIClanWarLeagueRound {
+export type APIClanWarLeagueRound = {
 	warTags: string[];
 }
 
 // *************** PLAYERS *************** //
 
-/** /players/{playerTag} */
-export interface APIPlayer {
+/**
+ * /players/{playerTag}
+ */
+export type APIPlayer = {
+	achievements: APIPlayerAchievement[];
+	attackWins: number;
+	bestTrophies: number;
+	bestVersusTrophies?: number;
+	builderHallLevel?: number;
+	clan?: APIPlayerClan;
+	clanCapitalContributions: number;
+	defenseWins: number;
+	donations: number;
+	donationsReceived: number;
+	expLevel: number;
+	heroes: APIPlayerItem[];
+	labels: APILabel[];
+	league?: APILeague;
+	legendStatistics?: APILegendStatistics;
 	name: string;
+	role?: string;
+	spells: APIPlayerItem[];
 	tag: string;
 	townHallLevel: number;
 	townHallWeaponLevel?: number;
-	expLevel: number;
-	trophies: number;
-	bestTrophies: number;
-	warStars: number;
-	attackWins: number;
-	defenseWins: number;
-	builderHallLevel?: number;
-	versusTrophies?: number;
-	bestVersusTrophies?: number;
-	versusBattleWins?: number;
-	versusBattleWinCount?: number;
-	donations: number;
-	donationsReceived: number;
-	clanCapitalContributions: number;
-	role?: string;
-	warPreference?: 'in' | 'out';
-	clan?: APIPlayerClan;
-	league?: APILeague;
-	legendStatistics?: APILegendStatistics;
-	achievements: APIPlayerAchievement[];
 	troops: APIPlayerItem[];
-	heroes: APIPlayerItem[];
-	spells: APIPlayerItem[];
-	labels: APILabel[];
+	trophies: number;
+	versusBattleWinCount?: number;
+	versusBattleWins?: number;
+	versusTrophies?: number;
+	warPreference?: 'in' | 'out';
+	warStars: number;
 }
 
-export interface APILegendStatistics {
-	previousSeason?: APISeason;
-	previousVersusSeason?: APISeason;
+export type APILegendStatistics = {
+	bestSeason?: APISeason;
 	bestVersusSeason?: APISeason;
 	currentSeason?: APISeason;
-	bestSeason?: APISeason;
 	legendTrophies: number;
+	previousSeason?: APISeason;
+	previousVersusSeason?: APISeason;
 }
 
-export interface APIPlayerClan {
-	tag: string;
-	name: string;
-	clanLevel: number;
+export type APIPlayerClan = {
 	badgeUrls: APIBadge;
+	clanLevel: number;
+	name: string;
+	tag: string;
 }
 
-export interface APIPlayerAchievement {
+export type APIPlayerAchievement = {
+	completionInfo: string | null;
+	info: string;
 	name: string;
 	stars: number;
-	value: number;
 	target: number;
-	info: string;
-	completionInfo: string | null;
-	village: 'home' | 'builderBase';
+	value: number;
+	village: 'builderBase' | 'home';
 }
 
-export interface APIPlayerItem {
-	name: string;
+export type APIPlayerItem = {
 	level: number;
 	maxLevel: number;
+	name: string;
 	superTroopIsActive?: boolean;
-	village: 'home' | 'builderBase';
+	village: 'builderBase' | 'home';
 }
 
-/** /players/{playerTag}/verifytoken */
-export interface APIVerifyToken {
+/**
+ * /players/{playerTag}/verifytoken
+ */
+export type APIVerifyToken = {
+	status: 'invalid' | 'ok';
 	tag: string;
 	token: string;
-	status: 'ok' | 'invalid';
 }
 
 // ************* LOCATIONS ************* //
 
-/** /locations */
-export interface APILocationList {
+/**
+ * /locations
+ */
+export type APILocationList = {
 	items: APILocation[];
 	paging: APIPaging;
 }
 
-/** /locations/{locationId} */
-export interface APILocation {
-	localizedName?: string;
-	id: number;
-	name: string;
-	isCountry: boolean;
+/**
+ * /locations/{locationId}
+ */
+export type APILocation = {
 	countryCode?: string;
+	id: number;
+	isCountry: boolean;
+	localizedName?: string;
+	name: string;
 }
 
-/** /locations/{locationId}/rankings/clans */
-export interface APIClanRankingList {
+/**
+ * /locations/{locationId}/rankings/clans
+ */
+export type APIClanRankingList = {
 	items: APIClanRanking[];
 	paging: APIPaging;
 }
 
-export interface APIClanRanking {
+export type APIClanRanking = {
+	badgeUrls: APIBadge;
 	clanLevel: number;
 	clanPoints: number;
 	location: APILocation;
 	members: number;
-	tag: string;
 	name: string;
-	rank: number;
 	previousRank: number;
-	badgeUrls: APIBadge;
+	rank: number;
+	tag: string;
 }
 
-/** /locations/{locationId}/rankings/players */
-export interface APIPlayerRankingList {
+/**
+ * /locations/{locationId}/rankings/players
+ */
+export type APIPlayerRankingList = {
 	items: APIPlayerRanking[];
 	paging: APIPaging;
 }
 
-export interface APIPlayerRanking {
-	tag: string;
-	name: string;
-	expLevel: number;
-	trophies: number;
+export type APIPlayerRanking = {
 	attackWins: number;
-	defenseWins: number;
-	rank: number;
-	previousRank: number;
 	clan?: Omit<APIPlayerClan, 'clanLevel'>;
+	defenseWins: number;
+	expLevel: number;
 	league: APILeague;
+	name: string;
+	previousRank: number;
+	rank: number;
+	tag: string;
+	trophies: number;
 }
 
-/** /locations/{locationId}/rankings/clans-versus */
-export interface APIClanVersusRankingList {
+/**
+ * /locations/{locationId}/rankings/clans-versus
+ */
+export type APIClanVersusRankingList = {
 	items: APIClanVersusRanking[];
 	paging: APIPaging;
 }
 
-export interface APIClanVersusRanking {
+export type APIClanVersusRanking = {
+	badgeUrls: APIBadge;
 	clanLevel: number;
+	clanVersusPoints: number;
 	location: APILocation;
 	members: number;
-	tag: string;
 	name: string;
-	rank: number;
 	previousRank: number;
-	badgeUrls: APIBadge;
-	clanVersusPoints: number;
+	rank: number;
+	tag: string;
 }
 
-/** /locations/{locationId}/rankings/players-versus */
-export interface APIPlayerVersusRankingList {
+/**
+ * /locations/{locationId}/rankings/players-versus
+ */
+export type APIPlayerVersusRankingList = {
 	items: APIPlayerVersusRanking[];
 	paging: APIPaging;
 }
 
-export interface APIPlayerVersusRanking {
-	tag: string;
-	name: string;
-	expLevel: number;
-	versusTrophies: number;
-	versusBattleWins: number;
-	rank: number;
-	previousRank: number;
+export type APIPlayerVersusRanking = {
 	clan?: APIPlayerClan;
+	expLevel: number;
+	name: string;
+	previousRank: number;
+	rank: number;
+	tag: string;
+	versusBattleWins: number;
+	versusTrophies: number;
 }
 
 // *************** LEAGUES *************** //
 
-/** /leagues */
-export interface APILeagueList {
+/**
+ * /leagues
+ */
+export type APILeagueList = {
 	items: APILeague[];
 	paging: APIPaging;
 }
 
-/** /leagues/{leagueId} */
-export interface APILeague {
+/**
+ * /leagues/{leagueId}
+ */
+export type APILeague = {
+	iconUrls: APIIcon;
 	id: number;
 	name: string;
-	iconUrls: APIIcon;
 }
 
-/** /leagues/{leagueId}/seasons/{seasonId} */
-export interface APIPlayerSeasonRankingList {
+/**
+ * /leagues/{leagueId}/seasons/{seasonId}
+ */
+export type APIPlayerSeasonRankingList = {
 	items: Omit<APIPlayerRanking, 'league'>[];
 	paging: APIPaging;
 }
 
-/** /leagues/{leagueId}/seasons */
-export interface APILeagueSeasonList {
+/**
+ * /leagues/{leagueId}/seasons
+ */
+export type APILeagueSeasonList = {
 	items: {
 		id: string;
 	}[];
 	paging: APIPaging;
 }
 
-/** /warleagues */
-export interface APIWarLeagueList {
+/**
+ * /warleagues
+ */
+export type APIWarLeagueList = {
 	items: APIWarLeague[];
 	paging: APIPaging;
 }
 
-/** /warleagues/{leagueId} */
-export interface APIWarLeague {
+/**
+ * /warleagues/{leagueId}
+ */
+export type APIWarLeague = {
 	id: number;
 	name: string;
 }
 
 // ************** LABELS ************** //
 
-export interface APILabel {
+export type APILabel = {
+	iconUrls: APIIcon;
 	id: number;
 	name: string;
-	iconUrls: APIIcon;
 }
 
-/** /labels/clans and /labels/players */
-export interface APILabelList {
+/**
+ * /labels/clans and /labels/players
+ */
+export type APILabelList = {
 	items: APILabel[];
 	paging: APIPaging;
 }
 
 // *********** GOLD PASS *********** //
 
-/** /goldpass/seasons/current */
-export interface APIGoldPassSeason {
-	startTime: string;
+/**
+ * /goldpass/seasons/current
+ */
+export type APIGoldPassSeason = {
 	endTime: string;
+	startTime: string;
 }

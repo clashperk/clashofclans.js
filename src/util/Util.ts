@@ -1,3 +1,4 @@
+import { setTimeout } from 'node:timers';
 import { URLSearchParams } from 'node:url';
 import type { ClanSearchOptions, SearchOptions } from '../types';
 import { RawData } from '../util/Constants.js';
