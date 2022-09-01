@@ -1,2 +1,2 @@
-export * from './api';
-export * from './lib';
+export * from './api.js';
+export * from './lib.js';
