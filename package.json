@@ -14,7 +14,7 @@
         "build": "tsc && gen-esm-wrapper dist/index.js dist/index.mjs",
         "prepare": "rimraf dist && npm run build",
         "test": "eslint src --ext ts",
-        "lint": "eslint --fix --ext .ts --ignore-path .gitignore ."
+        "lint": "eslint src --fix --ext .ts"
     },
     "files": [
         "dist"
