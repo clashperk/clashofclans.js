@@ -266,8 +266,7 @@ export class EventManager {
 	private async runWarUpdate(tag: string) {
 		if (this._inMaintenance) return null;
 
-		// @ts-expect-error
-		const clanWars = await this.client._getClanWars(tag).catch(() => null);
+		const clanWars = await this.client.getWars(tag).catch(() => null);
 		if (!clanWars?.length) return null;
 
 		clanWars.forEach(async (war, index) => {

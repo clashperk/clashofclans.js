@@ -7,6 +7,7 @@ import type { Player } from './Player';
 import { Location } from './Location';
 import { Label } from './Label';
 import { Badge } from './Badge';
+import { ClanCapital } from './ClanCapital';
 
 /** Represents a Clan. */
 export class Clan {
@@ -76,6 +77,9 @@ export class Clan {
 	/** An array of {@link Label} that the clan has. */
 	public labels: Label[];
 
+	/** The clan's Clan Capital information */
+	public clanCapital: ClanCapital | null;
+
 	/**
 	 * List of clan members.
 	 * - This property returns empty array for {@link Client.getClans} method.
@@ -105,7 +109,8 @@ export class Clan {
 		this.warLeague = data.warLeague ? new WarLeague(data.warLeague) : null;
 		this.memberCount = data.members;
 		this.labels = data.labels.map((label) => new Label(label));
-		this.members = data.memberList?.map((mem) => new ClanMember(this.client, mem)) ?? []; // eslint-disable-line
+		this.clanCapital = Object.keys(data.clanCapital).length > 0 ? new ClanCapital(data.clanCapital) : null;
+        this.members = data.memberList?.map((mem) => new ClanMember(this.client, mem)) ?? []; // eslint-disable-line
 	}
 
 	/** Get {@link Player} info for every Player in the clan. */
