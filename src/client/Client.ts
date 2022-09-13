@@ -159,7 +159,11 @@ export class Client extends EventEmitter {
 			return wars.find((war) => war.clan.tag === args.clanTag && war.state === state) ?? null;
 		}
 
-		return wars.find((war) => war.clan.tag === args.clanTag && war.state === state) ?? wars.at(0) ?? null;
+		return (
+			wars.find((war) => war.clan.tag === args.clanTag && war.state === state) ??
+			wars.find((war) => war.clan.tag === args.clanTag) ??
+			null
+		);
 	}
 
 	/** Returns active wars (last 2) of the CWL group. */
