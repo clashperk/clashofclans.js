@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## 2.8.3 (2022-09-13)
+
+### Bug Fixes
+
+- Conflict with the same name of builder base and home base troops. ([#123](https://github.com/clashperk/clashofclans.js/pull/123))
+- Fix the issue with the `Client#getLeagueWar()` method.
+
+### Features
+
+- Clan Capital related properties and typings.
+
 ## 2.8.0 (2022-07-22)
 
 ### Features
