@@ -157,35 +157,35 @@ export class Player {
 	/** An array of the player's home base troops. */
 	public get homeTroops() {
 		return this.troops
-			.filter((entry) => HOME_TROOPS.includes(entry.name))
+			.filter((entry) => entry.village === 'home' && HOME_TROOPS.includes(entry.name))
 			.sort((a, b) => HOME_TROOPS.indexOf(a.name) - HOME_TROOPS.indexOf(b.name));
 	}
 
 	/** An array of the player's builder base troops. */
 	public get builderTroops() {
 		return this.troops
-			.filter((entry) => BUILDER_TROOPS.includes(entry.name))
+			.filter((entry) => entry.village === 'builderBase' && BUILDER_TROOPS.includes(entry.name))
 			.sort((a, b) => BUILDER_TROOPS.indexOf(a.name) - BUILDER_TROOPS.indexOf(b.name));
 	}
 
 	/** An array of the player's super troops. */
 	public get superTroops() {
 		return this.troops
-			.filter((entry) => SUPER_TROOPS.includes(entry.name))
+			.filter((entry) => entry.village === 'home' && SUPER_TROOPS.includes(entry.name))
 			.sort((a, b) => SUPER_TROOPS.indexOf(a.name) - SUPER_TROOPS.indexOf(b.name));
 	}
 
 	/** An array of the player's hero pets. */
 	public get heroPets() {
 		return this.troops
-			.filter((entry) => HERO_PETS.includes(entry.name))
+			.filter((entry) => entry.village === 'home' && HERO_PETS.includes(entry.name))
 			.sort((a, b) => HERO_PETS.indexOf(a.name) - HERO_PETS.indexOf(b.name));
 	}
 
 	/** An array of the player's siege machines. */
 	public get siegeMachines() {
 		return this.troops
-			.filter((entry) => SIEGE_MACHINES.includes(entry.name))
+			.filter((entry) => entry.village === 'home' && SIEGE_MACHINES.includes(entry.name))
 			.sort((a, b) => SIEGE_MACHINES.indexOf(a.name) - SIEGE_MACHINES.indexOf(b.name));
 	}
 
