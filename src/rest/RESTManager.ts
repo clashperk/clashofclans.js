@@ -1,6 +1,4 @@
-import { RequestHandler } from './RequestHandler';
 import { Util } from '../util/Util';
-
 import {
 	APIClan,
 	APIClanList,
@@ -24,13 +22,13 @@ import {
 	APIVerifyToken,
 	APIWarLeague,
 	APIWarLeagueList,
-	//
 	SearchOptions,
 	ClanSearchOptions,
 	RESTOptions,
 	OverrideOptions,
 	LoginOptions
 } from '../types';
+import { RequestHandler } from './RequestHandler';
 
 /** Represents a REST Manager of the client. */
 export class RESTManager {

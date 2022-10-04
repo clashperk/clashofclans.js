@@ -1,7 +1,7 @@
 import { APIClan, OverrideOptions } from '../types';
+import { Client } from '../client/Client';
 import { ChatLanguage } from './ChatLanguage';
 import { ClanMember } from './ClanMember';
-import { Client } from '../client/Client';
 import { WarLeague } from './WarLeague';
 import type { Player } from './Player';
 import { Location } from './Location';

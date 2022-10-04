@@ -147,6 +147,11 @@ export const PollingEvents = {
 	Debug: 'debug'
 } as const;
 
+export const RestEvents = {
+	Error: 'error',
+	Debug: 'debug'
+} as const;
+
 export const CWLRounds = {
 	PreviousRound: 'warEnded',
 	CurrentRound: 'inWar',

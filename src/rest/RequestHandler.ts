@@ -1,10 +1,10 @@
+import https from 'node:https';
+import fetch from 'node-fetch';
 import { Response, RequestOptions, LoginOptions, Store, RequestHandlerOptions } from '../types';
 import { APIBaseURL, DevSiteAPIBaseURL } from '../util/Constants';
+import { CacheStore } from '../util/Store';
 import { QueueThrottler, BatchThrottler } from './Throttler';
 import { HTTPError, PrivateWarLogError } from './HTTPError';
-import { CacheStore } from '../util/Store';
-import fetch from 'node-fetch';
-import https from 'https';
 
 const IP_REGEX = /\d{1,3}.\d{1,3}.\d{1,3}.\d{1,3}/g;
 

@@ -1,10 +1,10 @@
 import { HeroPets, SiegeMachines, UnrankedLeagueData, SuperTroops, BuilderTroops, HomeTroops } from '../util/Constants';
 import { APIPlayer, OverrideOptions } from '../types';
+import { Client } from '../client/Client';
 import { LegendStatistics } from './LegendStatistics';
 import { Achievement } from './Achievement';
 import { Hero, Spell, Troop } from './Unit';
 import { PlayerClan } from './PlayerClan';
-import { Client } from '../client/Client';
 import { League } from './League';
 import { Label } from './Label';
 

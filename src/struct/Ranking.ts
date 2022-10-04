@@ -1,7 +1,7 @@
 import { APIClanRanking, APIClanVersusRanking, APIPlayerRanking, APIPlayerVersusRanking } from '../types';
 import { UnrankedLeagueData } from '../util/Constants';
-import { PlayerClan } from './PlayerClan';
 import { Client } from '../client/Client';
+import { PlayerClan } from './PlayerClan';
 import { Location } from './Location';
 import { League } from './League';
 import { Badge } from './Badge';
