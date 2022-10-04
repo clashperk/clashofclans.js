@@ -1,8 +1,8 @@
+import { EventEmitter } from 'node:events';
 import { ClanSearchOptions, SearchOptions, ClientOptions, LoginOptions, OverrideOptions } from '../types';
 import { LegendLeagueId, CWLRounds } from '../util/Constants';
 import { HTTPError, NotInWarError } from '../rest/HTTPError';
 import { RESTManager } from '../rest/RESTManager';
-import { EventEmitter } from 'events';
 import { Util } from '../util/Util';
 
 import {
@@ -180,7 +180,7 @@ export class Client extends EventEmitter {
 		}
 
 		try {
-			return this.getLeagueWars(clanTag, options);
+			return await this.getLeagueWars(clanTag, options);
 		} catch (e) {
 			if (e instanceof HTTPError && [404].includes(e.status)) {
 				return [await this.getClanWar(clanTag, options)];

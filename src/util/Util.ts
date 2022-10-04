@@ -133,8 +133,8 @@ export class Util extends null {
 
 	/** Parse in-game army link into troops and spells count with respective Id's. */
 	public static parseArmyLink(link: string) {
-		const unitsMatches = link.match(/u(?<units>[\d+x-]+)/);
-		const spellsMatches = link.match(/s(?<spells>[\d+x-]+)/);
+		const unitsMatches = /u(?<units>[\d+x-]+)/.exec(link);
+		const spellsMatches = /s(?<spells>[\d+x-]+)/.exec(link);
 
 		const unitsPart = (unitsMatches?.groups?.unit as string | null)?.split('-') ?? [];
 		const spellParts = (spellsMatches?.groups?.spells as string | null)?.split('-') ?? [];

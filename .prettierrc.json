@@ -1,0 +1,33 @@
+{
+	"endOfLine": "lf",
+	"semi": true,
+	"tabWidth": 4,
+	"printWidth": 140,
+	"singleQuote": true,
+	"quoteProps": "consistent",
+	"bracketSpacing": true,
+	"trailingComma": "none",
+	"overrides": [
+		{
+			"files": ["*.json"],
+			"options": {
+				"tabWidth": 2,
+				"printWidth": 120
+			}
+		},
+		{
+			"files": ["*.md"],
+			"options": {
+				"useTabs": false,
+				"tabWidth": 2
+			}
+		},
+		{
+			"files": ["*.yml"],
+			"options": {
+				"useTabs": false,
+				"tabWidth": 2
+			}
+		}
+	]
+}
