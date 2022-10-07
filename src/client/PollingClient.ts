@@ -119,9 +119,9 @@ export class PollingClient extends Client {
 	 *
 	 * @example
 	 * ```js
-	 * client.pollingEvents.addClans(['#2PP', '#8QU8J9LP']);
+	 * client.addClans(['#2PP', '#8QU8J9LP']);
 	 *
-	 * client.pollingEvents.setClanEvent({
+	 * client.setClanEvent({
 	 *   name: 'clanMemberUpdate',
 	 *   filter: (oldClan, newClan) => {
 	 *     return oldClan.memberCount !== newClan.memberCount;
@@ -133,7 +133,7 @@ export class PollingClient extends Client {
 	 * });
 	 *
 	 * (async function () {
-	 *   await client.pollingEvents.init();
+	 *   await client.init();
 	 * })();
 	 * ```
 	 * @returns
@@ -309,9 +309,23 @@ export class PollingClient extends Client {
 			return this._wars.set(key, war);
 		});
 	}
+}
 
-	// #region typings
-	/* eslint-disable @typescript-eslint/prefer-readonly */
+export interface PollingClient {
+	emit: (<K extends keyof IPollingEvents>(event: K, ...args: IPollingEvents[K]) => boolean) &
+		(<S extends string | symbol>(event: Exclude<S, keyof IPollingEvents>, ...args: any[]) => boolean);
+
+	off: (<K extends keyof IPollingEvents>(event: K, listener: (...args: IPollingEvents[K]) => void) => this) &
+		(<S extends string | symbol>(event: Exclude<S, keyof IPollingEvents>, listener: (...args: any[]) => void) => this);
+
+	on: (<K extends keyof IPollingEvents>(event: K, listener: (...args: IPollingEvents[K]) => void) => this) &
+		(<S extends string | symbol>(event: Exclude<S, keyof IPollingEvents>, listener: (...args: any[]) => void) => this);
+
+	once: (<K extends keyof IPollingEvents>(event: K, listener: (...args: IPollingEvents[K]) => void) => this) &
+		(<S extends string | symbol>(event: Exclude<S, keyof IPollingEvents>, listener: (...args: any[]) => void) => this);
+
+	removeAllListeners: (<K extends keyof IPollingEvents>(event?: K) => this) &
+		(<S extends string | symbol>(event?: Exclude<S, keyof IPollingEvents>) => this);
 
 	/**
 	 * Emits when a new season starts.
@@ -324,14 +338,14 @@ export class PollingClient extends Client {
 	 * @public
 	 * @event
 	 */
-	private static newSeasonStart: string;
+	newSeasonStart: string;
 
 	/**
 	 * Emits when maintenance break starts in the API.
 	 * @public
 	 * @event
 	 */
-	private static maintenanceStart: string;
+	maintenanceStart: string;
 
 	/**
 	 * Emits when maintenance break ends in the API.
@@ -344,54 +358,41 @@ export class PollingClient extends Client {
 	 * @public
 	 * @event
 	 */
-	private static maintenanceEnd: string;
+	maintenanceEnd: string;
 
-	/* eslint-disable @typescript-eslint/prefer-readonly */
+	/**
+	 * Emitted for general debugging information.
+	 * @public
+	 * @event
+	 */
+	debug: string;
 
-	/** @internal */
-	public on<K extends keyof ClientPollingEvents>(event: K, listeners: (...args: ClientPollingEvents[K]) => void): this;
-	/** @internal */
-	public on<S extends keyof CustomEvents>(
-		event: Exclude<S, keyof ClientPollingEvents>,
-		listeners: (...args: CustomEvents[S]) => void
-	): this;
-	/** @internal */ // @ts-expect-error
-	public on<S extends string | symbol>(event: Exclude<S, keyof ClientPollingEvents>, listeners: (...args: any[]) => void): this;
-
-	/** @internal */
-	public once<K extends keyof ClientPollingEvents>(event: K, listeners: (...args: ClientPollingEvents[K]) => void): this;
-	/** @internal */
-	public once<S extends keyof CustomEvents>(
-		event: Exclude<S, keyof ClientPollingEvents>,
-		listeners: (...args: CustomEvents[S]) => void
-	): this;
-	/** @internal */ // @ts-expect-error
-	public once<S extends string | symbol>(event: Exclude<S, keyof ClientPollingEvents>, listeners: (...args: any[]) => void): this;
-
-	/** @internal */
-	public emit<K extends keyof ClientPollingEvents>(event: K, ...args: ClientPollingEvents[K]): boolean;
-	/** @internal */
-	public emit<S extends keyof CustomEvents>(event: Exclude<S, keyof ClientPollingEvents>, ...args: CustomEvents[S]): this;
-	/** @internal */ // @ts-expect-error
-	public emit<S extends string | symbol>(event: Exclude<S, keyof ClientPollingEvents>, ...args: any[]): boolean;
-	// #endregion typings
+	/**
+	 * Emitted when the client encounters an error.
+	 * @public
+	 * @event
+	 */
+	error: string;
 }
 
-interface ClientPollingEvents {
-	[PollingEvents.NewSeasonStart]: [id: string];
-	[PollingEvents.MaintenanceStart]: [];
-	[PollingEvents.MaintenanceEnd]: [duration: number];
+interface IPollingEvents {
 	[PollingEvents.ClanLoopStart]: [];
 	[PollingEvents.ClanLoopEnd]: [];
 	[PollingEvents.PlayerLoopStart]: [];
 	[PollingEvents.PlayerLoopEnd]: [];
 	[PollingEvents.WarLoopStart]: [];
 	[PollingEvents.WarLoopEnd]: [];
+
+	[PollingEvents.NewSeasonStart]: [id: string];
+	[PollingEvents.MaintenanceStart]: [];
+	[PollingEvents.MaintenanceEnd]: [duration: number];
+
 	[PollingEvents.Error]: [error: unknown];
 	[PollingEvents.Debug]: [path: string, status: string, message: string];
 }
 
 // TypeScript 4.5 now can narrow values that have template string types, and also recognizes template string types as discriminants.
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 interface CustomEvents {
 	[key: `clan${string}`]: [oldClan: Clan, newClan: Clan];
 	[key: `war${string}`]: [oldWar: ClanWar, newWar: ClanWar];

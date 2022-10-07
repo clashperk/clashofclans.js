@@ -1,6 +1,6 @@
 import { EventEmitter } from 'node:events';
 import { ClanSearchOptions, SearchOptions, ClientOptions, LoginOptions, OverrideOptions } from '../types';
-import { LegendLeagueId, CWLRounds } from '../util/Constants';
+import { LegendLeagueId, CWLRounds, RestEvents, ClientEvents } from '../util/Constants';
 import { HTTPError, NotInWarError } from '../rest/HTTPError';
 import { RESTManager } from '../rest/RESTManager';
 import { Util } from '../util/Util';
@@ -22,6 +22,42 @@ import {
 	ClanWarLeagueGroup
 } from '../struct';
 
+interface IClientEvents {
+	[ClientEvents.Error]: [error: unknown];
+	[ClientEvents.Debug]: [path: string, status: string, message: string];
+}
+
+export interface Client {
+	emit: (<K extends keyof IClientEvents>(event: K, ...args: IClientEvents[K]) => boolean) &
+		(<S extends string | symbol>(event: Exclude<S, keyof IClientEvents>, ...args: any[]) => boolean);
+
+	off: (<K extends keyof IClientEvents>(event: K, listener: (...args: IClientEvents[K]) => void) => this) &
+		(<S extends string | symbol>(event: Exclude<S, keyof IClientEvents>, listener: (...args: any[]) => void) => this);
+
+	on: (<K extends keyof IClientEvents>(event: K, listener: (...args: IClientEvents[K]) => void) => this) &
+		(<S extends string | symbol>(event: Exclude<S, keyof IClientEvents>, listener: (...args: any[]) => void) => this);
+
+	once: (<K extends keyof IClientEvents>(event: K, listener: (...args: IClientEvents[K]) => void) => this) &
+		(<S extends string | symbol>(event: Exclude<S, keyof IClientEvents>, listener: (...args: any[]) => void) => this);
+
+	removeAllListeners: (<K extends keyof IClientEvents>(event?: K) => this) &
+		(<S extends string | symbol>(event?: Exclude<S, keyof IClientEvents>) => this);
+
+	/**
+	 * Emitted for general debugging information.
+	 * @public
+	 * @event
+	 */
+	debug: string;
+
+	/**
+	 * Emitted when the client encounters an error.
+	 * @public
+	 * @event
+	 */
+	error: string;
+}
+
 /**
  * Represents Clash of Clans API Client.
  * ```js
@@ -36,7 +72,9 @@ export class Client extends EventEmitter {
 	public constructor(options?: ClientOptions) {
 		super();
 
-		this.rest = new RESTManager({ ...options, rejectIfNotValid: true });
+		this.rest = new RESTManager({ ...options, rejectIfNotValid: true })
+			.on(RestEvents.Debug, this.emit.bind(this, RestEvents.Debug))
+			.on(RestEvents.Error, this.emit.bind(this, RestEvents.Error));
 	}
 
 	/** Contains various general-purpose utility methods. */
@@ -53,12 +91,12 @@ export class Client extends EventEmitter {
 	 * ```
 	 */
 	public login(options: LoginOptions) {
-		return this.rest.handler.init(options);
+		return this.rest.requestHandler.init(options);
 	}
 
 	/** Set Clash of Clans API keys. */
 	public setKeys(keys: string[]) {
-		this.rest.handler.setKeys(keys);
+		this.rest.requestHandler.setKeys(keys);
 		return this;
 	}
 
@@ -139,7 +177,7 @@ export class Client extends EventEmitter {
 	public async getLeagueWar(clanTag: string | { clanTag: string; round?: keyof typeof CWLRounds }, options?: OverrideOptions) {
 		const args = typeof clanTag === 'string' ? { clanTag } : { clanTag: clanTag.clanTag, round: clanTag.round };
 
-        const state = (args.round && CWLRounds[args.round]) ?? 'inWar'; // eslint-disable-line
+		const state = (args.round && CWLRounds[args.round]) ?? 'inWar'; // eslint-disable-line
 		const data = await this.getClanWarLeagueGroup(args.clanTag, options);
 
 		const rounds = data.rounds.filter((round) => !round.warTags.includes('#0'));
