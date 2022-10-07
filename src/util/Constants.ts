@@ -134,22 +134,28 @@ export const FriendlyWarPreparationTimes = [
 ] as const;
 
 export const PollingEvents = {
-	NewSeasonStart: 'newSeasonStart',
 	ClanLoopStart: 'clanLoopStart',
 	ClanLoopEnd: 'clanLoopEnd',
 	PlayerLoopStart: 'playerLoopStart',
 	PlayerLoopEnd: 'playerLoopEnd',
 	WarLoopStart: 'warLoopEnd',
 	WarLoopEnd: 'warLoopEnd',
+	NewSeasonStart: 'newSeasonStart',
 	MaintenanceStart: 'maintenanceStart',
 	MaintenanceEnd: 'maintenanceEnd',
 	Error: 'error',
 	Debug: 'debug'
 } as const;
 
-export const RestEvents = {
+export const ClientEvents = {
 	Error: 'error',
 	Debug: 'debug'
+} as const;
+
+export const RestEvents = {
+	Error: 'error',
+	Debug: 'debug',
+	RateLimited: 'rateLimited'
 } as const;
 
 export const CWLRounds = {

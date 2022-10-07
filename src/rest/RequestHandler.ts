@@ -1,17 +1,57 @@
 import https from 'node:https';
+import { EventEmitter } from 'node:events';
 import fetch from 'node-fetch';
 import { Response, RequestOptions, LoginOptions, Store, RequestHandlerOptions } from '../types';
-import { APIBaseURL, DevSiteAPIBaseURL } from '../util/Constants';
+import { APIBaseURL, DevSiteAPIBaseURL, RestEvents } from '../util/Constants';
 import { CacheStore } from '../util/Store';
 import { QueueThrottler, BatchThrottler } from './Throttler';
 import { HTTPError, PrivateWarLogError } from './HTTPError';
+import { IRestEvents } from './RESTManager';
 
 const IP_REGEX = /\d{1,3}.\d{1,3}.\d{1,3}.\d{1,3}/g;
 
 const agent = new https.Agent({ keepAlive: true });
 
-/** Represents a Request Handler. */
-export class RequestHandler {
+export interface RequestHandler {
+	emit: (<K extends keyof IRestEvents>(event: K, ...args: IRestEvents[K]) => boolean) &
+		(<S extends string | symbol>(event: Exclude<S, keyof IRestEvents>, ...args: any[]) => boolean);
+
+	off: (<K extends keyof IRestEvents>(event: K, listener: (...args: IRestEvents[K]) => void) => this) &
+		(<S extends string | symbol>(event: Exclude<S, keyof IRestEvents>, listener: (...args: any[]) => void) => this);
+
+	on: (<K extends keyof IRestEvents>(event: K, listener: (...args: IRestEvents[K]) => void) => this) &
+		(<S extends string | symbol>(event: Exclude<S, keyof IRestEvents>, listener: (...args: any[]) => void) => this);
+
+	once: (<K extends keyof IRestEvents>(event: K, listener: (...args: IRestEvents[K]) => void) => this) &
+		(<S extends string | symbol>(event: Exclude<S, keyof IRestEvents>, listener: (...args: any[]) => void) => this);
+
+	removeAllListeners: (<K extends keyof IRestEvents>(event?: K) => this) &
+		(<S extends string | symbol>(event?: Exclude<S, keyof IRestEvents>) => this);
+
+	/**
+	 * Emitted for general debugging information.
+	 * @public
+	 * @event
+	 */
+	debug: string;
+
+	/**
+	 * Emitted when the client encounters an error.
+	 * @public
+	 * @event
+	 */
+	error: string;
+
+	/**
+	 * Emitted when the client is rate limited.
+	 * @public
+	 * @event
+	 */
+	rateLimited: string;
+}
+
+/** Represents the class that manages handlers for endpoints. */
+export class RequestHandler extends EventEmitter {
 	#keyIndex = 0; // eslint-disable-line
 
 	private email!: string;
@@ -29,6 +69,8 @@ export class RequestHandler {
 	private readonly cached: Store<{ data: unknown; ttl: number; status: number }> | null;
 
 	public constructor(options?: RequestHandlerOptions) {
+		super();
+
 		this.keys = options?.keys ?? [];
 		this.retryLimit = options?.retryLimit ?? 0;
 		this.throttler = options?.throttler ?? null;
@@ -100,6 +142,11 @@ export class RequestHandler {
 		if (!res?.ok && this.rejectIfNotValid) {
 			throw new HTTPError(data, res?.status ?? 504, path, maxAge, options.method);
 		}
+
+		if (res?.status === 429) {
+			this.emit(RestEvents.RateLimited, path, res.status, options.method!);
+		}
+		this.emit(RestEvents.Debug, path, res?.status ?? 504, options.method!);
 
 		if (this.cached && maxAge > 0 && options.cache !== false && res?.ok) {
 			await this.cached.set(path, { data, ttl: Date.now() + maxAge, status: res.status }, maxAge);
