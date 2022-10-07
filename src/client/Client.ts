@@ -27,7 +27,7 @@ interface IClientEvents {
 	[ClientEvents.Debug]: [path: string, status: string, message: string];
 }
 
-export interface PollingClient {
+export interface Client {
 	emit: (<K extends keyof IClientEvents>(event: K, ...args: IClientEvents[K]) => boolean) &
 		(<S extends string | symbol>(event: Exclude<S, keyof IClientEvents>, ...args: any[]) => boolean);
 
