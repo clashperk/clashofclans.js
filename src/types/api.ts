@@ -192,7 +192,7 @@ export interface APIClanWarLeagueRound {
 }
 
 export interface APICapitalRaidSeason {
-	state: string;
+	state: 'ongoing' | 'ended';
 	startTime: string;
 	endTime: string;
 	capitalTotalLoot: number;
