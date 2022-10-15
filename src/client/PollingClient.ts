@@ -8,7 +8,7 @@ import { Client } from './Client';
  * Represents Clash of Clans Polling Event Client.
  * ```js
  * const { PollingClient } = require('clashofclans.js');
- * const client = new PollingClient({ keys: ['***'] });
+ * const pollingClient = new PollingClient({ keys: ['***'] });
  * ```
  */
 export class PollingClient extends Client {
