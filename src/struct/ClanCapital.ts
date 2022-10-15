@@ -9,6 +9,6 @@ export class ClanCapital {
 
 	public constructor(data: APIClanCapital) {
 		this.capitalHallLevel = data.capitalHallLevel ?? null;
-		this.districts = data.districts ? data.districts : null;
+		this.districts = data.districts ?? null;
 	}
 }

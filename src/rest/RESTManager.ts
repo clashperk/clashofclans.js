@@ -4,6 +4,7 @@ import {
 	APIClan,
 	APIClanList,
 	APIClanMemberList,
+	APICapitalRaidSeasons,
 	APIClanRankingList,
 	APIClanVersusRankingList,
 	APIClanWar,
@@ -148,6 +149,12 @@ export class RESTManager extends EventEmitter {
 	/** Get info about a CWL round by WarTag. */
 	public getClanWarLeagueRound(warTag: string, options?: OverrideOptions) {
 		return this.requestHandler.request<APIClanWar>(`/clanwarleagues/wars/${Util.encodeURI(warTag)}`, options);
+	}
+
+	/** Retrieve clan's capital raid seasons. */
+	public getCapitalRaidSeasons(tag: string, options?: OverrideOptions) {
+		const query = Util.queryString(options);
+		return this.requestHandler.request<APICapitalRaidSeasons>(`/clans/${Util.encodeURI(tag)}/capitalraidseasons${query}`, options);
 	}
 
 	/** Get info about a player by tag. */

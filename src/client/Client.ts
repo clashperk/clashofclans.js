@@ -21,6 +21,7 @@ import {
 	GoldPassSeason,
 	ClanWarLeagueGroup
 } from '../struct';
+import { CapitalRaidSeason } from '../struct/CapitalRaidSeason';
 
 interface IClientEvents {
 	[ClientEvents.Error]: [error: unknown];
@@ -122,6 +123,12 @@ export class Client extends EventEmitter {
 	public async getClanMembers(clanTag: string, options?: SearchOptions) {
 		const { data } = await this.rest.getClanMembers(clanTag, options);
 		return data.items.map((entry) => new ClanMember(this, entry));
+	}
+
+	/** Get capital raid seasons. */
+	public async getCapitalRaidSeasons(tag: string, options?: SearchOptions) {
+		const { data } = await this.rest.getCapitalRaidSeasons(tag, options);
+		return data.items.map((entry) => new CapitalRaidSeason(entry));
 	}
 
 	/** Get clan war log. */

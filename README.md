@@ -34,7 +34,7 @@ const client = new Client();
 })();
 ```
 
-### Custom Event
+### Custom Polling Event
 
 ```js
 const { Client, BatchThrottler } = require('clashofclans.js');
@@ -45,8 +45,8 @@ const client = new Client({
     throttler: new BatchThrottler(20)
 });
 
-client.events.addClans(['#8QU8J9LP', '#8P2QG08P']);
-client.events.setClanEvent({
+client.addClans(['#8QU8J9LP', '#8P2QG08P']);
+client.setClanEvent({
     name: 'clanDescriptionChange',
     filter: (oldClan, newClan) => {
         return oldClan.description !== newClan.description;
@@ -59,7 +59,7 @@ client.on('clanDescriptionChange', (oldClan, newClan) => {
 
 (async function () {
     await client.login({ email: 'developer@email.com', password: '***' });
-    await client.events.init();
+    await client.init();
 })();
 ```
 
