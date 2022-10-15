@@ -25,6 +25,7 @@
 ```js
 const { Client } = require('clashofclans.js');
 const client = new Client();
+// const client = new Client({ keys: [], cache: true, retryLimit: 2, restRequestTimeout: 5000 });
 
 (async function () {
     await client.login({ email: 'developer@email.com', password: '***' });
@@ -34,32 +35,35 @@ const client = new Client();
 })();
 ```
 
-### Custom Event
+### Custom Polling Event
+
+> **Warning** <br>
+> Events are neither real-time nor supported by the API. They are polled frequently and compared with the cached data. If there is a difference, the event is emitted.
 
 ```js
-const { Client, BatchThrottler } = require('clashofclans.js');
-const client = new Client({
+const { PollingClient, BatchThrottler } = require('clashofclans.js');
+const pollingClient = new PollingClient({
     cache: true,
     retryLimit: 1,
     restRequestTimeout: 5000,
     throttler: new BatchThrottler(20)
 });
 
-client.events.addClans(['#8QU8J9LP', '#8P2QG08P']);
-client.events.setClanEvent({
+pollingClient.addClans(['#8QU8J9LP', '#8P2QG08P']);
+pollingClient.setClanEvent({
     name: 'clanDescriptionChange',
     filter: (oldClan, newClan) => {
         return oldClan.description !== newClan.description;
     }
 });
 
-client.on('clanDescriptionChange', (oldClan, newClan) => {
+pollingClient.on('clanDescriptionChange', (oldClan, newClan) => {
     console.log(oldClan.description, newClan.description);
 });
 
 (async function () {
-    await client.login({ email: 'developer@email.com', password: '***' });
-    await client.events.init();
+    await pollingClient.login({ email: 'developer@email.com', password: '***' });
+    await pollingClient.init();
 })();
 ```
 

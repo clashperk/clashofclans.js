@@ -191,6 +191,71 @@ export interface APIClanWarLeagueRound {
 	warTags: string[];
 }
 
+export interface APICapitalRaidSeason {
+	state: 'ongoing' | 'ended';
+	startTime: string;
+	endTime: string;
+	capitalTotalLoot: number;
+	raidsCompleted: number;
+	totalAttacks: number;
+	enemyDistrictsDestroyed: number;
+	offensiveReward: number;
+	defensiveReward: number;
+	members?: APICapitalRaidSeasonMember[];
+	attackLog: APICapitalRaidSeasonAttackLog[];
+	defenseLog: APICapitalRaidSeasonDefenseLog[];
+}
+
+export interface APICapitalRaidSeasonMember {
+	tag: string;
+	name: string;
+	attacks: number;
+	attackLimit: number;
+	bonusAttackLimit: number;
+	capitalResourcesLooted: number;
+}
+
+export interface APICapitalRaidSeasonClan {
+	tag: string;
+	name: string;
+	level: number;
+	badgeUrls: {
+		small: string;
+		large: string;
+		medium: string;
+	};
+}
+
+export interface APICapitalRaidSeasonDistrict {
+	id: number;
+	name: string;
+	districtHallLevel: number;
+	destructionPercent: number;
+	attackCount: number;
+	totalLooted: number;
+}
+
+export interface APICapitalRaidSeasonAttackLog {
+	defender: APICapitalRaidSeasonClan;
+	attackCount: 27;
+	districtCount: 7;
+	districtsDestroyed: 7;
+	districts: APICapitalRaidSeasonDistrict[];
+}
+
+export interface APICapitalRaidSeasonDefenseLog {
+	attacker: APICapitalRaidSeasonClan;
+	attackCount: 27;
+	districtCount: 7;
+	districtsDestroyed: 7;
+	districts: APICapitalRaidSeasonDistrict[];
+}
+
+export interface APICapitalRaidSeasons {
+	items: APICapitalRaidSeason[];
+	paging: APIPaging;
+}
+
 // *************** PLAYERS *************** //
 
 /** /players/{playerTag} */
