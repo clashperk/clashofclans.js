@@ -1,7 +1,7 @@
 import { EventEmitter } from 'node:events';
 import { ClanSearchOptions, SearchOptions, ClientOptions, LoginOptions, OverrideOptions } from '../types';
 import { LegendLeagueId, CWLRounds, RestEvents, ClientEvents } from '../util/Constants';
-import { HTTPError, NotInWarError } from '../rest/HTTPError';
+import { HTTPError } from '../rest/HTTPError';
 import { RESTManager } from '../rest/RESTManager';
 import { Util } from '../util/Util';
 
@@ -139,10 +139,7 @@ export class Client extends EventEmitter {
 
 	/** Get info about currently running war (normal or friendly) in the clan. */
 	public async getClanWar(clanTag: string, options?: OverrideOptions) {
-		const { data, maxAge, path, status } = await this.rest.getCurrentWar(clanTag, options);
-		if (data.state === 'notInWar') {
-			throw new HTTPError(NotInWarError, status, path, maxAge);
-		}
+		const { data, maxAge } = await this.rest.getCurrentWar(clanTag, options);
 		return new ClanWar(this, data, { clanTag, maxAge });
 	}
 
@@ -236,20 +233,14 @@ export class Client extends EventEmitter {
 
 	/** Get info about clan war league. */
 	public async getClanWarLeagueGroup(clanTag: string, options?: OverrideOptions) {
-		const { data, status, path, maxAge } = await this.rest.getClanWarLeagueGroup(clanTag, options);
-		if (data.state === 'notInWar') {
-			throw new HTTPError(NotInWarError, status, path, maxAge);
-		}
+		const { data } = await this.rest.getClanWarLeagueGroup(clanTag, options);
 		return new ClanWarLeagueGroup(this, data);
 	}
 
 	/** Get info about a CWL round by WarTag. */
 	public async getClanWarLeagueRound(warTag: string | { warTag: string; clanTag?: string }, options?: OverrideOptions) {
 		const args = typeof warTag === 'string' ? { warTag } : { warTag: warTag.warTag, clanTag: warTag.clanTag };
-		const { data, maxAge, status, path } = await this.rest.getClanWarLeagueRound(args.warTag, options);
-		if (data.state === 'notInWar') {
-			throw new HTTPError(NotInWarError, status, path, maxAge);
-		}
+		const { data, maxAge } = await this.rest.getClanWarLeagueRound(args.warTag, options);
 		return new ClanWar(this, data, { warTag: args.warTag, clanTag: args.clanTag, maxAge });
 	}
 

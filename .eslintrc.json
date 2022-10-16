@@ -16,6 +16,7 @@
 	"ignorePatterns": [
 		"dist/*",
 		"docs/*",
+		"test/*",
 		"node_modules/*"
 	],
 	"parser": "@typescript-eslint/parser",

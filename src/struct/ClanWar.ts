@@ -229,36 +229,46 @@ export class WarClan {
 	}
 }
 
-/** Represents a Clan War in Clash of Clans. */
+/**
+ * Represents a Clan War in Clash of Clans.
+ *
+ * :::caution
+ * It's recommended to see if ClanWar#state is `notInWar` available before performing operations or reading data from it. You can check this with data.ok property.
+ * :::
+ */
 export class ClanWar {
 	public client!: Client;
 
-	/** The clan's current war state. */
-	public state: 'preparation' | 'inWar' | 'warEnded';
+	/**
+	 * The clan's current war state.
+	 *
+	 * :warning: Other properties won't be available if the state is `notInWar`.
+	 */
+	public state: 'preparation' | 'inWar' | 'warEnded' | 'notInWar';
 
 	/** The number of players on each side. */
-	public teamSize: number;
+	public teamSize!: number;
 
 	/** The number of attacks each member has. */
-	public attacksPerMember: number;
+	public attacksPerMember!: number;
 
 	/** The Date that preparation day started at. */
-	public preparationStartTime: Date;
+	public preparationStartTime!: Date;
 
 	/** The Date that battle day starts at. */
-	public startTime: Date;
+	public startTime!: Date;
 
 	/** The Date that battle day ends at. */
-	public endTime: Date;
+	public endTime!: Date;
 
 	/** The home clan. */
-	public clan: WarClan;
+	public clan!: WarClan;
 
 	/** The opposition clan. */
-	public opponent: WarClan;
+	public opponent!: WarClan;
 
 	/** The war's unique tag. This is `null` unless this is a CWL.  */
-	public warTag: string | null;
+	public warTag!: string | null;
 
 	/** Maximum number of milliseconds the results can be cached. */
 	public maxAge: number;
@@ -266,24 +276,25 @@ export class ClanWar {
 	public constructor(client: Client, data: APIClanWar, extra: { clanTag?: string; warTag?: string; maxAge: number }) {
 		Object.defineProperty(this, 'client', { value: client });
 
-		// @ts-expect-error
 		this.state = data.state;
-		this.teamSize = data.teamSize;
-		this.attacksPerMember = data.attacksPerMember ?? (extra.warTag ? 1 : 2);
-		this.preparationStartTime = client.util.formatDate(data.preparationStartTime);
-		this.startTime = client.util.formatDate(data.startTime);
-		this.endTime = client.util.formatDate(data.endTime);
-		this.warTag = extra.warTag ?? null;
+		if (this.state !== 'notInWar') {
+			this.teamSize = data.teamSize;
+			this.attacksPerMember = data.attacksPerMember ?? (extra.warTag ? 1 : 2);
+			this.preparationStartTime = client.util.formatDate(data.preparationStartTime);
+			this.startTime = client.util.formatDate(data.startTime);
+			this.endTime = client.util.formatDate(data.endTime);
+			this.warTag = extra.warTag ?? null;
 
-		let [clan, opponent] = [data.clan, data.opponent];
-		const clanTag = extra.clanTag && client.util.formatTag(extra.clanTag);
-		if (clanTag && [data.clan.tag, data.opponent.tag].includes(clanTag)) {
-			clan = data.clan.tag === clanTag ? data.clan : data.opponent;
-			opponent = data.clan.tag === clan.tag ? data.opponent : data.clan;
+			let [clan, opponent] = [data.clan, data.opponent];
+			const clanTag = extra.clanTag && client.util.formatTag(extra.clanTag);
+			if (clanTag && [data.clan.tag, data.opponent.tag].includes(clanTag)) {
+				clan = data.clan.tag === clanTag ? data.clan : data.opponent;
+				opponent = data.clan.tag === clan.tag ? data.opponent : data.clan;
+			}
+			this.clan = new WarClan(this, clan);
+			this.opponent = new WarClan(this, opponent);
 		}
 
-		this.clan = new WarClan(this, clan);
-		this.opponent = new WarClan(this, opponent);
 		this.maxAge = extra.maxAge;
 	}
 
@@ -306,6 +317,11 @@ export class ClanWar {
 			return this.clan.attacks.filter((atk) => atk.defenderTag === defenderTag);
 		}
 		return this.opponent.attacks.filter((atk) => atk.defenderTag === defenderTag);
+	}
+
+	/** Whether the clan is not in war. */
+	public get isNotInWar() {
+		return this.state === 'notInWar';
 	}
 
 	/** Whether this is a Battle Day. */
