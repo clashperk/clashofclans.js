@@ -128,7 +128,7 @@ export class Client extends EventEmitter {
 	/** Get capital raid seasons. */
 	public async getCapitalRaidSeasons(tag: string, options?: SearchOptions) {
 		const { data } = await this.rest.getCapitalRaidSeasons(tag, options);
-		return data.items.map((entry) => new CapitalRaidSeason(entry));
+		return data.items.map((entry) => new CapitalRaidSeason(this, entry));
 	}
 
 	/** Get clan war log. */
