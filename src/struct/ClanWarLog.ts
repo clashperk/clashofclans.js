@@ -1,7 +1,7 @@
-import { APIClanWarLogEntry, APIWarLogClan } from '../types';
-import { Client } from '../client/Client';
-import { Util } from '../util/Util';
 import { Badge } from './Badge';
+import { Client } from '../client/Client';
+import { APIClanWarLogEntry, APIWarLogClan } from '../types';
+import { Util } from '../util/Util';
 
 /**
  * Represents War Log Clan.

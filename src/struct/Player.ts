@@ -1,12 +1,12 @@
-import { HERO_PETS, SIEGE_MACHINES, UNRANKED_LEAGUE_DATA, SUPER_TROOPS, BUILDER_TROOPS, HOME_TROOPS } from '../util/Constants';
-import { APIPlayer, OverrideOptions } from '../types';
-import { LegendStatistics } from './LegendStatistics';
 import { Achievement } from './Achievement';
-import { Hero, Spell, Troop } from './Unit';
-import { PlayerClan } from './PlayerClan';
-import { Client } from '../client/Client';
-import { League } from './League';
 import { Label } from './Label';
+import { League } from './League';
+import { LegendStatistics } from './LegendStatistics';
+import { PlayerClan } from './PlayerClan';
+import { Hero, Spell, Troop } from './Unit';
+import { Client } from '../client/Client';
+import { APIPlayer, OverrideOptions } from '../types';
+import { HERO_PETS, SIEGE_MACHINES, UNRANKED_LEAGUE_DATA, SUPER_TROOPS, BUILDER_TROOPS, HOME_TROOPS } from '../util/Constants';
 
 /** Represents a Clash of Clans Player. */
 export class Player {

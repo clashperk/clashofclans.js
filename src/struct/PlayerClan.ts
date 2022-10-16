@@ -1,6 +1,6 @@
-import { OverrideOptions, APIPlayerClan } from '../types';
-import { Client } from '../client/Client';
 import { Badge } from './Badge';
+import { Client } from '../client/Client';
+import { OverrideOptions, APIPlayerClan } from '../types';
 
 /** Represents a Player's clan. */
 export class PlayerClan {

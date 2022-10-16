@@ -1,10 +1,10 @@
 import { QueueThrottler, BatchThrottler } from '../rest/Throttler';
 
 export interface Store<T = any> {
-	set(key: string, value: T, ttl?: number): boolean | Promise<boolean>;
-	get(key: string): T | null | Promise<T | null>;
-	delete(key: string): boolean | Promise<boolean>;
-	clear(): void | Promise<void>;
+	set: (key: string, value: T, ttl?: number) => boolean | Promise<boolean>;
+	get: (key: string) => T | null | Promise<T | null>;
+	delete: (key: string) => boolean | Promise<boolean>;
+	clear: () => void | Promise<void>;
 }
 
 /** Options for a {@link Client} */

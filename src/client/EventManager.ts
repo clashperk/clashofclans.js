@@ -1,8 +1,8 @@
-import { Clan, ClanWar, Player } from '../struct';
+import { Client } from './Client';
 import { HTTPError } from '../rest/HTTPError';
+import { Clan, ClanWar, Player } from '../struct';
 import { EVENTS } from '../util/Constants';
 import { Util } from '../util/Util';
-import { Client } from './Client';
 
 /** Represents Event Manager of the {@link Client}. */
 export class EventManager {
