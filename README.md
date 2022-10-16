@@ -37,7 +37,7 @@ const client = new Client();
 
 ### Custom Polling Event
 
-> **Warning** <br>
+> **Warning** <br />
 > Events are neither real-time nor supported by the API. They are polled frequently and compared with the cached data. If there is a difference, the event is emitted.
 
 ```js

@@ -1,5 +1,42 @@
-import { APICapitalRaidSeason, APICapitalRaidSeasonAttackLog, APICapitalRaidSeasonDefenseLog, APICapitalRaidSeasonMember } from '../types';
+import { Client } from '../client/Client';
+import {
+	APICapitalRaidSeason,
+	APICapitalRaidSeasonAttackLog,
+	APICapitalRaidSeasonDefenseLog,
+	APICapitalRaidSeasonMember,
+	OverrideOptions
+} from '../types';
 import { Util } from '../util/Util';
+import { Player } from './Player';
+
+export class CapitalRaidSeasonMember {
+	/** The player's tag. */
+	public name: string;
+
+	/** The player's name. */
+	public tag: string;
+
+	/** The number of attacks the player has made. */
+	public attacks: number;
+
+	/** The number of attacks the player can make. */
+	public attackLimit: number;
+
+	/** The number of bonus attacks the player can make. */
+	public bonusAttackLimit: number;
+
+	/** The number of capital resources the player has looted. */
+	public capitalResourcesLooted: number;
+
+	public constructor(data: APICapitalRaidSeasonMember) {
+		this.tag = data.tag;
+		this.name = data.name;
+		this.attacks = data.attacks;
+		this.attackLimit = data.attackLimit;
+		this.bonusAttackLimit = data.bonusAttackLimit;
+		this.capitalResourcesLooted = data.capitalResourcesLooted;
+	}
+}
 
 /** Represents a Capital Raid Season. */
 export class CapitalRaidSeason {
@@ -39,7 +76,7 @@ export class CapitalRaidSeason {
 	/** The defense log of the raid season. */
 	public defenseLog: APICapitalRaidSeasonDefenseLog[];
 
-	public constructor(data: APICapitalRaidSeason) {
+	public constructor(private readonly client: Client, data: APICapitalRaidSeason) {
 		this.state = data.state;
 		this.startTime = Util.formatDate(data.startTime);
 		this.endTime = Util.formatDate(data.endTime);
@@ -49,8 +86,15 @@ export class CapitalRaidSeason {
 		this.enemyDistrictsDestroyed = data.enemyDistrictsDestroyed;
 		this.offensiveReward = data.offensiveReward;
 		this.defensiveReward = data.defensiveReward;
-		this.members = data.members ?? [];
 		this.attackLog = data.attackLog;
 		this.defenseLog = data.defenseLog;
+		this.members = (data.members ?? []).map((member) => new CapitalRaidSeasonMember(member));
+	}
+
+	/** Get {@link Player} info for every Player in the clan. */
+	public async fetchMembers(options?: OverrideOptions) {
+		return (await Promise.allSettled(this.members.map((m) => this.client.getPlayer(m.tag, { ...options, ignoreRateLimit: true }))))
+			.filter((res) => res.status === 'fulfilled')
+			.map((res) => (res as PromiseFulfilledResult<Player>).value);
 	}
 }

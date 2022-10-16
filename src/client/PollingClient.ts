@@ -5,7 +5,7 @@ import { PollingEvents } from '../util/Constants';
 import { Client } from './Client';
 
 /**
- * Represents Clash of Clans Polling Event Client.
+ * Represents a Polling Event Client.
  * ```js
  * const { PollingClient } = require('clashofclans.js');
  * const pollingClient = new PollingClient({ keys: ['***'] });
@@ -174,6 +174,7 @@ export class PollingClient extends Client {
 
 	private async maintenanceHandler() {
 		setTimeout(this.maintenanceHandler.bind(this), 10_000).unref();
+		if (!(this.listenerCount(PollingEvents.MaintenanceStart) && this.listenerCount(PollingEvents.MaintenanceEnd))) return;
 		try {
 			const res = await this.rest.getClans({ maxMembers: Math.floor(Math.random() * 40) + 10, limit: 1 });
 			if (res.status === 200 && this.inMaintenance) {

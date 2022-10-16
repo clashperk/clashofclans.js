@@ -237,17 +237,17 @@ export interface APICapitalRaidSeasonDistrict {
 
 export interface APICapitalRaidSeasonAttackLog {
 	defender: APICapitalRaidSeasonClan;
-	attackCount: 27;
-	districtCount: 7;
-	districtsDestroyed: 7;
+	attackCount: number;
+	districtCount: number;
+	districtsDestroyed: number;
 	districts: APICapitalRaidSeasonDistrict[];
 }
 
 export interface APICapitalRaidSeasonDefenseLog {
 	attacker: APICapitalRaidSeasonClan;
-	attackCount: 27;
-	districtCount: 7;
-	districtsDestroyed: 7;
+	attackCount: number;
+	districtCount: number;
+	districtsDestroyed: number;
 	districts: APICapitalRaidSeasonDistrict[];
 }
 
