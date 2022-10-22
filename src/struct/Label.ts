@@ -1,5 +1,5 @@
-import { APILabel } from '../types';
 import { Icon } from './Icon';
+import { APILabel } from '../types';
 
 /** Represents a Clan or Player Label. */
 export class Label {

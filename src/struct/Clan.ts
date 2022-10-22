@@ -1,13 +1,13 @@
-import { APIClan, OverrideOptions } from '../types';
-import { ChatLanguage } from './ChatLanguage';
-import { ClanMember } from './ClanMember';
-import { Client } from '../client/Client';
-import { WarLeague } from './WarLeague';
-import type { Player } from './Player';
-import { Location } from './Location';
-import { Label } from './Label';
 import { Badge } from './Badge';
+import { ChatLanguage } from './ChatLanguage';
 import { ClanCapital } from './ClanCapital';
+import { ClanMember } from './ClanMember';
+import { Label } from './Label';
+import { Location } from './Location';
+import type { Player } from './Player';
+import { WarLeague } from './WarLeague';
+import { Client } from '../client/Client';
+import { APIClan, OverrideOptions } from '../types';
 
 /** Represents a Clan. */
 export class Clan {

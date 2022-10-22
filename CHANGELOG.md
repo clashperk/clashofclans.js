@@ -2,7 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
-## 2.8.3 (2022-09-13)
+## 2.9.0 (2022-10-16)
+
+### Features
+
+- Support for clan capital raid seasons `Client#getCapitalRaidSeasons()`
+
+## 2.8.4 (2022-09-14)
 
 ### Bug Fixes
 

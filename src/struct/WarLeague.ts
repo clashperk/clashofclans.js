@@ -1,5 +1,5 @@
-import { WAR_LEAGUES } from '../util/Constants';
 import { APIWarLeague } from '../types';
+import { WAR_LEAGUES } from '../util/Constants';
 
 /** Represents a Clan's War League. */
 export class WarLeague {

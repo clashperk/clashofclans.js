@@ -1,8 +1,8 @@
-import { APIClanWarLeagueClan, APIClanWarLeagueClanMember, APIClanWarLeagueGroup, APIClanWarLeagueRound, OverrideOptions } from '../types';
-import { Client } from '../client/Client';
+import { Badge } from './Badge';
 import { ClanWar } from './ClanWar';
 import { Player } from './Player';
-import { Badge } from './Badge';
+import { Client } from '../client/Client';
+import { APIClanWarLeagueClan, APIClanWarLeagueClanMember, APIClanWarLeagueGroup, APIClanWarLeagueRound, OverrideOptions } from '../types';
 
 /** Represents a Clan War League member.  */
 export class ClanWarLeagueClanMember {

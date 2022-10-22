@@ -1,7 +1,7 @@
+import { Badge } from './Badge';
+import { Client } from '../client/Client';
 import { APIClanWar, APIClanWarAttack, APIClanWarMember, APIWarClan } from '../types';
 import { FRIENDLY_WAR_PREPARATION_TIMES } from '../util/Constants';
-import { Client } from '../client/Client';
-import { Badge } from './Badge';
 
 /** Represents a Clash of Clans War Attack. */
 export class ClanWarAttack {

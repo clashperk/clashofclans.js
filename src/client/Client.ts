@@ -1,11 +1,7 @@
-import { ClanSearchOptions, SearchOptions, ClientOptions, LoginOptions, OverrideOptions } from '../types';
-import { LEGEND_LEAGUE_ID, EVENTS, CWL_ROUNDS } from '../util/Constants';
+import { EventEmitter } from 'events';
+import { EventManager } from './EventManager';
 import { HTTPError, NotInWarError } from '../rest/HTTPError';
 import { RESTManager } from '../rest/RESTManager';
-import { EventManager } from './EventManager';
-import { EventEmitter } from 'events';
-import { Util } from '../util/Util';
-
 import {
 	Clan,
 	ClanMember,
@@ -22,6 +18,10 @@ import {
 	GoldPassSeason,
 	ClanWarLeagueGroup
 } from '../struct';
+import { CapitalRaidSeason } from '../struct/CapitalRaidSeason';
+import { ClanSearchOptions, SearchOptions, ClientOptions, LoginOptions, OverrideOptions } from '../types';
+import { LEGEND_LEAGUE_ID, EVENTS, CWL_ROUNDS } from '../util/Constants';
+import { Util } from '../util/Util';
 
 /**
  * Represents Clash of Clans API Client.
@@ -95,6 +95,12 @@ export class Client extends EventEmitter {
 	public async getClanMembers(clanTag: string, options?: SearchOptions) {
 		const { data } = await this.rest.getClanMembers(clanTag, options);
 		return data.items.map((entry) => new ClanMember(this, entry));
+	}
+
+	/** Get capital raid seasons. */
+	public async getCapitalRaidSeasons(tag: string, options?: SearchOptions) {
+		const { data } = await this.rest.getCapitalRaidSeasons(tag, options);
+		return data.items.map((entry) => new CapitalRaidSeason(this, entry));
 	}
 
 	/** Get clan war log. */
@@ -191,7 +197,7 @@ export class Client extends EventEmitter {
 		}
 
 		try {
-			return this.getLeagueWars(clanTag, options);
+			return await this.getLeagueWars(clanTag, options);
 		} catch (e) {
 			if (e instanceof HTTPError && [404].includes(e.status)) {
 				return [await this.getClanWar(clanTag, options)];

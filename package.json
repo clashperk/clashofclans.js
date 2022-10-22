@@ -1,6 +1,6 @@
 {
 	"name": "clashofclans.js",
-	"version": "2.8.4",
+	"version": "2.9.0",
 	"description": "JavaScript library for interacting with the Clash of Clans API",
 	"author": "SUVAJIT <suvajit.me@gmail.com>",
 	"license": "MIT",
@@ -57,7 +57,10 @@
 			],
 			"@typescript-eslint/naming-convention": 0,
 			"@typescript-eslint/no-floating-promises": 0,
-			"@typescript-eslint/no-misused-promises": 0
+			"@typescript-eslint/no-misused-promises": 0,
+			"@typescript-eslint/no-unsafe-assignment": 0,
+			"@typescript-eslint/no-unsafe-call": 0,
+			"@typescript-eslint/no-unsafe-member-access": 0
 		}
 	},
 	"prettier": {
@@ -107,6 +110,7 @@
 		"eslint": "^8.3.0",
 		"eslint-config-marine": "^9.0.6",
 		"eslint-config-prettier": "^8.3.0",
+		"eslint-plugin-import": "^2.26.0",
 		"eslint-plugin-prettier": "^4.0.0",
 		"gen-esm-wrapper": "^1.1.3",
 		"prettier": "^2.4.1",

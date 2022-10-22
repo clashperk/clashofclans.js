@@ -1,5 +1,5 @@
-import { APILegendStatistics } from '../types';
 import { Season } from './Season';
+import { APILegendStatistics } from '../types';
 
 /** Represents the Legend Statistics. */
 export class LegendStatistics {

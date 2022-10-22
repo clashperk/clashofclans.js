@@ -1,6 +1,4 @@
 import { RequestHandler } from './RequestHandler';
-import { Util } from '../util/Util';
-
 import {
 	APIClan,
 	APIClanList,
@@ -29,8 +27,10 @@ import {
 	ClanSearchOptions,
 	RESTOptions,
 	OverrideOptions,
-	LoginOptions
+	LoginOptions,
+	APICapitalRaidSeasons
 } from '../types';
+import { Util } from '../util/Util';
 
 /** Represents a REST Manager of the client. */
 export class RESTManager {
@@ -99,6 +99,12 @@ export class RESTManager {
 	/** Get info about a CWL round by WarTag. */
 	public getClanWarLeagueRound(warTag: string, options?: OverrideOptions) {
 		return this.handler.request<APIClanWar>(`/clanwarleagues/wars/${Util.encodeURI(warTag)}`, options);
+	}
+
+	/** Retrieve clan's capital raid seasons. */
+	public getCapitalRaidSeasons(tag: string, options?: OverrideOptions) {
+		const query = Util.queryString(options);
+		return this.handler.request<APICapitalRaidSeasons>(`/clans/${Util.encodeURI(tag)}/capitalraidseasons${query}`, options);
 	}
 
 	/** Get info about a player by tag. */
