@@ -391,11 +391,3 @@ interface IPollingEvents {
 	[PollingEvents.Error]: [error: unknown];
 	[PollingEvents.Debug]: [path: string, status: string, message: string];
 }
-
-// TypeScript 4.5 now can narrow values that have template string types, and also recognizes template string types as discriminants.
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-interface CustomEvents {
-	[key: `clan${string}`]: [oldClan: Clan, newClan: Clan];
-	[key: `war${string}`]: [oldWar: ClanWar, newWar: ClanWar];
-	[key: `player${string}`]: [oldPlayer: Player, newPlayer: Player];
-}

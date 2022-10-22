@@ -17,3 +17,5 @@ export * from './Ranking';
 export * from './Season';
 export * from './Unit';
 export * from './WarLeague';
+export * from './ClanCapital';
+export * from './CapitalRaidSeason';

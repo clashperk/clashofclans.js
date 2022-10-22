@@ -3,4 +3,5 @@ node_modules/
 .vscode/
 .idea/
 dist/
+test/
 .vercel

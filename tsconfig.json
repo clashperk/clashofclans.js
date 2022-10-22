@@ -1,16 +1,16 @@
 {
-	"compilerOptions": {
-		"target": "ES2021",
-		"module": "CommonJS",
-		"strict": true,
-		"outDir": "dist",
-		"rootDir": "src",
-		"esModuleInterop": true,
-		"skipLibCheck": true,
-		"resolveJsonModule": true,
-		"declaration": true,
-		"forceConsistentCasingInFileNames": true
-	},
+  "compilerOptions": {
+    "target": "ES2021",
+    "module": "commonjs",
+    "rootDir": "src",
+    "resolveJsonModule": true,
+    "declaration": true,
+    "outDir": "dist",
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "skipLibCheck": true
+  },
 	"include": [
 		"src"
 	],
