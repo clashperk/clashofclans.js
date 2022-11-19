@@ -1,5 +1,5 @@
 import https from 'https';
-import fetch from 'node-fetch';
+import fetch, { FetchError } from 'node-fetch';
 import { HTTPError, PrivateWarLogError } from './HTTPError';
 import { QueueThrottler, BatchThrottler } from './Throttler';
 import { Response, RequestOptions, LoginOptions, Store, RequestHandlerOptions } from '../types';
@@ -71,40 +71,50 @@ export class RequestHandler {
 	}
 
 	private async exec<T>(path: string, options: RequestOptions = {}, retries = 0): Promise<Response<T>> {
-		const res = await fetch(`${this.baseURL}${path}`, {
-			agent,
-			body: options.body,
-			method: options.method,
-			timeout: options.restRequestTimeout ?? this.restRequestTimeout,
-			headers: { 'Authorization': `Bearer ${this._key}`, 'Content-Type': 'application/json' }
-		}).catch(() => null);
+		try {
+			const res = await fetch(`${this.baseURL}${path}`, {
+				agent,
+				body: options.body,
+				method: options.method,
+				timeout: options.restRequestTimeout ?? this.restRequestTimeout,
+				headers: { 'Authorization': `Bearer ${this._key}`, 'Content-Type': 'application/json' }
+			});
 
-		const data = await res?.json().catch(() => null);
-		if (!res && retries < (options.retryLimit ?? this.retryLimit)) return this.exec<T>(path, options, ++retries);
+			if (res.status === 504 && retries < (options.retryLimit ?? this.retryLimit)) {
+				return await this.exec<T>(path, options, ++retries);
+			}
+			const data = await res.json();
 
-		if (
-			this.creds &&
-			res?.status === 403 &&
-			data?.reason === 'accessDenied.invalidIp' &&
-			retries < (options.retryLimit ?? this.retryLimit)
-		) {
-			const keys = await this.reValidateKeys().then(() => () => this.login());
-			if (keys.length) return this.exec<T>(path, options, ++retries);
+			if (
+				this.creds &&
+				res.status === 403 &&
+				data.reason === 'accessDenied.invalidIp' &&
+				retries < (options.retryLimit ?? this.retryLimit)
+			) {
+				const keys = await this.reValidateKeys().then(() => () => this.login());
+				if (keys.length) return await this.exec<T>(path, options, ++retries);
+			}
+
+			const maxAge = Number(res.headers.get('cache-control')?.split('=')?.[1] ?? 0) * 1000;
+
+			if (res.status === 403 && !data?.message && this.rejectIfNotValid) {
+				throw new HTTPError(PrivateWarLogError, res.status, path, maxAge);
+			}
+			if (!res.ok && this.rejectIfNotValid) {
+				throw new HTTPError(data, res.status, path, maxAge, options.method);
+			}
+
+			if (this.cached && maxAge > 0 && options.cache !== false && res.ok) {
+				await this.cached.set(path, { data, ttl: Date.now() + maxAge, status: res.status }, maxAge);
+			}
+			return { data, maxAge, status: res.status, path, ok: res.status === 200 };
+		} catch (error) {
+			if (error instanceof FetchError && error.type === 'request-timeout' && retries < (options.retryLimit ?? this.retryLimit)) {
+				return this.exec<T>(path, options, ++retries);
+			}
+			if (this.rejectIfNotValid) throw error;
+			return { data: { message: (error as FetchError).message } as unknown as T, maxAge: 0, status: 500, path, ok: false };
 		}
-
-		const maxAge = Number(res?.headers.get('cache-control')?.split('=')?.[1] ?? 0) * 1000;
-
-		if (res?.status === 403 && !data?.message && this.rejectIfNotValid) {
-			throw new HTTPError(PrivateWarLogError, res.status, path, maxAge);
-		}
-		if (!res?.ok && this.rejectIfNotValid) {
-			throw new HTTPError(data, res?.status ?? 504, path, maxAge, options.method);
-		}
-
-		if (this.cached && maxAge > 0 && options.cache !== false && res?.ok) {
-			await this.cached.set(path, { data, ttl: Date.now() + maxAge, status: res.status }, maxAge);
-		}
-		return { data, maxAge, status: res?.status ?? 504, path, ok: res?.status === 200 };
 	}
 
 	public async init(options: LoginOptions) {
