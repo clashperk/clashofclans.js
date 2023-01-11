@@ -1,5 +1,5 @@
 import { HeroPets, SiegeMachines, UnrankedLeagueData, SuperTroops, BuilderTroops, HomeTroops } from '../util/Constants';
-import { APIPlayer, OverrideOptions } from '../types';
+import { APIPlayer, APIPlayerHouse, OverrideOptions } from '../types';
 import { Client } from '../client/Client';
 import { LegendStatistics } from './LegendStatistics';
 import { Achievement } from './Achievement';
@@ -91,6 +91,9 @@ export class Player {
 	/** An array of player's heroes (both home base and build base). */
 	public heroes: Hero[];
 
+	/** The player's clan capital house details. */
+	public playerHouse?: APIPlayerHouse | null;
+
 	public constructor(public client: Client, data: APIPlayer) {
 		this.name = data.name;
 		this.tag = data.tag;
@@ -121,6 +124,8 @@ export class Player {
 		this.troops = data.troops.map((unit) => new Troop(data, unit));
 		this.spells = data.spells.map((unit) => new Spell(data, unit));
 		this.heroes = data.heroes.map((unit) => new Hero(data, unit));
+
+		this.playerHouse = data.playerHouse ?? null;
 	}
 
 	/** Whether this clan member is in the clan. */

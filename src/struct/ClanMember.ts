@@ -1,4 +1,4 @@
-import { APIClanMember, OverrideOptions } from '../types';
+import { APIClanMember, APIPlayerHouse, OverrideOptions } from '../types';
 import { UnrankedLeagueData } from '../util/Constants';
 import { Client } from '../client/Client';
 import { League } from './League';
@@ -37,6 +37,9 @@ export class ClanMember {
 	/** The member's donation received count for this season. */
 	public received: number;
 
+	/** The member's player house details. */
+	public playerHouse?: APIPlayerHouse | null;
+
 	public constructor(public client: Client, data: APIClanMember) {
 		this.name = data.name;
 		this.tag = data.tag;
@@ -50,6 +53,7 @@ export class ClanMember {
 		this.clanRank = data.clanRank;
 		this.previousClanRank = data.previousClanRank;
 		this.donations = data.donations;
+		this.playerHouse = data.playerHouse ?? null;
 		this.received = data.donationsReceived;
 	}
 

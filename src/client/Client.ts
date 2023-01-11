@@ -263,10 +263,16 @@ export class Client extends EventEmitter {
 		return data.status === 'ok';
 	}
 
-	/** Get list of Leagues. */
+	/** Get a list of Leagues. */
 	public async getLeagues(options?: SearchOptions) {
 		const { data } = await this.rest.getLeagues(options);
 		return data.items.map((entry) => new League(entry));
+	}
+
+	/** Get a list of Capital Leagues. */
+	public async getCapitalLeagues(options?: SearchOptions) {
+		const { data } = await this.rest.getCapitalLeagues(options);
+		return data.items;
 	}
 
 	/** Get Legend League season Ids. */
@@ -331,6 +337,16 @@ export class Client extends EventEmitter {
 	public async getVersusPlayerRanks(locationId: number | 'global', options?: SearchOptions) {
 		const { data } = await this.rest.getVersusPlayerRanks(locationId, options);
 		return data.items.map((entry) => new RankedPlayer(this, entry));
+	}
+
+	/**
+	 * Get clan capital rankings for a specific location.
+	 *
+	 * For global ranking, use `global` as `locationId`.
+	 */
+	public async getClanCapitalRanks(locationId: number | 'global', options?: SearchOptions) {
+		const { data } = await this.rest.getClanCapitalRanks(locationId, options);
+		return data.items;
 	}
 
 	/** Get list of clan labels. */

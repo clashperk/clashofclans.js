@@ -1,4 +1,4 @@
-import { APIClan, OverrideOptions } from '../types';
+import { APICapitalLeague, APIClan, OverrideOptions } from '../types';
 import { Client } from '../client/Client';
 import { ChatLanguage } from './ChatLanguage';
 import { ClanMember } from './ClanMember';
@@ -37,6 +37,9 @@ export class Clan {
 
 	/** The clan's trophy count. */
 	public points: number;
+
+	/** The clan's capital points. */
+	public capitalPoints: number;
 
 	/** The clan's versus trophy count. */
 	public versusPoints: number;
@@ -80,6 +83,12 @@ export class Clan {
 	/** The clan's Clan Capital information */
 	public clanCapital: ClanCapital | null;
 
+	/** The clan's capital league. */
+	public capitalLeague?: APICapitalLeague;
+
+	/** Whether the clan is family friendly. */
+	public isFamilyFriendly: boolean;
+
 	/**
 	 * List of clan members.
 	 * - This property returns empty array for {@link Client.getClans} method.
@@ -110,6 +119,9 @@ export class Clan {
 		this.memberCount = data.members;
 		this.labels = data.labels.map((label) => new Label(label));
 		this.clanCapital = Object.keys(data.clanCapital).length > 0 ? new ClanCapital(data.clanCapital) : null;
+		this.isFamilyFriendly = data.isFamilyFriendly;
+		this.capitalPoints = data.clanCapitalPoints;
+		this.capitalLeague = data.capitalLeague;
         this.members = data.memberList?.map((mem) => new ClanMember(this.client, mem)) ?? []; // eslint-disable-line
 	}
 
