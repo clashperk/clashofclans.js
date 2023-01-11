@@ -50,7 +50,8 @@ export const SuperTroops = [
 	'Super Valkyrie',
 	'Super Witch',
 	'Ice Hound',
-	'Super Bowler'
+	'Super Bowler',
+	'Super Miner'
 ];
 
 export const ElixirSpells = [
