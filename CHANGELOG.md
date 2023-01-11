@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
-## 3.0.0 (15-10-222)
+## 3.0.0 (11-01-2023)
 
 ### Bug Fixes
 
@@ -12,7 +12,9 @@ All notable changes to this project will be documented in this file. See [standa
 
 ### Features
 
-- Support for clan capital raid seasons `Client#getCapitalRaidSeasons()`
+- Added `Client#getCapitalRaidSeasons()` method.
+- Added `Client#getCapitalLeagues()` method.
+- Added `Client#getClanCapitalRanks()` method.
 
 ### Breaking Changes
 

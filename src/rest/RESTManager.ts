@@ -28,7 +28,10 @@ import {
 	ClanSearchOptions,
 	RESTOptions,
 	OverrideOptions,
-	LoginOptions
+	LoginOptions,
+	APICapitalLeagueList,
+	APICapitalLeague,
+	APIClanCapitalRankingList
 } from '../types';
 import { RestEvents } from '../util/Constants';
 import { RequestHandler } from './RequestHandler';
@@ -168,7 +171,7 @@ export class RESTManager extends EventEmitter {
 		return this.requestHandler.request<APIVerifyToken>(`/players/${Util.encodeURI(playerTag)}/verifytoken`, opts);
 	}
 
-	/** Get list of Leagues. */
+	/** Get a list of Leagues. */
 	public getLeagues(options?: SearchOptions) {
 		const query = Util.queryString(options);
 		return this.requestHandler.request<APILeagueList>(`/leagues${query}`, options);
@@ -177,6 +180,17 @@ export class RESTManager extends EventEmitter {
 	/** Get a League info. */
 	public getLeague(leagueId: string | number, options?: OverrideOptions) {
 		return this.requestHandler.request<APILeague>(`/leagues/${leagueId}`, options);
+	}
+
+	/** Get a list of Capital leagues. */
+	public getCapitalLeagues(options?: SearchOptions) {
+		const query = Util.queryString(options);
+		return this.requestHandler.request<APICapitalLeagueList>(`/capitalleagues${query}`, options);
+	}
+
+	/** Get a Capital League info. */
+	public getCapitalLeague(leagueId: string | number, options?: OverrideOptions) {
+		return this.requestHandler.request<APICapitalLeague>(`/capitalleagues/${leagueId}`, options);
 	}
 
 	/** Get Legend League season Ids. */
@@ -235,6 +249,12 @@ export class RESTManager extends EventEmitter {
 	public getVersusPlayerRanks(locationId: number | string, options?: SearchOptions) {
 		const query = Util.queryString(options);
 		return this.requestHandler.request<APIPlayerVersusRankingList>(`/locations/${locationId}/rankings/players-versus${query}`, options);
+	}
+
+	/** Get clan capital rankings for a specific location. */
+	public getClanCapitalRanks(locationId: number | string, options?: SearchOptions) {
+		const query = Util.queryString(options);
+		return this.requestHandler.request<APIClanCapitalRankingList>(`/locations/${locationId}/rankings/capitals${query}`, options);
 	}
 
 	/** Get list of clan labels. */

@@ -69,6 +69,9 @@ export interface APIClan {
 	labels: APILabel[];
 	memberList: APIClanMember[];
 	clanCapital: APIClanCapital;
+	isFamilyFriendly: boolean;
+	clanCapitalPoints: number;
+	capitalLeague?: APICapitalLeague;
 }
 
 export interface APIClanMember {
@@ -83,6 +86,14 @@ export interface APIClanMember {
 	previousClanRank: number;
 	donations: number;
 	donationsReceived: number;
+	playerHouse?: APIPlayerHouse;
+}
+
+export interface APIPlayerHouse {
+	elements: {
+		type: string;
+		id: number;
+	}[];
 }
 
 export interface APIClanCapital {
@@ -288,6 +299,7 @@ export interface APIPlayer {
 	heroes: APIPlayerItem[];
 	spells: APIPlayerItem[];
 	labels: APILabel[];
+	playerHouse?: APIPlayerHouse;
 }
 
 export interface APILegendStatistics {
@@ -420,6 +432,24 @@ export interface APIPlayerVersusRanking {
 	clan?: APIPlayerClan;
 }
 
+export interface APIClanCapitalRanking {
+	clanLevel: number;
+	clanPoints: number;
+	location: APILocation;
+	members: number;
+	tag: string;
+	name: string;
+	rank: number;
+	previousRank: number;
+	badgeUrls: APIBadge;
+	clanCapitalPoints: number;
+}
+
+export interface APIClanCapitalRankingList {
+	items: APIClanCapitalRanking[];
+	paging: APIPaging;
+}
+
 // *************** LEAGUES *************** //
 
 /** /leagues */
@@ -459,6 +489,16 @@ export interface APIWarLeagueList {
 export interface APIWarLeague {
 	id: number;
 	name: string;
+}
+
+export interface APICapitalLeague {
+	id: number;
+	name: string;
+}
+
+export interface APICapitalLeagueList {
+	items: APICapitalLeague[];
+	paging: APIPaging;
 }
 
 // ************** LABELS ************** //
