@@ -101,7 +101,7 @@ export class Unit {
 			this.unlockBuildingLevel = original.unlock.buildingLevel;
 
 			this.dps = rawUnit!.dps[this.level - 1];
-			this.trainingTime = rawUnit!.trainingTime;
+			this.trainingTime = Number(rawUnit!.trainingTime);
 
 			const origin = data.troops.find((troop) => troop.village === 'home' && troop.name === original.name)!;
 			this.level = origin.level;
@@ -125,7 +125,7 @@ export class Unit {
 			this.upgradeCost = rawUnit.upgrade.cost[this.level - 1] ?? 0;
 			this.upgradeTime = rawUnit.upgrade.time[this.level - 1] ?? 0;
 			this.dps = rawUnit.dps[this.level - 1];
-			this.trainingTime = rawUnit.trainingTime;
+			this.trainingTime = Number(rawUnit.trainingTime);
 			if (rawUnit.category === 'hero') this.regenerationTime = rawUnit.regenerationTimes[this.level - 1];
 			this.hallMaxLevel = rawUnit.levels[(this.village === 'home' ? data.townHallLevel : data.builderHallLevel!) - 1];
 		}

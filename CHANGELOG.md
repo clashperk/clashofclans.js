@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
-## 3.0.0 (11-01-2023)
+## 3.0.1 (11-01-2023)
 
 ### Bug Fixes
 
@@ -15,6 +15,7 @@ All notable changes to this project will be documented in this file. See [standa
 - Added `Client#getCapitalRaidSeasons()` method.
 - Added `Client#getCapitalLeagues()` method.
 - Added `Client#getClanCapitalRanks()` method.
+- Added new Super Troops in raw.json file.
 
 ### Breaking Changes
 
