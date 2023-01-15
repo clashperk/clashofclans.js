@@ -118,7 +118,8 @@ export class Clan {
 		this.warLeague = data.warLeague ? new WarLeague(data.warLeague) : null;
 		this.memberCount = data.members;
 		this.labels = data.labels.map((label) => new Label(label));
-		this.clanCapital = Object.keys(data.clanCapital).length > 0 ? new ClanCapital(data.clanCapital) : null;
+		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+		this.clanCapital = Object.keys(data.clanCapital ?? {}).length > 0 ? new ClanCapital(data.clanCapital) : null;
 		this.isFamilyFriendly = data.isFamilyFriendly;
 		this.capitalPoints = data.clanCapitalPoints;
 		this.capitalLeague = data.capitalLeague;

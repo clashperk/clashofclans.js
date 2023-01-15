@@ -33,7 +33,7 @@ export interface APISeason {
 
 /** /clans?name={name}&limit={limit} */
 export interface APIClanList {
-	items: Omit<APIClan, 'memberList'>[];
+	items: Omit<APIClan, 'memberList' | 'clanCapital'>[];
 	paging: APIPaging;
 }
 

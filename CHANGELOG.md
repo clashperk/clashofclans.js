@@ -2,13 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
-## 3.0.1 (11-01-2023)
+## 3.0.2 (15-01-2023)
 
 ### Bug Fixes
 
 - Conflict with the same name of builder base and home base troops. (#123)
 - Fix the issue with the `Client#getLeagueWar()` method.
 - Typings and documentation for clan capital.
+- Fix the issue with the `Clan#clanCapital` property.
 
 ### Features
 
