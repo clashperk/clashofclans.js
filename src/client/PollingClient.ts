@@ -1,6 +1,6 @@
 import { HTTPError } from '../rest/HTTPError';
 import { Clan, ClanWar, Player } from '../struct';
-import { ClientOptions } from '../types';
+import { PollingClientOptions } from '../types';
 import { PollingEvents } from '../util/Constants';
 import { Client } from './Client';
 
@@ -15,6 +15,7 @@ export class PollingClient extends Client {
 	private readonly _clanTags = new Set<string>();
 	private readonly _playerTags = new Set<string>();
 	private readonly _warTags = new Set<string>();
+	private readonly _pollingInterval: number;
 
 	private readonly _clans = new Map<string, Clan>();
 	private readonly _players = new Map<string, Player>();
@@ -38,11 +39,17 @@ export class PollingClient extends Client {
 	public inMaintenance: boolean;
 	private _maintenanceStartTime: Date | null;
 
-	public constructor(options?: ClientOptions) {
+	public constructor(options?: PollingClientOptions) {
 		super(options);
 
 		this.inMaintenance = Boolean(false);
 		this._maintenanceStartTime = null;
+
+		if (options?.pollingInterval && !isNaN(options.pollingInterval)) {
+			throw new Error('The property "pollingInterval" must be a type of number.');
+		}
+
+		this._pollingInterval = Math.max(options?.pollingInterval ?? 1000, 1000);
 	}
 
 	/** Initialize the PollingEvent Manager to start pulling the data by polling api. */
@@ -173,7 +180,7 @@ export class PollingClient extends Client {
 	}
 
 	private async maintenanceHandler() {
-		setTimeout(this.maintenanceHandler.bind(this), 10_000).unref();
+		setTimeout(this.maintenanceHandler.bind(this), this._pollingInterval).unref();
 		if (!(this.listenerCount(PollingEvents.MaintenanceStart) && this.listenerCount(PollingEvents.MaintenanceEnd))) return;
 		try {
 			const res = await this.rest.getClans({ maxMembers: Math.floor(Math.random() * 40) + 10, limit: 1 });
@@ -211,7 +218,7 @@ export class PollingClient extends Client {
 		for (const tag of this._clanTags) await this.runClanUpdate(tag);
 		this.emit(PollingEvents.ClanLoopEnd);
 
-		setTimeout(this.clanUpdateHandler.bind(this), 10_000);
+		setTimeout(this.clanUpdateHandler.bind(this), this._pollingInterval);
 	}
 
 	private async playerUpdateHandler() {
@@ -219,7 +226,7 @@ export class PollingClient extends Client {
 		for (const tag of this._playerTags) await this.runPlayerUpdate(tag);
 		this.emit(PollingEvents.PlayerLoopEnd);
 
-		setTimeout(this.playerUpdateHandler.bind(this), 10_000);
+		setTimeout(this.playerUpdateHandler.bind(this), this._pollingInterval);
 	}
 
 	private async warUpdateHandler() {
@@ -227,7 +234,7 @@ export class PollingClient extends Client {
 		for (const tag of this._warTags) await this.runWarUpdate(tag);
 		this.emit(PollingEvents.WarLoopEnd);
 
-		setTimeout(this.warUpdateHandler.bind(this), 10_000);
+		setTimeout(this.warUpdateHandler.bind(this), this._pollingInterval);
 	}
 
 	private async runClanUpdate(tag: string) {

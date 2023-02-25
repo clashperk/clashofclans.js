@@ -155,7 +155,7 @@ export class RESTManager extends EventEmitter {
 	}
 
 	/** Retrieve clan's capital raid seasons. */
-	public getCapitalRaidSeasons(tag: string, options?: OverrideOptions) {
+	public getCapitalRaidSeasons(tag: string, options?: SearchOptions) {
 		const query = Util.queryString(options);
 		return this.requestHandler.request<APICapitalRaidSeasons>(`/clans/${Util.encodeURI(tag)}/capitalraidseasons${query}`, options);
 	}

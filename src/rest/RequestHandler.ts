@@ -176,7 +176,7 @@ export class RequestHandler extends EventEmitter {
 		for (const key of this.keys) {
 			const res = await fetch(`${this.baseURL}/locations?limit=1`, {
 				method: 'GET',
-				timeout: 10_000,
+				timeout: this.restRequestTimeout,
 				headers: { 'Authorization': `Bearer ${key}`, 'Content-Type': 'application/json' }
 			}).catch(() => null);
 
@@ -191,7 +191,7 @@ export class RequestHandler extends EventEmitter {
 	private async login() {
 		const res = await fetch(`${DevSiteAPIBaseURL}/login`, {
 			method: 'POST',
-			timeout: 10_000,
+			timeout: this.restRequestTimeout,
 			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify({ email: this.email, password: this.password })
 		});
@@ -208,7 +208,7 @@ export class RequestHandler extends EventEmitter {
 	private async getKeys(cookie: string, ip: string) {
 		const res = await fetch(`${DevSiteAPIBaseURL}/apikey/list`, {
 			method: 'POST',
-			timeout: 10_000,
+			timeout: this.restRequestTimeout,
 			headers: { 'Content-Type': 'application/json', cookie }
 		});
 		const data = await res.json();
@@ -258,7 +258,7 @@ export class RequestHandler extends EventEmitter {
 	private async revokeKey(keyId: string, cookie: string) {
 		const res = await fetch(`${DevSiteAPIBaseURL}/apikey/revoke`, {
 			method: 'POST',
-			timeout: 10_000,
+			timeout: this.restRequestTimeout,
 			body: JSON.stringify({ id: keyId }),
 			headers: { 'Content-Type': 'application/json', cookie }
 		});
@@ -269,7 +269,7 @@ export class RequestHandler extends EventEmitter {
 	private async createKey(cookie: string, ip: string) {
 		const res = await fetch(`${DevSiteAPIBaseURL}/apikey/create`, {
 			method: 'POST',
-			timeout: 10_000,
+			timeout: this.restRequestTimeout,
 			headers: { 'Content-Type': 'application/json', cookie },
 			body: JSON.stringify({
 				cidrRanges: [ip],
@@ -289,7 +289,7 @@ export class RequestHandler extends EventEmitter {
 			const props = decoded.limits.find((limit: { cidrs: string[] }) => limit.hasOwnProperty('cidrs'));
 			return (props.cidrs[0] as string).match(IP_REGEX)![0];
 		} catch {
-			const body = await fetch('https://api.ipify.org', { timeout: 10_000 }).then((res) => res.text());
+			const body = await fetch('https://api.ipify.org', { timeout: this.restRequestTimeout }).then((res) => res.text());
 			return body.match(IP_REGEX)?.[0] ?? null;
 		}
 	}

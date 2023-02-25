@@ -158,12 +158,16 @@ export class Client extends EventEmitter {
 		const args = typeof clanTag === 'string' ? { clanTag } : { clanTag: clanTag.clanTag, round: clanTag.round };
 
 		try {
-			return await this.getClanWar(args.clanTag, options);
-		} catch (e) {
-			if (e instanceof HTTPError && [200, 403].includes(e.status)) {
+			const data = await this.getClanWar(args.clanTag, options);
+			if (data.state === 'notInWar') {
+				return await this.getLeagueWar({ clanTag: args.clanTag, round: args.round }, options);
+			}
+			return data;
+		} catch (err) {
+			if (err instanceof HTTPError && err.status === 403) {
 				return this.getLeagueWar({ clanTag: args.clanTag, round: args.round }, options);
 			}
-			throw e;
+			throw err;
 		}
 	}
 
