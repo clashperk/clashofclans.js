@@ -149,7 +149,7 @@ export const PollingEvents = {
 	ClanLoopEnd: 'clanLoopEnd',
 	PlayerLoopStart: 'playerLoopStart',
 	PlayerLoopEnd: 'playerLoopEnd',
-	WarLoopStart: 'warLoopEnd',
+	WarLoopStart: 'warLoopStart',
 	WarLoopEnd: 'warLoopEnd',
 	NewSeasonStart: 'newSeasonStart',
 	MaintenanceStart: 'maintenanceStart',
