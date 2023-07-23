@@ -15,11 +15,11 @@ export class LegendStatistics {
 	/** Legend statistics for this player's best season. */
 	public bestSeason: Season | null;
 
-	/** Versus Legend statistics for previous season. */
-	public previousVersusSeason: Season | null;
+	/** Builder base Legend statistics for previous season. */
+	public previousBuilderBaseSeason: Season | null;
 
-	/** Versus Legend statistics for this player's best season. */
-	public bestVersusSeason: Season | null;
+	/** Builder base Legend statistics for this player's best season. */
+	public bestBuilderBaseSeason: Season | null;
 
 	public constructor(data: APILegendStatistics) {
 		this.legendTrophies = data.legendTrophies;
@@ -29,7 +29,7 @@ export class LegendStatistics {
 		this.currentSeason = data.currentSeason?.rank ? new Season(data.currentSeason) : null;
 		this.bestSeason = data.bestSeason ? new Season(data.bestSeason) : null;
 
-		this.previousVersusSeason = data.previousVersusSeason ? new Season(data.previousVersusSeason) : null;
-		this.bestVersusSeason = data.bestVersusSeason ? new Season(data.bestVersusSeason) : null;
+		this.previousBuilderBaseSeason = data.previousBuilderBaseSeason ? new Season(data.previousBuilderBaseSeason) : null;
+		this.bestBuilderBaseSeason = data.bestBuilderBaseSeason ? new Season(data.bestBuilderBaseSeason) : null;
 	}
 }

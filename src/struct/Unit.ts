@@ -108,11 +108,15 @@ export class Unit {
 			this.maxLevel = origin.maxLevel;
 			this.boostable = data.townHallLevel >= 11 && origin.level >= rawSuperUnit.minOriginalLevel;
 
-			this.upgradeCost = original.upgrade.cost[origin.level - 1] ?? 0;
+			this.upgradeCost = original.upgrade.cost[origin.level - 1] || 0;
 			this.upgradeResource = original.upgrade.resource;
-			this.upgradeTime = original.upgrade.time[origin.level - 1] ?? 0;
+			this.upgradeTime = original.upgrade.time[origin.level - 1] || 0;
 			this.hallMaxLevel = original.levels[data.townHallLevel - 1];
 		} else if (rawUnit) {
+			// special case for the builder base
+			this.level = this.level === 0 ? 0 : Math.max(this.level, rawUnit.minLevel ?? this.level);
+			this.maxLevel = Math.max(rawUnit.levels[rawUnit.levels.length - 1], this.maxLevel);
+
 			this.id = rawUnit.id;
 			this.housingSpace = rawUnit.housingSpace;
 			this.unlockCost = rawUnit.unlock.cost;
@@ -122,8 +126,8 @@ export class Unit {
 			this.unlockHallLevel = rawUnit.unlock.hall;
 			this.unlockBuildingLevel = rawUnit.unlock.buildingLevel;
 			this.upgradeResource = rawUnit.upgrade.resource;
-			this.upgradeCost = rawUnit.upgrade.cost[this.level - 1] ?? 0;
-			this.upgradeTime = rawUnit.upgrade.time[this.level - 1] ?? 0;
+			this.upgradeCost = rawUnit.upgrade.cost[this.level - 1] || 0;
+			this.upgradeTime = rawUnit.upgrade.time[this.level - 1] || 0;
 			this.dps = rawUnit.dps[this.level - 1];
 			this.trainingTime = Number(rawUnit.trainingTime);
 			if (rawUnit.category === 'hero') this.regenerationTime = rawUnit.regenerationTimes[this.level - 1];

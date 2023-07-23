@@ -43,13 +43,13 @@ export class Player {
 	/** The player's builder hall level, or 0 if it hasn't been unlocked. */
 	public builderHallLevel: number | null;
 
-	/** The player's versus trophy count. */
-	public versusTrophies: number | null;
+	/** The player's builder base trophy count. */
+	public builderBaseTrophies: number | null;
 
-	/** The player's best versus trophies. */
-	public bestVersusTrophies: number | null;
+	/** The player's best builder base trophies. */
+	public bestBuilderBaseTrophies: number | null;
 
-	/** The number of total versus attacks the player has won. */
+	/** The number of total builder base attacks the player has won. */
 	public versusBattleWins: number | null;
 
 	/** The player's donation count for this season. */
@@ -106,8 +106,8 @@ export class Player {
 		this.attackWins = data.attackWins;
 		this.defenseWins = data.defenseWins;
 		this.builderHallLevel = data.builderHallLevel ?? null;
-		this.versusTrophies = data.versusTrophies ?? null;
-		this.bestVersusTrophies = data.bestVersusTrophies ?? null;
+		this.builderBaseTrophies = data.builderBaseTrophies ?? null;
+		this.bestBuilderBaseTrophies = data.bestBuilderBaseTrophies ?? null;
 		this.versusBattleWins = data.versusBattleWins ?? null;
 		this.donations = data.donations;
 		this.received = data.donationsReceived;

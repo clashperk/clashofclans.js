@@ -1,11 +1,8 @@
-import { APICapitalLeague, APIClan, OverrideOptions } from '../types';
+import { APICapitalLeague, APIChatLanguage, APIClan, APILabel, APIWarLeague, OverrideOptions } from '../types';
 import { Client } from '../client/Client';
-import { ChatLanguage } from './ChatLanguage';
 import { ClanMember } from './ClanMember';
-import { WarLeague } from './WarLeague';
 import type { Player } from './Player';
 import { Location } from './Location';
-import { Label } from './Label';
 import { Badge } from './Badge';
 import { ClanCapital } from './ClanCapital';
 
@@ -27,7 +24,7 @@ export class Clan {
 	public location: Location | null;
 
 	/** The clan's trophy count. */
-	public chatLanguage: ChatLanguage | null;
+	public chatLanguage: APIChatLanguage | null;
 
 	/** The clan's Badge. */
 	public badge: Badge;
@@ -41,14 +38,14 @@ export class Clan {
 	/** The clan's capital points. */
 	public capitalPoints: number;
 
-	/** The clan's versus trophy count. */
-	public versusPoints: number;
+	/** The clan's builder base trophy count. */
+	public builderBasePoints: number;
 
 	/** The minimum trophies required to apply to this clan. */
 	public requiredTrophies: number;
 
-	/** The minimum versus trophies required to apply to this clan. */
-	public requiredVersusTrophies: number | null;
+	/** The minimum builder base trophies required to apply to this clan. */
+	public requiredBuilderBaseTrophies: number | null;
 
 	/** The minimum hall level required to apply to this clan. */
 	public requiredTownHallLevel: number | null;
@@ -72,13 +69,13 @@ export class Clan {
 	public isWarLogPublic: boolean;
 
 	/** The clan's CWL league. */
-	public warLeague: WarLeague | null;
+	public warLeague: APIWarLeague | null;
 
 	/** The number of members in the clan. */
 	public memberCount: number;
 
 	/** An array of {@link Label} that the clan has. */
-	public labels: Label[];
+	public labels: APILabel[];
 
 	/** The clan's Clan Capital information */
 	public clanCapital: ClanCapital | null;
@@ -101,29 +98,29 @@ export class Clan {
 		this.type = data.type;
 		this.description = data.description;
 		this.location = data.location ? new Location(data.location) : null;
-		this.chatLanguage = data.chatLanguage ? new ChatLanguage(data.chatLanguage) : null;
+		this.chatLanguage = data.chatLanguage ?? null;
 		this.badge = new Badge(data.badgeUrls);
 		this.level = data.clanLevel;
 		this.points = data.clanPoints;
-		this.versusPoints = data.clanVersusPoints;
+		this.builderBasePoints = data.clanBuilderBasePoints;
 		this.requiredTrophies = data.requiredTrophies;
 		this.requiredTownHallLevel = data.requiredTownhallLevel ?? null;
-		this.requiredVersusTrophies = data.requiredVersusTrophies ?? null;
+		this.requiredBuilderBaseTrophies = data.requiredBuilderBaseTrophies ?? null;
 		this.warFrequency = data.warFrequency;
 		this.warWinStreak = data.warWinStreak;
 		this.warWins = data.warWins;
 		this.warTies = data.warTies ?? null;
 		this.warLosses = data.warLosses ?? null;
 		this.isWarLogPublic = data.isWarLogPublic;
-		this.warLeague = data.warLeague ? new WarLeague(data.warLeague) : null;
+		this.warLeague = data.warLeague ?? null;
 		this.memberCount = data.members;
-		this.labels = data.labels.map((label) => new Label(label));
+		this.labels = data.labels;
 		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
 		this.clanCapital = Object.keys(data.clanCapital ?? {}).length > 0 ? new ClanCapital(data.clanCapital) : null;
 		this.isFamilyFriendly = data.isFamilyFriendly;
 		this.capitalPoints = data.clanCapitalPoints;
 		this.capitalLeague = data.capitalLeague;
-        this.members = data.memberList?.map((mem) => new ClanMember(this.client, mem)) ?? []; // eslint-disable-line
+		this.members = data.memberList?.map((mem) => new ClanMember(this.client, mem)) ?? []; // eslint-disable-line
 	}
 
 	/** Get {@link Player} info for every Player in the clan. */
