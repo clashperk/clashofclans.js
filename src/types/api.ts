@@ -54,9 +54,13 @@ export interface APIClan {
 	badgeUrls: APIBadge;
 	clanLevel: number;
 	clanPoints: number;
-	clanVersusPoints: number;
+	clanBuilderBasePoints: number;
+	/** @deprecated */
+	clanVersusPoints?: number;
 	requiredTrophies: number;
 	requiredTownhallLevel?: number;
+	requiredBuilderBaseTrophies?: number;
+	/** @deprecated */
 	requiredVersusTrophies?: number;
 	warFrequency: 'always' | 'moreThanOncePerWeek' | 'oncePerWeek' | 'lessThanOncePerWeek' | 'never' | 'unknown';
 	warWinStreak: number;
@@ -81,6 +85,8 @@ export interface APIClanMember {
 	expLevel: number;
 	league: APILeague;
 	trophies: number;
+	builderBaseTrophies?: number;
+	/** @deprecated */
 	versusTrophies?: number;
 	clanRank: number;
 	previousClanRank: number;
@@ -282,10 +288,12 @@ export interface APIPlayer {
 	attackWins: number;
 	defenseWins: number;
 	builderHallLevel?: number;
-	versusTrophies?: number;
-	bestVersusTrophies?: number;
+	builderBaseTrophies?: number;
+	bestBuilderBaseTrophies?: number;
+	/** @deprecated */
 	versusBattleWins?: number;
-	versusBattleWinCount?: number;
+	/** @deprecated */
+	versusTrophies?: number;
 	donations: number;
 	donationsReceived: number;
 	clanCapitalContributions: number;
@@ -293,6 +301,10 @@ export interface APIPlayer {
 	warPreference?: 'in' | 'out';
 	clan?: APIPlayerClan;
 	league?: APILeague;
+	builderBaseLeague?: {
+		id: number;
+		name: string;
+	};
 	legendStatistics?: APILegendStatistics;
 	achievements: APIPlayerAchievement[];
 	troops: APIPlayerItem[];
@@ -304,8 +316,8 @@ export interface APIPlayer {
 
 export interface APILegendStatistics {
 	previousSeason?: APISeason;
-	previousVersusSeason?: APISeason;
-	bestVersusSeason?: APISeason;
+	previousBuilderBaseSeason?: APISeason;
+	bestBuilderBaseSeason?: APISeason;
 	currentSeason?: APISeason;
 	bestSeason?: APISeason;
 	legendTrophies: number;
@@ -397,13 +409,13 @@ export interface APIPlayerRanking {
 	league: APILeague;
 }
 
-/** /locations/{locationId}/rankings/clans-versus */
-export interface APIClanVersusRankingList {
-	items: APIClanVersusRanking[];
+/** /locations/{locationId}/rankings/clans-builder-base */
+export interface APIClanBuilderBaseRankingList {
+	items: APIClanBuilderBaseRanking[];
 	paging: APIPaging;
 }
 
-export interface APIClanVersusRanking {
+export interface APIClanBuilderBaseRanking {
 	clanLevel: number;
 	location: APILocation;
 	members: number;
@@ -412,24 +424,33 @@ export interface APIClanVersusRanking {
 	rank: number;
 	previousRank: number;
 	badgeUrls: APIBadge;
-	clanVersusPoints: number;
+	clanBuilderBasePoints: number;
+	/** @deprecated */
+	clanVersusPoints?: number;
 }
 
-/** /locations/{locationId}/rankings/players-versus */
-export interface APIPlayerVersusRankingList {
-	items: APIPlayerVersusRanking[];
+/** /locations/{locationId}/rankings/players-builder-base */
+export interface APIPlayerBuilderBaseRankingList {
+	items: APIPlayerBuilderBaseRanking[];
 	paging: APIPaging;
 }
 
-export interface APIPlayerVersusRanking {
+export interface APIPlayerBuilderBaseRanking {
 	tag: string;
 	name: string;
 	expLevel: number;
-	versusTrophies: number;
-	versusBattleWins: number;
+	builderBaseTrophies: number;
+	/** @deprecated */
+	versusBattleWins?: number;
+	/** @deprecated */
+	versusTrophies?: number;
 	rank: number;
 	previousRank: number;
 	clan?: APIPlayerClan;
+	builderBaseLeague?: {
+		id: number;
+		name: string;
+	};
 }
 
 export interface APIClanCapitalRanking {
@@ -456,6 +477,16 @@ export interface APIClanCapitalRankingList {
 export interface APILeagueList {
 	items: APILeague[];
 	paging: APIPaging;
+}
+
+export interface APIBuilderBaseLeagueList {
+	items: APIBuilderBaseLeague[];
+	paging: APIPaging;
+}
+
+export interface APIBuilderBaseLeague {
+	id: number;
+	name: string;
 }
 
 /** /leagues/{leagueId} */

@@ -6,7 +6,7 @@ import {
 	APIClanMemberList,
 	APICapitalRaidSeasons,
 	APIClanRankingList,
-	APIClanVersusRankingList,
+	APIClanBuilderBaseRankingList,
 	APIClanWar,
 	APIClanWarLeagueGroup,
 	APIClanWarLog,
@@ -20,7 +20,7 @@ import {
 	APIPlayer,
 	APIPlayerRankingList,
 	APIPlayerSeasonRankingList,
-	APIPlayerVersusRankingList,
+	APIPlayerBuilderBaseRankingList,
 	APIVerifyToken,
 	APIWarLeague,
 	APIWarLeagueList,
@@ -31,7 +31,9 @@ import {
 	LoginOptions,
 	APICapitalLeagueList,
 	APICapitalLeague,
-	APIClanCapitalRankingList
+	APIClanCapitalRankingList,
+	APIBuilderBaseLeagueList,
+	APIBuilderBaseLeague
 } from '../types';
 import { RestEvents } from '../util/Constants';
 import { RequestHandler } from './RequestHandler';
@@ -182,6 +184,17 @@ export class RESTManager extends EventEmitter {
 		return this.requestHandler.request<APILeague>(`/leagues/${leagueId}`, options);
 	}
 
+	/** Get a list of builder base leagues. */
+	public getBuilderBaseLeagues(options?: SearchOptions) {
+		const query = Util.queryString(options);
+		return this.requestHandler.request<APIBuilderBaseLeagueList>(`/builderbaseleagues${query}`, options);
+	}
+
+	/** Get a builder base league info. */
+	public getBuilderBaseLeague(leagueId: string | number, options?: OverrideOptions) {
+		return this.requestHandler.request<APIBuilderBaseLeague>(`/builderbaseleagues/${leagueId}`, options);
+	}
+
 	/** Get a list of Capital leagues. */
 	public getCapitalLeagues(options?: SearchOptions) {
 		const query = Util.queryString(options);
@@ -239,16 +252,22 @@ export class RESTManager extends EventEmitter {
 		return this.requestHandler.request<APIPlayerRankingList>(`/locations/${locationId}/rankings/players${query}`, options);
 	}
 
-	/** Get clan versus rankings for a specific location. */
-	public getVersusClanRanks(locationId: number | string, options?: SearchOptions) {
+	/** Get clan builder base rankings for a specific location. */
+	public getBuilderBaseClanRanks(locationId: number | string, options?: SearchOptions) {
 		const query = Util.queryString(options);
-		return this.requestHandler.request<APIClanVersusRankingList>(`/locations/${locationId}/rankings/clans-versus${query}`, options);
+		return this.requestHandler.request<APIClanBuilderBaseRankingList>(
+			`/locations/${locationId}/rankings/clans-builder-base${query}`,
+			options
+		);
 	}
 
-	/** Get player versus rankings for a specific location. */
-	public getVersusPlayerRanks(locationId: number | string, options?: SearchOptions) {
+	/** Get player builder base rankings for a specific location. */
+	public getBuilderBasePlayerRanks(locationId: number | string, options?: SearchOptions) {
 		const query = Util.queryString(options);
-		return this.requestHandler.request<APIPlayerVersusRankingList>(`/locations/${locationId}/rankings/players-versus${query}`, options);
+		return this.requestHandler.request<APIPlayerBuilderBaseRankingList>(
+			`/locations/${locationId}/rankings/players-builder-base${query}`,
+			options
+		);
 	}
 
 	/** Get clan capital rankings for a specific location. */

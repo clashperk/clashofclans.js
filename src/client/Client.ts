@@ -10,13 +10,10 @@ import {
 	ClanMember,
 	ClanWar,
 	ClanWarLog,
-	League,
 	Location,
 	Player,
-	WarLeague,
 	RankedClan,
 	RankedPlayer,
-	Label,
 	SeasonRankedPlayer,
 	GoldPassSeason,
 	ClanWarLeagueGroup
@@ -270,7 +267,13 @@ export class Client extends EventEmitter {
 	/** Get a list of Leagues. */
 	public async getLeagues(options?: SearchOptions) {
 		const { data } = await this.rest.getLeagues(options);
-		return data.items.map((entry) => new League(entry));
+		return data.items;
+	}
+
+	/** Get a list of Leagues. */
+	public async getBuilderBaseLeagues(options?: SearchOptions) {
+		const { data } = await this.rest.getBuilderBaseLeagues(options);
+		return data.items;
 	}
 
 	/** Get a list of Capital Leagues. */
@@ -294,7 +297,7 @@ export class Client extends EventEmitter {
 	/** Get list of Clan War Leagues. */
 	public async getWarLeagues(options?: SearchOptions) {
 		const { data } = await this.rest.getWarLeagues(options);
-		return data.items.map((entry) => new WarLeague(entry));
+		return data.items;
 	}
 
 	/** Get list of Locations. */
@@ -324,22 +327,22 @@ export class Client extends EventEmitter {
 	}
 
 	/**
-	 * Get clan versus rankings for a specific location.
+	 * Get clan builder base rankings for a specific location.
 	 *
 	 * For global ranking, use `global` as `locationId`.
 	 */
-	public async getVersusClanRanks(locationId: number | 'global', options?: SearchOptions) {
-		const { data } = await this.rest.getVersusClanRanks(locationId, options);
+	public async getBuilderBaseClanRanks(locationId: number | 'global', options?: SearchOptions) {
+		const { data } = await this.rest.getBuilderBaseClanRanks(locationId, options);
 		return data.items.map((entry) => new RankedClan(entry));
 	}
 
 	/**
-	 * Get player versus rankings for a specific location.
+	 * Get player builder base rankings for a specific location.
 	 *
 	 * For global ranking, use `global` as `locationId`.
 	 */
-	public async getVersusPlayerRanks(locationId: number | 'global', options?: SearchOptions) {
-		const { data } = await this.rest.getVersusPlayerRanks(locationId, options);
+	public async getBuilderBasePlayerRanks(locationId: number | 'global', options?: SearchOptions) {
+		const { data } = await this.rest.getBuilderBasePlayerRanks(locationId, options);
 		return data.items.map((entry) => new RankedPlayer(this, entry));
 	}
 
@@ -356,13 +359,13 @@ export class Client extends EventEmitter {
 	/** Get list of clan labels. */
 	public async getClanLabels(options?: SearchOptions) {
 		const { data } = await this.rest.getClanLabels(options);
-		return data.items.map((entry) => new Label(entry));
+		return data.items;
 	}
 
 	/** Get list of player labels. */
 	public async getPlayerLabels(options?: SearchOptions) {
 		const { data } = await this.rest.getPlayerLabels(options);
-		return data.items.map((entry) => new Label(entry));
+		return data.items;
 	}
 
 	/** Get info about gold pass season. */
