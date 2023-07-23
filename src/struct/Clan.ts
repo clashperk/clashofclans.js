@@ -41,11 +41,17 @@ export class Clan {
 	/** The clan's builder base trophy count. */
 	public builderBasePoints: number;
 
+	/** @deprecated */
+	public versusPoints?: number | null;
+
 	/** The minimum trophies required to apply to this clan. */
 	public requiredTrophies: number;
 
 	/** The minimum builder base trophies required to apply to this clan. */
 	public requiredBuilderBaseTrophies: number | null;
+
+	/** @deprecated */
+	public requiredVersusTrophies?: number | null;
 
 	/** The minimum hall level required to apply to this clan. */
 	public requiredTownHallLevel: number | null;
@@ -103,9 +109,11 @@ export class Clan {
 		this.level = data.clanLevel;
 		this.points = data.clanPoints;
 		this.builderBasePoints = data.clanBuilderBasePoints;
+		this.versusPoints = data.clanVersusPoints ?? null;
 		this.requiredTrophies = data.requiredTrophies;
 		this.requiredTownHallLevel = data.requiredTownhallLevel ?? null;
 		this.requiredBuilderBaseTrophies = data.requiredBuilderBaseTrophies ?? null;
+		this.requiredVersusTrophies = data.requiredVersusTrophies ?? null;
 		this.warFrequency = data.warFrequency;
 		this.warWinStreak = data.warWinStreak;
 		this.warWins = data.warWins;

@@ -46,10 +46,13 @@ export class Player {
 	/** The player's builder base trophy count. */
 	public builderBaseTrophies: number | null;
 
+	/** @deprecated */
+	public versusTrophies?: number | null;
+
 	/** The player's best builder base trophies. */
 	public bestBuilderBaseTrophies: number | null;
 
-	/** The number of total builder base attacks the player has won. */
+	/** @deprecated */
 	public versusBattleWins: number | null;
 
 	/** The player's donation count for this season. */
@@ -109,6 +112,7 @@ export class Player {
 		this.builderBaseTrophies = data.builderBaseTrophies ?? null;
 		this.bestBuilderBaseTrophies = data.bestBuilderBaseTrophies ?? null;
 		this.versusBattleWins = data.versusBattleWins ?? null;
+		this.versusTrophies = data.versusTrophies ?? null;
 		this.donations = data.donations;
 		this.received = data.donationsReceived;
 		this.clanCapitalContributions = data.clanCapitalContributions;

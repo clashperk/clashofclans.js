@@ -25,6 +25,9 @@ export class ClanMember {
 	/** The member's builder base trophy count. */
 	public builderBaseTrophies: number | null;
 
+	/** @deprecated */
+	public versusTrophies?: number | null;
+
 	/** The member's rank in the clan. */
 	public clanRank: number;
 
@@ -50,6 +53,7 @@ export class ClanMember {
 		this.league = new League(data.league ?? UnrankedLeagueData);
 		this.trophies = data.trophies;
 		this.builderBaseTrophies = data.builderBaseTrophies ?? null;
+		this.versusTrophies = data.versusTrophies ?? null;
 		this.clanRank = data.clanRank;
 		this.previousClanRank = data.previousClanRank;
 		this.donations = data.donations;
