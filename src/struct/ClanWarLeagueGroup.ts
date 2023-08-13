@@ -85,26 +85,32 @@ export class ClanWarLeagueRound {
 /** Represents a CWL Group. */
 export class ClanWarLeagueGroup {
 	/** The CWL group's current war state. */
-	public state: 'preparation' | 'inWar' | 'ended';
+	public state: 'preparation' | 'inWar' | 'ended' | 'notInWar';
 
 	/** Season Id of this CWL group. */
-	public season: string;
+	public season!: string;
 
 	/** Returns all participating clans. */
-	public clans: ClanWarLeagueClan[];
+	public clans!: ClanWarLeagueClan[];
 
 	/** An array containing all war tags for each round. */
-	public rounds: ClanWarLeagueRound[];
+	public rounds!: ClanWarLeagueRound[];
 
 	public constructor(
 		private readonly client: Client,
 		data: APIClanWarLeagueGroup
 	) {
-		// @ts-expect-error
 		this.state = data.state;
-		this.season = data.season;
-		this.clans = data.clans.map((clan) => new ClanWarLeagueClan(client, clan));
-		this.rounds = data.rounds.map((round, i) => new ClanWarLeagueRound(round, i));
+		if (this.state !== 'notInWar') {
+			this.season = data.season;
+			this.clans = data.clans.map((clan) => new ClanWarLeagueClan(client, clan));
+			this.rounds = data.rounds.map((round, i) => new ClanWarLeagueRound(round, i));
+		}
+	}
+
+	/** Whether the clan is not in CWL group. */
+	public get isNotInWar() {
+		return this.state === 'notInWar';
 	}
 
 	/** Total number of rounds for this CWL. */

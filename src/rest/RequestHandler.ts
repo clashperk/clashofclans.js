@@ -83,8 +83,8 @@ export class RequestHandler extends EventEmitter {
 		else this.cached = options?.cache === true ? new CacheStore() : null;
 
 		this.dispatcher = new Pool(new URL(this.baseURL).origin, {
-			connections: 50,
-			pipelining: 10
+			connections: options?.connections ?? null,
+			pipelining: options?.pipelining ?? 1
 		});
 	}
 

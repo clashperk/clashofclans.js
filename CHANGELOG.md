@@ -2,7 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
-## 3.0.2 (15-01-2023)
+## 3.1.3 (13-08-2023)
+
+### Features
+
+- Switched to `undici` from `node-fetch` for better performance.
+
+## 3.1.0 (2023-07-28)
+
+### Features
+
+- Builder base update and new troop levels.
+
+## 3.0.2 (2023-01-15)
 
 ### Bug Fixes
 
