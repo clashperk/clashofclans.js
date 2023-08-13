@@ -17,6 +17,25 @@ const params = [
 	'before'
 ];
 
+export function timeoutSignal(timeout: number) {
+	if (!Number.isInteger(timeout)) {
+		throw new TypeError('Expected an integer for the timeout');
+	}
+
+	const controller = new AbortController();
+
+	if (timeout > 0) {
+		const timeoutId = setTimeout(() => {
+			controller.abort();
+		}, timeout);
+
+		// Allow Node.js processes to exit early if only the timeout is running
+		timeoutId.unref();
+	}
+
+	return controller.signal;
+}
+
 /** Contains various general-purpose utility methods. */
 export class Util extends null {
 	/**
