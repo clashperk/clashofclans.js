@@ -1,16 +1,14 @@
-import https from 'node:https';
 import { EventEmitter } from 'node:events';
-import fetch, { FetchError } from 'node-fetch';
+import { fetch, Pool } from 'undici';
 import { Response, RequestOptions, LoginOptions, Store, RequestHandlerOptions } from '../types';
 import { APIBaseURL, DevSiteAPIBaseURL } from '../util/Constants';
 import { CacheStore } from '../util/Store';
+import { timeoutSignal } from '../util/Util';
 import { QueueThrottler, BatchThrottler } from './Throttler';
 import { HTTPError, PrivateWarLogError } from './HTTPError';
 import { IRestEvents } from './RESTManager';
 
 const IP_REGEX = /\d{1,3}.\d{1,3}.\d{1,3}.\d{1,3}/g;
-
-const agent = new https.Agent({ keepAlive: true });
 
 export interface RequestHandler {
 	emit: (<K extends keyof IRestEvents>(event: K, ...args: IRestEvents[K]) => boolean) &
@@ -50,6 +48,8 @@ export interface RequestHandler {
 	rateLimited: string;
 }
 
+export type ResponseBody = any;
+
 /** Represents the class that manages handlers for endpoints. */
 export class RequestHandler extends EventEmitter {
 	#keyIndex = 0; // eslint-disable-line
@@ -68,6 +68,8 @@ export class RequestHandler extends EventEmitter {
 	private readonly throttler?: QueueThrottler | BatchThrottler | null;
 	private readonly cached: Store<{ data: unknown; ttl: number; status: number }> | null;
 
+	private readonly dispatcher!: Pool;
+
 	public constructor(options?: RequestHandlerOptions) {
 		super();
 
@@ -79,6 +81,11 @@ export class RequestHandler extends EventEmitter {
 		this.rejectIfNotValid = options?.rejectIfNotValid ?? true;
 		if (typeof options?.cache === 'object') this.cached = options.cache;
 		else this.cached = options?.cache === true ? new CacheStore() : null;
+
+		this.dispatcher = new Pool(new URL(this.baseURL).origin, {
+			connections: 50,
+			pipelining: 10
+		});
 	}
 
 	private get _keys() {
@@ -114,48 +121,47 @@ export class RequestHandler extends EventEmitter {
 
 	private async exec<T>(path: string, options: RequestOptions = {}, retries = 0): Promise<Response<T>> {
 		try {
-			const res = await fetch(`${this.baseURL}${path}`, {
-				agent,
+			const res = await this.dispatcher.request({
+				path: `/v1${path}`,
 				body: options.body,
-				method: options.method,
-				timeout: options.restRequestTimeout ?? this.restRequestTimeout,
+				method: 'GET',
+				signal: timeoutSignal(options.restRequestTimeout ?? this.restRequestTimeout),
 				headers: { 'Authorization': `Bearer ${this._key}`, 'Content-Type': 'application/json' }
 			});
 
-			if (res.status === 504 && retries < (options.retryLimit ?? this.retryLimit)) {
+			if (res.statusCode === 504 && retries < (options.retryLimit ?? this.retryLimit)) {
 				return await this.exec<T>(path, options, ++retries);
 			}
-			const data = await res.json();
+			const data = (await res.body.json()) as ResponseBody;
 
 			if (
 				this.creds &&
-				res.status === 403 &&
-				data.reason === 'accessDenied.invalidIp' &&
+				res.statusCode === 403 &&
+				data?.reason === 'accessDenied.invalidIp' &&
 				retries < (options.retryLimit ?? this.retryLimit)
 			) {
 				const keys = await this.reValidateKeys().then(() => () => this.login());
 				if (keys.length) return await this.exec<T>(path, options, ++retries);
 			}
 
-			const maxAge = Number(res.headers.get('cache-control')?.split('=')?.[1] ?? 0) * 1000;
+			const maxAge = Number((res.headers['cache-control'] as string | null)?.split('=')?.[1] ?? 0) * 1000;
 
-			if (res.status === 403 && !data?.message && this.rejectIfNotValid) {
-				throw new HTTPError(PrivateWarLogError, res.status, path, maxAge);
+			if (res.statusCode === 403 && !data?.message && this.rejectIfNotValid) {
+				throw new HTTPError(PrivateWarLogError, res.statusCode, path, maxAge);
 			}
-			if (!res.ok && this.rejectIfNotValid) {
-				throw new HTTPError(data, res.status, path, maxAge, options.method);
+			if (res.statusCode !== 200 && this.rejectIfNotValid) {
+				throw new HTTPError(data, res.statusCode, path, maxAge, options.method);
 			}
-
-			if (this.cached && maxAge > 0 && options.cache !== false && res.ok) {
-				await this.cached.set(path, { data, ttl: Date.now() + maxAge, status: res.status }, maxAge);
+			if (this.cached && maxAge > 0 && options.cache !== false && res.statusCode === 200) {
+				await this.cached.set(path, { data, ttl: Date.now() + maxAge, status: res.statusCode }, maxAge);
 			}
-			return { data, maxAge, status: res.status, path, ok: res.status === 200 };
-		} catch (error) {
-			if (error instanceof FetchError && error.type === 'request-timeout' && retries < (options.retryLimit ?? this.retryLimit)) {
+			return { data: data as T, maxAge, status: res.statusCode, path, ok: res.statusCode === 200 };
+		} catch (error: any) {
+			if (error.code === 'UND_ERR_ABORTED' && retries < (options.retryLimit ?? this.retryLimit)) {
 				return this.exec<T>(path, options, ++retries);
 			}
 			if (this.rejectIfNotValid) throw error;
-			return { data: { message: (error as FetchError).message } as unknown as T, maxAge: 0, status: 500, path, ok: false };
+			return { data: { message: error.message } as unknown as T, maxAge: 0, status: 500, path, ok: false };
 		}
 	}
 
@@ -176,7 +182,7 @@ export class RequestHandler extends EventEmitter {
 		for (const key of this.keys) {
 			const res = await fetch(`${this.baseURL}/locations?limit=1`, {
 				method: 'GET',
-				timeout: this.restRequestTimeout,
+				signal: timeoutSignal(this.restRequestTimeout),
 				headers: { 'Authorization': `Bearer ${key}`, 'Content-Type': 'application/json' }
 			}).catch(() => null);
 
@@ -191,12 +197,12 @@ export class RequestHandler extends EventEmitter {
 	private async login() {
 		const res = await fetch(`${DevSiteAPIBaseURL}/login`, {
 			method: 'POST',
-			timeout: this.restRequestTimeout,
+			signal: timeoutSignal(this.restRequestTimeout),
 			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify({ email: this.email, password: this.password })
 		});
 
-		const data = await res.json();
+		const data = (await res.json()) as ResponseBody;
 		if (!res.ok) throw new Error(`Invalid email or password. ${JSON.stringify(data)}`);
 
 		const ip = await this.getIp(data.temporaryAPIToken as string);
@@ -208,10 +214,10 @@ export class RequestHandler extends EventEmitter {
 	private async getKeys(cookie: string, ip: string) {
 		const res = await fetch(`${DevSiteAPIBaseURL}/apikey/list`, {
 			method: 'POST',
-			timeout: this.restRequestTimeout,
+			signal: timeoutSignal(this.restRequestTimeout),
 			headers: { 'Content-Type': 'application/json', cookie }
 		});
-		const data = await res.json();
+		const data = (await res.json()) as ResponseBody;
 		if (!res.ok) throw new Error(`Failed to retrieve the API Keys. ${JSON.stringify(data)}`);
 
 		// Get all available keys from the developer site.
@@ -258,7 +264,7 @@ export class RequestHandler extends EventEmitter {
 	private async revokeKey(keyId: string, cookie: string) {
 		const res = await fetch(`${DevSiteAPIBaseURL}/apikey/revoke`, {
 			method: 'POST',
-			timeout: this.restRequestTimeout,
+			signal: timeoutSignal(this.restRequestTimeout),
 			body: JSON.stringify({ id: keyId }),
 			headers: { 'Content-Type': 'application/json', cookie }
 		});
@@ -269,7 +275,7 @@ export class RequestHandler extends EventEmitter {
 	private async createKey(cookie: string, ip: string) {
 		const res = await fetch(`${DevSiteAPIBaseURL}/apikey/create`, {
 			method: 'POST',
-			timeout: this.restRequestTimeout,
+			signal: timeoutSignal(this.restRequestTimeout),
 			headers: { 'Content-Type': 'application/json', cookie },
 			body: JSON.stringify({
 				cidrRanges: [ip],
@@ -278,7 +284,7 @@ export class RequestHandler extends EventEmitter {
 			})
 		});
 
-		const data = await res.json();
+		const data = (await res.json()) as ResponseBody;
 		if (!res.ok) throw new Error(`Failed to create API Key. ${JSON.stringify(data)}`);
 		return data.key as { id: string; name: string; key: string; cidrRanges?: string[] };
 	}
@@ -289,7 +295,9 @@ export class RequestHandler extends EventEmitter {
 			const props = decoded.limits.find((limit: { cidrs: string[] }) => limit.hasOwnProperty('cidrs'));
 			return (props.cidrs[0] as string).match(IP_REGEX)![0];
 		} catch {
-			const body = await fetch('https://api.ipify.org', { timeout: this.restRequestTimeout }).then((res) => res.text());
+			const body = await fetch('https://api.ipify.org', {
+				signal: timeoutSignal(this.restRequestTimeout)
+			}).then((res) => res.text());
 			return body.match(IP_REGEX)?.[0] ?? null;
 		}
 	}
