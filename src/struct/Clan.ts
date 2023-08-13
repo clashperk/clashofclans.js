@@ -1,10 +1,10 @@
-import { APICapitalLeague, APIChatLanguage, APIClan, APILabel, APIWarLeague, OverrideOptions } from '../types';
 import { Client } from '../client/Client';
-import { ClanMember } from './ClanMember';
-import type { Player } from './Player';
-import { Location } from './Location';
+import { APICapitalLeague, APIChatLanguage, APIClan, APILabel, APIWarLeague, OverrideOptions } from '../types';
 import { Badge } from './Badge';
 import { ClanCapital } from './ClanCapital';
+import { ClanMember } from './ClanMember';
+import { Location } from './Location';
+import type { Player } from './Player';
 
 /** Represents a Clan. */
 export class Clan {
@@ -98,7 +98,10 @@ export class Clan {
 	 */
 	public members: ClanMember[];
 
-	public constructor(public client: Client, data: APIClan) {
+	public constructor(
+		public client: Client,
+		data: APIClan
+	) {
 		this.name = data.name;
 		this.tag = data.tag;
 		this.type = data.type;

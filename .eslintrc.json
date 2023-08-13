@@ -1,7 +1,10 @@
 {
 	"root": true,
+	"plugins": [
+		"@typescript-eslint/eslint-plugin"
+	],
 	"extends": [
-		"marine/prettier/node",
+		"plugin:@typescript-eslint/recommended",
 		"plugin:prettier/recommended"
 	],
 	"parserOptions": {
@@ -10,9 +13,6 @@
 	"env": {
 		"jest": true
 	},
-	"plugins": [
-		"prettier"
-	],
 	"ignorePatterns": [
 		"dist/*",
 		"docs/*",
@@ -32,17 +32,6 @@
 			"error",
 			"always"
 		],
-		"import/order": [
-			"error",
-			{
-				"pathGroups": [
-					{
-						"pattern": "~/**",
-						"group": "external"
-					}
-				]
-			}
-		],
 		"@typescript-eslint/naming-convention": 0,
 		"@typescript-eslint/no-floating-promises": 0,
 		"@typescript-eslint/no-misused-promises": 0,
@@ -51,6 +40,9 @@
 		"@typescript-eslint/no-unsafe-member-access": 0,
 		"@typescript-eslint/no-unsafe-call": 0,
 		"@typescript-eslint/no-unsafe-assignment": 0,
+		"@typescript-eslint/no-explicit-any": 0,
+		"@typescript-eslint/ban-ts-comment": 0,
+		"@typescript-eslint/no-unsafe-declaration-merging": 0,
 		"@typescript-eslint/no-unused-vars": [
 			"error",
 			{

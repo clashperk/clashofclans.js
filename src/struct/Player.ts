@@ -1,12 +1,12 @@
-import { HeroPets, SiegeMachines, UnrankedLeagueData, SuperTroops, BuilderTroops, HomeTroops } from '../util/Constants';
-import { APIPlayer, APIPlayerHouse, OverrideOptions } from '../types';
 import { Client } from '../client/Client';
-import { LegendStatistics } from './LegendStatistics';
+import { APIPlayer, APIPlayerHouse, OverrideOptions } from '../types';
+import { BuilderTroops, HeroPets, HomeTroops, SiegeMachines, SuperTroops, UnrankedLeagueData } from '../util/Constants';
 import { Achievement } from './Achievement';
-import { Hero, Spell, Troop } from './Unit';
-import { PlayerClan } from './PlayerClan';
-import { League } from './League';
 import { Label } from './Label';
+import { League } from './League';
+import { LegendStatistics } from './LegendStatistics';
+import { PlayerClan } from './PlayerClan';
+import { Hero, Spell, Troop } from './Unit';
 
 /** Represents a Clash of Clans Player. */
 export class Player {
@@ -97,7 +97,10 @@ export class Player {
 	/** The player's clan capital house details. */
 	public playerHouse?: APIPlayerHouse | null;
 
-	public constructor(public client: Client, data: APIPlayer) {
+	public constructor(
+		public client: Client,
+		data: APIPlayer
+	) {
 		this.name = data.name;
 		this.tag = data.tag;
 		this.townHallLevel = data.townHallLevel;

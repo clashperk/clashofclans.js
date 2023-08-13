@@ -1,6 +1,6 @@
+import { Client } from '../client/Client';
 import { APIClanMember, APIPlayerHouse, OverrideOptions } from '../types';
 import { UnrankedLeagueData } from '../util/Constants';
-import { Client } from '../client/Client';
 import { League } from './League';
 
 export class ClanMember {
@@ -43,7 +43,10 @@ export class ClanMember {
 	/** The member's player house details. */
 	public playerHouse?: APIPlayerHouse | null;
 
-	public constructor(public client: Client, data: APIClanMember) {
+	public constructor(
+		public client: Client,
+		data: APIClanMember
+	) {
 		this.name = data.name;
 		this.tag = data.tag;
 		// @ts-expect-error

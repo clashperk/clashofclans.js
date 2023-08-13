@@ -1,12 +1,16 @@
 import { EventEmitter } from 'node:events';
-import { Util } from '../util/Util';
 import {
+	APIBuilderBaseLeague,
+	APIBuilderBaseLeagueList,
+	APICapitalLeague,
+	APICapitalLeagueList,
+	APICapitalRaidSeasons,
 	APIClan,
+	APIClanBuilderBaseRankingList,
+	APIClanCapitalRankingList,
 	APIClanList,
 	APIClanMemberList,
-	APICapitalRaidSeasons,
 	APIClanRankingList,
-	APIClanBuilderBaseRankingList,
 	APIClanWar,
 	APIClanWarLeagueGroup,
 	APIClanWarLog,
@@ -18,24 +22,20 @@ import {
 	APILocation,
 	APILocationList,
 	APIPlayer,
+	APIPlayerBuilderBaseRankingList,
 	APIPlayerRankingList,
 	APIPlayerSeasonRankingList,
-	APIPlayerBuilderBaseRankingList,
 	APIVerifyToken,
 	APIWarLeague,
 	APIWarLeagueList,
-	SearchOptions,
 	ClanSearchOptions,
-	RESTOptions,
-	OverrideOptions,
 	LoginOptions,
-	APICapitalLeagueList,
-	APICapitalLeague,
-	APIClanCapitalRankingList,
-	APIBuilderBaseLeagueList,
-	APIBuilderBaseLeague
+	OverrideOptions,
+	RESTOptions,
+	SearchOptions
 } from '../types';
 import { RestEvents } from '../util/Constants';
+import { Util } from '../util/Util';
 import { RequestHandler } from './RequestHandler';
 
 export interface IRestEvents {
