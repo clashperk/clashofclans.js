@@ -1,22 +1,22 @@
 import { EventEmitter } from 'node:events';
-import { ClanSearchOptions, SearchOptions, ClientOptions, LoginOptions, OverrideOptions } from '../types';
-import { LegendLeagueId, CWLRounds, RestEvents, ClientEvents } from '../util/Constants';
 import { HTTPError } from '../rest/HTTPError';
 import { RESTManager } from '../rest/RESTManager';
+import { ClanSearchOptions, ClientOptions, LoginOptions, OverrideOptions, SearchOptions } from '../types';
+import { CWLRounds, ClientEvents, LegendLeagueId, RestEvents } from '../util/Constants';
 import { Util } from '../util/Util';
 
 import {
 	Clan,
 	ClanMember,
 	ClanWar,
+	ClanWarLeagueGroup,
 	ClanWarLog,
+	GoldPassSeason,
 	Location,
 	Player,
 	RankedClan,
 	RankedPlayer,
-	SeasonRankedPlayer,
-	GoldPassSeason,
-	ClanWarLeagueGroup
+	SeasonRankedPlayer
 } from '../struct';
 import { CapitalRaidSeason } from '../struct/CapitalRaidSeason';
 

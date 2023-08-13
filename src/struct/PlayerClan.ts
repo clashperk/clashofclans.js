@@ -1,5 +1,5 @@
-import { OverrideOptions, APIPlayerClan } from '../types';
 import { Client } from '../client/Client';
+import { APIPlayerClan, OverrideOptions } from '../types';
 import { Badge } from './Badge';
 
 /** Represents a Player's clan. */
@@ -20,7 +20,10 @@ export class PlayerClan {
 	/** Badge of this clan. */
 	public badge: Badge;
 
-	public constructor(private readonly _client: Client, data: APIPlayerClan) {
+	public constructor(
+		private readonly _client: Client,
+		data: APIPlayerClan
+	) {
 		this.name = data.name;
 		this.tag = data.tag;
 		this.level = data.clanLevel ?? null; // eslint-disable-line

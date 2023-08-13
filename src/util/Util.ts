@@ -28,8 +28,6 @@ export function timeoutSignal(timeout: number) {
 		const timeoutId = setTimeout(() => {
 			controller.abort();
 		}, timeout);
-
-		// Allow Node.js processes to exit early if only the timeout is running
 		timeoutId.unref();
 	}
 

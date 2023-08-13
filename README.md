@@ -12,7 +12,7 @@
 ### Installation
 
 -   **`npm i clashofclans.js`**
--   **Node.js v14 or newer is required.**
+-   **Node.js v16 or newer is required.**
 
 ### Links
 

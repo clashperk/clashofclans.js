@@ -1,12 +1,12 @@
 import { EventEmitter } from 'node:events';
 import { fetch, Pool } from 'undici';
-import { Response, RequestOptions, LoginOptions, Store, RequestHandlerOptions } from '../types';
+import { LoginOptions, RequestHandlerOptions, RequestOptions, Response, Store } from '../types';
 import { APIBaseURL, DevSiteAPIBaseURL } from '../util/Constants';
 import { CacheStore } from '../util/Store';
 import { timeoutSignal } from '../util/Util';
-import { QueueThrottler, BatchThrottler } from './Throttler';
 import { HTTPError, PrivateWarLogError } from './HTTPError';
 import { IRestEvents } from './RESTManager';
+import { BatchThrottler, QueueThrottler } from './Throttler';
 
 const IP_REGEX = /\d{1,3}.\d{1,3}.\d{1,3}.\d{1,3}/g;
 

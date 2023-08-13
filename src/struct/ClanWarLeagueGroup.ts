@@ -1,8 +1,8 @@
-import { APIClanWarLeagueClan, APIClanWarLeagueClanMember, APIClanWarLeagueGroup, APIClanWarLeagueRound, OverrideOptions } from '../types';
 import { Client } from '../client/Client';
+import { APIClanWarLeagueClan, APIClanWarLeagueClanMember, APIClanWarLeagueGroup, APIClanWarLeagueRound, OverrideOptions } from '../types';
+import { Badge } from './Badge';
 import { ClanWar } from './ClanWar';
 import { Player } from './Player';
-import { Badge } from './Badge';
 
 /** Represents a Clan War League member.  */
 export class ClanWarLeagueClanMember {
@@ -44,7 +44,10 @@ export class ClanWarLeagueClan {
 	/** An array of members that are in the CWL group. */
 	public members: ClanWarLeagueClanMember[];
 
-	public constructor(private readonly client: Client, data: APIClanWarLeagueClan) {
+	public constructor(
+		private readonly client: Client,
+		data: APIClanWarLeagueClan
+	) {
 		this.name = data.name;
 		this.tag = data.tag;
 		this.level = data.clanLevel;
@@ -93,7 +96,10 @@ export class ClanWarLeagueGroup {
 	/** An array containing all war tags for each round. */
 	public rounds: ClanWarLeagueRound[];
 
-	public constructor(private readonly client: Client, data: APIClanWarLeagueGroup) {
+	public constructor(
+		private readonly client: Client,
+		data: APIClanWarLeagueGroup
+	) {
 		// @ts-expect-error
 		this.state = data.state;
 		this.season = data.season;

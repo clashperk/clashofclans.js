@@ -29,13 +29,16 @@ export class CacheStore<T> implements Store<T> {
 	}
 
 	private _sweep() {
-		setInterval(() => {
-			for (const cache of this.store.values()) {
-				if (cache.expires > 0 && Date.now() > cache.expires) {
-					this.store.delete(cache.key);
+		setInterval(
+			() => {
+				for (const cache of this.store.values()) {
+					if (cache.expires > 0 && Date.now() > cache.expires) {
+						this.store.delete(cache.key);
+					}
 				}
-			}
-		}, Math.max(this.sweepInterval, 30 * 1000));
+			},
+			Math.max(this.sweepInterval, 30 * 1000)
+		);
 	}
 
 	public set(key: string, value: T, ttl = 0) {

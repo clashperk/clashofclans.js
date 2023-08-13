@@ -1,5 +1,5 @@
-import { APIClanWarLogEntry, APIWarLogClan } from '../types';
 import { Client } from '../client/Client';
+import { APIClanWarLogEntry, APIWarLogClan } from '../types';
 import { Util } from '../util/Util';
 import { Badge } from './Badge';
 
@@ -76,7 +76,10 @@ export class ClanWarLog {
 	/** The opposition clan. */
 	public opponent: WarLogClan;
 
-	public constructor(public client: Client, data: APIClanWarLogEntry) {
+	public constructor(
+		public client: Client,
+		data: APIClanWarLogEntry
+	) {
 		this.result = data.result ?? null;
 		this.endTime = Util.formatDate(data.endTime);
 		this.teamSize = data.teamSize;

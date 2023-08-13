@@ -1,5 +1,5 @@
+import { APIPlayer, APIPlayerItem } from '../types';
 import { RawData, SuperTroops } from '../util/Constants';
-import { APIPlayerItem, APIPlayer } from '../types';
 
 /** Represents a Player's Unit. */
 export class Unit {

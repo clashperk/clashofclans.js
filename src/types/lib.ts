@@ -1,4 +1,4 @@
-import { QueueThrottler, BatchThrottler } from '../rest/Throttler';
+import { BatchThrottler, QueueThrottler } from '../rest/Throttler';
 
 export interface Store<T = any> {
 	set: (key: string, value: T, ttl?: number) => boolean | Promise<boolean>;

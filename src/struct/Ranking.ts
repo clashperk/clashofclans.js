@@ -1,10 +1,10 @@
-import { APIClanRanking, APIClanBuilderBaseRanking, APIPlayerRanking, APIPlayerBuilderBaseRanking } from '../types';
-import { UnrankedLeagueData } from '../util/Constants';
 import { Client } from '../client/Client';
-import { PlayerClan } from './PlayerClan';
-import { Location } from './Location';
-import { League } from './League';
+import { APIClanBuilderBaseRanking, APIClanRanking, APIPlayerBuilderBaseRanking, APIPlayerRanking } from '../types';
+import { UnrankedLeagueData } from '../util/Constants';
 import { Badge } from './Badge';
+import { League } from './League';
+import { Location } from './Location';
+import { PlayerClan } from './PlayerClan';
 
 /** Represents the Player of seasonal legend league leader-board ranking. */
 export class SeasonRankedPlayer {
