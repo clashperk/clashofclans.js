@@ -183,7 +183,7 @@ export class PollingClient extends Client {
 		setTimeout(this.maintenanceHandler.bind(this), this._pollingInterval).unref();
 		if (!(this.listenerCount(PollingEvents.MaintenanceStart) && this.listenerCount(PollingEvents.MaintenanceEnd))) return;
 		try {
-			const res = await this.rest.getClans({ maxMembers: Math.floor(Math.random() * 40) + 10, limit: 1 });
+			const { res } = await this.rest.getClans({ maxMembers: Math.floor(Math.random() * 40) + 10, limit: 1 });
 			if (res.status === 200 && this.inMaintenance) {
 				this.inMaintenance = Boolean(false);
 				const duration = Date.now() - this._maintenanceStartTime!.getTime();

@@ -115,20 +115,22 @@ export interface RequestOptions extends OverrideOptions {
 }
 
 export interface Response<T> {
-	/** Whether the response is ok. */
-	ok: boolean;
-
 	/** The response body. */
 	data: T;
 
-	/** Path of the request for this response. */
-	path: string;
+	res: {
+		/** Whether the response is ok. */
+		ok: boolean;
 
-	/** HTTP status code of this response. */
-	status: number;
+		/** Path of the request for this response. */
+		path: string;
 
-	/** The maxAge of this response. */
-	maxAge: number;
+		/** HTTP status code of this response. */
+		status: number;
+
+		/** The maxAge of this response. */
+		maxAge: number;
+	};
 }
 
 /**

@@ -110,7 +110,10 @@ export class RequestHandler extends EventEmitter {
 	public async request<T>(path: string, options: RequestOptions = {}): Promise<Response<T>> {
 		const cached = this.cached ? (await this.cached.get(path)) ?? null : null;
 		if (cached && options.force !== true) {
-			return { data: cached.data as T, maxAge: cached.ttl - Date.now(), status: cached.status, path, ok: cached.status === 200 };
+			return {
+				data: cached.data as T,
+				res: { maxAge: cached.ttl - Date.now(), status: cached.status, path, ok: cached.status === 200 }
+			};
 		}
 
 		if (!this.throttler || options.ignoreRateLimit) return this.exec<T>(path, options);
@@ -155,13 +158,19 @@ export class RequestHandler extends EventEmitter {
 			if (this.cached && maxAge > 0 && options.cache !== false && res.statusCode === 200) {
 				await this.cached.set(path, { data, ttl: Date.now() + maxAge, status: res.statusCode }, maxAge);
 			}
-			return { data: data as T, maxAge, status: res.statusCode, path, ok: res.statusCode === 200 };
+			return {
+				data: data as T,
+				res: { maxAge, status: res.statusCode, path, ok: res.statusCode === 200 }
+			};
 		} catch (error: any) {
 			if (error.code === 'UND_ERR_ABORTED' && retries < (options.retryLimit ?? this.retryLimit)) {
 				return this.exec<T>(path, options, ++retries);
 			}
 			if (this.rejectIfNotValid) throw error;
-			return { data: { message: error.message } as unknown as T, maxAge: 0, status: 500, path, ok: false };
+			return {
+				data: { message: error.message } as unknown as T,
+				res: { maxAge: 0, status: 500, path, ok: false }
+			};
 		}
 	}
 
