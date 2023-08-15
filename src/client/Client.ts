@@ -136,8 +136,8 @@ export class Client extends EventEmitter {
 
 	/** Get info about currently running war (normal or friendly) in the clan. */
 	public async getClanWar(clanTag: string, options?: OverrideOptions) {
-		const { data, maxAge } = await this.rest.getCurrentWar(clanTag, options);
-		return new ClanWar(this, data, { clanTag, maxAge });
+		const { data, res } = await this.rest.getCurrentWar(clanTag, options);
+		return new ClanWar(this, data, { clanTag, maxAge: res.maxAge });
 	}
 
 	/**
@@ -241,8 +241,8 @@ export class Client extends EventEmitter {
 	/** Get info about a CWL round by WarTag. */
 	public async getClanWarLeagueRound(warTag: string | { warTag: string; clanTag?: string }, options?: OverrideOptions) {
 		const args = typeof warTag === 'string' ? { warTag } : { warTag: warTag.warTag, clanTag: warTag.clanTag };
-		const { data, maxAge } = await this.rest.getClanWarLeagueRound(args.warTag, options);
-		return new ClanWar(this, data, { warTag: args.warTag, clanTag: args.clanTag, maxAge });
+		const { data, res } = await this.rest.getClanWarLeagueRound(args.warTag, options);
+		return new ClanWar(this, data, { warTag: args.warTag, clanTag: args.clanTag, maxAge: res.maxAge });
 	}
 
 	/** Get info about a player by tag. */
