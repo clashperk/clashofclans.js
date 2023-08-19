@@ -169,8 +169,11 @@ export class RESTManager extends EventEmitter {
 
 	/** Verify Player API token that can be found from the Game settings. */
 	public verifyPlayerToken(playerTag: string, token: string, options?: OverrideOptions) {
-		const opts = { method: 'POST', body: JSON.stringify({ token }), ...options };
-		return this.requestHandler.request<APIVerifyToken>(`/players/${Util.encodeURI(playerTag)}/verifytoken`, opts);
+		return this.requestHandler.request<APIVerifyToken>(`/players/${Util.encodeURI(playerTag)}/verifytoken`, {
+			body: JSON.stringify({ token }),
+			method: 'POST',
+			...options
+		});
 	}
 
 	/** Get a list of Leagues. */
