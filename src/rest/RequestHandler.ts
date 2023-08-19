@@ -1,6 +1,6 @@
 import { EventEmitter } from 'node:events';
 import { fetch, Pool } from 'undici';
-import { LoginOptions, RequestHandlerOptions, RequestOptions, Response, Store } from '../types';
+import { LoginOptions, RequestHandlerOptions, RequestOptions, Result, Store } from '../types';
 import { APIBaseURL, DevSiteAPIBaseURL } from '../util/Constants';
 import { CacheStore } from '../util/Store';
 import { timeoutSignal } from '../util/Util';
@@ -66,9 +66,9 @@ export class RequestHandler extends EventEmitter {
 	private readonly retryLimit: number;
 	private readonly restRequestTimeout: number;
 	private readonly throttler?: QueueThrottler | BatchThrottler | null;
-	private readonly cached: Store<{ data: unknown; ttl: number; status: number }> | null;
+	private readonly cached: Store<{ body: unknown; ttl: number; status: number }> | null;
 
-	private readonly dispatcher!: Pool;
+	private readonly dispatcher: Pool;
 
 	public constructor(options?: RequestHandlerOptions) {
 		super();
@@ -103,15 +103,15 @@ export class RequestHandler extends EventEmitter {
 		return this;
 	}
 
-	private get creds() {
+	private get credentials() {
 		return Boolean(this.email && this.password);
 	}
 
-	public async request<T>(path: string, options: RequestOptions = {}): Promise<Response<T>> {
+	public async request<T>(path: string, options: RequestOptions = {}): Promise<Result<T>> {
 		const cached = this.cached ? (await this.cached.get(path)) ?? null : null;
 		if (cached && options.force !== true) {
 			return {
-				data: cached.data as T,
+				body: cached.body as T,
 				res: { maxAge: cached.ttl - Date.now(), status: cached.status, path, ok: cached.status === 200 }
 			};
 		}
@@ -122,12 +122,24 @@ export class RequestHandler extends EventEmitter {
 		return this.exec<T>(path, options);
 	}
 
-	private async exec<T>(path: string, options: RequestOptions = {}, retries = 0): Promise<Response<T>> {
+	public async rawRequest<T>(path: string, options: RequestOptions = {}): Promise<T> {
+		const cached = this.cached ? (await this.cached.get(path)) ?? null : null;
+		if (cached && options.force !== true) {
+			return cached.body as T;
+		}
+
+		if (!this.throttler || options.ignoreRateLimit) return this.exec<T>(path, options).then((res) => res.body);
+
+		await this.throttler.wait();
+		return this.exec<T>(path, options).then((res) => res.body);
+	}
+
+	private async exec<T>(path: string, options: RequestOptions = {}, retries = 0): Promise<Result<T>> {
 		try {
 			const res = await this.dispatcher.request({
 				path: `/v1${path}`,
 				body: options.body,
-				method: 'GET',
+				method: options.method ?? 'GET',
 				signal: timeoutSignal(options.restRequestTimeout ?? this.restRequestTimeout),
 				headers: { 'Authorization': `Bearer ${this._key}`, 'Content-Type': 'application/json' }
 			});
@@ -135,31 +147,31 @@ export class RequestHandler extends EventEmitter {
 			if (res.statusCode === 504 && retries < (options.retryLimit ?? this.retryLimit)) {
 				return await this.exec<T>(path, options, ++retries);
 			}
-			const data = (await res.body.json()) as ResponseBody;
+			const body = (await res.body.json()) as ResponseBody;
 
 			if (
-				this.creds &&
+				this.credentials &&
 				res.statusCode === 403 &&
-				data?.reason === 'accessDenied.invalidIp' &&
+				body?.reason === 'accessDenied.invalidIp' &&
 				retries < (options.retryLimit ?? this.retryLimit)
 			) {
-				const keys = await this.reValidateKeys().then(() => () => this.login());
+				const keys = await this.reValidateKeys().then(() => this.login());
 				if (keys.length) return await this.exec<T>(path, options, ++retries);
 			}
 
 			const maxAge = Number((res.headers['cache-control'] as string | null)?.split('=')?.[1] ?? 0) * 1000;
 
-			if (res.statusCode === 403 && !data?.message && this.rejectIfNotValid) {
+			if (res.statusCode === 403 && !body?.message && this.rejectIfNotValid) {
 				throw new HTTPError(PrivateWarLogError, res.statusCode, path, maxAge);
 			}
 			if (res.statusCode !== 200 && this.rejectIfNotValid) {
-				throw new HTTPError(data, res.statusCode, path, maxAge, options.method);
+				throw new HTTPError(body, res.statusCode, path, maxAge, options.method);
 			}
 			if (this.cached && maxAge > 0 && options.cache !== false && res.statusCode === 200) {
-				await this.cached.set(path, { data, ttl: Date.now() + maxAge, status: res.statusCode }, maxAge);
+				await this.cached.set(path, { body, ttl: Date.now() + maxAge, status: res.statusCode }, maxAge);
 			}
 			return {
-				data: data as T,
+				body: body as T,
 				res: { maxAge, status: res.statusCode, path, ok: res.statusCode === 200 }
 			};
 		} catch (error: any) {
@@ -168,7 +180,7 @@ export class RequestHandler extends EventEmitter {
 			}
 			if (this.rejectIfNotValid) throw error;
 			return {
-				data: { message: error.message } as unknown as T,
+				body: { message: error.message } as unknown as T,
 				res: { maxAge: 0, status: 500, path, ok: false }
 			};
 		}
@@ -183,8 +195,7 @@ export class RequestHandler extends EventEmitter {
 		this.password = options.password;
 		this.email = options.email;
 
-		await this.reValidateKeys();
-		return this.login();
+		return this.reValidateKeys().then(() => this.login());
 	}
 
 	private async reValidateKeys() {

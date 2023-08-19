@@ -1,3 +1,4 @@
+import { Dispatcher } from 'undici';
 import { BatchThrottler, QueueThrottler } from '../rest/Throttler';
 
 export interface Store<T = any> {
@@ -111,12 +112,12 @@ export interface RequestOptions extends OverrideOptions {
 	body?: string;
 
 	/** The request method. */
-	method?: string;
+	method?: Dispatcher.HttpMethod;
 }
 
-export interface Response<T> {
+export interface Result<T> {
 	/** The response body. */
-	data: T;
+	body: T;
 
 	res: {
 		/** Whether the response is ok. */
