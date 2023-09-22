@@ -1,6 +1,7 @@
 import { Client } from '../client/Client';
 import { APIClanWar, APIClanWarAttack, APIClanWarMember, APIWarClan } from '../types';
 import { FriendlyWarPreparationTimes } from '../util/Constants';
+import { getWarResult } from '../util/Helper';
 import { Badge } from './Badge';
 
 /** Represents a Clash of Clans War Attack. */
@@ -360,12 +361,16 @@ export class ClanWar {
 	/** Returns the war status, based off the home clan. */
 	public get status() {
 		if (this.state === 'preparation') return 'pending';
-		if (this.clan.stars > this.opponent.stars) return 'win';
-		if (this.clan.stars === this.opponent.stars) {
-			if (this.clan.destruction > this.opponent.destruction) return 'win';
-			if (this.clan.destruction === this.opponent.destruction) return 'tie';
-		}
-		return 'lose';
+		return getWarResult(
+			{
+				stars: this.clan.stars,
+				destructionPercentage: this.clan.destruction
+			},
+			{
+				stars: this.opponent.stars,
+				destructionPercentage: this.opponent.destruction
+			}
+		);
 	}
 
 	/** Returns the Clan War League Group. */

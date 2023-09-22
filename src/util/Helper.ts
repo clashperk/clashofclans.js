@@ -1,4 +1,5 @@
 import { APICapitalRaidSeason } from '../types';
+import { FriendlyWarPreparationTimes } from './Constants';
 
 export const calculateRaidsCompleted = (attackLog: APICapitalRaidSeason['attackLog']) => {
 	let total = 0;
@@ -45,3 +46,27 @@ export const calculateOffensiveRaidMedals = (attackLog: APICapitalRaidSeason['at
 	if (totalMedals !== 0) totalMedals = Math.ceil(totalMedals / attacksDone);
 	return Math.max(totalMedals, offensiveReward);
 };
+
+export const isFriendlyWar = (preparationStartTime: Date, startTime: Date) => {
+	const preparationTime = startTime.getTime() - preparationStartTime.getTime();
+	return FriendlyWarPreparationTimes.includes(preparationTime);
+};
+
+export const getWarResult = (clan: PartialWarClan, opponent: PartialWarClan) => {
+	if (clan.stars > opponent.stars) return 'win';
+	if (clan.stars === opponent.stars) {
+		if (clan.destructionPercentage > opponent.destructionPercentage) return 'win';
+		if (clan.destructionPercentage === opponent.destructionPercentage) return 'tie';
+	}
+	return 'lose';
+};
+
+export const isWarWinner = (clan: PartialWarClan, opponent: PartialWarClan) => {
+	const result = getWarResult(clan, opponent);
+	return result === 'win';
+};
+
+export interface PartialWarClan {
+	stars: number;
+	destructionPercentage: number;
+}

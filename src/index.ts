@@ -9,3 +9,4 @@ export * from './types';
 export * from './util/Constants';
 export * from './util/Store';
 export * from './util/Util';
+export * from './util/Helper';
