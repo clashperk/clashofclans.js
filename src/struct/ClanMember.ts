@@ -1,5 +1,5 @@
 import { Client } from '../client/Client';
-import { APIClanMember, APIPlayerHouse, OverrideOptions } from '../types';
+import { APIClanMember, APILeague, APIPlayerHouse, OverrideOptions } from '../types';
 import { UnrankedLeagueData } from '../util/Constants';
 import { League } from './League';
 
@@ -16,8 +16,14 @@ export class ClanMember {
 	/** The member's experience level. */
 	public expLevel: number;
 
+	/** The member's Town Hall level. */
+	public townHallLevel: number;
+
 	/** The member's current League. */
 	public league: League;
+
+	/** The member's current Builder Base League. */
+	public builderBaseLeague: Omit<APILeague, 'iconUrls'> | null;
 
 	/** The member's trophy count. */
 	public trophies: number;
@@ -62,6 +68,8 @@ export class ClanMember {
 		this.donations = data.donations;
 		this.playerHouse = data.playerHouse ?? null;
 		this.received = data.donationsReceived;
+		this.townHallLevel = data.townHallLevel;
+		this.builderBaseLeague = data.builderBaseLeague ?? null;
 	}
 
 	/** Whether this clan member is in the clan. */

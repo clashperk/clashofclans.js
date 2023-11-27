@@ -83,7 +83,9 @@ export interface APIClanMember {
 	tag: string;
 	role: 'member' | 'admin' | 'coLeader' | 'leader';
 	expLevel: number;
+	townHallLevel: number;
 	league: APILeague;
+	builderBaseLeague?: Omit<APILeague, 'iconUrls'>;
 	trophies: number;
 	builderBaseTrophies?: number;
 	/** @deprecated */
