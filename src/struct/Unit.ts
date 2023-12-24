@@ -73,6 +73,8 @@ export class Unit {
 	public minOriginalLevel!: number | null;
 	/** @internal */
 	public originalName!: string | null;
+	/** @internal */
+	public equipment!: HeroEquipment[];
 
 	// #endregion static
 
@@ -112,6 +114,7 @@ export class Unit {
 			this.upgradeResource = original.upgrade.resource;
 			this.upgradeTime = original.upgrade.time[origin.level - 1] || 0;
 			this.hallMaxLevel = original.levels[data.townHallLevel - 1];
+			this.equipment = (unit.equipment ?? []).map((unit) => new HeroEquipment(data, unit));
 		} else if (rawUnit) {
 			// special case for the builder base
 			this.level = this.level === 0 ? 0 : Math.max(this.level, rawUnit.minLevel ?? this.level);
@@ -151,11 +154,6 @@ export class Unit {
 	/** Whether the unit is at max level. */
 	public get isMax() {
 		return this.level === this.maxLevel;
-	}
-
-	/** Icon of this unit. */
-	public get iconURL() {
-		return `https://clashofclans.js.org/assets/${this.name.replace(/ /gi, '_')}.png`;
 	}
 }
 
@@ -197,4 +195,10 @@ export class Spell extends Unit {}
 export class Hero extends Unit {
 	/** Regeneration time of this hero. */
 	public regenerationTime!: number;
+
+	/** Hero Equipment */
+	public equipment!: HeroEquipment[];
 }
+
+/** Represents a Player's Hero Equipment. */
+export class HeroEquipment extends Unit {}

@@ -55,13 +55,9 @@ export interface APIClan {
 	clanLevel: number;
 	clanPoints: number;
 	clanBuilderBasePoints: number;
-	/** @deprecated */
-	clanVersusPoints?: number;
 	requiredTrophies: number;
 	requiredTownhallLevel?: number;
 	requiredBuilderBaseTrophies?: number;
-	/** @deprecated */
-	requiredVersusTrophies?: number;
 	warFrequency: 'always' | 'moreThanOncePerWeek' | 'oncePerWeek' | 'lessThanOncePerWeek' | 'never' | 'unknown';
 	warWinStreak: number;
 	warWins: number;
@@ -88,8 +84,6 @@ export interface APIClanMember {
 	builderBaseLeague?: Omit<APILeague, 'iconUrls'>;
 	trophies: number;
 	builderBaseTrophies?: number;
-	/** @deprecated */
-	versusTrophies?: number;
 	clanRank: number;
 	previousClanRank: number;
 	donations: number;
@@ -292,10 +286,6 @@ export interface APIPlayer {
 	builderHallLevel?: number;
 	builderBaseTrophies?: number;
 	bestBuilderBaseTrophies?: number;
-	/** @deprecated */
-	versusBattleWins?: number;
-	/** @deprecated */
-	versusTrophies?: number;
 	donations: number;
 	donationsReceived: number;
 	clanCapitalContributions: number;
@@ -312,6 +302,7 @@ export interface APIPlayer {
 	troops: APIPlayerItem[];
 	heroes: APIPlayerItem[];
 	spells: APIPlayerItem[];
+	heroEquipment: APIPlayerItem[];
 	labels: APILabel[];
 	playerHouse?: APIPlayerHouse;
 }
@@ -347,6 +338,7 @@ export interface APIPlayerItem {
 	level: number;
 	maxLevel: number;
 	superTroopIsActive?: boolean;
+	equipment?: APIPlayerItem[];
 	village: 'home' | 'builderBase';
 }
 
@@ -427,8 +419,6 @@ export interface APIClanBuilderBaseRanking {
 	previousRank: number;
 	badgeUrls: APIBadge;
 	clanBuilderBasePoints: number;
-	/** @deprecated */
-	clanVersusPoints?: number;
 }
 
 /** /locations/{locationId}/rankings/players-builder-base */
@@ -442,10 +432,6 @@ export interface APIPlayerBuilderBaseRanking {
 	name: string;
 	expLevel: number;
 	builderBaseTrophies: number;
-	/** @deprecated */
-	versusBattleWins?: number;
-	/** @deprecated */
-	versusTrophies?: number;
 	rank: number;
 	previousRank: number;
 	clan?: APIPlayerClan;
