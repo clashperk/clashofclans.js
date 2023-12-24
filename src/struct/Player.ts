@@ -6,7 +6,7 @@ import { Label } from './Label';
 import { League } from './League';
 import { LegendStatistics } from './LegendStatistics';
 import { PlayerClan } from './PlayerClan';
-import { Hero, Spell, Troop } from './Unit';
+import { Hero, HeroEquipment, Spell, Troop } from './Unit';
 
 /** Represents a Clash of Clans Player. */
 export class Player {
@@ -46,14 +46,8 @@ export class Player {
 	/** The player's builder base trophy count. */
 	public builderBaseTrophies: number | null;
 
-	/** @deprecated */
-	public versusTrophies?: number | null;
-
 	/** The player's best builder base trophies. */
 	public bestBuilderBaseTrophies: number | null;
-
-	/** @deprecated */
-	public versusBattleWins: number | null;
 
 	/** The player's donation count for this season. */
 	public donations: number;
@@ -94,6 +88,9 @@ export class Player {
 	/** An array of player's heroes (both home base and build base). */
 	public heroes: Hero[];
 
+	/** An array of player's hero equipment. */
+	public heroEquipment: HeroEquipment[];
+
 	/** The player's clan capital house details. */
 	public playerHouse?: APIPlayerHouse | null;
 
@@ -114,8 +111,6 @@ export class Player {
 		this.builderHallLevel = data.builderHallLevel ?? null;
 		this.builderBaseTrophies = data.builderBaseTrophies ?? null;
 		this.bestBuilderBaseTrophies = data.bestBuilderBaseTrophies ?? null;
-		this.versusBattleWins = data.versusBattleWins ?? null;
-		this.versusTrophies = data.versusTrophies ?? null;
 		this.donations = data.donations;
 		this.received = data.donationsReceived;
 		this.clanCapitalContributions = data.clanCapitalContributions;
@@ -131,6 +126,7 @@ export class Player {
 		this.troops = data.troops.map((unit) => new Troop(data, unit));
 		this.spells = data.spells.map((unit) => new Spell(data, unit));
 		this.heroes = data.heroes.map((unit) => new Hero(data, unit));
+		this.heroEquipment = data.heroEquipment.map((unit) => new HeroEquipment(data, unit));
 
 		this.playerHouse = data.playerHouse ?? null;
 	}

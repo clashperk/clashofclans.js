@@ -73,12 +73,6 @@ export class RankedPlayer {
 	/** The player's builder base trophy count. If retrieving info for regular leader-boards, this will be `null`. */
 	public builderBaseTrophies: number | null;
 
-	/** @deprecated */
-	public versusBattleWins: number | null;
-
-	/** @deprecated */
-	public versusTrophies?: number | null;
-
 	/** The player's rank in the clan leader-board. */
 	public rank: number;
 
@@ -103,10 +97,6 @@ export class RankedPlayer {
 		this.defenseWins = data.defenseWins ?? null;
 		// @ts-expect-error
 		this.builderBaseTrophies = data.builderBaseTrophies ?? null;
-		// @ts-expect-error
-		this.versusBattleWins = data.versusBattleWins ?? null;
-		// @ts-expect-error
-		this.versusTrophies = data.versusTrophies ?? null;
 		this.rank = data.rank;
 		this.previousRank = data.previousRank ?? null; // eslint-disable-line
 		// @ts-expect-error
@@ -138,9 +128,6 @@ export class RankedClan {
 	/** The clan's builder base trophy count. If retrieving info for regular leader boards, this will be `null`. */
 	public builderBasePoints: number | null;
 
-	/** @deprecated */
-	public versusPoints?: number | null;
-
 	/** The clan's location. */
 	public location: Location;
 
@@ -164,8 +151,6 @@ export class RankedClan {
 		this.points = data.clanPoints ?? null;
 		// @ts-expect-error
 		this.builderBasePoints = data.clanBuilderBasePoints ?? null;
-		// @ts-expect-error
-		this.versusPoints = data.clanVersusPoints ?? null;
 		this.location = new Location(data.location);
 		this.memberCount = data.members;
 		this.rank = data.rank;
