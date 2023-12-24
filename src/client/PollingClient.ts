@@ -10,6 +10,9 @@ import { Client } from './Client';
  * const { PollingClient } = require('clashofclans.js');
  * const pollingClient = new PollingClient({ keys: ['***'] });
  * ```
+ * @deprecated The API lacks socket-based real-time events. It is recommended to implement your own custom polling system.
+ * Pull data at specified intervals, compare with previous values, and emit events on change.
+ * Consider using Node.js clusters for efficient parallel processing.
  */
 export class PollingClient extends Client {
 	private readonly _clanTags = new Set<string>();

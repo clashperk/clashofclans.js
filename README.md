@@ -11,61 +11,51 @@
 
 ### Installation
 
--   **`npm i clashofclans.js`**
--   **Node.js v16 or newer is required.**
+- **`npm i clashofclans.js`**
+- **Node.js v16 or newer is required.**
 
 ### Links
 
--   [Documentation](https://clashofclans.js.org/docs/)
--   [Clash of Clans Developer Website](https://developer.clashofclans.com/)
--   [Clash of Clans API Community Discord](https://discord.gg/Eaja7gJ)
+- [Documentation](https://clashofclans.js.org/docs/)
+- [Clash of Clans Developer Website](https://developer.clashofclans.com/)
+- [Clash of Clans API Community Discord](https://discord.gg/Eaja7gJ)
 
 ### Examples
 
 ```js
 const { Client } = require('clashofclans.js');
-const client = new Client();
-// const client = new Client({ keys: [], cache: true, retryLimit: 2, restRequestTimeout: 5000 });
-
-(async function () {
-    await client.login({ email: 'developer@email.com', password: '***' });
-
-    const clan = await client.getClan('#2PP');
-    console.log(`${clan.name} (${clan.tag})`);
-})();
 ```
 
-### Custom Polling Event
-
-> **Warning** <br />
-> Events are neither real-time nor supported by the API. They are polled frequently and compared with the cached data. If there is a difference, the event is emitted.
+#### Login with Email Password
 
 ```js
-const { PollingClient, BatchThrottler } = require('clashofclans.js');
-const pollingClient = new PollingClient({
-    cache: true,
-    retryLimit: 1,
-    restRequestTimeout: 5000,
-    throttler: new BatchThrottler(20)
-});
-
-pollingClient.addClans(['#8QU8J9LP', '#8P2QG08P']);
-pollingClient.setClanEvent({
-    name: 'clanDescriptionChange',
-    filter: (oldClan, newClan) => {
-        return oldClan.description !== newClan.description;
-    }
-});
-
-pollingClient.on('clanDescriptionChange', (oldClan, newClan) => {
-    console.log(oldClan.description, newClan.description);
-});
+const client = new Client();
 
 (async function () {
-    await pollingClient.login({ email: 'developer@email.com', password: '***' });
-    await pollingClient.init();
+  // This method should be called once when application starts.
+  await client.login({ email: 'developer@email.com', password: '***' });
+
+  const clan = await client.getClan('#2PP');
+  console.log(`${clan.name} (${clan.tag})`);
 })();
 ```
+
+#### Login with API Keys
+
+```js
+const client = new Client({ keys: ['api_key_goes_here'] });
+
+(async function () {
+  const clan = await client.getClan('#2PP');
+  console.log(`${clan.name} (${clan.tag})`);
+})();
+```
+
+### Events
+
+The API lacks socket-based real-time events. It is recommended to implement your own custom polling system.
+Pull data at specified intervals, compare with previous values, and emit events on change.
+Consider using Node.js clusters and threads for efficient parallel processing.
 
 ### Disclaimer
 
