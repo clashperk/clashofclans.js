@@ -87,7 +87,7 @@ export class Unit {
 		const rawSuperUnit = RawData.RawSuperUnits.find((unit) => unit.name === this.name && this.isHomeBase);
 		const rawUnit = RawData.RawUnits.find((unit) => unit.name === this.name && unit.village === this.village);
 
-		if (rawSuperUnit) {
+		if (rawSuperUnit && data.townHallLevel >= 11) {
 			this.id = rawSuperUnit.id;
 			this.housingSpace = rawSuperUnit.housingSpace;
 
