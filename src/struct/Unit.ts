@@ -105,14 +105,15 @@ export class Unit {
 			this.dps = rawUnit!.dps[this.level - 1] ?? 0;
 			this.trainingTime = Number(rawUnit!.trainingTime);
 
-			const origin = data.troops.find((troop) => troop.village === 'home' && troop.name === original.name)!;
-			this.level = origin.level;
-			this.maxLevel = origin.maxLevel;
-			this.boostable = data.townHallLevel >= 11 && origin.level >= rawSuperUnit.minOriginalLevel;
-
-			this.upgradeCost = original.upgrade.cost[origin.level - 1] || 0;
+			const origin = data.troops.find((troop) => troop.village === 'home' && troop.name === original.name);
+			if (origin) {
+				this.level = origin.level;
+				this.maxLevel = origin.maxLevel;
+				this.boostable = data.townHallLevel >= 11 && origin.level >= rawSuperUnit.minOriginalLevel;
+				this.upgradeCost = original.upgrade.cost[origin.level - 1] || 0;
+				this.upgradeTime = original.upgrade.time[origin.level - 1] || 0;
+			}
 			this.upgradeResource = original.upgrade.resource;
-			this.upgradeTime = original.upgrade.time[origin.level - 1] || 0;
 			this.hallMaxLevel = original.levels[data.townHallLevel - 1] ?? this.maxLevel;
 		} else if (rawUnit) {
 			// special case for the builder base
