@@ -1,23 +1,23 @@
-name: ESLint
+name: build-and-test
 
 on:
   push:
 
 jobs:
   build:
-    name: ESLint
+    name: build-and-test
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
 
-      - name: Use Node.js 16
+      - name: Use Node.js 18
         uses: actions/setup-node@v2
         with:
-          node-version: 16
+          node-version: 18
 
       - name: NPM Install
         run: npm i
 
-      - name: ESLint
-        run: npm lint:test
+      - name: Test
+        run: npm test
