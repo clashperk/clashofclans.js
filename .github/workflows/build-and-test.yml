@@ -21,3 +21,5 @@ jobs:
 
       - name: Test
         run: npm test
+        env:
+          BASE_URL: ${{ secrets.BASE_URL }}
