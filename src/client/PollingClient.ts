@@ -205,7 +205,7 @@ export class PollingClient extends Client {
 	}
 
 	private seasonEndHandler() {
-		const end = this.util.getSeasonEndTime().getTime() - Date.now();
+		const end = this.util.getSeason().endTime.getTime() - Date.now();
 		// Why this? setTimeout can be up to 24.8 days or 2147483647ms [(2^31 - 1) Max 32bit Integer]
 		if (end > 24 * 60 * 60 * 1000) {
 			setTimeout(this.seasonEndHandler.bind(this), 60 * 60 * 1000);
