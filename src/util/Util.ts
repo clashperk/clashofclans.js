@@ -110,32 +110,52 @@ export class Util extends null {
 		return query.length ? `?${query}` : query;
 	}
 
-	private static getSeasonEnd(month: number, year: number, autoFix = true): Date {
-		const now = new Date();
-		now.setUTCFullYear(year);
-		now.setUTCMonth(month, 0);
-		now.setUTCHours(5, 0, 0, 0);
+	private static getSeasonStart(inputDate: Date) {
+		const lastMonthLastDay = new Date(Date.UTC(inputDate.getUTCFullYear(), inputDate.getUTCMonth(), 0));
+		const lastMonthLastMonday = new Date(lastMonthLastDay);
+		lastMonthLastMonday.setUTCDate(lastMonthLastMonday.getUTCDate() - ((lastMonthLastDay.getUTCDay() + 6) % 7));
+		lastMonthLastMonday.setUTCHours(5, 0, 0, 0);
 
-		const newDate = now.getUTCDay() === 0 ? now.getUTCDate() - 6 : now.getUTCDate() - (now.getUTCDay() - 1);
-		now.setUTCDate(newDate);
+		return lastMonthLastMonday;
+	}
 
-		if (Date.now() >= now.getTime() && autoFix) {
-			return this.getSeasonEnd(month + 1, year);
+	private static getSeasonEnd(inputDate: Date, forward = true): Date {
+		const lastDayOfMonth = new Date(Date.UTC(inputDate.getUTCFullYear(), inputDate.getUTCMonth() + 1, 0));
+		const lastMonday = new Date(lastDayOfMonth);
+		lastMonday.setUTCDate(lastMonday.getUTCDate() - ((lastDayOfMonth.getUTCDay() + 6) % 7));
+
+		lastMonday.setUTCHours(5, 0, 0, 0);
+
+		// check if the last Monday is in the past relative to the input date
+		if (lastMonday.getTime() < inputDate.getTime() && forward) {
+			// calculate the last Monday of the next month
+			const nextMonth = new Date(Date.UTC(inputDate.getUTCFullYear(), inputDate.getUTCMonth() + 1, 1));
+			const nextMonthLastDay = new Date(Date.UTC(nextMonth.getUTCFullYear(), nextMonth.getUTCMonth() + 1, 0));
+			const nextMonthLastMonday = new Date(nextMonthLastDay);
+			nextMonthLastMonday.setUTCDate(nextMonthLastMonday.getUTCDate() - ((nextMonthLastDay.getUTCDay() + 6) % 7));
+
+			nextMonthLastMonday.setUTCHours(5, 0, 0, 0);
+
+			return nextMonthLastMonday;
 		}
 
-		return now;
+		return lastMonday;
 	}
 
 	/** Get current trophy season Id. */
 	public static getSeasonId() {
-		return this.getSeasonEndTime().toISOString().substring(0, 7);
+		return this.getSeasonEnd(new Date()).toISOString().substring(0, 7);
 	}
 
-	/** Get trophy season end timestamp. */
-	public static getSeasonEndTime(timestamp?: Date) {
-		const autoFix = !(timestamp instanceof Date);
-		const date = timestamp instanceof Date ? timestamp : new Date();
-		return this.getSeasonEnd(date.getUTCMonth() + 1, date.getUTCFullYear(), autoFix);
+	/**
+	 * Get the timestamp for the last Monday of the previous month.
+	 * @param {Date} timestamp - The reference date. Defaults to the current date if not provided.
+	 * @param {boolean} forward - Whether to forward to the next month if the returned date is in the past relative to the given timestamp. Defaults to true.
+	 */
+	public static getSeason(timestamp?: Date, forward: boolean = true) {
+		const endTime = this.getSeasonEnd(timestamp ?? new Date(), forward);
+		const startTime = this.getSeasonStart(endTime);
+		return { endTime, startTime };
 	}
 
 	public static async allSettled<T>(values: Promise<T>[]) {

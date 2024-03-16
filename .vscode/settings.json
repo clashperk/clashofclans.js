@@ -5,5 +5,7 @@
 	],
 	"editor.tabSize": 4,
 	"editor.detectIndentation": false,
-	"editor.insertSpaces": false
+	"editor.insertSpaces": false,
+	"jest.runMode": "on-demand",
+	"jest.nodeEnv": null
 }
