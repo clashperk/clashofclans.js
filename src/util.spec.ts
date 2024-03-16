@@ -5,13 +5,25 @@ describe('util', () => {
 		expect(new Date().getTimezoneOffset()).toBe(0);
 	});
 
-	it('should forward to next month if date is in past', async () => {
+	it('should forward to next month if the given date is in the past', async () => {
 		const timestamp = new Date('2024-03-25T05:01');
 
 		const { endTime, startTime } = Util.getSeason(timestamp);
 
 		const expectedEndTime = new Date('2024-04-29T05:00').toISOString();
 		const expectedStartTime = new Date('2024-03-25T05:00').toISOString();
+
+		expect(endTime.toISOString()).toBe(expectedEndTime);
+		expect(startTime.toISOString()).toBe(expectedStartTime);
+	});
+
+	it('should not forward to next month even if the given date is in the past', async () => {
+		const timestamp = new Date('2024-03-25T05:01');
+
+		const { endTime, startTime } = Util.getSeason(timestamp, false);
+
+		const expectedEndTime = new Date('2024-03-25T05:00').toISOString();
+		const expectedStartTime = new Date('2024-02-26T05:00').toISOString();
 
 		expect(endTime.toISOString()).toBe(expectedEndTime);
 		expect(startTime.toISOString()).toBe(expectedStartTime);

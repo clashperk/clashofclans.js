@@ -142,13 +142,13 @@ export class Util extends null {
 		return lastMonday;
 	}
 
-	/** Get current trophy season Id. */
+	/** Get the current season ID. */
 	public static getSeasonId() {
 		return this.getSeasonEnd(new Date()).toISOString().substring(0, 7);
 	}
 
 	/**
-	 * Get the timestamp for the last Monday of the previous month.
+	 * Get the season start and end timestamp.
 	 * @param {Date} timestamp - The reference date. Defaults to the current date if not provided.
 	 * @param {boolean} forward - Whether to forward to the next month if the returned date is in the past relative to the given timestamp. Defaults to true.
 	 */

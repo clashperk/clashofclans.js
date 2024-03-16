@@ -1,11 +1,8 @@
 {
 	"editor.formatOnSave": true,
-	"editor.codeActionsOnSave": [
-		"source.organizeImports"
-	],
+	"editor.codeActionsOnSave": ["source.organizeImports"],
 	"editor.tabSize": 4,
 	"editor.detectIndentation": false,
 	"editor.insertSpaces": false,
-	"jest.runMode": "on-demand",
-	"jest.nodeEnv": null
+	"jest.runMode": "on-demand"
 }
