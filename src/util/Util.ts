@@ -71,7 +71,7 @@ export class Util extends null {
 	 * ```
 	 */
 	public static encodeTag(tag: string) {
-		const formatted = this.formatTag(tag).substring(1);
+		const formatted = this.formatTag(tag).slice(1);
 		if (!this.isValidTag(formatted)) {
 			throw new TypeError(`Failed to encode tag ${formatted}. RegExp matching failed.`);
 		}
@@ -110,7 +110,7 @@ export class Util extends null {
 		return query.length ? `?${query}` : query;
 	}
 
-	private static getSeasonStart(inputDate: Date) {
+	public static getSeasonStart(inputDate: Date) {
 		const lastMonthLastDay = new Date(Date.UTC(inputDate.getUTCFullYear(), inputDate.getUTCMonth(), 0));
 		const lastMonthLastMonday = new Date(lastMonthLastDay);
 		lastMonthLastMonday.setUTCDate(lastMonthLastMonday.getUTCDate() - ((lastMonthLastDay.getUTCDay() + 6) % 7));
@@ -119,7 +119,7 @@ export class Util extends null {
 		return lastMonthLastMonday;
 	}
 
-	private static getSeasonEnd(inputDate: Date, forward = true): Date {
+	public static getSeasonEnd(inputDate: Date, forward = true): Date {
 		const lastDayOfMonth = new Date(Date.UTC(inputDate.getUTCFullYear(), inputDate.getUTCMonth() + 1, 0));
 		const lastMonday = new Date(lastDayOfMonth);
 		lastMonday.setUTCDate(lastMonday.getUTCDate() - ((lastDayOfMonth.getUTCDay() + 6) % 7));
@@ -144,7 +144,7 @@ export class Util extends null {
 
 	/** Get the current season ID. */
 	public static getSeasonId() {
-		return this.getSeasonEnd(new Date()).toISOString().substring(0, 7);
+		return this.getSeasonEnd(new Date()).toISOString().slice(0, 7);
 	}
 
 	/**
