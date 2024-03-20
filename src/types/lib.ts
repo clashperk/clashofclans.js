@@ -67,6 +67,8 @@ export interface RequestHandlerOptions extends ClientOptions {
 
 	/** The amount of concurrent requests to be sent over the single TCP/TLS connection according to RFC7230. Default: 1 */
 	pipelining?: number;
+
+	onError?: (args: { path: string; status: number; body: unknown }) => unknown;
 }
 
 /** Search options for request. */

@@ -67,12 +67,14 @@ export class RequestHandler extends EventEmitter {
 	private readonly restRequestTimeout: number;
 	private readonly throttler?: QueueThrottler | BatchThrottler | null;
 	private readonly cached: Store<{ body: unknown; ttl: number; status: number }> | null;
+	private readonly onError?: (args: { path: string; status: number; body: unknown }) => unknown;
 
 	private readonly dispatcher: Pool;
 
 	public constructor(options?: RequestHandlerOptions) {
 		super();
 
+		this.onError = options?.onError;
 		this.keys = options?.keys ?? [];
 		this.retryLimit = options?.retryLimit ?? 0;
 		this.throttler = options?.throttler ?? null;
@@ -119,6 +121,7 @@ export class RequestHandler extends EventEmitter {
 		if (!this.throttler || options.ignoreRateLimit) return this.exec<T>(path, options);
 
 		await this.throttler.wait();
+
 		return this.exec<T>(path, options);
 	}
 
@@ -131,10 +134,20 @@ export class RequestHandler extends EventEmitter {
 		if (!this.throttler || options.ignoreRateLimit) return this.exec<T>(path, options).then((res) => res.body);
 
 		await this.throttler.wait();
-		return this.exec<T>(path, options).then((res) => res.body);
+
+		const result = await this.exec<T>(path, options);
+		return result.body;
 	}
 
 	private async exec<T>(path: string, options: RequestOptions = {}, retries = 0): Promise<Result<T>> {
+		const result = await this.dispatch(path, options, retries);
+
+		this.onError?.({ path, status: result.res.status, body: result.body });
+
+		return result as Result<T>;
+	}
+
+	private async dispatch<T>(path: string, options: RequestOptions = {}, retries = 0): Promise<Result<T>> {
 		try {
 			const res = await this.dispatcher.request({
 				path: `/v1${path}`,
