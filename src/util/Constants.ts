@@ -23,7 +23,18 @@ export const ElixirTroops = [
 	'Root Rider'
 ];
 
-export const DarkElixirTroops = ['Minion', 'Hog Rider', 'Valkyrie', 'Golem', 'Witch', 'Lava Hound', 'Bowler', 'Ice Golem', 'Headhunter', 'Apprentice Warden'];
+export const DarkElixirTroops = [
+	'Minion',
+	'Hog Rider',
+	'Valkyrie',
+	'Golem',
+	'Witch',
+	'Lava Hound',
+	'Bowler',
+	'Ice Golem',
+	'Headhunter',
+	'Apprentice Warden'
+];
 
 export const HomeTroops = [...ElixirTroops, ...DarkElixirTroops];
 
@@ -87,7 +98,18 @@ export const BuilderTroops = [
 
 export const Heroes = ['Barbarian King', 'Archer Queen', 'Grand Warden', 'Royal Champion', 'Battle Machine', 'Battle Copter'];
 
-export const HeroPets = ['L.A.S.S.I', 'Electro Owl', 'Mighty Yak', 'Unicorn', 'Poison Lizard', 'Diggy', 'Frosty', 'Phoenix', 'Spirit Fox', 'Angry Jelly'];
+export const HeroPets = [
+	'L.A.S.S.I',
+	'Electro Owl',
+	'Mighty Yak',
+	'Unicorn',
+	'Poison Lizard',
+	'Diggy',
+	'Frosty',
+	'Phoenix',
+	'Spirit Fox',
+	'Angry Jelly'
+];
 
 export const UnrankedLeagueData = {
 	id: 29000000,

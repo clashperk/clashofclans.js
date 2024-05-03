@@ -7,11 +7,11 @@ describe('root', () => {
 		const result = await client.login({
 			email: process.env.EMAIL!,
 			password: process.env.PASSWORD!,
-			keyCount: 10,
+			keyCount: 2,
 			keyName: 'prod_key'
 		});
 		console.log({
-			result: result.join(',')
+			result: result.length
 		});
 		expect(result).toBeDefined();
 	}, 60_000);
