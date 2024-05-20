@@ -1,14 +1,13 @@
-name: Docs
+name: publish-docs
 
 on:
   workflow_dispatch:
-  push:
-    branches: [stable]
+  release:
+    types: [created]
 
 jobs:
   build:
-    if: github.ref == 'refs/heads/stable'
-    name: Docs (Stable)
+    name: publish-docs
     runs-on: ubuntu-latest
 
     steps:

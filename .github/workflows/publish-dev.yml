@@ -1,4 +1,4 @@
-name: Publish Dev
+name: npm-publish-dev
 
 on:
   workflow_dispatch:
@@ -7,8 +7,9 @@ on:
 
 jobs:
   build:
-    name: Pre-Release
+    name: npm-publish-dev
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2

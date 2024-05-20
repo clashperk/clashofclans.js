@@ -1,4 +1,4 @@
-name: Node.js Package
+name: npm-release
 
 on:
   release:
@@ -6,8 +6,9 @@ on:
 
 jobs:
   build:
-    name: Build
+    name: npm-release
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
