@@ -1,12 +1,13 @@
-name: ESLint
+name: eslint
 
 on:
   push:
 
 jobs:
   build:
-    name: ESLint
+    name: eslint
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
