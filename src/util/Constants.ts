@@ -20,7 +20,8 @@ export const ElixirTroops = [
 	'Yeti',
 	'Dragon Rider',
 	'Electro Titan',
-	'Root Rider'
+	'Root Rider',
+	'Druid'
 ];
 
 export const DarkElixirTroops = [
