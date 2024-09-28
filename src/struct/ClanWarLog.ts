@@ -78,7 +78,7 @@ export class ClanWarLog {
 	public opponent: WarLogClan;
 
 	@Enumerable(false)
-	public readonly client: Client;
+	private readonly client: Client;
 
 	public constructor(client: Client, data: APIClanWarLogEntry) {
 		this.client = client;

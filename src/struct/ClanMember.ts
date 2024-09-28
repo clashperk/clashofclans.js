@@ -48,7 +48,7 @@ export class ClanMember {
 	public playerHouse?: APIPlayerHouse | null;
 
 	@Enumerable(false)
-	public readonly client: Client;
+	private readonly client: Client;
 
 	public constructor(client: Client, data: APIClanMember) {
 		this.client = client;

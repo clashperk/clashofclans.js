@@ -94,7 +94,7 @@ export class Clan {
 	public members: ClanMember[];
 
 	@Enumerable(false)
-	public readonly client: Client;
+	private readonly client: Client;
 
 	public constructor(client: Client, data: APIClan) {
 		this.client = client;

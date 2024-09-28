@@ -271,7 +271,7 @@ export class ClanWar {
 	public warTag!: string | null;
 
 	@Enumerable(false)
-	public readonly client: Client;
+	private readonly client: Client;
 
 	public constructor(client: Client, data: APIClanWar, extra: { clanTag?: string; warTag?: string }) {
 		this.client = client;
