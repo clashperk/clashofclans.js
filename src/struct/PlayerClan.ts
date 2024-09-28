@@ -1,5 +1,6 @@
 import { Client } from '../client/Client';
 import { APIPlayerClan, OverrideOptions } from '../types';
+import { Enumerable } from '../util/Decorators';
 import { Badge } from './Badge';
 
 /** Represents a Player's clan. */
@@ -20,10 +21,11 @@ export class PlayerClan {
 	/** Badge of this clan. */
 	public badge: Badge;
 
-	public constructor(
-		private readonly _client: Client,
-		data: APIPlayerClan
-	) {
+	@Enumerable(false)
+	private readonly client: Client;
+
+	public constructor(client: Client, data: APIPlayerClan) {
+		this.client = client;
 		this.name = data.name;
 		this.tag = data.tag;
 		this.level = data.clanLevel ?? null; // eslint-disable-line
@@ -32,7 +34,7 @@ export class PlayerClan {
 
 	/** Fetch detailed clan info for the player's clan. */
 	public fetch(options?: OverrideOptions) {
-		return this._client.getClan(this.tag, options);
+		return this.client.getClan(this.tag, options);
 	}
 
 	/** Get clan's formatted link to open clan in-game. */

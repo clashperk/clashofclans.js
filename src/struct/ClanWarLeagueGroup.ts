@@ -1,5 +1,6 @@
 import { Client } from '../client/Client';
 import { APIClanWarLeagueClan, APIClanWarLeagueClanMember, APIClanWarLeagueGroup, APIClanWarLeagueRound, OverrideOptions } from '../types';
+import { Enumerable } from '../util/Decorators';
 import { Badge } from './Badge';
 import { ClanWar } from './ClanWar';
 import { Player } from './Player';
@@ -44,10 +45,11 @@ export class ClanWarLeagueClan {
 	/** An array of members that are in the CWL group. */
 	public members: ClanWarLeagueClanMember[];
 
-	public constructor(
-		private readonly client: Client,
-		data: APIClanWarLeagueClan
-	) {
+	@Enumerable(false)
+	private readonly client: Client;
+
+	public constructor(client: Client, data: APIClanWarLeagueClan) {
+		this.client = client;
 		this.name = data.name;
 		this.tag = data.tag;
 		this.level = data.clanLevel;
@@ -96,10 +98,11 @@ export class ClanWarLeagueGroup {
 	/** An array containing all war tags for each round. */
 	public rounds!: ClanWarLeagueRound[];
 
-	public constructor(
-		private readonly client: Client,
-		data: APIClanWarLeagueGroup
-	) {
+	@Enumerable(false)
+	private readonly client: Client;
+
+	public constructor(client: Client, data: APIClanWarLeagueGroup) {
+		this.client = client;
 		this.state = data.state;
 		if (this.state !== 'notInWar') {
 			this.season = data.season;

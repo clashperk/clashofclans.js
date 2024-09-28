@@ -1,6 +1,7 @@
 import { Client } from '../client/Client';
 import { APIClanWar, APIClanWarAttack, APIClanWarMember, APIWarClan } from '../types';
 import { FriendlyWarPreparationTimes } from '../util/Constants';
+import { Enumerable } from '../util/Decorators';
 import { getWarResult } from '../util/Helper';
 import { Badge } from './Badge';
 
@@ -238,8 +239,6 @@ export class WarClan {
  * :::
  */
 export class ClanWar {
-	public client!: Client;
-
 	/**
 	 * The clan's current war state.
 	 *
@@ -271,9 +270,11 @@ export class ClanWar {
 	/** The war's unique tag. This is `null` unless this is a CWL.  */
 	public warTag!: string | null;
 
-	public constructor(client: Client, data: APIClanWar, extra: { clanTag?: string; warTag?: string }) {
-		Object.defineProperty(this, 'client', { value: client });
+	@Enumerable(false)
+	public readonly client: Client;
 
+	public constructor(client: Client, data: APIClanWar, extra: { clanTag?: string; warTag?: string }) {
+		this.client = client;
 		this.state = data.state;
 		if (this.state !== 'notInWar') {
 			this.teamSize = data.teamSize;

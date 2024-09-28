@@ -1,5 +1,6 @@
 import { Client } from '../client/Client';
 import { APICapitalLeague, APIChatLanguage, APIClan, APILabel, APIWarLeague, OverrideOptions } from '../types';
+import { Enumerable } from '../util/Decorators';
 import { Badge } from './Badge';
 import { ClanCapital } from './ClanCapital';
 import { ClanMember } from './ClanMember';
@@ -92,10 +93,11 @@ export class Clan {
 	 */
 	public members: ClanMember[];
 
-	public constructor(
-		public client: Client,
-		data: APIClan
-	) {
+	@Enumerable(false)
+	public readonly client: Client;
+
+	public constructor(client: Client, data: APIClan) {
+		this.client = client;
 		this.name = data.name;
 		this.tag = data.tag;
 		this.type = data.type;

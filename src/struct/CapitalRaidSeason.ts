@@ -6,6 +6,7 @@ import {
 	APICapitalRaidSeasonMember,
 	OverrideOptions
 } from '../types';
+import { Enumerable } from '../util/Decorators';
 import { Util } from '../util/Util';
 import { Player } from './Player';
 
@@ -76,10 +77,11 @@ export class CapitalRaidSeason {
 	/** The defense log of the raid season. */
 	public defenseLog: APICapitalRaidSeasonDefenseLog[];
 
-	public constructor(
-		private readonly client: Client,
-		data: APICapitalRaidSeason
-	) {
+	@Enumerable(false)
+	private readonly client: Client;
+
+	public constructor(client: Client, data: APICapitalRaidSeason) {
+		this.client = client;
 		this.state = data.state;
 		this.startTime = Util.formatDate(data.startTime);
 		this.endTime = Util.formatDate(data.endTime);
