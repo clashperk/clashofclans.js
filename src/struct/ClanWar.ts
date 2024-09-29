@@ -225,6 +225,11 @@ export class WarClan {
 		return this.members.find((m) => m.tag === tag) ?? null;
 	}
 
+	/** Get a member of the clan for the given map position, or `null` if not found. */
+	public getMemberByMapPosition(mapPosition: number): ClanWarMember | null {
+		return this.members.find((m) => m.mapPosition === mapPosition) ?? null;
+	}
+
 	/** Get clan's formatted link to open clan in-game. */
 	public get shareLink() {
 		return `https://link.clashofclans.com/en?action=OpenClanProfile&tag=${this.tag.replace(/#/g, '')}`;
