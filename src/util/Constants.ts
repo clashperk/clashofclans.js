@@ -122,7 +122,9 @@ export const UnrankedLeagueData = {
 	}
 };
 
+export const UnrankedLeagueId = 29000000;
 export const LegendLeagueId = 29000022;
+export const UnrankedWarLeagueId = 48000000;
 
 export const Leagues = [
 	29000000,

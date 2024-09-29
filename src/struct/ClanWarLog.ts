@@ -1,5 +1,5 @@
 import { Client } from '../client/Client';
-import { APIClanWarLogEntry, APIWarLogClan } from '../types';
+import { APIClanWarLog, APIWarLogClan } from '../types';
 import { Enumerable } from '../util/Decorators';
 import { Util } from '../util/Util';
 import { Badge } from './Badge';
@@ -80,7 +80,7 @@ export class ClanWarLog {
 	@Enumerable(false)
 	private readonly client: Client;
 
-	public constructor(client: Client, data: APIClanWarLogEntry) {
+	public constructor(client: Client, data: APIClanWarLog) {
 		this.client = client;
 		this.result = data.result ?? null;
 		this.endTime = Util.formatDate(data.endTime);

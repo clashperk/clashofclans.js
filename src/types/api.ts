@@ -58,7 +58,7 @@ export interface APIClan {
 	requiredTrophies: number;
 	requiredTownhallLevel?: number;
 	requiredBuilderBaseTrophies?: number;
-	warFrequency: 'always' | 'moreThanOncePerWeek' | 'oncePerWeek' | 'lessThanOncePerWeek' | 'never' | 'unknown';
+	warFrequency?: 'always' | 'moreThanOncePerWeek' | 'oncePerWeek' | 'lessThanOncePerWeek' | 'never' | 'unknown';
 	warWinStreak: number;
 	warWins: number;
 	warTies?: number;
@@ -115,6 +115,7 @@ export interface APIClanWar {
 	teamSize: number;
 	startTime: string;
 	preparationStartTime: string;
+	battleModifier?: 'none' | 'hardMode';
 	endTime: string;
 	clan: APIWarClan;
 	opponent: APIWarClan;
@@ -163,9 +164,10 @@ export interface APIWarLogClan {
 	expEarned?: number;
 }
 
-export interface APIClanWarLogEntry {
-	result: 'win' | 'lose' | 'tie' | null;
+export interface APIClanWarLog {
+	result?: 'win' | 'lose' | 'tie' | null;
 	endTime: string;
+	battleModifier?: 'none' | 'hardMode';
 	teamSize: number;
 	attacksPerMember?: number;
 	clan: APIWarLogClan;
@@ -173,8 +175,8 @@ export interface APIClanWarLogEntry {
 }
 
 /** /clans/{clanTag}/warlog */
-export interface APIClanWarLog {
-	items: APIClanWarLogEntry[];
+export interface APIClanWarLogList {
+	items: APIClanWarLog[];
 	paging: APIPaging;
 }
 
