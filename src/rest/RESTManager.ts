@@ -13,7 +13,7 @@ import {
 	APIClanRankingList,
 	APIClanWar,
 	APIClanWarLeagueGroup,
-	APIClanWarLog,
+	APIClanWarLogList,
 	APIGoldPassSeason,
 	APILabelList,
 	APILeague,
@@ -138,7 +138,7 @@ export class RESTManager extends EventEmitter {
 	/** Get clan war log. */
 	public getClanWarLog(clanTag: string, options?: SearchOptions) {
 		const query = Util.queryString(options);
-		return this.requestHandler.request<APIClanWarLog>(`/clans/${Util.encodeURI(clanTag)}/warlog${query}`, options);
+		return this.requestHandler.request<APIClanWarLogList>(`/clans/${Util.encodeURI(clanTag)}/warlog${query}`, options);
 	}
 
 	/** Get info about currently running war in the clan. */
