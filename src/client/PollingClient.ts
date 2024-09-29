@@ -48,7 +48,7 @@ export class PollingClient extends Client {
 		this.inMaintenance = Boolean(false);
 		this._maintenanceStartTime = null;
 
-		if (options?.pollingInterval && !isNaN(options.pollingInterval)) {
+		if (options?.pollingInterval && typeof options.pollingInterval !== 'number') {
 			throw new Error('The property "pollingInterval" must be a type of number.');
 		}
 

@@ -1,6 +1,7 @@
 import { Client } from '../client/Client';
 import { APIPlayer, APIPlayerHouse, OverrideOptions } from '../types';
 import { BuilderTroops, HeroPets, HomeTroops, SiegeMachines, SuperTroops, UnrankedLeagueData } from '../util/Constants';
+import { Enumerable } from '../util/Decorators';
 import { Achievement } from './Achievement';
 import { Label } from './Label';
 import { League } from './League';
@@ -94,10 +95,11 @@ export class Player {
 	/** The player's clan capital house details. */
 	public playerHouse?: APIPlayerHouse | null;
 
-	public constructor(
-		public client: Client,
-		data: APIPlayer
-	) {
+	@Enumerable(false)
+	private readonly client: Client;
+
+	public constructor(client: Client, data: APIPlayer) {
+		this.client = client;
 		this.name = data.name;
 		this.tag = data.tag;
 		this.townHallLevel = data.townHallLevel;
