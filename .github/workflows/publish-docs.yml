@@ -17,13 +17,12 @@ jobs:
       - name: Trigger Workflow
         uses: convictional/trigger-workflow-and-wait@v1.3.0
         with:
-          ref: master
+          ref: main
           owner: clashperk
           repo: clashofclans.js.org
           wait_interval: 10
           wait_workflow: true
           trigger_workflow: true
           propagate_failure: false
-          workflow_file_name: main.yml
-          inputs: '{"ref":"${{github.ref}}"}'
+          workflow_file_name: deploy-github-pages.yml
           github_token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
