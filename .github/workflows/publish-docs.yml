@@ -5,15 +5,16 @@ on:
   release:
     types: [created]
 
+concurrency:
+  group: docs
+  cancel-in-progress: false
+
 jobs:
   build:
     name: publish-docs
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v2
-
       - name: Trigger Workflow
         uses: convictional/trigger-workflow-and-wait@v1.3.0
         with:

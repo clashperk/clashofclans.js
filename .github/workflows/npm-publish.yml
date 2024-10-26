@@ -4,6 +4,10 @@ on:
   release:
     types: [created]
 
+concurrency:
+  group: release
+  cancel-in-progress: false
+
 jobs:
   build:
     name: npm-release
