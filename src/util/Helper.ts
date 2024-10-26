@@ -9,7 +9,7 @@ export const calculateRaidsCompleted = (attackLog: APICapitalRaidSeason['attackL
 	return total;
 };
 
-export const calculateOffensiveRaidMedals = (attackLog: APICapitalRaidSeason['attackLog'], offensiveReward = 0) => {
+export const calculateOffensiveRaidMedals = (attackLog: APICapitalRaidSeason['attackLog']) => {
 	const districtMap: Record<string, number> = {
 		1: 135,
 		2: 225,
@@ -44,7 +44,7 @@ export const calculateOffensiveRaidMedals = (attackLog: APICapitalRaidSeason['at
 		}
 	}
 	if (totalMedals !== 0) totalMedals = Math.ceil(totalMedals / attacksDone);
-	return Math.max(totalMedals, offensiveReward);
+	return totalMedals;
 };
 
 export const isFriendlyWar = (preparationStartTime: Date, startTime: Date) => {
