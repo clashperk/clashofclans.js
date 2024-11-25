@@ -100,7 +100,15 @@ export const BuilderTroops = [
 	'Electrofire Wizard'
 ];
 
-export const Heroes = ['Barbarian King', 'Archer Queen', 'Grand Warden', 'Royal Champion', 'Minion Prince', 'Battle Machine', 'Battle Copter'];
+export const Heroes = [
+	'Barbarian King',
+	'Archer Queen',
+	'Grand Warden',
+	'Royal Champion',
+	'Minion Prince',
+	'Battle Machine',
+	'Battle Copter'
+];
 
 export const HeroPets = [
 	'L.A.S.S.I',
