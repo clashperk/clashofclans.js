@@ -74,7 +74,7 @@ export class Unit {
 	/** @internal */
 	public originalName!: string | null;
 	/** @internal */
-	public equipment!: HeroEquipment[];
+	public equipment!: Equipment[];
 
 	// #endregion static
 
@@ -136,7 +136,7 @@ export class Unit {
 			if (rawUnit.category === 'hero') this.regenerationTime = rawUnit.regenerationTimes[this.level - 1] ?? 0;
 			this.hallMaxLevel =
 				rawUnit.levels[(this.village === 'home' ? data.townHallLevel : data.builderHallLevel!) - 1] ?? this.maxLevel;
-			this.equipment = (unit.equipment ?? []).map((unit) => new HeroEquipment(data, unit));
+			this.equipment = (unit.equipment ?? []).map((unit) => new Equipment(data, unit));
 		}
 
 		this.seasonal = Boolean(rawUnit?.seasonal);
@@ -199,8 +199,8 @@ export class Hero extends Unit {
 	public regenerationTime!: number;
 
 	/** Hero Equipment */
-	public equipment!: HeroEquipment[];
+	public equipment!: Equipment[];
 }
 
 /** Represents a Player's Hero Equipment. */
-export class HeroEquipment extends Unit {}
+export class Equipment extends Unit {}

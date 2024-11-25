@@ -7,7 +7,7 @@ import { Label } from './Label';
 import { League } from './League';
 import { LegendStatistics } from './LegendStatistics';
 import { PlayerClan } from './PlayerClan';
-import { Hero, HeroEquipment, Spell, Troop } from './Unit';
+import { Equipment, Hero, Spell, Troop } from './Unit';
 
 /** Represents a Clash of Clans Player. */
 export class Player {
@@ -90,7 +90,7 @@ export class Player {
 	public heroes: Hero[];
 
 	/** An array of player's hero equipment. */
-	public heroEquipment: HeroEquipment[];
+	public heroEquipment: Equipment[];
 
 	/** The player's clan capital house details. */
 	public playerHouse?: APIPlayerHouse | null;
@@ -128,7 +128,7 @@ export class Player {
 		this.troops = data.troops.map((unit) => new Troop(data, unit));
 		this.spells = data.spells.map((unit) => new Spell(data, unit));
 		this.heroes = data.heroes.map((unit) => new Hero(data, unit));
-		this.heroEquipment = data.heroEquipment.map((unit) => new HeroEquipment(data, unit));
+		this.heroEquipment = data.heroEquipment.map((unit) => new Equipment(data, unit));
 
 		this.playerHouse = data.playerHouse ?? null;
 	}

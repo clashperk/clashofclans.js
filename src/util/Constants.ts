@@ -3,125 +3,39 @@ import RAW from '../util/raw.json';
 export const APIBaseURL = 'https://api.clashofclans.com/v1';
 export const DevSiteAPIBaseURL = 'https://developer.clashofclans.com/api';
 
-export const ElixirTroops = [
-	'Barbarian',
-	'Archer',
-	'Giant',
-	'Goblin',
-	'Wall Breaker',
-	'Balloon',
-	'Wizard',
-	'Healer',
-	'Dragon',
-	'P.E.K.K.A',
-	'Baby Dragon',
-	'Miner',
-	'Electro Dragon',
-	'Yeti',
-	'Dragon Rider',
-	'Electro Titan',
-	'Root Rider',
-	'Thrower'
-];
+export const SuperTroops = RAW.RAW_SUPER_UNITS.map((unit) => unit.name);
 
-export const DarkElixirTroops = [
-	'Minion',
-	'Hog Rider',
-	'Valkyrie',
-	'Golem',
-	'Witch',
-	'Lava Hound',
-	'Bowler',
-	'Ice Golem',
-	'Headhunter',
-	'Apprentice Warden',
-	'Druid'
-];
+export const ElixirTroops = RAW.RAW_UNITS.filter(
+	(unit) => !SuperTroops.includes(unit.name) && unit.subCategory === 'troop' && unit.upgrade.resource === 'Elixir'
+).map((unit) => unit.name);
+
+export const DarkElixirTroops = RAW.RAW_UNITS.filter(
+	(unit) => !SuperTroops.includes(unit.name) && unit.subCategory === 'troop' && unit.upgrade.resource === 'Dark Elixir'
+).map((unit) => unit.name);
 
 export const HomeTroops = [...ElixirTroops, ...DarkElixirTroops];
 
-export const SiegeMachines = [
-	'Wall Wrecker',
-	'Battle Blimp',
-	'Stone Slammer',
-	'Siege Barracks',
-	'Log Launcher',
-	'Flame Flinger',
-	'Battle Drill'
-];
+export const SiegeMachines = RAW.RAW_UNITS.filter((unit) => unit.subCategory === 'siege').map((unit) => unit.name);
 
-export const SuperTroops = [
-	'Super Barbarian',
-	'Super Archer',
-	'Super Giant',
-	'Sneaky Goblin',
-	'Super Wall Breaker',
-	'Rocket Balloon',
-	'Super Wizard',
-	'Super Dragon',
-	'Inferno Dragon',
-	'Super Minion',
-	'Super Valkyrie',
-	'Super Witch',
-	'Ice Hound',
-	'Super Bowler',
-	'Super Miner',
-	'Super Hog Rider'
-];
+export const HeroEquipment = RAW.RAW_UNITS.filter((unit) => unit.subCategory === 'equipment').map((unit) => unit.name);
 
-export const ElixirSpells = [
-	'Lightning Spell',
-	'Healing Spell',
-	'Rage Spell',
-	'Jump Spell',
-	'Freeze Spell',
-	'Clone Spell',
-	'Invisibility Spell',
-	'Recall Spell',
-	'Revive Spell'
-];
+export const ElixirSpells = RAW.RAW_UNITS.filter((unit) => unit.subCategory === 'spell' && unit.upgrade.resource === 'Elixir').map(
+	(unit) => unit.name
+);
 
-export const DarkElixirSpells = ['Poison Spell', 'Earthquake Spell', 'Haste Spell', 'Skeleton Spell', 'Bat Spell', 'Overgrowth Spell'];
+export const DarkElixirSpells = RAW.RAW_UNITS.filter((unit) => unit.subCategory === 'spell' && unit.upgrade.resource === 'Dark Elixir').map(
+	(unit) => unit.name
+);
 
 export const Spells = [...ElixirSpells, ...DarkElixirSpells];
 
-export const BuilderTroops = [
-	'Raged Barbarian',
-	'Sneaky Archer',
-	'Boxer Giant',
-	'Beta Minion',
-	'Bomber',
-	'Baby Dragon',
-	'Cannon Cart',
-	'Night Witch',
-	'Drop Ship',
-	'Super P.E.K.K.A',
-	'Hog Glider',
-	'Electrofire Wizard'
-];
+export const BuilderTroops = RAW.RAW_UNITS.filter((unit) => unit.subCategory === 'troop' && unit.village === 'builderBase').map(
+	(unit) => unit.name
+);
 
-export const Heroes = [
-	'Barbarian King',
-	'Archer Queen',
-	'Grand Warden',
-	'Royal Champion',
-	'Minion Prince',
-	'Battle Machine',
-	'Battle Copter'
-];
+export const Heroes = RAW.RAW_UNITS.filter((unit) => unit.subCategory === 'hero').map((unit) => unit.name);
 
-export const HeroPets = [
-	'L.A.S.S.I',
-	'Electro Owl',
-	'Mighty Yak',
-	'Unicorn',
-	'Poison Lizard',
-	'Diggy',
-	'Frosty',
-	'Phoenix',
-	'Spirit Fox',
-	'Angry Jelly'
-];
+export const HeroPets = RAW.RAW_UNITS.filter((unit) => unit.subCategory === 'pet').map((unit) => unit.name);
 
 export const UnrankedLeagueData = {
 	id: 29000000,
