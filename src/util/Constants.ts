@@ -21,7 +21,7 @@ export const ElixirTroops = [
 	'Dragon Rider',
 	'Electro Titan',
 	'Root Rider',
-	'Druid'
+	'Thrower'
 ];
 
 export const DarkElixirTroops = [
@@ -34,7 +34,8 @@ export const DarkElixirTroops = [
 	'Bowler',
 	'Ice Golem',
 	'Headhunter',
-	'Apprentice Warden'
+	'Apprentice Warden',
+	'Druid'
 ];
 
 export const HomeTroops = [...ElixirTroops, ...DarkElixirTroops];
@@ -76,7 +77,8 @@ export const ElixirSpells = [
 	'Freeze Spell',
 	'Clone Spell',
 	'Invisibility Spell',
-	'Recall Spell'
+	'Recall Spell',
+	'Revive Spell'
 ];
 
 export const DarkElixirSpells = ['Poison Spell', 'Earthquake Spell', 'Haste Spell', 'Skeleton Spell', 'Bat Spell', 'Overgrowth Spell'];
@@ -98,7 +100,7 @@ export const BuilderTroops = [
 	'Electrofire Wizard'
 ];
 
-export const Heroes = ['Barbarian King', 'Archer Queen', 'Grand Warden', 'Royal Champion', 'Battle Machine', 'Battle Copter'];
+export const Heroes = ['Barbarian King', 'Archer Queen', 'Grand Warden', 'Royal Champion', 'Minion Prince', 'Battle Machine', 'Battle Copter'];
 
 export const HeroPets = [
 	'L.A.S.S.I',
