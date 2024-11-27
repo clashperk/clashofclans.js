@@ -95,7 +95,7 @@ export const BuilderTroops = [
 	'Cannon Cart',
 	'Night Witch',
 	'Drop Ship',
-	'Super P.E.K.K.A',
+	'Power P.E.K.K.A',
 	'Hog Glider',
 	'Electrofire Wizard'
 ];
