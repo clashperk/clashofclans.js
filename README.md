@@ -19,6 +19,8 @@
 - [Documentation](https://clashofclans.js.org/docs/)
 - [Clash of Clans Developer Website](https://developer.clashofclans.com/)
 - [Clash of Clans API Community Discord](https://discord.gg/Eaja7gJ)
+- [Contributing Guidelines](CONTRIBUTING.md)
+- [Code of Conduct](CODE_OF_CONDUCT.md)
 
 ### Examples
 
