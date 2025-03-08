@@ -74,8 +74,8 @@ export class ClanWarAttack {
 		);
 	}
 
-	/** Returns gain or new stars on the defender. */
-	public get gainStars(): number {
+	/** Returns new stars on the defender. */
+	public get newStars(): number {
 		const prevBest = this.previousBestAttack();
 		if (!prevBest) return this.stars;
 		return Math.max(0, this.stars - prevBest.stars);
