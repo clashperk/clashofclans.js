@@ -73,6 +73,13 @@ export class ClanWarAttack {
 				.at(0) ?? null
 		);
 	}
+
+	/** Returns new stars on the defender. */
+	public get newStars(): number {
+		const prevBest = this.previousBestAttack();
+		if (!prevBest) return this.stars;
+		return Math.max(0, this.stars - prevBest.stars);
+	}
 }
 
 /** Represents a Clash of Clans War Member. */
