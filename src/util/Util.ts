@@ -1,5 +1,4 @@
 import { ClanSearchOptions, SearchOptions } from '../types';
-import { RawData } from '../util/Constants';
 
 const TAG_CHARACTERS = '0289PYLQGRJCUV' as const;
 
@@ -166,39 +165,5 @@ export class Util extends null {
 
 	public static async delay(ms: number) {
 		return new Promise((res) => setTimeout(res, ms));
-	}
-
-	/** Parse in-game army link into troops and spells count with respective Id's. */
-	public static parseArmyLink(link: string) {
-		const unitsMatches = /u(?<units>[\d+x-]+)/.exec(link);
-		const spellsMatches = /s(?<spells>[\d+x-]+)/.exec(link);
-
-		const unitsPart = (unitsMatches?.groups?.units as string | null)?.split('-') ?? [];
-		const spellParts = (spellsMatches?.groups?.spells as string | null)?.split('-') ?? [];
-
-		const units = unitsPart
-			.map((parts) => parts.split(/x/))
-			.map((parts) => ({
-				id: Number(parts[1]),
-				total: Number(parts[0])
-			}));
-
-		const spells = spellParts
-			.map((parts) => parts.split(/x/))
-			.map((parts) => ({
-				id: Number(parts[1]),
-				total: Number(parts[0])
-			}));
-
-		return {
-			units: units.map((unit) => {
-				const _unit = RawData.RawUnits.find((raw) => raw.category === 'troop' && raw.id === unit.id);
-				return { name: _unit?.name ?? null, count: unit.total, id: unit.id };
-			}),
-			spells: spells.map((spell) => {
-				const _spell = RawData.RawUnits.find((raw) => raw.category === 'spell' && raw.id === spell.id);
-				return { name: _spell?.name ?? null, count: spell.total, id: spell.id };
-			})
-		};
 	}
 }
