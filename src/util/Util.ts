@@ -110,10 +110,6 @@ export class Util extends null {
 	}
 
 	public static getSeasonStart(inputDate: Date) {
-		if (inputDate >= new Date('2025-08-25T05:00:00.000Z') && inputDate <= new Date('2025-10-06T05:00:00.000Z')) {
-			return new Date('2025-08-25T05:00:00.000Z');
-		}
-
 		const lastMonthLastDay = new Date(Date.UTC(inputDate.getUTCFullYear(), inputDate.getUTCMonth(), 0));
 		const lastMonthLastMonday = new Date(lastMonthLastDay);
 		lastMonthLastMonday.setUTCDate(lastMonthLastMonday.getUTCDate() - ((lastMonthLastDay.getUTCDay() + 6) % 7));
@@ -123,10 +119,6 @@ export class Util extends null {
 	}
 
 	public static getSeasonEnd(inputDate: Date, forward = true): Date {
-		if (inputDate >= new Date('2025-08-25T05:00:00.000Z') && inputDate <= new Date('2025-10-06T05:00:00.000Z')) {
-			return forward ? new Date('2025-10-06T05:00:00.000Z') : new Date('2025-08-25T05:00:00.000Z');
-		}
-
 		const lastDayOfMonth = new Date(Date.UTC(inputDate.getUTCFullYear(), inputDate.getUTCMonth() + 1, 0));
 		const lastMonday = new Date(lastDayOfMonth);
 		lastMonday.setUTCDate(lastMonday.getUTCDate() - ((lastDayOfMonth.getUTCDay() + 6) % 7));
@@ -160,12 +152,6 @@ export class Util extends null {
 	 * @param {boolean} forward - Whether to forward to the next month if the returned date is in the past relative to the given timestamp. Defaults to true.
 	 */
 	public static getSeason(timestamp?: Date, forward: boolean = true) {
-		const inputDate = timestamp ?? new Date();
-
-		if (inputDate >= new Date('2025-08-25T05:00:00.000Z') && inputDate <= new Date('2025-10-06T05:00:00.000Z')) {
-			return { startTime: new Date('2025-08-25T05:00:00.000Z'), endTime: new Date('2025-10-06T05:00:00.000Z') };
-		}
-
 		const endTime = this.getSeasonEnd(timestamp ?? new Date(), forward);
 		const startTime = this.getSeasonStart(endTime);
 		return { endTime, startTime };
