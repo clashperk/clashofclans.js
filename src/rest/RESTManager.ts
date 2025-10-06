@@ -16,9 +16,9 @@ import {
 	APIClanWarLogList,
 	APIGoldPassSeason,
 	APILabelList,
-	APILeague,
-	APILeagueList,
 	APILeagueSeasonList,
+	APILeagueTier,
+	APILeagueTierList,
 	APILocation,
 	APILocationList,
 	APIPlayer,
@@ -176,15 +176,15 @@ export class RESTManager extends EventEmitter {
 		});
 	}
 
-	/** Get a list of Leagues. */
-	public getLeagues(options?: SearchOptions) {
+	/** Get a list of League Tiers. */
+	public getLeagueTiers(options?: SearchOptions) {
 		const query = Util.queryString(options);
-		return this.requestHandler.request<APILeagueList>(`/leagues${query}`, options);
+		return this.requestHandler.request<APILeagueTierList>(`/leaguetiers${query}`, options);
 	}
 
-	/** Get a League info. */
-	public getLeague(leagueId: string | number, options?: OverrideOptions) {
-		return this.requestHandler.request<APILeague>(`/leagues/${leagueId}`, options);
+	/** Get a League tier info. */
+	public getLeagueTier(leagueId: string | number, options?: OverrideOptions) {
+		return this.requestHandler.request<APILeagueTier>(`/leaguetiers/${leagueId}`, options);
 	}
 
 	/** Get a list of builder base leagues. */

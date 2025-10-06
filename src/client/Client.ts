@@ -264,9 +264,9 @@ export class Client extends EventEmitter {
 		return body.status === 'ok';
 	}
 
-	/** Get a list of Leagues. */
-	public async getLeagues(options?: SearchOptions) {
-		const { body } = await this.rest.getLeagues(options);
+	/** Get a list of League Tiers. */
+	public async getLeaguesTiers(options?: SearchOptions) {
+		const { body } = await this.rest.getLeagueTiers(options);
 		return body.items;
 	}
 

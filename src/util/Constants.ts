@@ -38,11 +38,11 @@ export const Heroes = RAW.RAW_UNITS.filter((unit) => unit.subCategory === 'hero'
 export const HeroPets = RAW.RAW_UNITS.filter((unit) => unit.subCategory === 'pet').map((unit) => unit.name);
 
 export const UnrankedLeagueData = {
-	id: 29000000,
+	id: 105000000,
 	name: 'Unranked',
 	iconUrls: {
-		small: 'https://api-assets.clashofclans.com/leagues/72/e--YMyIexEQQhE4imLoJcwhYn6Uy8KqlgyY3_kFV6t4.png',
-		tiny: 'https://api-assets.clashofclans.com/leagues/36/e--YMyIexEQQhE4imLoJcwhYn6Uy8KqlgyY3_kFV6t4.png'
+		small: 'https://api-assets.clashofclans.com/leaguetiers/125/yyYo5DUFeFBZvmMEQh0ZxvG-1sUOZ_S3kDMB7RllXX0.png',
+		large: 'https://api-assets.clashofclans.com/leaguetiers/326/yyYo5DUFeFBZvmMEQh0ZxvG-1sUOZ_S3kDMB7RllXX0.png'
 	}
 };
 

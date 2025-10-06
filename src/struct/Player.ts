@@ -120,7 +120,7 @@ export class Player {
 		this.role = data.role?.replace('admin', 'elder') ?? null;
 		this.warOptedIn = data.warPreference ? data.warPreference === 'in' : null;
 		this.clan = data.clan ? new PlayerClan(client, data.clan) : null;
-		this.league = new League(data.league ?? UnrankedLeagueData);
+		this.league = new League(data.leagueTier ?? UnrankedLeagueData);
 		this.legendStatistics = data.legendStatistics ? new LegendStatistics(data.legendStatistics) : null;
 		this.achievements = data.achievements.map((data) => new Achievement(data));
 		this.labels = data.labels.map((data) => new Label(data));

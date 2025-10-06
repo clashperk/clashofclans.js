@@ -85,9 +85,8 @@ export interface APIClanMember {
 	role: 'member' | 'admin' | 'coLeader' | 'leader';
 	expLevel: number;
 	townHallLevel: number;
-	league: APILeague;
 	leagueTier?: APILeagueTier;
-	builderBaseLeague?: Omit<APILeague, 'iconUrls'>;
+	builderBaseLeague?: Omit<APILeagueTier, 'iconUrls'>;
 	trophies: number;
 	builderBaseTrophies?: number;
 	clanRank: number;
@@ -300,7 +299,6 @@ export interface APIPlayer {
 	role?: string;
 	warPreference?: 'in' | 'out';
 	clan?: APIPlayerClan;
-	league?: APILeague;
 	leagueTier?: APILeagueTier;
 	builderBaseLeague?: {
 		id: number;
@@ -409,7 +407,6 @@ export interface APIPlayerRanking {
 	rank: number;
 	previousRank: number;
 	clan?: Omit<APIPlayerClan, 'clanLevel'>;
-	league: APILeague;
 	leagueTier?: APILeagueTier;
 }
 
@@ -471,12 +468,6 @@ export interface APIClanCapitalRankingList {
 
 // *************** LEAGUES *************** //
 
-/** /leagues */
-export interface APILeagueList {
-	items: APILeague[];
-	paging: APIPaging;
-}
-
 /** /leaguetiers */
 export interface APILeagueTierList {
 	items: APILeagueTier[];
@@ -493,13 +484,6 @@ export interface APIBuilderBaseLeague {
 	name: string;
 }
 
-/** /leagues/{leagueId} */
-export interface APILeague {
-	id: number;
-	name: string;
-	iconUrls: APIIcon;
-}
-
 export interface APILeagueTier {
 	id: number;
 	name: string;
@@ -508,7 +492,7 @@ export interface APILeagueTier {
 
 /** /leagues/{leagueId}/seasons/{seasonId} */
 export interface APIPlayerSeasonRankingList {
-	items: Omit<APIPlayerRanking, 'league'>[];
+	items: Omit<APIPlayerRanking, 'leagueTier'>[];
 	paging: APIPaging;
 }
 
