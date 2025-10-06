@@ -1,4 +1,4 @@
-import { APILeague } from '../types';
+import { APILeagueTier } from '../types';
 import { Leagues } from '../util/Constants';
 import { Icon } from './Icon';
 
@@ -13,7 +13,7 @@ export class League {
 	/** The League Icon. */
 	public icon: Icon;
 
-	public constructor(data: APILeague) {
+	public constructor(data: APILeagueTier) {
 		this.id = data.id;
 		this.name = data.name;
 		this.icon = new Icon(data.iconUrls);
