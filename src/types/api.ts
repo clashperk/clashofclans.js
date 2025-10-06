@@ -17,6 +17,11 @@ export interface APIIcon {
 	medium?: string;
 }
 
+export interface APILeagueTierIcon {
+	small: string;
+	large: string;
+}
+
 export interface APIBadge {
 	small: string;
 	large: string;
@@ -81,6 +86,7 @@ export interface APIClanMember {
 	expLevel: number;
 	townHallLevel: number;
 	league: APILeague;
+	leagueTier?: APILeagueTier;
 	builderBaseLeague?: Omit<APILeague, 'iconUrls'>;
 	trophies: number;
 	builderBaseTrophies?: number;
@@ -295,6 +301,7 @@ export interface APIPlayer {
 	warPreference?: 'in' | 'out';
 	clan?: APIPlayerClan;
 	league?: APILeague;
+	leagueTier?: APILeagueTier;
 	builderBaseLeague?: {
 		id: number;
 		name: string;
@@ -403,6 +410,7 @@ export interface APIPlayerRanking {
 	previousRank: number;
 	clan?: Omit<APIPlayerClan, 'clanLevel'>;
 	league: APILeague;
+	leagueTier?: APILeagueTier;
 }
 
 /** /locations/{locationId}/rankings/clans-builder-base */
@@ -469,6 +477,12 @@ export interface APILeagueList {
 	paging: APIPaging;
 }
 
+/** /leaguetiers */
+export interface APILeagueTierList {
+	items: APILeagueTier[];
+	paging: APIPaging;
+}
+
 export interface APIBuilderBaseLeagueList {
 	items: APIBuilderBaseLeague[];
 	paging: APIPaging;
@@ -484,6 +498,12 @@ export interface APILeague {
 	id: number;
 	name: string;
 	iconUrls: APIIcon;
+}
+
+export interface APILeagueTier {
+	id: number;
+	name: string;
+	iconUrls: APILeagueTierIcon;
 }
 
 /** /leagues/{leagueId}/seasons/{seasonId} */

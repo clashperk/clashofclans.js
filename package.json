@@ -51,6 +51,7 @@
 		}
 	},
 	"dependencies": {
+		"clashofclans.js": "^3.4.0-dev.c71cfc8",
 		"undici": "^5.23.0"
 	},
 	"devDependencies": {
