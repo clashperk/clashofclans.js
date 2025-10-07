@@ -109,6 +109,7 @@ export class Util extends null {
 		return query.length ? `?${query}` : query;
 	}
 
+	/** @deprecated Use getSeason instead */
 	public static getSeasonStart(inputDate: Date) {
 		const lastMonthLastDay = new Date(Date.UTC(inputDate.getUTCFullYear(), inputDate.getUTCMonth(), 0));
 		const lastMonthLastMonday = new Date(lastMonthLastDay);
@@ -118,6 +119,7 @@ export class Util extends null {
 		return lastMonthLastMonday;
 	}
 
+	/** @deprecated Use getSeason instead */
 	public static getSeasonEnd(inputDate: Date, forward = true): Date {
 		const lastDayOfMonth = new Date(Date.UTC(inputDate.getUTCFullYear(), inputDate.getUTCMonth() + 1, 0));
 		const lastMonday = new Date(lastDayOfMonth);
@@ -143,7 +145,7 @@ export class Util extends null {
 
 	/** Get the current season ID. */
 	public static getSeasonId() {
-		return this.getSeasonEnd(new Date()).toISOString().slice(0, 7);
+		return this.getSeason(new Date()).seasonId;
 	}
 
 	/**
@@ -152,9 +154,42 @@ export class Util extends null {
 	 * @param {boolean} forward - Whether to forward to the next month if the returned date is in the past relative to the given timestamp. Defaults to true.
 	 */
 	public static getSeason(timestamp?: Date, forward: boolean = true) {
-		const endTime = this.getSeasonEnd(timestamp ?? new Date(), forward);
-		const startTime = this.getSeasonStart(endTime);
-		return { endTime, startTime };
+		const target = timestamp ?? new Date();
+
+		if (target < new Date('2025-08-25T05:00:00.000Z')) {
+			const endTime = this.getSeasonEnd(timestamp ?? new Date(), forward);
+			const startTime = this.getSeasonStart(endTime);
+			return { endTime, startTime, seasonId: endTime.toISOString().slice(0, 7) };
+		}
+
+		if (target > new Date('2025-08-25T05:00:00.000Z') && target <= new Date('2025-10-06T05:00:00.000Z')) {
+			return {
+				startTime: new Date('2025-08-25T05:00:00.000Z'),
+				endTime: new Date('2025-10-06T05:00:00.000Z'),
+				seasonId: '2025-09'
+			};
+		}
+
+		// After 6th October 2025, season ends every 4 weeks
+		const seasonDuration = 7 * 4 * 24 * 60 * 60 * 1000;
+		const referenceDate = new Date('2025-10-06T05:00:00.000Z');
+		const timeDifference = target.getTime() - referenceDate.getTime();
+		const seasonsPassed = Math.floor(timeDifference / seasonDuration);
+
+		const startTime = new Date(referenceDate.getTime() + seasonsPassed * seasonDuration);
+		const endTime = new Date(startTime.getTime() + seasonDuration);
+
+		// "month" increments by 1 each season starting from referenceDate's month
+		const refYear = referenceDate.getUTCFullYear();
+		const refMonthIndex = referenceDate.getUTCMonth(); // 0-based (Oct -> 9)
+		const totalMonths = refYear * 12 + refMonthIndex + seasonsPassed;
+
+		const year = Math.floor(totalMonths / 12);
+		const month = totalMonths - year * 12 + 1; // 1..12
+
+		const seasonId = `${year}-${String(month).padStart(2, '0')}`;
+
+		return { startTime, endTime, seasonId };
 	}
 
 	public static async allSettled<T>(values: Promise<T>[]) {
