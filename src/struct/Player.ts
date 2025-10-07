@@ -4,7 +4,7 @@ import { BuilderTroops, HeroPets, HomeTroops, SiegeMachines, SuperTroops, Unrank
 import { Enumerable } from '../util/Decorators';
 import { Achievement } from './Achievement';
 import { Label } from './Label';
-import { League } from './League';
+import { LeagueTier } from './LeagueTier';
 import { LegendStatistics } from './LegendStatistics';
 import { PlayerClan } from './PlayerClan';
 import { Equipment, Hero, Spell, Troop } from './Unit';
@@ -69,7 +69,7 @@ export class Player {
 	public clan: PlayerClan | null;
 
 	/** The player's current League. */
-	public league: League;
+	public leagueTier: LeagueTier;
 
 	/** The player's legend statistics, or `null` if they have never been in the legend league. */
 	public legendStatistics: LegendStatistics | null;
@@ -120,7 +120,7 @@ export class Player {
 		this.role = data.role?.replace('admin', 'elder') ?? null;
 		this.warOptedIn = data.warPreference ? data.warPreference === 'in' : null;
 		this.clan = data.clan ? new PlayerClan(client, data.clan) : null;
-		this.league = new League(data.leagueTier ?? UnrankedLeagueData);
+		this.leagueTier = new LeagueTier(data.leagueTier ?? UnrankedLeagueData);
 		this.legendStatistics = data.legendStatistics ? new LegendStatistics(data.legendStatistics) : null;
 		this.achievements = data.achievements.map((data) => new Achievement(data));
 		this.labels = data.labels.map((data) => new Label(data));

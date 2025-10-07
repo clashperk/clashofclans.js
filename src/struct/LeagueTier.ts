@@ -3,7 +3,7 @@ import { Leagues } from '../util/Constants';
 import { Icon } from './Icon';
 
 /** Represents a Player's League. */
-export class League {
+export class LeagueTier {
 	/** The league Id. */
 	public id: number;
 

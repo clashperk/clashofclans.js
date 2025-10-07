@@ -2,7 +2,7 @@ import { Client } from '../client/Client';
 import { APIClanMember, APILeagueTier, APIPlayerHouse, OverrideOptions } from '../types';
 import { UnrankedLeagueData } from '../util/Constants';
 import { Enumerable } from '../util/Decorators';
-import { League } from './League';
+import { LeagueTier } from './LeagueTier';
 
 export class ClanMember {
 	/** The member's name. */
@@ -21,7 +21,7 @@ export class ClanMember {
 	public townHallLevel: number;
 
 	/** The member's current League. */
-	public league: League;
+	public leagueTier: LeagueTier;
 
 	/** The member's current Builder Base League. */
 	public builderBaseLeague: Omit<APILeagueTier, 'iconUrls'> | null;
@@ -58,7 +58,7 @@ export class ClanMember {
 		this.role = data.role.replace('admin', 'elder');
 		this.expLevel = data.expLevel;
 		// eslint-disable-next-line
-		this.league = new League(data.leagueTier ?? UnrankedLeagueData);
+		this.leagueTier = new LeagueTier(data.leagueTier ?? UnrankedLeagueData);
 		this.trophies = data.trophies;
 		this.builderBaseTrophies = data.builderBaseTrophies ?? null;
 		this.clanRank = data.clanRank;
