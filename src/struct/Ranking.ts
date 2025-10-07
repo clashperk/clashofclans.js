@@ -102,7 +102,7 @@ export class RankedPlayer {
 		// @ts-expect-error
 		this.clan = data.clan ? new PlayerClan(client, data.clan) : null;
 		// @ts-expect-error
-		this.leagueTier = data.trophies ? new League(data.leagueTier ?? UnrankedLeagueData) : null; // eslint-disable-line
+		this.leagueTier = data.trophies ? new LeagueTier(data.leagueTier ?? UnrankedLeagueData) : null; // eslint-disable-line
 	}
 
 	/** Get player's formatted link to open player in-game. */

@@ -156,7 +156,7 @@ export class Util extends null {
 	public static getSeason(timestamp?: Date, forward: boolean = true) {
 		const target = timestamp ?? new Date();
 
-		if (target < new Date('2025-08-25T05:00:00.000Z')) {
+		if (target <= new Date('2025-08-25T05:00:00.000Z')) {
 			const endTime = this.getSeasonEnd(timestamp ?? new Date(), forward);
 			const startTime = this.getSeasonStart(endTime);
 			return { endTime, startTime, seasonId: endTime.toISOString().slice(0, 7) };
