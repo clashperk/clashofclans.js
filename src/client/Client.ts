@@ -285,7 +285,7 @@ export class Client extends EventEmitter {
 	/** Get Legend League season Ids. */
 	public async getLeagueSeasons(options?: SearchOptions) {
 		const { body } = await this.rest.getLeagueSeasons(LegendLeagueId, options);
-		return body.items.map((league) => league.id);
+		return body.items.map((item) => item.id);
 	}
 
 	/** Get Legend League season rankings by season Id. */

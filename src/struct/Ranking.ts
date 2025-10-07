@@ -2,7 +2,7 @@ import { Client } from '../client/Client';
 import { APIClanBuilderBaseRanking, APIClanRanking, APIPlayerBuilderBaseRanking, APIPlayerRanking } from '../types';
 import { UnrankedLeagueData } from '../util/Constants';
 import { Badge } from './Badge';
-import { League } from './League';
+import { LeagueTier } from './LeagueTier';
 import { Location } from './Location';
 import { PlayerClan } from './PlayerClan';
 
@@ -32,7 +32,7 @@ export class SeasonRankedPlayer {
 	/** The player's clan. */
 	public clan: PlayerClan | null;
 
-	public constructor(client: Client, data: Omit<APIPlayerRanking, 'league'>) {
+	public constructor(client: Client, data: Omit<APIPlayerRanking, 'leagueTier'>) {
 		this.name = data.name;
 		this.tag = data.tag;
 		this.rank = data.rank;
@@ -83,7 +83,7 @@ export class RankedPlayer {
 	public clan: PlayerClan | null;
 
 	/** The player's league. If retrieving info for builder base leader-boards, this will be `null`. */
-	public league!: League | null;
+	public leagueTier!: LeagueTier | null;
 
 	public constructor(client: Client, data: APIPlayerRanking | APIPlayerBuilderBaseRanking) {
 		this.name = data.name;
@@ -102,7 +102,7 @@ export class RankedPlayer {
 		// @ts-expect-error
 		this.clan = data.clan ? new PlayerClan(client, data.clan) : null;
 		// @ts-expect-error
-		this.league = data.trophies ? new League(data.league ?? UnrankedLeagueData) : null; // eslint-disable-line
+		this.leagueTier = data.trophies ? new League(data.leagueTier ?? UnrankedLeagueData) : null; // eslint-disable-line
 	}
 
 	/** Get player's formatted link to open player in-game. */
