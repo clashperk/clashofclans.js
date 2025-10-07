@@ -192,6 +192,51 @@ export class Util extends null {
 		return { startTime, endTime, seasonId };
 	}
 
+	public static getSeasonById(seasonId: string) {
+		// Handle the fixed September 2025 season
+		if (seasonId === '2025-09') {
+			return {
+				startTime: new Date('2025-08-25T05:00:00.000Z'),
+				endTime: new Date('2025-10-06T05:00:00.000Z'),
+				seasonId
+			};
+		}
+
+		const [yearStr, monthStr] = seasonId.split('-');
+		const targetYear = parseInt(yearStr, 10);
+		const targetMonth = parseInt(monthStr, 10); // 1..12
+
+		const referenceDate = new Date('2025-10-06T05:00:00.000Z');
+
+		// Only handle the post-6 Oct seasons with 28-day intervals
+		const refYear = referenceDate.getUTCFullYear();
+		const refMonthIndex = referenceDate.getUTCMonth(); // 0-based
+
+		const totalMonthsTarget = targetYear * 12 + (targetMonth - 1);
+		const totalMonthsRef = refYear * 12 + refMonthIndex;
+		const seasonsPassed = totalMonthsTarget - totalMonthsRef;
+
+		if (seasonsPassed < 0) {
+			// Before 6th Oct, compute using old last-Monday rule
+			const tempDate = new Date(Date.UTC(targetYear, targetMonth, 0)); // last day of month
+			const lastMonday = new Date(tempDate);
+			lastMonday.setUTCDate(lastMonday.getUTCDate() - ((tempDate.getUTCDay() + 6) % 7));
+			lastMonday.setUTCHours(5, 0, 0, 0);
+
+			const startTime = this.getSeasonStart(lastMonday);
+			const endTime = lastMonday;
+
+			return { startTime, endTime, seasonId };
+		}
+
+		// After 6 Oct 2025, 28-day seasons
+		const seasonDuration = 28 * 24 * 60 * 60 * 1000;
+		const startTime = new Date(referenceDate.getTime() + seasonsPassed * seasonDuration);
+		const endTime = new Date(startTime.getTime() + seasonDuration);
+
+		return { startTime, endTime, seasonId };
+	}
+
 	public static async allSettled<T>(values: Promise<T>[]) {
 		return (await Promise.allSettled(values))
 			.filter((res) => res.status === 'fulfilled')
