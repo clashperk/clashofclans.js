@@ -201,10 +201,9 @@ export class Util extends null {
 				seasonId
 			};
 		}
-
-		const [yearStr, monthStr] = seasonId.split('-');
-		const targetYear = parseInt(yearStr, 10);
-		const targetMonth = parseInt(monthStr, 10); // 1..12
+		const date = new Date(seasonId);
+		const targetYear = date.getUTCFullYear();
+		const targetMonth = date.getUTCMonth() + 1; // 1..12
 
 		const referenceDate = new Date('2025-10-06T05:00:00.000Z');
 
