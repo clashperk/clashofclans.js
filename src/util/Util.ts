@@ -260,8 +260,8 @@ export class Util extends null {
 
 		return {
 			id: lastMonday.toISOString().substring(0, 10),
-			lastMonday: lastMonday,
-			nextMonday: nextMonday
+			startTime: lastMonday,
+			endTime: nextMonday
 		};
 	}
 
