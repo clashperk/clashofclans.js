@@ -236,6 +236,43 @@ export class Util extends null {
 		return { startTime, endTime, seasonId };
 	}
 
+	public static getTournamentWindow(timestamp?: Date) {
+		const now = timestamp ?? new Date();
+
+		const day = now.getUTCDay(); // 0=Sun, 1=Mon, ..., 6=Sat
+		const hour = now.getUTCHours();
+
+		// Days since last Monday
+		let daysSinceMonday = (day + 6) % 7; // e.g., if Mon -> 0, Tue -> 1, etc.
+
+		// If today is Monday but before 5 AM, move back one full week
+		if (day === 1 && hour < 5) {
+			daysSinceMonday = 7;
+		}
+
+		// Last Monday 5:00 AM UTC
+		const lastMonday = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() - daysSinceMonday, 5, 0, 0, 0));
+
+		// Next Monday 5:00 AM UTC (7 days after last Monday)
+		const nextMonday = new Date(
+			Date.UTC(lastMonday.getUTCFullYear(), lastMonday.getUTCMonth(), lastMonday.getUTCDate() + 7, 5, 0, 0, 0)
+		);
+
+		const year = lastMonday.getUTCFullYear();
+		const month = String(lastMonday.getUTCMonth() + 1).padStart(2, '0');
+		const dayOfMonth = String(lastMonday.getUTCDate()).padStart(2, '0');
+
+		return {
+			id: `${year}-${month}-${dayOfMonth}`,
+			startTime: lastMonday,
+			endTime: nextMonday
+		};
+	}
+
+	public static getTournamentWindowById(id: string) {
+		return this.getTournamentWindow(new Date(`${id}T05:00:00.000Z`));
+	}
+
 	public static async allSettled<T>(values: Promise<T>[]) {
 		return (await Promise.allSettled(values))
 			.filter((res) => res.status === 'fulfilled')

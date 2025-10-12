@@ -190,4 +190,99 @@ describe('util', () => {
 		expect(endTime.toISOString()).toBe(expectedEndTime);
 		expect(seasonId).toBe('2026-02');
 	});
+
+	// tournament window
+	it('should get the correct tournament window for a Wednesday', async () => {
+		const timestamp = new Date('2024-03-20T10:00'); // Wednesday
+
+		const { endTime, startTime } = Util.getTournamentWindow(timestamp);
+
+		const expectedStartTime = new Date('2024-03-18T05:00').toISOString(); // Last Monday 5 AM UTC
+		const expectedEndTime = new Date('2024-03-25T05:00').toISOString(); // Next Monday 5 AM UTC
+
+		expect(startTime.toISOString()).toBe(expectedStartTime);
+		expect(endTime.toISOString()).toBe(expectedEndTime);
+	});
+
+	it('should get the correct tournament window for a Monday after 5 AM', async () => {
+		const timestamp = new Date('2024-03-18T10:00'); // Monday after 5 AM
+
+		const { endTime, startTime } = Util.getTournamentWindow(timestamp);
+
+		const expectedStartTime = new Date('2024-03-18T05:00').toISOString(); // Last Monday 5 AM UTC
+		const expectedEndTime = new Date('2024-03-25T05:00').toISOString(); // Next Monday 5 AM UTC
+
+		expect(startTime.toISOString()).toBe(expectedStartTime);
+		expect(endTime.toISOString()).toBe(expectedEndTime);
+	});
+
+	it('should get the correct tournament window for a Monday before 5 AM', async () => {
+		const timestamp = new Date('2024-03-18T04:00'); // Monday before 5 AM
+
+		const { endTime, startTime } = Util.getTournamentWindow(timestamp);
+
+		const expectedStartTime = new Date('2024-03-11T05:00').toISOString(); // Last Monday 5 AM UTC (a week earlier)
+		const expectedEndTime = new Date('2024-03-18T05:00').toISOString(); // Next Monday 5 AM UTC
+
+		expect(startTime.toISOString()).toBe(expectedStartTime);
+		expect(endTime.toISOString()).toBe(expectedEndTime);
+	});
+
+	it('should get the correct tournament window for a Sunday', async () => {
+		const timestamp = new Date('2024-03-17T10:00'); // Sunday
+
+		const { endTime, startTime } = Util.getTournamentWindow(timestamp);
+
+		const expectedStartTime = new Date('2024-03-11T05:00').toISOString(); // Last Monday 5 AM UTC
+		const expectedEndTime = new Date('2024-03-18T05:00').toISOString(); // Next Monday 5 AM UTC
+
+		expect(startTime.toISOString()).toBe(expectedStartTime);
+		expect(endTime.toISOString()).toBe(expectedEndTime);
+	});
+
+	it('should pass 5am Monday', async () => {
+		const timestamp = new Date('2025-10-06T05:00');
+
+		const { endTime, startTime } = Util.getTournamentWindow(timestamp);
+
+		const expectedStartTime = new Date('2025-10-06T05:00').toISOString(); // Last Monday 5 AM UTC
+		const expectedEndTime = new Date('2025-10-13T05:00').toISOString(); // Next Monday 5 AM UTC
+
+		expect(startTime.toISOString()).toBe(expectedStartTime);
+		expect(endTime.toISOString()).toBe(expectedEndTime);
+	});
+
+	it('should pass 4:59am Monday', async () => {
+		const timestamp = new Date('2025-10-06T04:59');
+
+		const { endTime, startTime } = Util.getTournamentWindow(timestamp);
+
+		const expectedStartTime = new Date('2025-09-29T05:00').toISOString();
+		const expectedEndTime = new Date('2025-10-06T05:00').toISOString();
+
+		expect(startTime.toISOString()).toBe(expectedStartTime);
+		expect(endTime.toISOString()).toBe(expectedEndTime);
+	});
+
+	it('should pass End of year', async () => {
+		const timestamp = new Date('2025-12-30T05:00');
+
+		const { endTime, startTime } = Util.getTournamentWindow(timestamp);
+
+		const expectedStartTime = new Date('2025-12-29T05:00').toISOString();
+		const expectedEndTime = new Date('2026-01-05T05:00').toISOString();
+
+		expect(startTime.toISOString()).toBe(expectedStartTime);
+		expect(endTime.toISOString()).toBe(expectedEndTime);
+	});
+
+	it('should pass End of year (ID)', async () => {
+		const { endTime, startTime } = Util.getTournamentWindowById('2025-12-30');
+
+		const expectedStartTime = new Date('2025-12-29T05:00').toISOString();
+		const expectedEndTime = new Date('2026-01-05T05:00').toISOString();
+
+		expect(startTime.toISOString()).toBe(expectedStartTime);
+		expect(endTime.toISOString()).toBe(expectedEndTime);
+	});
 });
