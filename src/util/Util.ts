@@ -258,8 +258,12 @@ export class Util extends null {
 			Date.UTC(lastMonday.getUTCFullYear(), lastMonday.getUTCMonth(), lastMonday.getUTCDate() + 7, 5, 0, 0, 0)
 		);
 
+		const year = lastMonday.getUTCFullYear();
+		const month = String(lastMonday.getUTCMonth() + 1).padStart(2, '0');
+		const dayOfMonth = String(lastMonday.getUTCDate()).padStart(2, '0');
+
 		return {
-			id: lastMonday.toISOString().substring(0, 10),
+			id: `${year}-${month}-${dayOfMonth}`,
 			startTime: lastMonday,
 			endTime: nextMonday
 		};
