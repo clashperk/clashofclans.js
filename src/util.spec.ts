@@ -263,4 +263,26 @@ describe('util', () => {
 		expect(startTime.toISOString()).toBe(expectedStartTime);
 		expect(endTime.toISOString()).toBe(expectedEndTime);
 	});
+
+	it('should pass End of year', async () => {
+		const timestamp = new Date('2025-12-30T05:00');
+
+		const { endTime, startTime } = Util.getTournamentWindow(timestamp);
+
+		const expectedStartTime = new Date('2025-12-29T05:00').toISOString();
+		const expectedEndTime = new Date('2026-01-05T05:00').toISOString();
+
+		expect(startTime.toISOString()).toBe(expectedStartTime);
+		expect(endTime.toISOString()).toBe(expectedEndTime);
+	});
+
+	it('should pass End of year (ID)', async () => {
+		const { endTime, startTime } = Util.getTournamentWindowById('2025-12-30');
+
+		const expectedStartTime = new Date('2025-12-29T05:00').toISOString();
+		const expectedEndTime = new Date('2026-01-05T05:00').toISOString();
+
+		expect(startTime.toISOString()).toBe(expectedStartTime);
+		expect(endTime.toISOString()).toBe(expectedEndTime);
+	});
 });
