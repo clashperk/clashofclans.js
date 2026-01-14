@@ -51,7 +51,7 @@
 		}
 	},
 	"dependencies": {
-		"undici": "^5.23.0"
+		"undici": "^6.23.0"
 	},
 	"devDependencies": {
 		"@jest/globals": "^29.7.0",
