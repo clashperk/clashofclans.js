@@ -31,7 +31,8 @@ jobs:
         run: npm run build
 
       - name: Deprecate Pre-released Version
-        run: npm deprecate clashofclans.js@"$(npm view clashofclans.js@dev version)" "No longer supported" || true
+        continue-on-error: true
+        run: npm deprecate clashofclans.js@"$(npm view clashofclans.js@dev version)" "No longer supported"
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
