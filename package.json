@@ -1,6 +1,6 @@
 {
 	"name": "clashofclans.js",
-	"version": "3.6.1",
+	"version": "3.6.2",
 	"description": "JavaScript library for interacting with the Clash of Clans API",
 	"author": "https://clashofclans.js.org",
 	"license": "MIT",
@@ -51,7 +51,7 @@
 		}
 	},
 	"dependencies": {
-		"undici": "^5.23.0"
+		"undici": "^7.22.0"
 	},
 	"devDependencies": {
 		"@jest/globals": "^29.7.0",
@@ -71,6 +71,6 @@
 		"typescript": "^5.1.6"
 	},
 	"engines": {
-		"node": ">=18.x"
+		"node": ">=20.x"
 	}
 }
