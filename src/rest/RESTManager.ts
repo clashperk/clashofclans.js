@@ -176,6 +176,18 @@ export class RESTManager extends EventEmitter {
 		});
 	}
 
+	public getLeagueHistory(playerTag: string, options?: OverrideOptions) {
+		return this.requestHandler.request<APIVerifyToken>(`/players/${Util.encodeURI(playerTag)}/leaguehistory`, options);
+	}
+
+	public getBattleLog(playerTag: string, options?: OverrideOptions) {
+		return this.requestHandler.request<APIVerifyToken>(`/players/${Util.encodeURI(playerTag)}/battlelog`, options);
+	}
+
+	public getLeagueGroup(leagueGroupTag: string, seasonId: string, options?: OverrideOptions & { playerTag?: string }) {
+		return this.requestHandler.request<APIVerifyToken>(`/leaguegroup/${leagueGroupTag}/${seasonId}`, options);
+	}
+
 	/** Get a list of League Tiers. */
 	public getLeagueTiers(options?: SearchOptions) {
 		const query = Util.queryString(options);

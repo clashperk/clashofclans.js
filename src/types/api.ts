@@ -356,6 +356,45 @@ export interface APIVerifyToken {
 	status: 'ok' | 'invalid';
 }
 
+export interface APIBattleLogEntryList {
+	items: APIBattleLogEntry[];
+}
+
+export interface APILootEntry {
+	name: string;
+	amount: number;
+}
+
+export interface APIBattleLogEntry {
+	battleType: 'legend' | 'homeVillage' | 'ranked';
+	attack: boolean;
+	armyShareCode: string;
+	opponentPlayerTag: string;
+	stars: number;
+	destructionPercentage: number;
+	lootedResources: APILootEntry[];
+	extraLootedResources: APILootEntry[];
+	availableLoot: APILootEntry[];
+}
+
+export interface APILeagueSeasonResult {
+	leagueSeasonId: number;
+	leagueTrophies: number;
+	leagueTierId: number;
+	placement: number;
+	attackWins: number;
+	attackLosses: number;
+	attackStars: number;
+	defenseWins: number;
+	defenseLosses: number;
+	defenseStars: number;
+	maxBattles: number;
+}
+
+export interface APILeagueSeasonResultList {
+	items: APILeagueSeasonResult[];
+}
+
 // ************* LOCATIONS ************* //
 
 /** /locations */
