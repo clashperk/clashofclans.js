@@ -63,7 +63,7 @@ export class Unit {
 	public dps!: number;
 
 	/** Training time of this unit. */
-	public trainingTime!: number;
+	public trainingTime = 0;
 
 	/** @internal */
 	public regenerationTime!: number | null;
