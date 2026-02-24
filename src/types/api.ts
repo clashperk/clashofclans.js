@@ -395,6 +395,8 @@ export interface APILeagueSeasonResultList {
 	items: APILeagueSeasonResult[];
 }
 
+export interface APILeagueGroupList {}
+
 // ************* LOCATIONS ************* //
 
 /** /locations */

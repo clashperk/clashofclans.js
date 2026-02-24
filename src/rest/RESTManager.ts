@@ -1,5 +1,6 @@
 import { EventEmitter } from 'node:events';
 import {
+	APIBattleLogEntryList,
 	APIBuilderBaseLeague,
 	APIBuilderBaseLeagueList,
 	APICapitalLeague,
@@ -16,7 +17,9 @@ import {
 	APIClanWarLogList,
 	APIGoldPassSeason,
 	APILabelList,
+	APILeagueGroupList,
 	APILeagueSeasonList,
+	APILeagueSeasonResultList,
 	APILeagueTier,
 	APILeagueTierList,
 	APILocation,
@@ -177,15 +180,15 @@ export class RESTManager extends EventEmitter {
 	}
 
 	public getLeagueHistory(playerTag: string, options?: OverrideOptions) {
-		return this.requestHandler.request<APIVerifyToken>(`/players/${Util.encodeURI(playerTag)}/leaguehistory`, options);
+		return this.requestHandler.request<APILeagueSeasonResultList>(`/players/${Util.encodeURI(playerTag)}/leaguehistory`, options);
 	}
 
 	public getBattleLog(playerTag: string, options?: OverrideOptions) {
-		return this.requestHandler.request<APIVerifyToken>(`/players/${Util.encodeURI(playerTag)}/battlelog`, options);
+		return this.requestHandler.request<APIBattleLogEntryList>(`/players/${Util.encodeURI(playerTag)}/battlelog`, options);
 	}
 
 	public getLeagueGroup(leagueGroupTag: string, seasonId: string, options?: OverrideOptions & { playerTag?: string }) {
-		return this.requestHandler.request<APIVerifyToken>(`/leaguegroup/${leagueGroupTag}/${seasonId}`, options);
+		return this.requestHandler.request<APILeagueGroupList>(`/leaguegroup/${leagueGroupTag}/${seasonId}`, options);
 	}
 
 	/** Get a list of League Tiers. */
