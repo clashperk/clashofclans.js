@@ -279,6 +279,48 @@ export class Util extends null {
 			.map((res) => (res as PromiseFulfilledResult<T>).value);
 	}
 
+	public static calculateTrophies(stars: number, destruction: number, isAttack: boolean, isLegendLeague: boolean): number {
+		let attackerGain = 0;
+
+		if (stars === 3) {
+			// 3 stars always awards the full pool
+			attackerGain = 40;
+		} else if (stars === 2) {
+			// 16 base + 1 per 3% over 50%
+			attackerGain = 16 + Math.floor((destruction - 50) / 3);
+		} else if (stars === 1) {
+			// 5 base + 1 per 9% destruction
+			attackerGain = 5 + Math.floor(destruction / 9);
+		} else {
+			// 0 stars: 1 trophy per 10% destruction (minimum 10% required)
+			if (destruction >= 10) {
+				attackerGain = Math.floor(destruction / 10);
+			}
+		}
+
+		// Cap at 40 (standard trophy pool)
+		if (attackerGain > 40) {
+			attackerGain = 40;
+		}
+
+		if (isAttack) {
+			return attackerGain;
+		}
+
+		// In Legend League, the defender LOSES what the attacker gains
+		if (isLegendLeague) {
+			return -attackerGain;
+		}
+
+		// In Ranked, the defender GAINS the remainder of the 40 pool
+		// 0-star defense always gives full 40 to defender
+		if (stars === 0) {
+			return 40;
+		}
+
+		return 40 - attackerGain;
+	}
+
 	public static async delay(ms: number) {
 		return new Promise((res) => setTimeout(res, ms));
 	}
