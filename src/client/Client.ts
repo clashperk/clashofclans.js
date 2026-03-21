@@ -2,7 +2,7 @@ import { EventEmitter } from 'node:events';
 import { HTTPError } from '../rest/HTTPError';
 import { RESTManager } from '../rest/RESTManager';
 import { ClanSearchOptions, ClientOptions, LoginOptions, OverrideOptions, SearchOptions } from '../types';
-import { CWLRounds, ClientEvents, LegendLeagueId, RestEvents } from '../util/Constants';
+import { CWL_ROUNDS, CLIENT_EVENTS, LEGEND_LEAGUE_ID, REST_EVENTS } from '../util/Constants';
 import { Util } from '../util/Util';
 
 import {
@@ -21,8 +21,8 @@ import {
 import { CapitalRaidSeason } from '../struct/CapitalRaidSeason';
 
 interface IClientEvents {
-	[ClientEvents.Error]: [error: unknown];
-	[ClientEvents.Debug]: [path: string, status: string, message: string];
+	[CLIENT_EVENTS.Error]: [error: unknown];
+	[CLIENT_EVENTS.Debug]: [path: string, status: string, message: string];
 }
 
 export interface Client {
@@ -71,8 +71,8 @@ export class Client extends EventEmitter {
 		super();
 
 		this.rest = new RESTManager({ ...options, rejectIfNotValid: true })
-			.on(RestEvents.Debug, this.emit.bind(this, RestEvents.Debug))
-			.on(RestEvents.Error, this.emit.bind(this, RestEvents.Error));
+			.on(REST_EVENTS.Debug, this.emit.bind(this, REST_EVENTS.Debug))
+			.on(REST_EVENTS.Error, this.emit.bind(this, REST_EVENTS.Error));
 	}
 
 	/** Contains various general-purpose utility methods. */
@@ -151,7 +151,7 @@ export class Client extends EventEmitter {
 	 * await client.getCurrentWar({ clanTag: '#8QU8J9LP', round: 'PREVIOUS_ROUND' });
 	 * ```
 	 */
-	public async getCurrentWar(clanTag: string | { clanTag: string; round?: keyof typeof CWLRounds }, options?: OverrideOptions) {
+	public async getCurrentWar(clanTag: string | { clanTag: string; round?: keyof typeof CWL_ROUNDS }, options?: OverrideOptions) {
 		const args = typeof clanTag === 'string' ? { clanTag } : { clanTag: clanTag.clanTag, round: clanTag.round };
 
 		try {
@@ -179,10 +179,10 @@ export class Client extends EventEmitter {
 	 * await client.getLeagueWar({ clanTag: '#8QU8J9LP', round: 'PREVIOUS_ROUND' });
 	 * ```
 	 */
-	public async getLeagueWar(clanTag: string | { clanTag: string; round?: keyof typeof CWLRounds }, options?: OverrideOptions) {
+	public async getLeagueWar(clanTag: string | { clanTag: string; round?: keyof typeof CWL_ROUNDS }, options?: OverrideOptions) {
 		const args = typeof clanTag === 'string' ? { clanTag } : { clanTag: clanTag.clanTag, round: clanTag.round };
 
-		const state = (args.round && CWLRounds[args.round]) ?? 'inWar'; // eslint-disable-line
+		const state = (args.round && CWL_ROUNDS[args.round]) ?? 'inWar'; // eslint-disable-line
 		const body = await this.getClanWarLeagueGroup(args.clanTag, options);
 
 		const rounds = body.rounds.filter((round) => !round.warTags.includes('#0'));
@@ -198,7 +198,7 @@ export class Client extends EventEmitter {
 			warTags.map((warTag) => this.getClanWarLeagueRound({ warTag, clanTag: args.clanTag }, { ...options, ignoreRateLimit: true }))
 		);
 
-		if (args.round && args.round in CWLRounds) {
+		if (args.round && args.round in CWL_ROUNDS) {
 			return wars.find((war) => war.clan.tag === args.clanTag && war.state === state) ?? null;
 		}
 
@@ -284,13 +284,13 @@ export class Client extends EventEmitter {
 
 	/** Get Legend League season Ids. */
 	public async getLeagueSeasons(options?: SearchOptions) {
-		const { body } = await this.rest.getLeagueSeasons(LegendLeagueId, options);
+		const { body } = await this.rest.getLeagueSeasons(LEGEND_LEAGUE_ID, options);
 		return body.items.map((item) => item.id);
 	}
 
 	/** Get Legend League season rankings by season Id. */
 	public async getSeasonRankings(seasonId: string, options?: SearchOptions) {
-		const { body } = await this.rest.getSeasonRankings(LegendLeagueId, seasonId, options);
+		const { body } = await this.rest.getSeasonRankings(LEGEND_LEAGUE_ID, seasonId, options);
 		return body.items.map((entry) => new SeasonRankedPlayer(this, entry));
 	}
 

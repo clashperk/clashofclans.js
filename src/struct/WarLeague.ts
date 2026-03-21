@@ -1,5 +1,5 @@
 import { APIWarLeague } from '../types';
-import { WarLeagues } from '../util/Constants';
+import { WAR_LEAGUES } from '../util/Constants';
 
 /** Represents a Clan's War League. */
 export class WarLeague {
@@ -16,6 +16,6 @@ export class WarLeague {
 
 	/** Position of this War League. Starting from 0 (Unranked) */
 	public get position() {
-		return WarLeagues.indexOf(this.id);
+		return WAR_LEAGUES.indexOf(this.id);
 	}
 }

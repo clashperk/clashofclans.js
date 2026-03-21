@@ -1,6 +1,6 @@
 import { EventEmitter } from 'node:events';
 import { LoginOptions, RequestHandlerOptions, RequestOptions, Result, Store } from '../types';
-import { APIBaseURL, DevSiteAPIBaseURL } from '../util/Constants';
+import { API_BASE_URL, DEV_SITE_API_BASE_URL } from '../util/Constants';
 import { CacheStore } from '../util/Store';
 import { timeoutSignal } from '../util/Util';
 import { HTTPError, PrivateWarLogError } from './HTTPError';
@@ -75,7 +75,7 @@ export class RequestHandler extends EventEmitter {
 		this.keys = options?.keys ?? [];
 		this.retryLimit = options?.retryLimit ?? 0;
 		this.throttler = options?.throttler ?? null;
-		this.baseURL = options?.baseURL ?? APIBaseURL;
+		this.baseURL = options?.baseURL ?? API_BASE_URL;
 		this.restRequestTimeout = options?.restRequestTimeout ?? 0;
 		this.rejectIfNotValid = options?.rejectIfNotValid ?? true;
 		if (typeof options?.cache === 'object') this.cached = options.cache;
@@ -216,7 +216,7 @@ export class RequestHandler extends EventEmitter {
 	}
 
 	private async login() {
-		const res = await fetch(`${DevSiteAPIBaseURL}/login`, {
+		const res = await fetch(`${DEV_SITE_API_BASE_URL}/login`, {
 			method: 'POST',
 			signal: timeoutSignal(this.restRequestTimeout),
 			headers: { 'Content-Type': 'application/json' },
@@ -233,7 +233,7 @@ export class RequestHandler extends EventEmitter {
 	}
 
 	private async getKeys(cookie: string, ip: string) {
-		const res = await fetch(`${DevSiteAPIBaseURL}/apikey/list`, {
+		const res = await fetch(`${DEV_SITE_API_BASE_URL}/apikey/list`, {
 			method: 'POST',
 			signal: timeoutSignal(this.restRequestTimeout),
 			headers: { 'Content-Type': 'application/json', cookie }
@@ -283,7 +283,7 @@ export class RequestHandler extends EventEmitter {
 	}
 
 	private async revokeKey(keyId: string, cookie: string) {
-		const res = await fetch(`${DevSiteAPIBaseURL}/apikey/revoke`, {
+		const res = await fetch(`${DEV_SITE_API_BASE_URL}/apikey/revoke`, {
 			method: 'POST',
 			signal: timeoutSignal(this.restRequestTimeout),
 			body: JSON.stringify({ id: keyId }),
@@ -294,7 +294,7 @@ export class RequestHandler extends EventEmitter {
 	}
 
 	private async createKey(cookie: string, ip: string) {
-		const res = await fetch(`${DevSiteAPIBaseURL}/apikey/create`, {
+		const res = await fetch(`${DEV_SITE_API_BASE_URL}/apikey/create`, {
 			method: 'POST',
 			signal: timeoutSignal(this.restRequestTimeout),
 			headers: { 'Content-Type': 'application/json', cookie },

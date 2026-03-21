@@ -1,5 +1,5 @@
 import { APICapitalRaidSeason } from '../types';
-import { FriendlyWarPreparationTimes } from './Constants';
+import { FRIENDLY_WAR_PREPARATION_TIMES } from './Constants';
 
 export const calculateRaidsCompleted = (attackLog: APICapitalRaidSeason['attackLog']) => {
 	let total = 0;
@@ -49,7 +49,7 @@ export const calculateOffensiveRaidMedals = (attackLog: APICapitalRaidSeason['at
 
 export const isFriendlyWar = (preparationStartTime: Date, startTime: Date) => {
 	const preparationTime = startTime.getTime() - preparationStartTime.getTime();
-	return FriendlyWarPreparationTimes.includes(preparationTime);
+	return FRIENDLY_WAR_PREPARATION_TIMES.includes(preparationTime);
 };
 
 export const getWarResult = (clan: PartialWarClan, opponent: PartialWarClan) => {
