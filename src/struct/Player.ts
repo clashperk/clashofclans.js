@@ -1,6 +1,6 @@
 import { Client } from '../client/Client';
 import { APIPlayer, APIPlayerHouse, OverrideOptions } from '../types';
-import { BuilderTroops, HeroPets, HomeTroops, SiegeMachines, SuperTroops, UnrankedLeagueData } from '../util/Constants';
+import { BUILDER_TROOPS, HERO_PETS, HOME_TROOPS, SIEGE_MACHINES, SUPER_TROOPS, UNRANKED_LEAGUE_DATA } from '../util/Constants';
 import { Enumerable } from '../util/Decorators';
 import { Achievement } from './Achievement';
 import { Label } from './Label';
@@ -120,7 +120,7 @@ export class Player {
 		this.role = data.role?.replace('admin', 'elder') ?? null;
 		this.warOptedIn = data.warPreference ? data.warPreference === 'in' : null;
 		this.clan = data.clan ? new PlayerClan(client, data.clan) : null;
-		this.leagueTier = new LeagueTier(data.leagueTier ?? UnrankedLeagueData);
+		this.leagueTier = new LeagueTier(data.leagueTier ?? UNRANKED_LEAGUE_DATA);
 		this.legendStatistics = data.legendStatistics ? new LegendStatistics(data.legendStatistics) : null;
 		this.achievements = data.achievements.map((data) => new Achievement(data));
 		this.labels = data.labels.map((data) => new Label(data));
@@ -167,36 +167,36 @@ export class Player {
 	/** An array of the player's home base troops. */
 	public get homeTroops() {
 		return this.troops
-			.filter((entry) => entry.village === 'home' && HomeTroops.includes(entry.name))
-			.sort((a, b) => HomeTroops.indexOf(a.name) - HomeTroops.indexOf(b.name));
+			.filter((entry) => entry.village === 'home' && HOME_TROOPS.includes(entry.name))
+			.sort((a, b) => HOME_TROOPS.indexOf(a.name) - HOME_TROOPS.indexOf(b.name));
 	}
 
 	/** An array of the player's builder base troops. */
 	public get builderTroops() {
 		return this.troops
-			.filter((entry) => entry.village === 'builderBase' && BuilderTroops.includes(entry.name))
-			.sort((a, b) => BuilderTroops.indexOf(a.name) - BuilderTroops.indexOf(b.name));
+			.filter((entry) => entry.village === 'builderBase' && BUILDER_TROOPS.includes(entry.name))
+			.sort((a, b) => BUILDER_TROOPS.indexOf(a.name) - BUILDER_TROOPS.indexOf(b.name));
 	}
 
 	/** An array of the player's super troops. */
 	public get superTroops() {
 		return this.troops
-			.filter((entry) => entry.village === 'home' && SuperTroops.includes(entry.name))
-			.sort((a, b) => SuperTroops.indexOf(a.name) - SuperTroops.indexOf(b.name));
+			.filter((entry) => entry.village === 'home' && SUPER_TROOPS.includes(entry.name))
+			.sort((a, b) => SUPER_TROOPS.indexOf(a.name) - SUPER_TROOPS.indexOf(b.name));
 	}
 
 	/** An array of the player's hero pets. */
 	public get heroPets() {
 		return this.troops
-			.filter((entry) => entry.village === 'home' && HeroPets.includes(entry.name))
-			.sort((a, b) => HeroPets.indexOf(a.name) - HeroPets.indexOf(b.name));
+			.filter((entry) => entry.village === 'home' && HERO_PETS.includes(entry.name))
+			.sort((a, b) => HERO_PETS.indexOf(a.name) - HERO_PETS.indexOf(b.name));
 	}
 
 	/** An array of the player's siege machines. */
 	public get siegeMachines() {
 		return this.troops
-			.filter((entry) => entry.village === 'home' && SiegeMachines.includes(entry.name))
-			.sort((a, b) => SiegeMachines.indexOf(a.name) - SiegeMachines.indexOf(b.name));
+			.filter((entry) => entry.village === 'home' && SIEGE_MACHINES.includes(entry.name))
+			.sort((a, b) => SIEGE_MACHINES.indexOf(a.name) - SIEGE_MACHINES.indexOf(b.name));
 	}
 
 	/** Get player's formatted link to open player in-game. */

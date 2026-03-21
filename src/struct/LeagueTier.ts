@@ -1,5 +1,5 @@
 import { APILeagueTier } from '../types';
-import { Leagues } from '../util/Constants';
+import { LEAGUES } from '../util/Constants';
 import { Icon } from './Icon';
 
 /** Represents a Player's League. */
@@ -21,6 +21,6 @@ export class LeagueTier {
 
 	/** Position of this League. Starting from 0 (Un-ranked) */
 	public get position() {
-		return Leagues.indexOf(this.id);
+		return LEAGUES.indexOf(this.id);
 	}
 }

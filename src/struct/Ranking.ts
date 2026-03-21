@@ -1,6 +1,6 @@
 import { Client } from '../client/Client';
 import { APIClanBuilderBaseRanking, APIClanRanking, APIPlayerBuilderBaseRanking, APIPlayerRanking } from '../types';
-import { UnrankedLeagueData } from '../util/Constants';
+import { UNRANKED_LEAGUE_DATA } from '../util/Constants';
 import { Badge } from './Badge';
 import { LeagueTier } from './LeagueTier';
 import { Location } from './Location';
@@ -102,7 +102,7 @@ export class RankedPlayer {
 		// @ts-expect-error
 		this.clan = data.clan ? new PlayerClan(client, data.clan) : null;
 		// @ts-expect-error
-		this.leagueTier = data.trophies ? new LeagueTier(data.leagueTier ?? UnrankedLeagueData) : null; // eslint-disable-line
+		this.leagueTier = data.trophies ? new LeagueTier(data.leagueTier ?? UNRANKED_LEAGUE_DATA) : null; // eslint-disable-line
 	}
 
 	/** Get player's formatted link to open player in-game. */

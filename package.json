@@ -23,7 +23,8 @@
 		"lint:test": "eslint --ext .ts --ignore-path .gitignore .",
 		"lint:fix": "eslint --fix --ext .ts --ignore-path .gitignore .",
 		"test": "TZ=UTC jest --setupFiles dotenv/config --config ./jest.config.json",
-		"test:watch": "npm run test -- --watch"
+		"test:watch": "npm run test -- --watch",
+		"test:bun": "TZ=UTC bun test"
 	},
 	"files": [
 		"dist"
@@ -50,13 +51,10 @@
 			"tag": true
 		}
 	},
-	"dependencies": {
-		"undici": "^7.22.0"
-	},
 	"devDependencies": {
 		"@jest/globals": "^29.7.0",
 		"@types/jest": "^29.5.14",
-		"@types/node": "^18.17.5",
+		"@types/node": "^20.19.37",
 		"@typescript-eslint/eslint-plugin": "^6.3.0",
 		"@typescript-eslint/parser": "^6.3.0",
 		"dotenv": "^16.0.2",
@@ -71,6 +69,7 @@
 		"typescript": "^5.1.6"
 	},
 	"engines": {
-		"node": ">=20.x"
+		"node": ">=20.x",
+		"bun": ">=1.0.0"
 	}
 }

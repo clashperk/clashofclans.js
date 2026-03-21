@@ -37,14 +37,14 @@ import {
 	RESTOptions,
 	SearchOptions
 } from '../types';
-import { RestEvents } from '../util/Constants';
+import { REST_EVENTS } from '../util/Constants';
 import { Util } from '../util/Util';
 import { RequestHandler } from './RequestHandler';
 
 export interface IRestEvents {
-	[RestEvents.Error]: [error: unknown];
-	[RestEvents.Debug]: [path: string, status: number, message: string];
-	[RestEvents.RateLimited]: [path: string, status: number, message: string];
+	[REST_EVENTS.ERROR]: [error: unknown];
+	[REST_EVENTS.DEBUG]: [path: string, status: number, message: string];
+	[REST_EVENTS.RATE_LIMITED]: [path: string, status: number, message: string];
 }
 
 export interface RESTManager {
@@ -94,9 +94,9 @@ export class RESTManager extends EventEmitter {
 		super();
 
 		this.requestHandler = new RequestHandler(options)
-			.on(RestEvents.Debug, this.emit.bind(this, RestEvents.Debug))
-			.on(RestEvents.Error, this.emit.bind(this, RestEvents.Error))
-			.on(RestEvents.RateLimited, this.emit.bind(this, RestEvents.RateLimited));
+			.on(REST_EVENTS.DEBUG, this.emit.bind(this, REST_EVENTS.DEBUG))
+			.on(REST_EVENTS.ERROR, this.emit.bind(this, REST_EVENTS.ERROR))
+			.on(REST_EVENTS.RATE_LIMITED, this.emit.bind(this, REST_EVENTS.RATE_LIMITED));
 	}
 
 	/** Contains various general-purpose utility methods. */
