@@ -1,5 +1,4 @@
 import { EventEmitter } from 'node:events';
-import { fetch, Pool } from 'undici';
 import { LoginOptions, RequestHandlerOptions, RequestOptions, Result, Store } from '../types';
 import { APIBaseURL, DevSiteAPIBaseURL } from '../util/Constants';
 import { CacheStore } from '../util/Store';
@@ -7,6 +6,8 @@ import { timeoutSignal } from '../util/Util';
 import { HTTPError, PrivateWarLogError } from './HTTPError';
 import { IRestEvents } from './RESTManager';
 import { BatchThrottler, QueueThrottler } from './Throttler';
+
+const isBun = typeof (globalThis as any).Bun !== 'undefined';
 
 const IP_REGEX = /\d{1,3}.\d{1,3}.\d{1,3}.\d{1,3}/g;
 
@@ -69,7 +70,7 @@ export class RequestHandler extends EventEmitter {
 	private readonly cached: Store<{ body: unknown; ttl: number; status: number }> | null;
 	private readonly onError?: (args: { path: string; status: number; body: unknown }) => unknown;
 
-	private readonly dispatcher: Pool;
+	private readonly dispatcher: import('undici').Pool | null;
 
 	public constructor(options?: RequestHandlerOptions) {
 		super();
@@ -84,10 +85,16 @@ export class RequestHandler extends EventEmitter {
 		if (typeof options?.cache === 'object') this.cached = options.cache;
 		else this.cached = options?.cache === true ? new CacheStore() : null;
 
-		this.dispatcher = new Pool(new URL(this.baseURL).origin, {
-			connections: options?.connections ?? null,
-			pipelining: options?.pipelining ?? 1
-		});
+		if (isBun) {
+			this.dispatcher = null;
+		} else {
+			// eslint-disable-next-line @typescript-eslint/no-var-requires
+			const { Pool } = require('undici') as typeof import('undici');
+			this.dispatcher = new Pool(new URL(this.baseURL).origin, {
+				connections: options?.connections ?? null,
+				pipelining: options?.pipelining ?? 1
+			});
+		}
 	}
 
 	private get _keys() {
@@ -149,22 +156,44 @@ export class RequestHandler extends EventEmitter {
 
 	private async dispatch<T>(path: string, options: RequestOptions = {}, retries = 0): Promise<Result<T>> {
 		try {
-			const res = await this.dispatcher.request({
-				path: `/v1${path}`,
-				body: options.body,
-				method: options.method ?? 'GET',
-				signal: timeoutSignal(options.restRequestTimeout ?? this.restRequestTimeout),
-				headers: { 'Authorization': `Bearer ${this._key}`, 'Content-Type': 'application/json' }
-			});
+			const signal = timeoutSignal(options.restRequestTimeout ?? this.restRequestTimeout);
+			const headers = { 'Authorization': `Bearer ${this._key}`, 'Content-Type': 'application/json' };
+			const method = options.method ?? 'GET';
 
-			if (res.statusCode === 504 && retries < (options.retryLimit ?? this.retryLimit)) {
+			let statusCode: number;
+			let body: ResponseBody;
+			let cacheControl: string | null;
+
+			if (this.dispatcher) {
+				const res = await this.dispatcher.request({
+					path: `/v1${path}`,
+					body: options.body,
+					method,
+					signal,
+					headers
+				});
+				statusCode = res.statusCode;
+				body = (await res.body.json()) as ResponseBody;
+				cacheControl = (res.headers['cache-control'] as string | null) ?? null;
+			} else {
+				const res = await fetch(`${this.baseURL}/v1${path}`, {
+					method,
+					signal,
+					headers,
+					body: options.body as string | undefined
+				});
+				statusCode = res.status;
+				body = (await res.json()) as ResponseBody;
+				cacheControl = res.headers.get('cache-control');
+			}
+
+			if (statusCode === 504 && retries < (options.retryLimit ?? this.retryLimit)) {
 				return await this.exec<T>(path, options, ++retries);
 			}
-			const body = (await res.body.json()) as ResponseBody;
 
 			if (
 				this.credentials &&
-				res.statusCode === 403 &&
+				statusCode === 403 &&
 				body?.reason === 'accessDenied.invalidIp' &&
 				retries < (options.retryLimit ?? this.retryLimit)
 			) {
@@ -172,20 +201,20 @@ export class RequestHandler extends EventEmitter {
 				if (keys.length) return await this.exec<T>(path, options, ++retries);
 			}
 
-			const maxAge = Number((res.headers['cache-control'] as string | null)?.split('=')?.[1] ?? 0) * 1000;
+			const maxAge = Number(cacheControl?.split('=')?.[1] ?? 0) * 1000;
 
-			if (res.statusCode === 403 && !body?.message && this.rejectIfNotValid) {
-				throw new HTTPError(PrivateWarLogError, res.statusCode, path, maxAge);
+			if (statusCode === 403 && !body?.message && this.rejectIfNotValid) {
+				throw new HTTPError(PrivateWarLogError, statusCode, path, maxAge);
 			}
-			if (res.statusCode !== 200 && this.rejectIfNotValid) {
-				throw new HTTPError(body, res.statusCode, path, maxAge, options.method);
+			if (statusCode !== 200 && this.rejectIfNotValid) {
+				throw new HTTPError(body, statusCode, path, maxAge, options.method);
 			}
-			if (this.cached && maxAge > 0 && options.cache !== false && res.statusCode === 200) {
-				await this.cached.set(path, { body, ttl: Date.now() + maxAge, status: res.statusCode }, maxAge);
+			if (this.cached && maxAge > 0 && options.cache !== false && statusCode === 200) {
+				await this.cached.set(path, { body, ttl: Date.now() + maxAge, status: statusCode }, maxAge);
 			}
 			return {
 				body: body as T,
-				res: { maxAge, status: res.statusCode, path, ok: res.statusCode === 200 }
+				res: { maxAge, status: statusCode, path, ok: statusCode === 200 }
 			};
 		} catch (error: any) {
 			if (error.code === 'UND_ERR_ABORTED' && retries < (options.retryLimit ?? this.retryLimit)) {

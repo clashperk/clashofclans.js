@@ -1,4 +1,4 @@
-import { Dispatcher } from 'undici';
+import type { Dispatcher } from 'undici';
 import { BatchThrottler, QueueThrottler } from '../rest/Throttler';
 
 export interface Store<T = any> {
