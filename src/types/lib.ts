@@ -1,4 +1,3 @@
-import type { Dispatcher } from 'undici';
 import { BatchThrottler, QueueThrottler } from '../rest/Throttler';
 
 export interface Store<T = any> {
@@ -62,12 +61,6 @@ export interface RequestHandlerOptions extends ClientOptions {
 	/** Set this `false` to use `res.ok` property. */
 	rejectIfNotValid?: boolean;
 
-	/** The max number of clients to create. null if no limit. Default null. */
-	connections?: number;
-
-	/** The amount of concurrent requests to be sent over the single TCP/TLS connection according to RFC7230. Default: 1 */
-	pipelining?: number;
-
 	onError?: (args: { path: string; status: number; body: unknown }) => unknown;
 }
 
@@ -114,7 +107,7 @@ export interface RequestOptions extends OverrideOptions {
 	body?: string;
 
 	/** The request method. */
-	method?: Dispatcher.HttpMethod;
+	method?: 'GET' | 'HEAD' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
 }
 
 export interface Result<T> {
