@@ -42,9 +42,9 @@ import { Util } from '../util/Util';
 import { RequestHandler } from './RequestHandler';
 
 export interface IRestEvents {
-	[REST_EVENTS.Error]: [error: unknown];
-	[REST_EVENTS.Debug]: [path: string, status: number, message: string];
-	[REST_EVENTS.RateLimited]: [path: string, status: number, message: string];
+	[REST_EVENTS.ERROR]: [error: unknown];
+	[REST_EVENTS.DEBUG]: [path: string, status: number, message: string];
+	[REST_EVENTS.RATE_LIMITED]: [path: string, status: number, message: string];
 }
 
 export interface RESTManager {
@@ -94,9 +94,9 @@ export class RESTManager extends EventEmitter {
 		super();
 
 		this.requestHandler = new RequestHandler(options)
-			.on(REST_EVENTS.Debug, this.emit.bind(this, REST_EVENTS.Debug))
-			.on(REST_EVENTS.Error, this.emit.bind(this, REST_EVENTS.Error))
-			.on(REST_EVENTS.RateLimited, this.emit.bind(this, REST_EVENTS.RateLimited));
+			.on(REST_EVENTS.DEBUG, this.emit.bind(this, REST_EVENTS.DEBUG))
+			.on(REST_EVENTS.ERROR, this.emit.bind(this, REST_EVENTS.ERROR))
+			.on(REST_EVENTS.RATE_LIMITED, this.emit.bind(this, REST_EVENTS.RATE_LIMITED));
 	}
 
 	/** Contains various general-purpose utility methods. */

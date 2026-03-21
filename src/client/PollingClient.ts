@@ -184,7 +184,7 @@ export class PollingClient extends Client {
 
 	private async maintenanceHandler() {
 		setTimeout(this.maintenanceHandler.bind(this), this._pollingInterval).unref();
-		if (!(this.listenerCount(POLLING_EVENTS.MaintenanceStart) && this.listenerCount(POLLING_EVENTS.MaintenanceEnd))) return;
+		if (!(this.listenerCount(POLLING_EVENTS.MAINTENANCE_START) && this.listenerCount(POLLING_EVENTS.MAINTENANCE_END))) return;
 		try {
 			const { res } = await this.rest.getClans({ maxMembers: Math.floor(Math.random() * 40) + 10, limit: 1 });
 			if (res.status === 200 && this.inMaintenance) {
@@ -192,14 +192,14 @@ export class PollingClient extends Client {
 				const duration = Date.now() - this._maintenanceStartTime!.getTime();
 				this._maintenanceStartTime = null;
 
-				this.emit(POLLING_EVENTS.MaintenanceEnd, duration);
+				this.emit(POLLING_EVENTS.MAINTENANCE_END, duration);
 			}
 		} catch (error) {
 			if (error instanceof HTTPError && error.status === 503 && !this.inMaintenance) {
 				this.inMaintenance = Boolean(true);
 				this._maintenanceStartTime = new Date();
 
-				this.emit(POLLING_EVENTS.MaintenanceStart);
+				this.emit(POLLING_EVENTS.MAINTENANCE_START);
 			}
 		}
 	}
@@ -211,31 +211,31 @@ export class PollingClient extends Client {
 			setTimeout(this.seasonEndHandler.bind(this), 60 * 60 * 1000);
 		} else if (end > 0) {
 			setTimeout(() => {
-				this.emit(POLLING_EVENTS.NewSeasonStart, this.util.getSeasonId());
+				this.emit(POLLING_EVENTS.NEW_SEASON_START, this.util.getSeasonId());
 			}, end + 100).unref();
 		}
 	}
 
 	private async clanUpdateHandler() {
-		this.emit(POLLING_EVENTS.ClanLoopStart);
+		this.emit(POLLING_EVENTS.CLAN_LOOP_START);
 		for (const tag of this._clanTags) await this.runClanUpdate(tag);
-		this.emit(POLLING_EVENTS.ClanLoopEnd);
+		this.emit(POLLING_EVENTS.CLAN_LOOP_END);
 
 		setTimeout(this.clanUpdateHandler.bind(this), this._pollingInterval);
 	}
 
 	private async playerUpdateHandler() {
-		this.emit(POLLING_EVENTS.PlayerLoopStart);
+		this.emit(POLLING_EVENTS.PLAYER_LOOP_START);
 		for (const tag of this._playerTags) await this.runPlayerUpdate(tag);
-		this.emit(POLLING_EVENTS.PlayerLoopEnd);
+		this.emit(POLLING_EVENTS.PLAYER_LOOP_END);
 
 		setTimeout(this.playerUpdateHandler.bind(this), this._pollingInterval);
 	}
 
 	private async warUpdateHandler() {
-		this.emit(POLLING_EVENTS.WarLoopStart);
+		this.emit(POLLING_EVENTS.WAR_LOOP_START);
 		for (const tag of this._warTags) await this.runWarUpdate(tag);
-		this.emit(POLLING_EVENTS.WarLoopEnd);
+		this.emit(POLLING_EVENTS.WAR_LOOP_END);
 
 		setTimeout(this.warUpdateHandler.bind(this), this._pollingInterval);
 	}
@@ -254,7 +254,7 @@ export class PollingClient extends Client {
 				if (!(await filter(cached, clan))) continue;
 				this.emit(name, cached, clan);
 			} catch (error) {
-				this.emit(POLLING_EVENTS.Error, error);
+				this.emit(POLLING_EVENTS.ERROR, error);
 			}
 		}
 
@@ -275,7 +275,7 @@ export class PollingClient extends Client {
 				if (!(await filter(cached, player))) continue;
 				this.emit(name, cached, player);
 			} catch (error) {
-				this.emit(POLLING_EVENTS.Error, error);
+				this.emit(POLLING_EVENTS.ERROR, error);
 			}
 		}
 
@@ -298,20 +298,20 @@ export class PollingClient extends Client {
 					if (!(await filter(cached, war))) continue;
 					this.emit(name, cached, war);
 				} catch (error) {
-					this.emit(POLLING_EVENTS.Error, error);
+					this.emit(POLLING_EVENTS.ERROR, error);
 				}
 			}
 
 			// check for war end
 			if (index === 1 && cached.warTag !== war.warTag) {
-				const data = await this.getLeagueWar({ clanTag: tag, round: 'PreviousRound' }).catch(() => null);
+				const data = await this.getLeagueWar({ clanTag: tag, round: 'PREVIOUS_ROUND' }).catch(() => null);
 				if (data && data.warTag === cached.warTag) {
 					for (const { name, filter } of this._pollingEvents.wars) {
 						try {
 							if (!(await filter(cached, data))) continue;
 							this.emit(name, cached, data);
 						} catch (error) {
-							this.emit(POLLING_EVENTS.Error, error);
+							this.emit(POLLING_EVENTS.ERROR, error);
 						}
 					}
 				}
@@ -387,17 +387,17 @@ export interface PollingClient {
 }
 
 interface IPollingEvents {
-	[POLLING_EVENTS.ClanLoopStart]: [];
-	[POLLING_EVENTS.ClanLoopEnd]: [];
-	[POLLING_EVENTS.PlayerLoopStart]: [];
-	[POLLING_EVENTS.PlayerLoopEnd]: [];
-	[POLLING_EVENTS.WarLoopStart]: [];
-	[POLLING_EVENTS.WarLoopEnd]: [];
+	[POLLING_EVENTS.CLAN_LOOP_START]: [];
+	[POLLING_EVENTS.CLAN_LOOP_END]: [];
+	[POLLING_EVENTS.PLAYER_LOOP_START]: [];
+	[POLLING_EVENTS.PLAYER_LOOP_END]: [];
+	[POLLING_EVENTS.WAR_LOOP_START]: [];
+	[POLLING_EVENTS.WAR_LOOP_END]: [];
 
-	[POLLING_EVENTS.NewSeasonStart]: [id: string];
-	[POLLING_EVENTS.MaintenanceStart]: [];
-	[POLLING_EVENTS.MaintenanceEnd]: [duration: number];
+	[POLLING_EVENTS.NEW_SEASON_START]: [id: string];
+	[POLLING_EVENTS.MAINTENANCE_START]: [];
+	[POLLING_EVENTS.MAINTENANCE_END]: [duration: number];
 
-	[POLLING_EVENTS.Error]: [error: unknown];
-	[POLLING_EVENTS.Debug]: [path: string, status: string, message: string];
+	[POLLING_EVENTS.ERROR]: [error: unknown];
+	[POLLING_EVENTS.DEBUG]: [path: string, status: string, message: string];
 }

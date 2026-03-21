@@ -77,37 +77,37 @@ export const FRIENDLY_WAR_PREPARATION_TIMES = [
 ] as const;
 
 export const POLLING_EVENTS = {
-	ClanLoopStart: 'clanLoopStart',
-	ClanLoopEnd: 'clanLoopEnd',
-	PlayerLoopStart: 'playerLoopStart',
-	PlayerLoopEnd: 'playerLoopEnd',
-	WarLoopStart: 'warLoopStart',
-	WarLoopEnd: 'warLoopEnd',
-	NewSeasonStart: 'newSeasonStart',
-	MaintenanceStart: 'maintenanceStart',
-	MaintenanceEnd: 'maintenanceEnd',
-	Error: 'error',
-	Debug: 'debug'
+	CLAN_LOOP_START: 'clanLoopStart',
+	CLAN_LOOP_END: 'clanLoopEnd',
+	PLAYER_LOOP_START: 'playerLoopStart',
+	PLAYER_LOOP_END: 'playerLoopEnd',
+	WAR_LOOP_START: 'warLoopStart',
+	WAR_LOOP_END: 'warLoopEnd',
+	NEW_SEASON_START: 'newSeasonStart',
+	MAINTENANCE_START: 'maintenanceStart',
+	MAINTENANCE_END: 'maintenanceEnd',
+	ERROR: 'error',
+	DEBUG: 'debug'
 } as const;
 
 export const CLIENT_EVENTS = {
-	Error: 'error',
-	Debug: 'debug'
+	ERROR: 'error',
+	DEBUG: 'debug'
 } as const;
 
 export const REST_EVENTS = {
-	Error: 'error',
-	Debug: 'debug',
-	RateLimited: 'rateLimited'
+	ERROR: 'error',
+	DEBUG: 'debug',
+	RATE_LIMITED: 'rateLimited'
 } as const;
 
 export const CWL_ROUNDS = {
-	PreviousRound: 'warEnded',
-	CurrentRound: 'inWar',
-	NextRound: 'preparation'
+	PREVIOUS_ROUND: 'warEnded',
+	CURRENT_ROUND: 'inWar',
+	NEXT_ROUND: 'preparation'
 } as const;
 
 export const RAW_DATA = {
-	RawUnits: RAW.RAW_UNITS,
-	RawSuperUnits: RAW.RAW_SUPER_UNITS
+	RAW_UNITS: RAW.RAW_UNITS,
+	RAW_SUPER_UNITS: RAW.RAW_SUPER_UNITS
 };

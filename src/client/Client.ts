@@ -21,8 +21,8 @@ import {
 import { CapitalRaidSeason } from '../struct/CapitalRaidSeason';
 
 interface IClientEvents {
-	[CLIENT_EVENTS.Error]: [error: unknown];
-	[CLIENT_EVENTS.Debug]: [path: string, status: string, message: string];
+	[CLIENT_EVENTS.ERROR]: [error: unknown];
+	[CLIENT_EVENTS.DEBUG]: [path: string, status: string, message: string];
 }
 
 export interface Client {
@@ -71,8 +71,8 @@ export class Client extends EventEmitter {
 		super();
 
 		this.rest = new RESTManager({ ...options, rejectIfNotValid: true })
-			.on(REST_EVENTS.Debug, this.emit.bind(this, REST_EVENTS.Debug))
-			.on(REST_EVENTS.Error, this.emit.bind(this, REST_EVENTS.Error));
+			.on(REST_EVENTS.DEBUG, this.emit.bind(this, REST_EVENTS.DEBUG))
+			.on(REST_EVENTS.ERROR, this.emit.bind(this, REST_EVENTS.ERROR));
 	}
 
 	/** Contains various general-purpose utility methods. */
