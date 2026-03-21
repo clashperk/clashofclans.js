@@ -151,8 +151,7 @@ export class RequestHandler extends EventEmitter {
 			if (res.status === 504 && retries < (options.retryLimit ?? this.retryLimit)) {
 				return await this.exec<T>(path, options, ++retries);
 			}
-			const text = await res.text();
-			const body = (text ? JSON.parse(text) : null) as ResponseBody;
+			const body = (await res.json()) as ResponseBody;
 
 			if (
 				this.credentials &&
