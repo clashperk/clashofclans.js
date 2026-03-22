@@ -3,8 +3,8 @@ import { LoginOptions, RequestHandlerOptions, RequestOptions, Result, Store } fr
 import { API_BASE_URL, DEV_SITE_API_BASE_URL } from '../util/Constants';
 import { CacheStore } from '../util/Store';
 import { timeoutSignal } from '../util/Util';
-import { HTTPError, PrivateWarLogError } from './Http-Error';
-import { IRestEvents } from './Rest-Manager';
+import { HttpError, PrivateWarLogError } from './HttpError';
+import { IRestEvents } from './RestManager';
 import { BatchThrottler, QueueThrottler } from './Throttler';
 
 const IP_REGEX = /\d{1,3}.\d{1,3}.\d{1,3}.\d{1,3}/g;
@@ -166,10 +166,10 @@ export class RequestHandler extends EventEmitter {
 			const maxAge = Number(res.headers.get('cache-control')?.split('=')?.[1] ?? 0) * 1000;
 
 			if (res.status === 403 && !body?.message && this.rejectIfNotValid) {
-				throw new HTTPError(PrivateWarLogError, res.status, path, maxAge);
+				throw new HttpError(PrivateWarLogError, res.status, path, maxAge);
 			}
 			if (res.status !== 200 && this.rejectIfNotValid) {
-				throw new HTTPError(body, res.status, path, maxAge, options.method);
+				throw new HttpError(body, res.status, path, maxAge, options.method);
 			}
 			if (this.cached && maxAge > 0 && options.cache !== false && res.status === 200) {
 				await this.cached.set(path, { body, ttl: Date.now() + maxAge, status: res.status }, maxAge);

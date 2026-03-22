@@ -1,6 +1,6 @@
 import { EventEmitter } from 'node:events';
-import { HTTPError } from '../rest/Http-Error';
-import { RESTManager } from '../rest/Rest-Manager';
+import { HttpError } from '../rest/HttpError';
+import { RestManager } from '../rest/RestManager';
 import { ClanSearchOptions, ClientOptions, LoginOptions, OverrideOptions, SearchOptions } from '../types';
 import { CLIENT_EVENTS, CWL_ROUNDS, LEGEND_LEAGUE_ID, REST_EVENTS } from '../util/Constants';
 import { Util } from '../util/Util';
@@ -65,12 +65,12 @@ export interface Client {
  */
 export class Client extends EventEmitter {
 	/** REST Handler of the client. */
-	public rest: RESTManager;
+	public rest: RestManager;
 
 	public constructor(options?: ClientOptions) {
 		super();
 
-		this.rest = new RESTManager({ ...options, rejectIfNotValid: true })
+		this.rest = new RestManager({ ...options, rejectIfNotValid: true })
 			.on(REST_EVENTS.DEBUG, this.emit.bind(this, REST_EVENTS.DEBUG))
 			.on(REST_EVENTS.ERROR, this.emit.bind(this, REST_EVENTS.ERROR));
 	}
@@ -161,7 +161,7 @@ export class Client extends EventEmitter {
 			}
 			return body;
 		} catch (err) {
-			if (err instanceof HTTPError && err.status === 403) {
+			if (err instanceof HttpError && err.status === 403) {
 				return this.getLeagueWar({ clanTag: args.clanTag, round: args.round }, options);
 			}
 			throw err;
@@ -225,7 +225,7 @@ export class Client extends EventEmitter {
 		try {
 			return await this.getLeagueWars(clanTag, options);
 		} catch (e) {
-			if (e instanceof HTTPError && [404].includes(e.status)) {
+			if (e instanceof HttpError && [404].includes(e.status)) {
 				return [await this.getClanWar(clanTag, options)];
 			}
 			throw e;

@@ -26,7 +26,7 @@ The library is organized in four layers under `src/`:
 
 1. **Client** (`client/`) — `Client` is the main EventEmitter-based entry point. Users instantiate it, call `login()`, then use methods like `getClan()`, `getPlayer()`, `getClanWar()`, etc.
 
-2. **REST** (`rest/`) — `RESTManager` orchestrates API calls. `RequestHandler` handles HTTP requests using native fetch, with retry logic, key rotation, and rate limiting. `Throttler` provides `QueueThrottler` and `BatchThrottler` implementations. `HTTPError` wraps API errors with reason codes.
+2. **REST** (`rest/`) — `RestManager` orchestrates API calls. `RequestHandler` handles HTTP requests using native fetch, with retry logic, key rotation, and rate limiting. `Throttler` provides `QueueThrottler` and `BatchThrottler` implementations. `HttpError` wraps API errors with reason codes.
 
 3. **Structures** (`struct/`) — ~24 classes (Clan, Player, ClanWar, ClanMember, Unit, etc.) that wrap raw API responses into typed objects with helper methods.
 
@@ -38,7 +38,7 @@ The library is organized in four layers under `src/`:
 
 - **Dual output**: CommonJS (`dist/index.js`) + ESM wrapper (`dist/index.mjs`) via `gen-esm-wrapper`
 - **Experimental decorators** are enabled and used (see `Decorators.ts`)
-- **Event system**: Client emits `CLIENT_EVENTS.DEBUG`/`ERROR`; RESTManager emits `REST_EVENTS.DEBUG`/`ERROR`/`RATE_LIMITED`
+- **Event system**: Client emits `CLIENT_EVENTS.DEBUG`/`ERROR`; RestManager emits `REST_EVENTS.DEBUG`/`ERROR`/`RATE_LIMITED`
 - **Authentication flow**: `Client.login()` can auto-create API keys via email/password, or accept pre-existing keys
 - **Node.js >= 20** required (uses native fetch)
 

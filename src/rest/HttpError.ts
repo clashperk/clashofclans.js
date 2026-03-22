@@ -19,7 +19,7 @@ const reasons: { [key: string]: string } = {
 };
 
 /** Represents an HTTP Error. */
-export class HTTPError extends Error {
+export class HttpError extends Error {
 	/** The message of this errored request. */
 	public message: string;
 
