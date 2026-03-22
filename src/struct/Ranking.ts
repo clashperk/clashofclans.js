@@ -98,11 +98,11 @@ export class RankedPlayer {
 		// @ts-expect-error
 		this.builderBaseTrophies = data.builderBaseTrophies ?? null;
 		this.rank = data.rank;
-		this.previousRank = data.previousRank ?? null; // eslint-disable-line
+		this.previousRank = data.previousRank ?? null;
 		// @ts-expect-error
 		this.clan = data.clan ? new PlayerClan(client, data.clan) : null;
 		// @ts-expect-error
-		this.leagueTier = data.trophies ? new LeagueTier(data.leagueTier ?? UNRANKED_LEAGUE_DATA) : null; // eslint-disable-line
+		this.leagueTier = data.trophies ? new LeagueTier(data.leagueTier ?? UNRANKED_LEAGUE_DATA) : null;
 	}
 
 	/** Get player's formatted link to open player in-game. */

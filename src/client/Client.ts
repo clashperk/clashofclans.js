@@ -182,7 +182,7 @@ export class Client extends EventEmitter {
 	public async getLeagueWar(clanTag: string | { clanTag: string; round?: keyof typeof CWL_ROUNDS }, options?: OverrideOptions) {
 		const args = typeof clanTag === 'string' ? { clanTag } : { clanTag: clanTag.clanTag, round: clanTag.round };
 
-		const state = (args.round && CWL_ROUNDS[args.round]) ?? 'inWar'; // eslint-disable-line
+		const state = (args.round && CWL_ROUNDS[args.round]) ?? 'inWar';
 		const body = await this.getClanWarLeagueGroup(args.clanTag, options);
 
 		const rounds = body.rounds.filter((round) => !round.warTags.includes('#0'));

@@ -51,7 +51,7 @@ export type ResponseBody = any;
 
 /** Represents the class that manages handlers for endpoints. */
 export class RequestHandler extends EventEmitter {
-	#keyIndex = 0; // eslint-disable-line
+	#keyIndex = 0;
 
 	private email!: string;
 	private password!: string;

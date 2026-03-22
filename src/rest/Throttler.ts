@@ -17,7 +17,7 @@ export class QueueThrottler {
 
 	private async *init() {
 		let lastRan = 0;
-		// eslint-disable-next-line
+
 		while (true) {
 			const difference = Date.now() - lastRan;
 			const needToSleep = this.sleepTime - difference;
@@ -52,7 +52,7 @@ export class BatchThrottler {
 
 	private async *init() {
 		let count = 0;
-		// eslint-disable-next-line
+
 		while (true) {
 			if (count++ >= this.rateLimit) {
 				if (this.sleepTime > 0) await Util.delay(this.sleepTime);

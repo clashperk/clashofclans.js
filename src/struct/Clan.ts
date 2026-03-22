@@ -120,12 +120,12 @@ export class Clan {
 		this.warLeague = data.warLeague ?? null;
 		this.memberCount = data.members;
 		this.labels = data.labels;
-		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+
 		this.clanCapital = Object.keys(data.clanCapital ?? {}).length > 0 ? new ClanCapital(data.clanCapital) : null;
 		this.isFamilyFriendly = data.isFamilyFriendly;
 		this.capitalPoints = data.clanCapitalPoints;
 		this.capitalLeague = data.capitalLeague;
-		this.members = data.memberList?.map((mem) => new ClanMember(this.client, mem)) ?? []; // eslint-disable-line
+		this.members = data.memberList?.map((mem) => new ClanMember(this.client, mem)) ?? [];
 	}
 
 	/** Get {@link Player} info for every Player in the clan. */
