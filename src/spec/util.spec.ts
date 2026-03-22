@@ -1,5 +1,5 @@
 process.env.TZ = 'UTC';
-import { Util } from './util/Util';
+import { Util } from '../util/Util';
 
 describe('util', () => {
 	it('should always be UTC', () => {
