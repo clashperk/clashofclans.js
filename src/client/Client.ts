@@ -1,6 +1,6 @@
 import { EventEmitter } from 'node:events';
-import { HTTPError } from '../rest/HttpError';
-import { RESTManager } from '../rest/RestManager';
+import { HTTPError } from '../rest/Http-Error';
+import { RESTManager } from '../rest/Rest-Manager';
 import { ClanSearchOptions, ClientOptions, LoginOptions, OverrideOptions, SearchOptions } from '../types';
 import { CLIENT_EVENTS, CWL_ROUNDS, LEGEND_LEAGUE_ID, REST_EVENTS } from '../util/Constants';
 import { Util } from '../util/Util';

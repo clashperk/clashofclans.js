@@ -3,8 +3,8 @@ import { LoginOptions, RequestHandlerOptions, RequestOptions, Result, Store } fr
 import { API_BASE_URL, DEV_SITE_API_BASE_URL } from '../util/Constants';
 import { CacheStore } from '../util/Store';
 import { timeoutSignal } from '../util/Util';
-import { HTTPError, PrivateWarLogError } from './HttpError';
-import { IRestEvents } from './RestManager';
+import { HTTPError, PrivateWarLogError } from './Http-Error';
+import { IRestEvents } from './Rest-Manager';
 import { BatchThrottler, QueueThrottler } from './Throttler';
 
 const IP_REGEX = /\d{1,3}.\d{1,3}.\d{1,3}.\d{1,3}/g;
