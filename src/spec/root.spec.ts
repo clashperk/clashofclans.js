@@ -1,4 +1,4 @@
-import { Client } from './client/Client';
+import { Client } from '../client/Client';
 
 describe('root', () => {
 	const client = new Client({ baseURL: process.env.BASE_URL });

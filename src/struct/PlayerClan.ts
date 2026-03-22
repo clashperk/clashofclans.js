@@ -28,7 +28,7 @@ export class PlayerClan {
 		this.client = client;
 		this.name = data.name;
 		this.tag = data.tag;
-		this.level = data.clanLevel ?? null; // eslint-disable-line
+		this.level = data.clanLevel ?? null;
 		this.badge = new Badge(data.badgeUrls);
 	}
 

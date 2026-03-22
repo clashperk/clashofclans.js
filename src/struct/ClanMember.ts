@@ -57,7 +57,7 @@ export class ClanMember {
 		// @ts-expect-error
 		this.role = data.role.replace('admin', 'elder');
 		this.expLevel = data.expLevel;
-		// eslint-disable-next-line
+
 		this.leagueTier = new LeagueTier(data.leagueTier ?? UNRANKED_LEAGUE_DATA);
 		this.trophies = data.trophies;
 		this.builderBaseTrophies = data.builderBaseTrophies ?? null;

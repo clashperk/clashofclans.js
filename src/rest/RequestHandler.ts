@@ -3,8 +3,8 @@ import { LoginOptions, RequestHandlerOptions, RequestOptions, Result, Store } fr
 import { API_BASE_URL, DEV_SITE_API_BASE_URL } from '../util/Constants';
 import { CacheStore } from '../util/Store';
 import { timeoutSignal } from '../util/Util';
-import { HTTPError, PrivateWarLogError } from './HTTPError';
-import { IRestEvents } from './RESTManager';
+import { HttpError, PrivateWarLogError } from './HttpError';
+import { IRestEvents } from './RestManager';
 import { BatchThrottler, QueueThrottler } from './Throttler';
 
 const IP_REGEX = /\d{1,3}.\d{1,3}.\d{1,3}.\d{1,3}/g;
@@ -51,7 +51,7 @@ export type ResponseBody = any;
 
 /** Represents the class that manages handlers for endpoints. */
 export class RequestHandler extends EventEmitter {
-	#keyIndex = 0; // eslint-disable-line
+	#keyIndex = 0;
 
 	private email!: string;
 	private password!: string;
@@ -141,7 +141,7 @@ export class RequestHandler extends EventEmitter {
 
 	private async dispatch<T>(path: string, options: RequestOptions = {}, retries = 0): Promise<Result<T>> {
 		try {
-			const res = await fetch(`${this.baseURL}/v1${path}`, {
+			const res = await fetch(`${this.baseURL}${path}`, {
 				method: options.method ?? 'GET',
 				signal: timeoutSignal(options.restRequestTimeout ?? this.restRequestTimeout),
 				headers: { 'Authorization': `Bearer ${this._key}`, 'Content-Type': 'application/json' },
@@ -166,10 +166,10 @@ export class RequestHandler extends EventEmitter {
 			const maxAge = Number(res.headers.get('cache-control')?.split('=')?.[1] ?? 0) * 1000;
 
 			if (res.status === 403 && !body?.message && this.rejectIfNotValid) {
-				throw new HTTPError(PrivateWarLogError, res.status, path, maxAge);
+				throw new HttpError(PrivateWarLogError, res.status, path, maxAge);
 			}
 			if (res.status !== 200 && this.rejectIfNotValid) {
-				throw new HTTPError(body, res.status, path, maxAge, options.method);
+				throw new HttpError(body, res.status, path, maxAge, options.method);
 			}
 			if (this.cached && maxAge > 0 && options.cache !== false && res.status === 200) {
 				await this.cached.set(path, { body, ttl: Date.now() + maxAge, status: res.status }, maxAge);

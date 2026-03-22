@@ -46,14 +46,10 @@ export interface ClientOptions {
 	throttler?: QueueThrottler | BatchThrottler | null;
 }
 
-/** Options for a {@link RESTManager} */
+/** Options for a {@link RestManager} */
 export interface RESTOptions extends ClientOptions {
 	/** Set this `false` to use `res.ok` property. */
 	rejectIfNotValid?: boolean;
-}
-
-export interface PollingClientOptions extends ClientOptions {
-	pollingInterval?: number;
 }
 
 /** Options for a {@link RequestHandler} */

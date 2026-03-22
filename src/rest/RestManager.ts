@@ -47,7 +47,7 @@ export interface IRestEvents {
 	[REST_EVENTS.RATE_LIMITED]: [path: string, status: number, message: string];
 }
 
-export interface RESTManager {
+export interface RestManager {
 	emit: (<K extends keyof IRestEvents>(event: K, ...args: IRestEvents[K]) => boolean) &
 		(<S extends string | symbol>(event: Exclude<S, keyof IRestEvents>, ...args: any[]) => boolean);
 
@@ -86,8 +86,8 @@ export interface RESTManager {
 }
 
 /** Represents a REST Manager of the client. */
-export class RESTManager extends EventEmitter {
-	/** Request Handler for the RESTManager. */
+export class RestManager extends EventEmitter {
+	/** Request Handler for the RestManager. */
 	public requestHandler: RequestHandler;
 
 	public constructor(options?: RESTOptions) {
@@ -108,7 +108,7 @@ export class RESTManager extends EventEmitter {
 	 * Initialize the client to create keys.
 	 * @example
 	 * ```
-	 * const rest = new RESTManager();
+	 * const rest = new RestManager();
 	 * rest.login({ email: 'developer@email.com', password: '***' });
 	 * ```
 	 */
@@ -179,14 +179,17 @@ export class RESTManager extends EventEmitter {
 		});
 	}
 
+	/** Get league history for a player by tag. */
 	public getLeagueHistory(playerTag: string, options?: OverrideOptions) {
 		return this.requestHandler.request<APILeagueSeasonResultList>(`/players/${Util.encodeURI(playerTag)}/leaguehistory`, options);
 	}
 
+	/** Get battle log for a player by tag. */
 	public getBattleLog(playerTag: string, options?: OverrideOptions) {
 		return this.requestHandler.request<APIBattleLogEntryList>(`/players/${Util.encodeURI(playerTag)}/battlelog`, options);
 	}
 
+	/** Get league group info. */
 	public getLeagueGroup(leagueGroupTag: string, seasonId: string, options?: OverrideOptions & { playerTag?: string }) {
 		return this.requestHandler.request<APILeagueGroupList>(`/leaguegroup/${leagueGroupTag}/${seasonId}`, options);
 	}

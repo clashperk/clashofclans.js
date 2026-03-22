@@ -1,8 +1,8 @@
 import { EventEmitter } from 'node:events';
-import { HTTPError } from '../rest/HTTPError';
-import { RESTManager } from '../rest/RESTManager';
+import { HttpError } from '../rest/HttpError';
+import { RestManager } from '../rest/RestManager';
 import { ClanSearchOptions, ClientOptions, LoginOptions, OverrideOptions, SearchOptions } from '../types';
-import { CWL_ROUNDS, CLIENT_EVENTS, LEGEND_LEAGUE_ID, REST_EVENTS } from '../util/Constants';
+import { CLIENT_EVENTS, CWL_ROUNDS, LEGEND_LEAGUE_ID, REST_EVENTS } from '../util/Constants';
 import { Util } from '../util/Util';
 
 import {
@@ -65,12 +65,12 @@ export interface Client {
  */
 export class Client extends EventEmitter {
 	/** REST Handler of the client. */
-	public rest: RESTManager;
+	public rest: RestManager;
 
 	public constructor(options?: ClientOptions) {
 		super();
 
-		this.rest = new RESTManager({ ...options, rejectIfNotValid: true })
+		this.rest = new RestManager({ ...options, rejectIfNotValid: true })
 			.on(REST_EVENTS.DEBUG, this.emit.bind(this, REST_EVENTS.DEBUG))
 			.on(REST_EVENTS.ERROR, this.emit.bind(this, REST_EVENTS.ERROR));
 	}
@@ -161,7 +161,7 @@ export class Client extends EventEmitter {
 			}
 			return body;
 		} catch (err) {
-			if (err instanceof HTTPError && err.status === 403) {
+			if (err instanceof HttpError && err.status === 403) {
 				return this.getLeagueWar({ clanTag: args.clanTag, round: args.round }, options);
 			}
 			throw err;
@@ -182,7 +182,7 @@ export class Client extends EventEmitter {
 	public async getLeagueWar(clanTag: string | { clanTag: string; round?: keyof typeof CWL_ROUNDS }, options?: OverrideOptions) {
 		const args = typeof clanTag === 'string' ? { clanTag } : { clanTag: clanTag.clanTag, round: clanTag.round };
 
-		const state = (args.round && CWL_ROUNDS[args.round]) ?? 'inWar'; // eslint-disable-line
+		const state = (args.round && CWL_ROUNDS[args.round]) ?? 'inWar';
 		const body = await this.getClanWarLeagueGroup(args.clanTag, options);
 
 		const rounds = body.rounds.filter((round) => !round.warTags.includes('#0'));
@@ -225,7 +225,7 @@ export class Client extends EventEmitter {
 		try {
 			return await this.getLeagueWars(clanTag, options);
 		} catch (e) {
-			if (e instanceof HTTPError && [404].includes(e.status)) {
+			if (e instanceof HttpError && [404].includes(e.status)) {
 				return [await this.getClanWar(clanTag, options)];
 			}
 			throw e;
@@ -366,6 +366,24 @@ export class Client extends EventEmitter {
 	public async getPlayerLabels(options?: SearchOptions) {
 		const { body } = await this.rest.getPlayerLabels(options);
 		return body.items;
+	}
+
+	/** Get league history for a player by tag. */
+	public async getLeagueHistory(playerTag: string, options?: OverrideOptions) {
+		const { body } = await this.rest.getLeagueHistory(playerTag, options);
+		return body.items;
+	}
+
+	/** Get battle log for a player by tag. */
+	public async getBattleLog(playerTag: string, options?: OverrideOptions) {
+		const { body } = await this.rest.getBattleLog(playerTag, options);
+		return body.items;
+	}
+
+	/** Get league group info. */
+	public async getLeagueGroup(leagueGroupTag: string, seasonId: string, options?: OverrideOptions) {
+		const { body } = await this.rest.getLeagueGroup(leagueGroupTag, seasonId, options);
+		return body;
 	}
 
 	/** Get info about gold pass season. */
