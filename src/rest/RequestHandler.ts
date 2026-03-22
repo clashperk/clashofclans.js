@@ -141,7 +141,7 @@ export class RequestHandler extends EventEmitter {
 
 	private async dispatch<T>(path: string, options: RequestOptions = {}, retries = 0): Promise<Result<T>> {
 		try {
-			const res = await fetch(`${this.baseURL}/v1${path}`, {
+			const res = await fetch(`${this.baseURL}${path}`, {
 				method: options.method ?? 'GET',
 				signal: timeoutSignal(options.restRequestTimeout ?? this.restRequestTimeout),
 				headers: { 'Authorization': `Bearer ${this._key}`, 'Content-Type': 'application/json' },
