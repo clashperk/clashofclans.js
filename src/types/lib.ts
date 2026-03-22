@@ -52,10 +52,6 @@ export interface RESTOptions extends ClientOptions {
 	rejectIfNotValid?: boolean;
 }
 
-export interface PollingClientOptions extends ClientOptions {
-	pollingInterval?: number;
-}
-
 /** Options for a {@link RequestHandler} */
 export interface RequestHandlerOptions extends ClientOptions {
 	/** Set this `false` to use `res.ok` property. */

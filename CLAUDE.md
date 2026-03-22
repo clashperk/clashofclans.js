@@ -24,7 +24,7 @@ Tests require environment variables (`EMAIL`, `PASSWORD`, optionally `BASE_URL`)
 
 The library is organized in four layers under `src/`:
 
-1. **Client** (`client/`) — `Client` is the main EventEmitter-based entry point. Users instantiate it, call `login()`, then use methods like `getClan()`, `getPlayer()`, `getClanWar()`, etc. `PollingClient` extends Client for event-based polling (deprecated).
+1. **Client** (`client/`) — `Client` is the main EventEmitter-based entry point. Users instantiate it, call `login()`, then use methods like `getClan()`, `getPlayer()`, `getClanWar()`, etc.
 
 2. **REST** (`rest/`) — `RESTManager` orchestrates API calls. `RequestHandler` handles HTTP requests using native fetch, with retry logic, key rotation, and rate limiting. `Throttler` provides `QueueThrottler` and `BatchThrottler` implementations. `HTTPError` wraps API errors with reason codes.
 

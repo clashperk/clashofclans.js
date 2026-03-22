@@ -368,6 +368,24 @@ export class Client extends EventEmitter {
 		return body.items;
 	}
 
+	/** Get league history for a player by tag. */
+	public async getLeagueHistory(playerTag: string, options?: OverrideOptions) {
+		const { body } = await this.rest.getLeagueHistory(playerTag, options);
+		return body.items;
+	}
+
+	/** Get battle log for a player by tag. */
+	public async getBattleLog(playerTag: string, options?: OverrideOptions) {
+		const { body } = await this.rest.getBattleLog(playerTag, options);
+		return body.items;
+	}
+
+	/** Get league group info. */
+	public async getLeagueGroup(leagueGroupTag: string, seasonId: string, options?: OverrideOptions) {
+		const { body } = await this.rest.getLeagueGroup(leagueGroupTag, seasonId, options);
+		return body;
+	}
+
 	/** Get info about gold pass season. */
 	public async getGoldPassSeason(options?: OverrideOptions) {
 		const { body } = await this.rest.getGoldPassSeason(options);

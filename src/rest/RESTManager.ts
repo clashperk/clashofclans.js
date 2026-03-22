@@ -179,14 +179,17 @@ export class RESTManager extends EventEmitter {
 		});
 	}
 
+	/** Get league history for a player by tag. */
 	public getLeagueHistory(playerTag: string, options?: OverrideOptions) {
 		return this.requestHandler.request<APILeagueSeasonResultList>(`/players/${Util.encodeURI(playerTag)}/leaguehistory`, options);
 	}
 
+	/** Get battle log for a player by tag. */
 	public getBattleLog(playerTag: string, options?: OverrideOptions) {
 		return this.requestHandler.request<APIBattleLogEntryList>(`/players/${Util.encodeURI(playerTag)}/battlelog`, options);
 	}
 
+	/** Get league group info. */
 	public getLeagueGroup(leagueGroupTag: string, seasonId: string, options?: OverrideOptions & { playerTag?: string }) {
 		return this.requestHandler.request<APILeagueGroupList>(`/leaguegroup/${leagueGroupTag}/${seasonId}`, options);
 	}

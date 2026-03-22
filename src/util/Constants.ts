@@ -76,20 +76,6 @@ export const FRIENDLY_WAR_PREPARATION_TIMES = [
 	1000 * 60 * 5
 ] as const;
 
-export const POLLING_EVENTS = {
-	CLAN_LOOP_START: 'clanLoopStart',
-	CLAN_LOOP_END: 'clanLoopEnd',
-	PLAYER_LOOP_START: 'playerLoopStart',
-	PLAYER_LOOP_END: 'playerLoopEnd',
-	WAR_LOOP_START: 'warLoopStart',
-	WAR_LOOP_END: 'warLoopEnd',
-	NEW_SEASON_START: 'newSeasonStart',
-	MAINTENANCE_START: 'maintenanceStart',
-	MAINTENANCE_END: 'maintenanceEnd',
-	ERROR: 'error',
-	DEBUG: 'debug'
-} as const;
-
 export const CLIENT_EVENTS = {
 	ERROR: 'error',
 	DEBUG: 'debug'
