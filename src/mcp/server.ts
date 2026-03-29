@@ -7,22 +7,13 @@ import { Client } from '../client/Client';
 // ─── Client Initialization ───────────────────────────────────────────────────
 
 const apiKeys = (process.env.CLASH_API_KEYS ?? '').split(',').filter(Boolean);
-const client = new Client(apiKeys.length ? { keys: apiKeys } : undefined);
+const baseURL = process.env.CLASH_BASE_URL;
+const client = new Client({ ...(apiKeys.length && { keys: apiKeys }), ...(baseURL && { baseURL }) });
 
-let clientReady = apiKeys.length > 0;
-
-async function ensureClient() {
-	if (clientReady) return;
-	const email = process.env.CLASH_EMAIL;
-	const password = process.env.CLASH_PASSWORD;
-	if (!email || !password) {
-		throw new McpError(
-			ErrorCode.InternalError,
-			'Authentication required. Set CLASH_API_KEYS, or CLASH_EMAIL + CLASH_PASSWORD environment variables.'
-		);
+function ensureClient() {
+	if (!apiKeys.length) {
+		throw new McpError(ErrorCode.InternalError, 'Authentication required. Set the CLASH_API_KEYS environment variable.');
 	}
-	await client.login({ email, password });
-	clientReady = true;
 }
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
@@ -411,7 +402,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
 	const params = args as Record<string, unknown>;
 
 	try {
-		await ensureClient();
+		ensureClient();
 
 		switch (name) {
 			case 'get_clan': {
