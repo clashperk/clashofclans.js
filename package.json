@@ -17,9 +17,13 @@
 			"types": "./dist/types/api.d.ts"
 		}
 	},
+	"bin": {
+		"clashofclans-mcp": "dist/mcp/server.js"
+	},
 	"scripts": {
 		"build": "tsc && gen-esm-wrapper dist/index.js dist/index.mjs",
 		"prepare": "rimraf dist && npm run build",
+		"mcp": "node dist/mcp/server.js",
 		"lint:test": "eslint .",
 		"lint:fix": "eslint --fix .",
 		"test": "TZ=UTC jest --setupFiles dotenv/config --config ./jest.config.json",
@@ -70,5 +74,9 @@
 	"engines": {
 		"node": ">=20.x",
 		"bun": ">=1.0.0"
+	},
+	"dependencies": {
+		"@modelcontextprotocol/sdk": "^1.28.0",
+		"zod": "^4.3.6"
 	}
 }
