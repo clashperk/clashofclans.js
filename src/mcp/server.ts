@@ -48,7 +48,7 @@ function searchOptions(params: Record<string, unknown>) {
 	return {
 		limit: optionalNumber(params, 'limit'),
 		after: optionalString(params, 'after'),
-		before: optionalString(params, 'before'),
+		before: optionalString(params, 'before')
 	};
 }
 
@@ -61,10 +61,10 @@ const TOOLS = [
 		inputSchema: {
 			type: 'object',
 			properties: {
-				clanTag: { type: 'string', description: 'The clan tag (e.g. "#2PP")' },
+				clanTag: { type: 'string', description: 'The clan tag (e.g. "#2PP")' }
 			},
-			required: ['clanTag'],
-		},
+			required: ['clanTag']
+		}
 	},
 	{
 		name: 'search_clans',
@@ -79,13 +79,13 @@ const TOOLS = [
 				minClanLevel: { type: 'number', description: 'Minimum clan level' },
 				warFrequency: {
 					type: 'string',
-					description: 'War frequency filter (always, moreThanOncePerWeek, oncePerWeek, lessThanOncePerWeek, never, unknown)',
+					description: 'War frequency filter (always, moreThanOncePerWeek, oncePerWeek, lessThanOncePerWeek, never, unknown)'
 				},
 				locationId: { type: 'string', description: 'Location ID to filter by' },
 				labelIds: { type: 'string', description: 'Comma-separated label IDs' },
-				limit: { type: 'number', description: 'Maximum number of results' },
-			},
-		},
+				limit: { type: 'number', description: 'Maximum number of results' }
+			}
+		}
 	},
 	{
 		name: 'get_clan_members',
@@ -96,10 +96,10 @@ const TOOLS = [
 				clanTag: { type: 'string', description: 'The clan tag' },
 				limit: { type: 'number', description: 'Maximum results per page' },
 				after: { type: 'string', description: 'Pagination cursor (after)' },
-				before: { type: 'string', description: 'Pagination cursor (before)' },
+				before: { type: 'string', description: 'Pagination cursor (before)' }
 			},
-			required: ['clanTag'],
-		},
+			required: ['clanTag']
+		}
 	},
 	{
 		name: 'get_clan_war_log',
@@ -110,10 +110,10 @@ const TOOLS = [
 				clanTag: { type: 'string', description: 'The clan tag' },
 				limit: { type: 'number', description: 'Maximum results per page' },
 				after: { type: 'string', description: 'Pagination cursor (after)' },
-				before: { type: 'string', description: 'Pagination cursor (before)' },
+				before: { type: 'string', description: 'Pagination cursor (before)' }
 			},
-			required: ['clanTag'],
-		},
+			required: ['clanTag']
+		}
 	},
 	{
 		name: 'get_clan_war',
@@ -121,10 +121,10 @@ const TOOLS = [
 		inputSchema: {
 			type: 'object',
 			properties: {
-				clanTag: { type: 'string', description: 'The clan tag' },
+				clanTag: { type: 'string', description: 'The clan tag' }
 			},
-			required: ['clanTag'],
-		},
+			required: ['clanTag']
+		}
 	},
 	{
 		name: 'get_current_war',
@@ -137,11 +137,11 @@ const TOOLS = [
 				round: {
 					type: 'string',
 					enum: ['PREVIOUS_ROUND', 'CURRENT_ROUND', 'NEXT_ROUND'],
-					description: 'CWL round selector (optional)',
-				},
+					description: 'CWL round selector (optional)'
+				}
 			},
-			required: ['clanTag'],
-		},
+			required: ['clanTag']
+		}
 	},
 	{
 		name: 'get_clan_war_league_group',
@@ -149,10 +149,10 @@ const TOOLS = [
 		inputSchema: {
 			type: 'object',
 			properties: {
-				clanTag: { type: 'string', description: 'The clan tag' },
+				clanTag: { type: 'string', description: 'The clan tag' }
 			},
-			required: ['clanTag'],
-		},
+			required: ['clanTag']
+		}
 	},
 	{
 		name: 'get_league_wars',
@@ -160,10 +160,10 @@ const TOOLS = [
 		inputSchema: {
 			type: 'object',
 			properties: {
-				clanTag: { type: 'string', description: 'The clan tag' },
+				clanTag: { type: 'string', description: 'The clan tag' }
 			},
-			required: ['clanTag'],
-		},
+			required: ['clanTag']
+		}
 	},
 	{
 		name: 'get_capital_raid_seasons',
@@ -174,10 +174,10 @@ const TOOLS = [
 				clanTag: { type: 'string', description: 'The clan tag' },
 				limit: { type: 'number', description: 'Maximum results per page' },
 				after: { type: 'string', description: 'Pagination cursor (after)' },
-				before: { type: 'string', description: 'Pagination cursor (before)' },
+				before: { type: 'string', description: 'Pagination cursor (before)' }
 			},
-			required: ['clanTag'],
-		},
+			required: ['clanTag']
+		}
 	},
 	{
 		name: 'get_player',
@@ -185,10 +185,10 @@ const TOOLS = [
 		inputSchema: {
 			type: 'object',
 			properties: {
-				playerTag: { type: 'string', description: 'The player tag (e.g. "#LUV2PG2Y9")' },
+				playerTag: { type: 'string', description: 'The player tag (e.g. "#LUV2PG2Y9")' }
 			},
-			required: ['playerTag'],
-		},
+			required: ['playerTag']
+		}
 	},
 	{
 		name: 'get_players',
@@ -199,11 +199,11 @@ const TOOLS = [
 				playerTags: {
 					type: 'array',
 					items: { type: 'string' },
-					description: 'Array of player tags',
-				},
+					description: 'Array of player tags'
+				}
 			},
-			required: ['playerTags'],
-		},
+			required: ['playerTags']
+		}
 	},
 	{
 		name: 'verify_player_token',
@@ -212,10 +212,10 @@ const TOOLS = [
 			type: 'object',
 			properties: {
 				playerTag: { type: 'string', description: 'The player tag' },
-				token: { type: 'string', description: 'The API token from game settings' },
+				token: { type: 'string', description: 'The API token from game settings' }
 			},
-			required: ['playerTag', 'token'],
-		},
+			required: ['playerTag', 'token']
+		}
 	},
 	{
 		name: 'get_player_ranks',
@@ -225,12 +225,12 @@ const TOOLS = [
 			properties: {
 				locationId: {
 					description: 'Location ID (number) or "global" for worldwide',
-					oneOf: [{ type: 'string', enum: ['global'] }, { type: 'number' }],
+					oneOf: [{ type: 'string', enum: ['global'] }, { type: 'number' }]
 				},
-				limit: { type: 'number', description: 'Maximum results per page' },
+				limit: { type: 'number', description: 'Maximum results per page' }
 			},
-			required: ['locationId'],
-		},
+			required: ['locationId']
+		}
 	},
 	{
 		name: 'get_clan_ranks',
@@ -240,12 +240,12 @@ const TOOLS = [
 			properties: {
 				locationId: {
 					description: 'Location ID (number) or "global" for worldwide',
-					oneOf: [{ type: 'string', enum: ['global'] }, { type: 'number' }],
+					oneOf: [{ type: 'string', enum: ['global'] }, { type: 'number' }]
 				},
-				limit: { type: 'number', description: 'Maximum results per page' },
+				limit: { type: 'number', description: 'Maximum results per page' }
 			},
-			required: ['locationId'],
-		},
+			required: ['locationId']
+		}
 	},
 	{
 		name: 'get_builder_base_player_ranks',
@@ -255,12 +255,12 @@ const TOOLS = [
 			properties: {
 				locationId: {
 					description: 'Location ID (number) or "global" for worldwide',
-					oneOf: [{ type: 'string', enum: ['global'] }, { type: 'number' }],
+					oneOf: [{ type: 'string', enum: ['global'] }, { type: 'number' }]
 				},
-				limit: { type: 'number', description: 'Maximum results per page' },
+				limit: { type: 'number', description: 'Maximum results per page' }
 			},
-			required: ['locationId'],
-		},
+			required: ['locationId']
+		}
 	},
 	{
 		name: 'get_builder_base_clan_ranks',
@@ -270,12 +270,12 @@ const TOOLS = [
 			properties: {
 				locationId: {
 					description: 'Location ID (number) or "global" for worldwide',
-					oneOf: [{ type: 'string', enum: ['global'] }, { type: 'number' }],
+					oneOf: [{ type: 'string', enum: ['global'] }, { type: 'number' }]
 				},
-				limit: { type: 'number', description: 'Maximum results per page' },
+				limit: { type: 'number', description: 'Maximum results per page' }
 			},
-			required: ['locationId'],
-		},
+			required: ['locationId']
+		}
 	},
 	{
 		name: 'get_clan_capital_ranks',
@@ -285,12 +285,12 @@ const TOOLS = [
 			properties: {
 				locationId: {
 					description: 'Location ID (number) or "global" for worldwide',
-					oneOf: [{ type: 'string', enum: ['global'] }, { type: 'number' }],
+					oneOf: [{ type: 'string', enum: ['global'] }, { type: 'number' }]
 				},
-				limit: { type: 'number', description: 'Maximum results per page' },
+				limit: { type: 'number', description: 'Maximum results per page' }
 			},
-			required: ['locationId'],
-		},
+			required: ['locationId']
+		}
 	},
 	{
 		name: 'get_locations',
@@ -298,29 +298,29 @@ const TOOLS = [
 		inputSchema: {
 			type: 'object',
 			properties: {
-				limit: { type: 'number', description: 'Maximum results per page' },
-			},
-		},
+				limit: { type: 'number', description: 'Maximum results per page' }
+			}
+		}
 	},
 	{
 		name: 'get_war_leagues',
 		description: 'Get a list of all Clan War League tiers.',
-		inputSchema: { type: 'object', properties: {} },
+		inputSchema: { type: 'object', properties: {} }
 	},
 	{
 		name: 'get_league_tiers',
 		description: 'Get a list of all trophy league tiers.',
-		inputSchema: { type: 'object', properties: {} },
+		inputSchema: { type: 'object', properties: {} }
 	},
 	{
 		name: 'get_capital_leagues',
 		description: 'Get a list of all Clan Capital league tiers.',
-		inputSchema: { type: 'object', properties: {} },
+		inputSchema: { type: 'object', properties: {} }
 	},
 	{
 		name: 'get_builder_base_leagues',
 		description: 'Get a list of all Builder Base league tiers.',
-		inputSchema: { type: 'object', properties: {} },
+		inputSchema: { type: 'object', properties: {} }
 	},
 	{
 		name: 'get_league_seasons',
@@ -328,9 +328,9 @@ const TOOLS = [
 		inputSchema: {
 			type: 'object',
 			properties: {
-				limit: { type: 'number', description: 'Maximum results per page' },
-			},
-		},
+				limit: { type: 'number', description: 'Maximum results per page' }
+			}
+		}
 	},
 	{
 		name: 'get_season_rankings',
@@ -339,25 +339,25 @@ const TOOLS = [
 			type: 'object',
 			properties: {
 				seasonId: { type: 'string', description: 'Season ID (e.g. "2024-06")' },
-				limit: { type: 'number', description: 'Maximum results per page' },
+				limit: { type: 'number', description: 'Maximum results per page' }
 			},
-			required: ['seasonId'],
-		},
+			required: ['seasonId']
+		}
 	},
 	{
 		name: 'get_gold_pass_season',
 		description: 'Get information about the current Gold Pass season.',
-		inputSchema: { type: 'object', properties: {} },
+		inputSchema: { type: 'object', properties: {} }
 	},
 	{
 		name: 'get_clan_labels',
 		description: 'Get the list of all available clan labels.',
-		inputSchema: { type: 'object', properties: {} },
+		inputSchema: { type: 'object', properties: {} }
 	},
 	{
 		name: 'get_player_labels',
 		description: 'Get the list of all available player labels.',
-		inputSchema: { type: 'object', properties: {} },
+		inputSchema: { type: 'object', properties: {} }
 	},
 	{
 		name: 'get_battle_log',
@@ -365,10 +365,10 @@ const TOOLS = [
 		inputSchema: {
 			type: 'object',
 			properties: {
-				playerTag: { type: 'string', description: 'The player tag' },
+				playerTag: { type: 'string', description: 'The player tag' }
 			},
-			required: ['playerTag'],
-		},
+			required: ['playerTag']
+		}
 	},
 	{
 		name: 'get_league_history',
@@ -376,11 +376,11 @@ const TOOLS = [
 		inputSchema: {
 			type: 'object',
 			properties: {
-				playerTag: { type: 'string', description: 'The player tag' },
+				playerTag: { type: 'string', description: 'The player tag' }
 			},
-			required: ['playerTag'],
-		},
-	},
+			required: ['playerTag']
+		}
+	}
 ];
 
 // ─── Server Setup ─────────────────────────────────────────────────────────────
@@ -388,10 +388,10 @@ const TOOLS = [
 const server = new Server(
 	{
 		name: 'clashofclans',
-		version: '1.0.0',
+		version: '1.0.0'
 	},
 	{
-		capabilities: { tools: {} },
+		capabilities: { tools: {} }
 	}
 );
 
@@ -476,10 +476,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
 			}
 
 			case 'verify_player_token': {
-				const verified = await client.verifyPlayerToken(
-					requireString(params, 'playerTag'),
-					requireString(params, 'token')
-				);
+				const verified = await client.verifyPlayerToken(requireString(params, 'playerTag'), requireString(params, 'token'));
 				return mcpResult({ verified });
 			}
 
@@ -545,7 +542,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
 
 			case 'get_season_rankings': {
 				const result = await client.getSeasonRankings(requireString(params, 'seasonId'), {
-					limit: optionalNumber(params, 'limit'),
+					limit: optionalNumber(params, 'limit')
 				});
 				return mcpResult(result);
 			}
