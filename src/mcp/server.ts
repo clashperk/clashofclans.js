@@ -7,8 +7,8 @@ import { LEGEND_LEAGUE_ID } from '../util/Constants';
 
 // ─── Client Initialization ───────────────────────────────────────────────────
 
-const baseURL = process.env.CLASH_BASE_URL;
-const apiKeys = process.env.CLASH_API_KEYS?.split(',').filter(Boolean) || [];
+const baseURL = process.env.CLASH_OF_CLANS_API_BASE_URL;
+const apiKeys = process.env.CLASH_OF_CLANS_API_KEYS?.split(',').filter(Boolean) || [];
 const rest = new RestManager({ ...(apiKeys.length && { keys: apiKeys }), ...(baseURL && { baseURL }) });
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
