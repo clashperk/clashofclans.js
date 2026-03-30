@@ -5,3 +5,4 @@ dist/
 test/
 .vercel
 .env
+.claude/worktrees/
