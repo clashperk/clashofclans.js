@@ -1,9 +1,8 @@
 import eslint from '@eslint/js';
 import tseslint from 'typescript-eslint';
 import prettier from 'eslint-plugin-prettier/recommended';
-import { defineConfig } from 'eslint/config';
 
-export default defineConfig(
+export default tseslint.config(
 	eslint.configs.recommended,
 	...tseslint.configs.recommended,
 	prettier,
@@ -44,6 +43,6 @@ export default defineConfig(
 		}
 	},
 	{
-		ignores: ['dist/**', 'docs/**', 'test/**', 'node_modules/**', '.claude/**']
+		ignores: ['dist/**', 'docs/**', 'test/**', 'node_modules/**']
 	}
 );
