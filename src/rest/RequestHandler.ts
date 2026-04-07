@@ -1,4 +1,5 @@
 import { EventEmitter } from 'node:events';
+import { fetch, Pool } from 'undici';
 import { LoginOptions, RequestHandlerOptions, RequestOptions, Result, Store } from '../types';
 import { API_BASE_URL, DEV_SITE_API_BASE_URL } from '../util/Constants';
 import { CacheStore } from '../util/Store';
@@ -68,6 +69,8 @@ export class RequestHandler extends EventEmitter {
 	private readonly cached: Store<{ body: unknown; ttl: number; status: number }> | null;
 	private readonly onError?: (args: { path: string; status: number; body: unknown }) => unknown;
 
+	private readonly dispatcher: Pool;
+
 	public constructor(options?: RequestHandlerOptions) {
 		super();
 
@@ -80,6 +83,11 @@ export class RequestHandler extends EventEmitter {
 		this.rejectIfNotValid = options?.rejectIfNotValid ?? true;
 		if (typeof options?.cache === 'object') this.cached = options.cache;
 		else this.cached = options?.cache === true ? new CacheStore() : null;
+
+		this.dispatcher = new Pool(new URL(this.baseURL).origin, {
+			connections: options?.connections ?? null,
+			pipelining: options?.pipelining ?? 1
+		});
 	}
 
 	private get _keys() {
@@ -141,21 +149,22 @@ export class RequestHandler extends EventEmitter {
 
 	private async dispatch<T>(path: string, options: RequestOptions = {}, retries = 0): Promise<Result<T>> {
 		try {
-			const res = await fetch(`${this.baseURL}${path}`, {
+			const res = await this.dispatcher.request({
+				path: `/v1${path}`,
+				body: options.body,
 				method: options.method ?? 'GET',
 				signal: timeoutSignal(options.restRequestTimeout ?? this.restRequestTimeout),
-				headers: { 'Authorization': `Bearer ${this._key}`, 'Content-Type': 'application/json' },
-				body: options.body
+				headers: { 'Authorization': `Bearer ${this._key}`, 'Content-Type': 'application/json' }
 			});
 
-			if (res.status === 504 && retries < (options.retryLimit ?? this.retryLimit)) {
+			if (res.statusCode === 504 && retries < (options.retryLimit ?? this.retryLimit)) {
 				return await this.exec<T>(path, options, ++retries);
 			}
-			const body = (await res.json()) as ResponseBody;
+			const body = (await res.body.json()) as ResponseBody;
 
 			if (
 				this.credentials &&
-				res.status === 403 &&
+				res.statusCode === 403 &&
 				body?.reason === 'accessDenied.invalidIp' &&
 				retries < (options.retryLimit ?? this.retryLimit)
 			) {
@@ -163,22 +172,25 @@ export class RequestHandler extends EventEmitter {
 				if (keys.length) return await this.exec<T>(path, options, ++retries);
 			}
 
-			const maxAge = Number(res.headers.get('cache-control')?.split('=')?.[1] ?? 0) * 1000;
+			const maxAge = Number((res.headers['cache-control'] as string | null)?.split('=')?.[1] ?? 0) * 1000;
 
-			if (res.status === 403 && !body?.message && this.rejectIfNotValid) {
-				throw new HttpError(PrivateWarLogError, res.status, path, maxAge);
+			if (res.statusCode === 403 && !body?.message && this.rejectIfNotValid) {
+				throw new HttpError(PrivateWarLogError, res.statusCode, path, maxAge);
 			}
-			if (res.status !== 200 && this.rejectIfNotValid) {
-				throw new HttpError(body, res.status, path, maxAge, options.method);
+			if (res.statusCode !== 200 && this.rejectIfNotValid) {
+				throw new HttpError(body, res.statusCode, path, maxAge, options.method);
 			}
-			if (this.cached && maxAge > 0 && options.cache !== false && res.status === 200) {
-				await this.cached.set(path, { body, ttl: Date.now() + maxAge, status: res.status }, maxAge);
+			if (this.cached && maxAge > 0 && options.cache !== false && res.statusCode === 200) {
+				await this.cached.set(path, { body, ttl: Date.now() + maxAge, status: res.statusCode }, maxAge);
 			}
 			return {
 				body: body as T,
-				res: { maxAge, status: res.status, path, ok: res.status === 200 }
+				res: { maxAge, status: res.statusCode, path, ok: res.statusCode === 200 }
 			};
 		} catch (error: any) {
+			if (error.code === 'UND_ERR_ABORTED' && retries < (options.retryLimit ?? this.retryLimit)) {
+				return this.exec<T>(path, options, ++retries);
+			}
 			if (this.rejectIfNotValid) throw error;
 			return {
 				body: { message: error.message } as unknown as T,
