@@ -85,7 +85,7 @@ export interface APIClanMember {
 	role: 'member' | 'admin' | 'coLeader' | 'leader';
 	expLevel: number;
 	townHallLevel: number;
-	leagueTier?: APILeagueTier;
+	leagueTier: APILeagueTier;
 	builderBaseLeague?: Omit<APILeagueTier, 'iconUrls'>;
 	trophies: number;
 	builderBaseTrophies?: number;
@@ -299,11 +299,15 @@ export interface APIPlayer {
 	role?: string;
 	warPreference?: 'in' | 'out';
 	clan?: APIPlayerClan;
-	leagueTier?: APILeagueTier;
+	leagueTier: APILeagueTier;
 	builderBaseLeague?: {
 		id: number;
 		name: string;
 	};
+	currentLeagueGroupTag: string;
+	currentLeagueSeasonId: number;
+	previousLeagueGroupTag: string;
+	previousLeagueSeasonId: number;
 	legendStatistics?: APILegendStatistics;
 	achievements: APIPlayerAchievement[];
 	troops: APIPlayerItem[];
@@ -395,7 +399,35 @@ export interface APILeagueSeasonResultList {
 	items: APILeagueSeasonResult[];
 }
 
-export interface APILeagueGroupList {}
+export interface APILeagueGroupList {
+	members: {
+		playerTag: string;
+		playerName: string;
+		clanTag: string;
+		clanName: string;
+		leagueTrophies: number;
+		attackWinCount: number;
+		attackLoseCount: number;
+		defenseWinCount: number;
+		defenseLoseCount: number;
+	}[];
+	attackLogs: {
+		opponentPlayerTag: string;
+		opponentName: string;
+		stars: number;
+		destructionPercentage: number;
+		trophies: number;
+		creationTime: string;
+	}[];
+	defenseLogs: {
+		opponentPlayerTag: string;
+		opponentName: string;
+		stars: number;
+		destructionPercentage: number;
+		trophies: number;
+		creationTime: string;
+	}[];
+}
 
 // ************* LOCATIONS ************* //
 
