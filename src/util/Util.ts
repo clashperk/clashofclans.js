@@ -13,7 +13,8 @@ const params = [
 	'labelIds',
 	'limit',
 	'after',
-	'before'
+	'before',
+	'playerTag'
 ];
 
 export function timeoutSignal(timeout: number) {
