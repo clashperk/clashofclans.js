@@ -47,7 +47,7 @@ export const UNRANKED_LEAGUE_DATA = {
 };
 
 export const UNRANKED_LEAGUE_ID = 105000000;
-export const LEGEND_LEAGUE_ID = 105000034;
+export const LEGEND_LEAGUE_ID = 105000036;
 export const UNRANKED_WAR_LEAGUE_ID = 48000000;
 
 export const LEAGUES = [
