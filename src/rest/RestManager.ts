@@ -191,7 +191,7 @@ export class RestManager extends EventEmitter {
 
 	/** Get league group info. */
 	public getLeagueGroup(leagueGroupTag: string, seasonId: string | number, options?: OverrideOptions & { playerTag?: string }) {
-		return this.requestHandler.request<APILeagueGroupList>(`/leaguegroup/${leagueGroupTag}/${seasonId}`, options);
+		return this.requestHandler.request<APILeagueGroupList>(`/leaguegroup/${encodeURIComponent(leagueGroupTag)}/${seasonId}`, options);
 	}
 
 	/** Get a list of League Tiers. */
