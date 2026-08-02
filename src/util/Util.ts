@@ -17,21 +17,37 @@ const params = [
 	'playerTag'
 ];
 
+/**
+ * A timeout signal plus the means to cancel it.
+ *
+ * The timer must be cleared once the request settles. Left running, a busy client keeps
+ * one live timer and one retained `AbortController` per in-flight *and already-finished*
+ * request for the whole timeout window — at a few hundred requests per second with a
+ * 10s timeout that is thousands of needless timers and a steady stream of garbage.
+ * `unref()` only stops them holding the process open; it does not free them.
+ */
+export function createTimeout(timeout: number): { signal: AbortSignal | undefined; clear: () => void } {
+	if (!Number.isInteger(timeout)) {
+		throw new TypeError('Expected an integer for the timeout');
+	}
+
+	if (timeout <= 0) return { signal: undefined, clear: () => undefined };
+
+	const controller = new AbortController();
+	const timeoutId = setTimeout(() => controller.abort(), timeout);
+	timeoutId.unref();
+
+	return { signal: controller.signal, clear: () => clearTimeout(timeoutId) };
+}
+
 export function timeoutSignal(timeout: number) {
 	if (!Number.isInteger(timeout)) {
 		throw new TypeError('Expected an integer for the timeout');
 	}
 
-	const controller = new AbortController();
-
-	if (timeout > 0) {
-		const timeoutId = setTimeout(() => {
-			controller.abort();
-		}, timeout);
-		timeoutId.unref();
-	}
-
-	return controller.signal;
+	// AbortSignal.timeout holds the signal weakly, so an abandoned one can be collected
+	// instead of being pinned by a setTimeout closure until it fires.
+	return timeout > 0 ? AbortSignal.timeout(timeout) : new AbortController().signal;
 }
 
 /** Contains various general-purpose utility methods. */

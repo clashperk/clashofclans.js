@@ -57,11 +57,37 @@ export interface RequestHandlerOptions extends ClientOptions {
 	/** Set this `false` to use `res.ok` property. */
 	rejectIfNotValid?: boolean;
 
-	/** The max number of clients to create. null if no limit. Default null. */
-	connections?: number;
+	/** The max number of clients to create. null if no limit. Default: 8 */
+	connections?: number | null;
 
-	/** The amount of concurrent requests to be sent over the single TCP/TLS connection according to RFC7230. Default: 1 */
+	/**
+	 * Concurrent requests per connection. Under HTTP/2 this is the number of concurrent
+	 * streams; under HTTP/1.1 it is request pipelining (RFC7230).
+	 *
+	 * Defaults to 32 when `RequestHandlerOptions.allowH2` is on and 1 otherwise.
+	 * Leaving this at 1 while HTTP/2 is enabled makes every connection strictly serial,
+	 * which is roughly a 10x throughput loss.
+	 */
 	pipelining?: number;
+
+	/**
+	 * Negotiate HTTP/2 when the server offers it (the official API does). Requests then
+	 * multiplex over a handful of connections instead of one connection per in-flight
+	 * request, which removes most TLS handshakes. Default: true.
+	 */
+	allowH2?: boolean;
+
+	/**
+	 * Request gzip-encoded responses and transparently decode them. Player payloads
+	 * compress roughly 5-12x, so this is a large bandwidth saving. Default: true.
+	 */
+	compression?: boolean;
+
+	/** Idle socket keep-alive, in milliseconds. Default: 60_000 */
+	keepAliveTimeout?: number;
+
+	/** Upper bound on keep-alive negotiated with the server, in milliseconds. Default: 600_000 */
+	keepAliveMaxTimeout?: number;
 
 	onError?: (args: { path: string; status: number; body: unknown }) => unknown;
 }
