@@ -1,9 +1,10 @@
 import { EventEmitter } from 'node:events';
+import { gunzipSync, inflateSync } from 'node:zlib';
 import { fetch, Pool } from 'undici';
 import { LoginOptions, RequestHandlerOptions, RequestOptions, Result, Store } from '../types';
 import { API_BASE_URL, DEV_SITE_API_BASE_URL } from '../util/Constants';
 import { CacheStore } from '../util/Store';
-import { timeoutSignal } from '../util/Util';
+import { createTimeout, timeoutSignal } from '../util/Util';
 import { HttpError, PrivateWarLogError } from './HttpError';
 import { IRestEvents } from './RestManager';
 import { BatchThrottler, QueueThrottler } from './Throttler';
@@ -70,6 +71,7 @@ export class RequestHandler extends EventEmitter {
 	private readonly onError?: (args: { path: string; status: number; body: unknown }) => unknown;
 
 	private readonly dispatcher: Pool;
+	private readonly compression: boolean;
 
 	public constructor(options?: RequestHandlerOptions) {
 		super();
@@ -81,13 +83,39 @@ export class RequestHandler extends EventEmitter {
 		this.baseURL = options?.baseURL ?? API_BASE_URL;
 		this.restRequestTimeout = options?.restRequestTimeout ?? 0;
 		this.rejectIfNotValid = options?.rejectIfNotValid ?? true;
+		this.compression = options?.compression ?? true;
 		if (typeof options?.cache === 'object') this.cached = options.cache;
 		else this.cached = options?.cache === true ? new CacheStore() : null;
 
+		const allowH2 = options?.allowH2 ?? true;
+
 		this.dispatcher = new Pool(new URL(this.baseURL).origin, {
-			connections: options?.connections ?? null,
-			pipelining: options?.pipelining ?? 1
+			allowH2,
+			connections: options?.connections ?? 8,
+			// Under HTTP/2 this is concurrent streams per connection; a value of 1 would
+			// serialise every connection and cost roughly 10x throughput. Under HTTP/1.1
+			// it is pipelining, which is only safe at 1.
+			pipelining: options?.pipelining ?? (allowH2 ? 32 : 1),
+			keepAliveTimeout: options?.keepAliveTimeout ?? 60_000,
+			keepAliveMaxTimeout: options?.keepAliveMaxTimeout ?? 600_000
 		});
+	}
+
+	/**
+	 * `undici.request()` neither advertises nor decodes compression, unlike `fetch`, so
+	 * both halves are handled here. Decoding is synchronous on purpose: these payloads
+	 * are a few KB and the async zlib path would put hundreds of tiny jobs per second
+	 * onto libuv's threadpool, where they would contend with DNS and file I/O.
+	 */
+	private decode(buffer: Buffer, encoding?: string) {
+		switch (encoding) {
+			case 'gzip':
+				return gunzipSync(buffer);
+			case 'deflate':
+				return inflateSync(buffer);
+			default:
+				return buffer;
+		}
 	}
 
 	private get _keys() {
@@ -148,19 +176,30 @@ export class RequestHandler extends EventEmitter {
 	}
 
 	private async dispatch<T>(path: string, options: RequestOptions = {}, retries = 0): Promise<Result<T>> {
+		const timeout = createTimeout(options.restRequestTimeout ?? this.restRequestTimeout);
+
 		try {
 			const res = await this.dispatcher.request({
 				path: `/v1${path}`,
 				body: options.body,
 				method: options.method ?? 'GET',
-				signal: timeoutSignal(options.restRequestTimeout ?? this.restRequestTimeout),
-				headers: { 'Authorization': `Bearer ${this._key}`, 'Content-Type': 'application/json' }
+				signal: timeout.signal,
+				headers: {
+					'Authorization': `Bearer ${this._key}`,
+					'Content-Type': 'application/json',
+					...(this.compression ? { 'Accept-Encoding': 'gzip, deflate' } : {})
+				}
 			});
 
 			if (res.statusCode === 504 && retries < (options.retryLimit ?? this.retryLimit)) {
 				return await this.exec<T>(path, options, ++retries);
 			}
-			const body = (await res.body.json()) as ResponseBody;
+
+			const encoding = res.headers['content-encoding'] as string | undefined;
+			const raw = Buffer.from(await res.body.arrayBuffer());
+			const decoded = this.decode(raw, encoding);
+			// An empty body is valid for some responses; JSON.parse would throw on it.
+			const body = (decoded.length ? JSON.parse(decoded.toString('utf8')) : null) as ResponseBody;
 
 			if (
 				this.credentials &&
@@ -196,6 +235,10 @@ export class RequestHandler extends EventEmitter {
 				body: { message: error.message } as unknown as T,
 				res: { maxAge: 0, status: 500, path, ok: false }
 			};
+		} finally {
+			// Must run on every path, including the retry returns above, or the timer
+			// outlives the request it was guarding.
+			timeout.clear();
 		}
 	}
 
