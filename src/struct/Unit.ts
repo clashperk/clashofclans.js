@@ -1,5 +1,6 @@
 import { APIPlayer, APIPlayerItem } from '../types';
-import { RAW_DATA, SUPER_TROOPS } from '../util/Constants';
+import { SUPER_TROOPS } from '../util/Constants';
+import { getRawUnit, SUPER_TROOP_MIN_TOWN_HALL_LEVEL } from '../util/StaticData';
 
 /** Represents a Player's Unit. */
 export class Unit {
@@ -62,7 +63,7 @@ export class Unit {
 	/** Damage per second of this unit. */
 	public dps!: number;
 
-	/** Training time of this unit. */
+	/** @deprecated Training times are no longer part of the game data; always `0`. */
 	public trainingTime = 0;
 
 	/** @internal */
@@ -84,41 +85,41 @@ export class Unit {
 		this.maxLevel = unit.maxLevel;
 		this.village = unit.village;
 
-		const rawSuperUnit = RAW_DATA.RAW_SUPER_UNITS.find((unit) => unit.name === this.name && this.isHomeBase);
-		const rawUnit = RAW_DATA.RAW_UNITS.find((unit) => unit.name === this.name && unit.village === this.village);
+		const rawUnit = getRawUnit(this.name, this.village);
 
-		if (rawSuperUnit && data.townHallLevel >= 11) {
-			this.id = rawSuperUnit.id;
-			this.housingSpace = rawSuperUnit.housingSpace;
+		if (rawUnit?.superTroop && data.townHallLevel >= SUPER_TROOP_MIN_TOWN_HALL_LEVEL) {
+			const { originalName, minOriginalLevel } = rawUnit.superTroop;
+			const original = getRawUnit(originalName, 'home')!;
 
-			this.originalName = rawSuperUnit.original;
-			this.minOriginalLevel = rawSuperUnit.minOriginalLevel;
+			this.id = rawUnit.id;
+			this.housingSpace = rawUnit.housingSpace;
 
-			const original = RAW_DATA.RAW_UNITS.find((unit) => unit.village === 'home' && unit.name === rawSuperUnit.original)!;
-			this.unlockHallLevel = original.levels.findIndex((level) => level >= rawSuperUnit.minOriginalLevel) + 1;
-			this.unlockCost = original.unlock.cost;
-			this.unlockTime = original.unlock.time;
-			this.unlockResource = original.unlock.resource;
-			this.unlockBuilding = original.unlock.building;
-			this.unlockBuildingLevel = original.unlock.buildingLevel;
+			this.originalName = originalName;
+			this.minOriginalLevel = minOriginalLevel;
 
-			this.dps = rawUnit!.dps[this.level - 1] ?? 0;
-			this.trainingTime = Number(rawUnit!.trainingTime);
+			this.unlockHallLevel = rawUnit.unlock.hall;
+			this.unlockCost = rawUnit.unlock.cost;
+			this.unlockTime = rawUnit.unlock.time;
+			this.unlockResource = rawUnit.unlock.resource;
+			this.unlockBuilding = rawUnit.unlock.building;
+			this.unlockBuildingLevel = rawUnit.unlock.buildingLevel;
 
-			const origin = data.troops.find((troop) => troop.village === 'home' && troop.name === original.name);
+			this.dps = rawUnit.dps[this.level - rawUnit.minLevel] ?? 0;
+
+			const origin = data.troops.find((troop) => troop.village === 'home' && troop.name === originalName);
 			if (origin) {
 				this.level = origin.level;
 				this.maxLevel = origin.maxLevel;
-				this.boostable = data.townHallLevel >= 11 && origin.level >= rawSuperUnit.minOriginalLevel;
-				this.upgradeCost = original.upgrade.cost[origin.level - 1] || 0;
-				this.upgradeTime = original.upgrade.time[origin.level - 1] || 0;
+				this.boostable = origin.level >= minOriginalLevel;
+				this.upgradeCost = original.upgrade.cost[origin.level - original.minLevel] || 0;
+				this.upgradeTime = original.upgrade.time[origin.level - original.minLevel] || 0;
 			}
 			this.upgradeResource = original.upgrade.resource;
 			this.hallMaxLevel = original.levels[data.townHallLevel - 1] ?? this.maxLevel;
 		} else if (rawUnit) {
 			// special case for the builder base
-			this.level = this.level === 0 ? 0 : Math.max(this.level, rawUnit.minLevel ?? this.level);
-			this.maxLevel = Math.max(rawUnit.levels[rawUnit.levels.length - 1], this.maxLevel);
+			this.level = this.level === 0 ? 0 : Math.max(this.level, rawUnit.minLevel);
+			this.maxLevel = Math.max(rawUnit.maxLevel, this.maxLevel);
 
 			this.id = rawUnit.id;
 			this.housingSpace = rawUnit.housingSpace;
@@ -129,18 +130,17 @@ export class Unit {
 			this.unlockHallLevel = rawUnit.unlock.hall;
 			this.unlockBuildingLevel = rawUnit.unlock.buildingLevel;
 			this.upgradeResource = rawUnit.upgrade.resource;
-			this.upgradeCost = rawUnit.upgrade.cost[this.level - 1] || 0;
-			this.upgradeTime = rawUnit.upgrade.time[this.level - 1] || 0;
-			this.dps = rawUnit.dps[this.level - 1] ?? 0;
-			this.trainingTime = Number(rawUnit.trainingTime);
-			if (rawUnit.category === 'hero') this.regenerationTime = rawUnit.regenerationTimes[this.level - 1] ?? 0;
+			this.upgradeCost = rawUnit.upgrade.cost[this.level - rawUnit.minLevel] || 0;
+			this.upgradeTime = rawUnit.upgrade.time[this.level - rawUnit.minLevel] || 0;
+			this.dps = rawUnit.dps[this.level - rawUnit.minLevel] ?? 0;
+			if (rawUnit.category === 'hero') this.regenerationTime = 0;
 			this.hallMaxLevel =
 				rawUnit.levels[(this.village === 'home' ? data.townHallLevel : data.builderHallLevel!) - 1] ?? this.maxLevel;
 			this.equipment = (unit.equipment ?? []).map((unit) => new Equipment(data, unit));
 		}
 
 		this.seasonal = Boolean(rawUnit?.seasonal);
-		this.isLoaded = Boolean(rawUnit ?? rawSuperUnit);
+		this.isLoaded = Boolean(rawUnit);
 	}
 
 	/** Whether the unit belongs to the home base. */
@@ -195,7 +195,7 @@ export class Spell extends Unit {}
 
 /** Represents a Player's Hero. */
 export class Hero extends Unit {
-	/** Regeneration time of this hero. */
+	/** @deprecated Heroes no longer regenerate; always `0`. */
 	public regenerationTime!: number;
 
 	/** Hero Equipment */

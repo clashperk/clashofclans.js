@@ -5,3 +5,5 @@ dist/
 test/
 .vercel
 .env
+.claude/**/*.local.json
+.claude/**/*.local.md
