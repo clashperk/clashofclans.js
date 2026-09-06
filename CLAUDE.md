@@ -10,7 +10,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ```bash
 npm run prepare        # Clean dist/ and rebuild (rimraf + tsc + ESM wrapper)
-npm run build          # TypeScript compile + generate ESM wrapper
+npm run build          # TypeScript compile + re-minify dist/util/*.json (update-static.mjs --dist) + generate ESM wrapper
 npm run lint:test      # Run ESLint checks
 npm run lint:fix       # Auto-fix ESLint issues
 npm test               # Run Jest tests (TZ=UTC, loads .env)
@@ -32,7 +32,7 @@ The library is organized in four layers under `src/`:
 
 4. **Types** (`types/`) — `api.ts` defines raw API response interfaces (prefixed `API*`), `lib.ts` defines library-facing types (ClientOptions, SearchOptions, etc.).
 
-5. **Utilities** (`util/`) — `Constants.ts` has the API base URL and static game data (troop/spell/hero lists, league info). `Store.ts` provides a cache implementation. `raw.json` contains static unit/game data.
+5. **Utilities** (`util/`) — `Constants.ts` has the API base URL and derived unit lists (troops/spells/heroes, league info). `Store.ts` provides a cache implementation. `StaticData.ts` types `units.json` (from [clash-asset-library](https://github.com/clashperk/clash-asset-library), copied verbatim) plus `buildings.json` (production-building levels, needed for unlock Town Hall levels) and builds the normalized `RAW_UNITS`/`RAW_SUPER_UNITS` model. Refresh both files with `npm run update:static [dir|url]` — never edit them by hand.
 
 ## Key Patterns
 

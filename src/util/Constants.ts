@@ -1,41 +1,43 @@
-import RAW from './raw.json';
+import { RAW_DATA } from './StaticData';
 
 export const API_BASE_URL = 'https://api.clashofclans.com/v1';
 export const DEV_SITE_API_BASE_URL = 'https://developer.clashofclans.com/api';
 
-export const SUPER_TROOPS = RAW.RAW_SUPER_UNITS.map((unit) => unit.name);
+export const SUPER_TROOPS = RAW_DATA.RAW_SUPER_UNITS.map((unit) => unit.name);
 
-export const ELIXIR_TROOPS = RAW.RAW_UNITS.filter(
-	(unit) => !SUPER_TROOPS.includes(unit.name) && unit.subCategory === 'troop' && unit.upgrade.resource === 'Elixir'
-).map((unit) => unit.name);
+const UNITS = RAW_DATA.RAW_UNITS.filter((unit) => !unit.seasonal && !unit.superTroop);
 
-export const DARK_ELIXIR_TROOPS = RAW.RAW_UNITS.filter(
-	(unit) => !SUPER_TROOPS.includes(unit.name) && unit.subCategory === 'troop' && unit.upgrade.resource === 'Dark Elixir'
-).map((unit) => unit.name);
+export const ELIXIR_TROOPS = UNITS.filter((unit) => unit.subCategory === 'troop' && unit.upgrade.resource === 'Elixir').map(
+	(unit) => unit.name
+);
+
+export const DARK_ELIXIR_TROOPS = UNITS.filter((unit) => unit.subCategory === 'troop' && unit.upgrade.resource === 'Dark Elixir').map(
+	(unit) => unit.name
+);
 
 export const HOME_TROOPS = [...ELIXIR_TROOPS, ...DARK_ELIXIR_TROOPS];
 
-export const SIEGE_MACHINES = RAW.RAW_UNITS.filter((unit) => unit.subCategory === 'siege').map((unit) => unit.name);
+export const SIEGE_MACHINES = UNITS.filter((unit) => unit.subCategory === 'siege').map((unit) => unit.name);
 
-export const HERO_EQUIPMENT = RAW.RAW_UNITS.filter((unit) => unit.subCategory === 'equipment').map((unit) => unit.name);
+export const HERO_EQUIPMENT = UNITS.filter((unit) => unit.subCategory === 'equipment').map((unit) => unit.name);
 
-export const ELIXIR_SPELLS = RAW.RAW_UNITS.filter((unit) => unit.subCategory === 'spell' && unit.upgrade.resource === 'Elixir').map(
+export const ELIXIR_SPELLS = UNITS.filter((unit) => unit.subCategory === 'spell' && unit.upgrade.resource === 'Elixir').map(
 	(unit) => unit.name
 );
 
-export const DARK_ELIXIR_SPELLS = RAW.RAW_UNITS.filter(
-	(unit) => unit.subCategory === 'spell' && unit.upgrade.resource === 'Dark Elixir'
-).map((unit) => unit.name);
+export const DARK_ELIXIR_SPELLS = UNITS.filter((unit) => unit.subCategory === 'spell' && unit.upgrade.resource === 'Dark Elixir').map(
+	(unit) => unit.name
+);
 
 export const SPELLS = [...ELIXIR_SPELLS, ...DARK_ELIXIR_SPELLS];
 
-export const BUILDER_TROOPS = RAW.RAW_UNITS.filter((unit) => unit.subCategory === 'troop' && unit.village === 'builderBase').map(
+export const BUILDER_TROOPS = UNITS.filter((unit) => unit.subCategory === 'troop' && unit.village === 'builderBase').map(
 	(unit) => unit.name
 );
 
-export const HEROES = RAW.RAW_UNITS.filter((unit) => unit.subCategory === 'hero').map((unit) => unit.name);
+export const HEROES = UNITS.filter((unit) => unit.subCategory === 'hero').map((unit) => unit.name);
 
-export const HERO_PETS = RAW.RAW_UNITS.filter((unit) => unit.subCategory === 'pet').map((unit) => unit.name);
+export const HERO_PETS = UNITS.filter((unit) => unit.subCategory === 'pet').map((unit) => unit.name);
 
 export const UNRANKED_LEAGUE_DATA = {
 	id: 105000000,
@@ -92,8 +94,3 @@ export const CWL_ROUNDS = {
 	CURRENT_ROUND: 'inWar',
 	NEXT_ROUND: 'preparation'
 } as const;
-
-export const RAW_DATA = {
-	RAW_UNITS: RAW.RAW_UNITS,
-	RAW_SUPER_UNITS: RAW.RAW_SUPER_UNITS
-};

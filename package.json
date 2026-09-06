@@ -1,6 +1,6 @@
 {
 	"name": "clashofclans.js",
-	"version": "4.0.7",
+	"version": "5.0.0",
 	"description": "JavaScript library for interacting with the Clash of Clans API",
 	"author": "https://clashofclans.js.org",
 	"license": "MIT",
@@ -18,10 +18,11 @@
 		}
 	},
 	"scripts": {
-		"build": "tsc && gen-esm-wrapper dist/index.js dist/index.mjs",
+		"build": "tsc && node scripts/update-static.mjs --dist && gen-esm-wrapper dist/index.js dist/index.mjs",
 		"prepare": "rimraf dist && npm run build",
 		"lint:test": "eslint .",
 		"lint:fix": "eslint --fix .",
+		"update:static": "node scripts/update-static.mjs",
 		"test": "TZ=UTC jest --setupFiles dotenv/config --config ./jest.config.json",
 		"test:watch": "npm run test -- --watch",
 		"test:bun": "TZ=UTC bun test"

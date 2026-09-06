@@ -7,5 +7,6 @@ export * from './struct';
 export * from './types';
 export * from './util/Constants';
 export * from './util/Helper';
+export * from './util/StaticData';
 export * from './util/Store';
 export * from './util/Util';
