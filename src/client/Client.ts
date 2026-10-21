@@ -381,7 +381,7 @@ export class Client extends EventEmitter {
 	}
 
 	/** Get league group info. */
-	public async getLeagueGroup(leagueGroupTag: string, seasonId: string, options?: OverrideOptions) {
+	public async getLeagueGroup(leagueGroupTag: string, seasonId: string | number, options?: OverrideOptions) {
 		const { body } = await this.rest.getLeagueGroup(leagueGroupTag, seasonId, options);
 		return body;
 	}

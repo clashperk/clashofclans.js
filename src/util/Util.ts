@@ -1,6 +1,11 @@
-import { ClanSearchOptions, SearchOptions } from '../types';
+import { CalendarMonth, ClanSearchOptions, LeagueSeason, SearchOptions } from '../types';
 
 const TAG_CHARACTERS = '0289PYLQGRJCUV' as const;
+
+const LEAGUE_SEASON_DURATION = 28 * 24 * 60 * 60 * 1000;
+// 28-day seasons count from here; before it ran a one-off 6-week transition season.
+const LEAGUE_SEASON_ANCHOR = Date.UTC(2025, 9, 6, 5);
+const LEAGUE_SEASON_TRANSITION_START = Date.UTC(2025, 7, 25, 5);
 
 const params = [
 	'name',
@@ -110,7 +115,7 @@ export class Util extends null {
 		return query.length ? `?${query}` : query;
 	}
 
-	/** @deprecated Use getSeason instead */
+	/** @deprecated Use getLeagueSeason instead */
 	public static getSeasonStart(inputDate: Date) {
 		const lastMonthLastDay = new Date(Date.UTC(inputDate.getUTCFullYear(), inputDate.getUTCMonth(), 0));
 		const lastMonthLastMonday = new Date(lastMonthLastDay);
@@ -120,7 +125,7 @@ export class Util extends null {
 		return lastMonthLastMonday;
 	}
 
-	/** @deprecated Use getSeason instead */
+	/** @deprecated Use getLeagueSeason instead */
 	public static getSeasonEnd(inputDate: Date, forward = true): Date {
 		const lastDayOfMonth = new Date(Date.UTC(inputDate.getUTCFullYear(), inputDate.getUTCMonth() + 1, 0));
 		const lastMonday = new Date(lastDayOfMonth);
@@ -144,12 +149,14 @@ export class Util extends null {
 		return lastMonday;
 	}
 
-	/** Get the current season ID. */
+	/** @deprecated Use getLeagueSeason or getMonth instead. The id drifts ahead of the calendar month. */
 	public static getSeasonId() {
 		return this.getSeason(new Date()).seasonId;
 	}
 
 	/**
+	 * @deprecated Use getLeagueSeason or getMonth instead. The id drifts ahead of the calendar month.
+	 *
 	 * Get the season start and end timestamp.
 	 * @param {Date} timestamp - The reference date. Defaults to the current date if not provided.
 	 * @param {boolean} forward - Whether to forward to the next month if the returned date is in the past relative to the given timestamp. Defaults to true.
@@ -193,6 +200,7 @@ export class Util extends null {
 		return { startTime, endTime, seasonId };
 	}
 
+	/** @deprecated Use getLeagueSeasonById or getMonthById instead. */
 	public static getSeasonById(seasonId: string) {
 		// Handle the fixed September 2025 season
 		if (seasonId === '2025-09') {
@@ -235,6 +243,69 @@ export class Util extends null {
 		const endTime = new Date(startTime.getTime() + seasonDuration);
 
 		return { startTime, endTime, seasonId };
+	}
+
+	/** Get the 28-day trophy league season that contains the given time (defaults to now). */
+	public static getLeagueSeason(timestamp: Date = new Date()): LeagueSeason {
+		const time = timestamp.getTime();
+
+		if (time >= LEAGUE_SEASON_ANCHOR) {
+			const seasonsPassed = Math.floor((time - LEAGUE_SEASON_ANCHOR) / LEAGUE_SEASON_DURATION);
+			const startTime = new Date(LEAGUE_SEASON_ANCHOR + seasonsPassed * LEAGUE_SEASON_DURATION);
+			return this.toLeagueSeason(startTime, new Date(startTime.getTime() + LEAGUE_SEASON_DURATION));
+		}
+
+		if (time >= LEAGUE_SEASON_TRANSITION_START) {
+			return this.toLeagueSeason(new Date(LEAGUE_SEASON_TRANSITION_START), new Date(LEAGUE_SEASON_ANCHOR));
+		}
+
+		// Before the transition, seasons ended on the last Monday of the month; the end instant belongs to the next season.
+		let endTime = this.getSeasonEnd(timestamp);
+		if (endTime.getTime() === time) endTime = this.getSeasonEnd(new Date(time + 1));
+		return this.toLeagueSeason(this.getSeasonStart(endTime), endTime);
+	}
+
+	/**
+	 * Get a trophy league season by its start date (`YYYY-MM-DD`).
+	 * Also accepts the legacy `YYYY-MM` ids returned by {@link Util.getSeason}.
+	 */
+	public static getLeagueSeasonById(id: string): LeagueSeason {
+		if (/^\d{4}-\d{2}$/.test(id)) return this.getLeagueSeason(this.getSeasonById(id).startTime);
+		return this.getLeagueSeason(new Date(`${id}T05:00:00.000Z`));
+	}
+
+	/** Get the latest `count` trophy league seasons, newest first, ending with the one that contains `timestamp`. */
+	public static getLeagueSeasons(count: number, timestamp: Date = new Date()): LeagueSeason[] {
+		const seasons = [this.getLeagueSeason(timestamp)];
+		while (seasons.length < count) {
+			seasons.push(this.getLeagueSeason(new Date(seasons[seasons.length - 1].startTime.getTime() - 1)));
+		}
+		return seasons;
+	}
+
+	/** Get the UTC calendar month that contains the given time (defaults to now). */
+	public static getMonth(timestamp: Date = new Date()): CalendarMonth {
+		const startTime = new Date(Date.UTC(timestamp.getUTCFullYear(), timestamp.getUTCMonth(), 1));
+		const endTime = new Date(Date.UTC(timestamp.getUTCFullYear(), timestamp.getUTCMonth() + 1, 1));
+		return { id: startTime.toISOString().slice(0, 7), startTime, endTime };
+	}
+
+	/** Get a UTC calendar month by its id (`YYYY-MM`). */
+	public static getMonthById(id: string): CalendarMonth {
+		return this.getMonth(new Date(`${id}-01T00:00:00.000Z`));
+	}
+
+	/** Get the latest `count` UTC calendar months, newest first, ending with the one that contains `timestamp`. */
+	public static getMonths(count: number, timestamp: Date = new Date()): CalendarMonth[] {
+		const months = [this.getMonth(timestamp)];
+		while (months.length < count) {
+			months.push(this.getMonth(new Date(months[months.length - 1].startTime.getTime() - 1)));
+		}
+		return months;
+	}
+
+	private static toLeagueSeason(startTime: Date, endTime: Date): LeagueSeason {
+		return { id: startTime.toISOString().slice(0, 10), startTime, endTime };
 	}
 
 	public static getTournamentWindow(timestamp?: Date) {

@@ -197,3 +197,27 @@ export interface LoginOptions {
 	/** Description of API key(s). */
 	keyDescription?: string;
 }
+
+/** A 28-day trophy league season. */
+export interface LeagueSeason {
+	/** The season's start date (`YYYY-MM-DD`), e.g. `2026-10-05`. */
+	id: string;
+
+	/** When the season starts (Monday 05:00 UTC). */
+	startTime: Date;
+
+	/** When the season ends, which is also when the next one starts. */
+	endTime: Date;
+}
+
+/** A UTC calendar month. */
+export interface CalendarMonth {
+	/** The month (`YYYY-MM`), e.g. `2026-10`. */
+	id: string;
+
+	/** The 1st of the month at 00:00 UTC. */
+	startTime: Date;
+
+	/** The 1st of the next month at 00:00 UTC. */
+	endTime: Date;
+}

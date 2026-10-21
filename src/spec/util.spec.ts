@@ -285,4 +285,103 @@ describe('util', () => {
 		expect(startTime.toISOString()).toBe(expectedStartTime);
 		expect(endTime.toISOString()).toBe(expectedEndTime);
 	});
+	describe('getLeagueSeason', () => {
+		const legacyIds: [string, string][] = [
+			['2025-09', '2025-08-25'],
+			['2025-10', '2025-10-06'],
+			['2025-11', '2025-11-03'],
+			['2025-12', '2025-12-01'],
+			['2026-01', '2025-12-29'],
+			['2026-02', '2026-01-26'],
+			['2026-03', '2026-02-23'],
+			['2026-04', '2026-03-23'],
+			['2026-05', '2026-04-20'],
+			['2026-06', '2026-05-18'],
+			['2026-07', '2026-06-15'],
+			['2026-08', '2026-07-13'],
+			['2026-09', '2026-08-10'],
+			['2026-10', '2026-09-07'],
+			['2026-11', '2026-10-05']
+		];
+
+		it.each(legacyIds)('maps legacy id %s to start date %s', (legacyId, id) => {
+			expect(Util.getLeagueSeasonById(legacyId).id).toBe(id);
+			expect(Util.getLeagueSeason(Util.getSeasonById(legacyId).startTime).id).toBe(id);
+		});
+
+		it('starts each season at Monday 05:00 UTC, inclusive', () => {
+			expect(Util.getLeagueSeason(new Date('2026-11-02T05:00:00.000Z')).id).toBe('2026-11-02');
+			expect(Util.getLeagueSeason(new Date('2026-11-02T04:59:59.999Z')).id).toBe('2026-10-05');
+		});
+
+		it('gives two seasons ending in the same month different ids', () => {
+			const first = Util.getLeagueSeason(new Date('2026-10-21T00:00:00.000Z'));
+			const second = Util.getLeagueSeason(new Date('2026-11-10T00:00:00.000Z'));
+
+			expect(first).toEqual({
+				id: '2026-10-05',
+				startTime: new Date('2026-10-05T05:00:00.000Z'),
+				endTime: new Date('2026-11-02T05:00:00.000Z')
+			});
+			expect(second).toEqual({
+				id: '2026-11-02',
+				startTime: new Date('2026-11-02T05:00:00.000Z'),
+				endTime: new Date('2026-11-30T05:00:00.000Z')
+			});
+		});
+
+		it('covers the 6-week transition season', () => {
+			const season = Util.getLeagueSeason(new Date('2025-09-15T00:00:00.000Z'));
+
+			expect(season.id).toBe('2025-08-25');
+			expect(season.endTime.toISOString()).toBe('2025-10-06T05:00:00.000Z');
+		});
+
+		it('uses the last-Monday rule before the transition', () => {
+			expect(Util.getLeagueSeason(new Date('2024-03-25T05:00:00.000Z'))).toEqual({
+				id: '2024-03-25',
+				startTime: new Date('2024-03-25T05:00:00.000Z'),
+				endTime: new Date('2024-04-29T05:00:00.000Z')
+			});
+			expect(Util.getLeagueSeason(new Date('2024-03-25T04:59:59.999Z')).id).toBe('2024-02-26');
+		});
+
+		it('looks a season up by its start date', () => {
+			expect(Util.getLeagueSeasonById('2026-10-05')).toEqual(Util.getLeagueSeason(new Date('2026-10-05T05:00:00.000Z')));
+		});
+
+		it('lists consecutive seasons newest first', () => {
+			const seasons = Util.getLeagueSeasons(4, new Date('2025-11-10T00:00:00.000Z'));
+
+			expect(seasons.map((season) => season.id)).toEqual(['2025-11-03', '2025-10-06', '2025-08-25', '2025-07-28']);
+			for (let i = 1; i < seasons.length; i++) {
+				expect(seasons[i].endTime).toEqual(seasons[i - 1].startTime);
+			}
+		});
+	});
+
+	describe('getMonth', () => {
+		it('returns the UTC calendar month', () => {
+			expect(Util.getMonth(new Date('2026-10-21T12:00:00.000Z'))).toEqual({
+				id: '2026-10',
+				startTime: new Date('2026-10-01T00:00:00.000Z'),
+				endTime: new Date('2026-11-01T00:00:00.000Z')
+			});
+		});
+
+		it('starts each month at 00:00 UTC, inclusive', () => {
+			expect(Util.getMonth(new Date('2026-11-01T00:00:00.000Z')).id).toBe('2026-11');
+			expect(Util.getMonth(new Date('2026-10-31T23:59:59.999Z')).id).toBe('2026-10');
+		});
+
+		it('rolls over the year', () => {
+			expect(Util.getMonthById('2026-12').endTime.toISOString()).toBe('2027-01-01T00:00:00.000Z');
+		});
+
+		it('lists consecutive months newest first', () => {
+			const months = Util.getMonths(3, new Date('2027-01-15T00:00:00.000Z'));
+
+			expect(months.map((month) => month.id)).toEqual(['2027-01', '2026-12', '2026-11']);
+		});
+	});
 });
