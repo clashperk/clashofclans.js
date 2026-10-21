@@ -13,7 +13,7 @@ export class Season {
 	public trophies: number;
 
 	public constructor(data: APISeason) {
-		this.id = data.id || Util.getSeasonId();
+		this.id = data.id || Util.getLeagueSeason().id;
 		this.rank = data.rank;
 		this.trophies = data.trophies;
 	}

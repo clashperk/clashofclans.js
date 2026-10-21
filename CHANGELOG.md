@@ -1,3 +1,19 @@
 # Changelog
 
 All notable changes to this project will be documented in this file.
+
+## 5.1.0
+
+### Added
+
+- `Util.getLeagueSeason`, `Util.getLeagueSeasonById` and `Util.getLeagueSeasons` for 28-day trophy league seasons. The id is the season's start date (`YYYY-MM-DD`); `getLeagueSeasonById` also accepts the legacy `YYYY-MM` ids.
+- `Util.getMonth`, `Util.getMonthById` and `Util.getMonths` for UTC calendar months (`YYYY-MM`, 1st 00:00 UTC).
+
+### Changed
+
+- `Season.id` falls back to the league season's start date instead of the drifting `YYYY-MM` id.
+- `Client.getLeagueGroup` accepts a numeric `seasonId`, matching `currentLeagueSeasonId`.
+
+### Deprecated
+
+- `Util.getSeason`, `Util.getSeasonId` and `Util.getSeasonById`. Their `YYYY-MM` id advances one month per 28-day season, so it runs ahead of the calendar and two seasons can end in the same month.
