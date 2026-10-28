@@ -296,7 +296,8 @@ const buildUnit = (options: BuildOptions): RawUnit => {
 		return levels.slice(1).reduce((max, level) => (level.required_townhall <= hall ? Math.max(max, level.level) : max), minLevel);
 	});
 
-	const upgrades = levels.slice(0, -1); // the last level has nothing to upgrade to
+	// each level stores the price of reaching it, so level N's upgrade is priced on level N+1
+	const upgrades = levels.slice(1);
 
 	return {
 		id: unit.id,

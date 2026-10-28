@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## 5.1.1
+
+### Fixed
+
+- Barbarian's level 1 to 2 research time is 30 minutes, not instant.
+
+### Changed
+
+- Static data synced from clash-asset-library 2026.10.28.1 (game build 18.647.6). It now stores each unit level's cost and time as the price of reaching that level; `upgrade.cost` / `upgrade.time` keep their meaning (from each level to the next).
+
 ## 5.1.0
 
 ### Added
