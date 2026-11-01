@@ -26,7 +26,7 @@ The library is organized in four layers under `src/`:
 
 1. **Client** (`client/`) — `Client` is the main EventEmitter-based entry point. Users instantiate it, call `login()`, then use methods like `getClan()`, `getPlayer()`, `getClanWar()`, etc.
 
-2. **REST** (`rest/`) — `RestManager` orchestrates API calls. `RequestHandler` handles HTTP requests using native fetch, with retry logic, key rotation, and rate limiting. `Throttler` provides `QueueThrottler` and `BatchThrottler` implementations. `HttpError` wraps API errors with reason codes.
+2. **REST** (`rest/`) — `RestManager` orchestrates API calls. `RequestHandler` sends API requests through an undici `Pool` on Node and native `fetch` on Bun (Bun's `undici` is a stub whose `Pool.request()` does nothing), with retry logic, key rotation, and rate limiting. `Throttler` provides `QueueThrottler` and `BatchThrottler` implementations. `HttpError` wraps API errors with reason codes.
 
 3. **Structures** (`struct/`) — ~24 classes (Clan, Player, ClanWar, ClanMember, Unit, etc.) that wrap raw API responses into typed objects with helper methods.
 
