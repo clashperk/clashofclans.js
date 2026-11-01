@@ -1,5 +1,5 @@
 import { EventEmitter } from 'node:events';
-import { gunzipSync, inflateRawSync, inflateSync } from 'node:zlib';
+import { gunzipSync, inflateSync } from 'node:zlib';
 import { fetch, Pool } from 'undici';
 import { LoginOptions, RequestHandlerOptions, RequestOptions, Result, Store } from '../types';
 import { API_BASE_URL, DEV_SITE_API_BASE_URL } from '../util/Constants';
@@ -12,8 +12,7 @@ import { BatchThrottler, QueueThrottler } from './Throttler';
 // Sync on purpose: for ~4 KB bodies the async zlib call costs more CPU than the decompression itself.
 const decoders = new Map<string, (buf: Buffer) => Buffer>([
 	['gzip', gunzipSync],
-	// "deflate" should be zlib-wrapped (0x78 header), but some servers send it raw.
-	['deflate', (buf) => (buf[0] === 0x78 ? inflateSync(buf) : inflateRawSync(buf))]
+	['deflate', inflateSync]
 ]);
 
 function readJson(raw: ArrayBuffer, encoding?: string | string[]): ResponseBody {

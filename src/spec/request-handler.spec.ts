@@ -1,12 +1,11 @@
 import { createServer, IncomingHttpHeaders, Server } from 'node:http';
 import { AddressInfo } from 'node:net';
-import { deflateRawSync, deflateSync, gzipSync } from 'node:zlib';
+import { deflateSync, gzipSync } from 'node:zlib';
 import { RequestHandler } from '../rest/RequestHandler';
 
 const encoders: Record<string, [string | null, (data: string) => Buffer]> = {
 	GZIP: ['gzip', (data) => gzipSync(data)],
 	DEFLATE: ['deflate', (data) => deflateSync(data)],
-	RAWDEFLATE: ['deflate', (data) => deflateRawSync(data)],
 	PLAIN: [null, (data) => Buffer.from(data)]
 };
 
