@@ -10,15 +10,16 @@ import { IRestEvents } from './RestManager';
 import { BatchThrottler, QueueThrottler } from './Throttler';
 
 // Sync on purpose: for ~4 KB bodies the async zlib call costs more CPU than the decompression itself.
-function decompress(buf: Buffer, encoding?: string | string[]): Buffer {
-	if (encoding === 'gzip') return gunzipSync(buf);
-	if (encoding !== 'deflate') return buf;
-	// "deflate" is meant to be zlib-wrapped, but some servers send raw deflate.
-	return buf[0] === 0x78 ? inflateSync(buf) : inflateRawSync(buf);
-}
+const decoders = new Map<string, (buf: Buffer) => Buffer>([
+	['gzip', gunzipSync],
+	// "deflate" should be zlib-wrapped (0x78 header), but some servers send it raw.
+	['deflate', (buf) => (buf[0] === 0x78 ? inflateSync(buf) : inflateRawSync(buf))]
+]);
 
 function readJson(raw: ArrayBuffer, encoding?: string | string[]): ResponseBody {
-	return JSON.parse(decompress(Buffer.from(raw), encoding).toString());
+	const buf = Buffer.from(raw);
+	const decode = decoders.get(String(encoding));
+	return JSON.parse((decode ? decode(buf) : buf).toString());
 }
 
 const IP_REGEX = /\d{1,3}.\d{1,3}.\d{1,3}.\d{1,3}/g;
