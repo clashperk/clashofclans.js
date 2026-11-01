@@ -12,7 +12,7 @@ import { BatchThrottler, QueueThrottler } from './Throttler';
 
 const gunzipAsync = promisify(gunzip);
 
-async function readJson(encoding: string | string[] | undefined, raw: ArrayBuffer): Promise<ResponseBody> {
+async function readJson(raw: ArrayBuffer, encoding?: string | string[]): Promise<ResponseBody> {
 	const buf = Buffer.from(raw);
 	return JSON.parse((encoding === 'gzip' ? await gunzipAsync(buf) : buf).toString());
 }
@@ -174,7 +174,7 @@ export class RequestHandler extends EventEmitter {
 			if (res.statusCode === 504 && retries < (options.retryLimit ?? this.retryLimit)) {
 				return await this.exec<T>(path, options, ++retries);
 			}
-			const body = await readJson(res.headers['content-encoding'], await res.body.arrayBuffer());
+			const body = await readJson(await res.body.arrayBuffer(), res.headers['content-encoding']);
 
 			if (
 				this.credentials &&
