@@ -35,7 +35,7 @@ describe('RequestHandler', () => {
 
 	it('asks for deflate or gzip', async () => {
 		await handler().request('/players/%23PLAIN');
-		expect(received['accept-encoding']).toBe('deflate, gzip;q=0.5');
+		expect(received['accept-encoding']).toBe('gzip, deflate');
 	});
 
 	it.each(Object.keys(encoders))('decodes a %s body', async (tag) => {

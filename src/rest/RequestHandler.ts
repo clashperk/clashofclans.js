@@ -170,8 +170,8 @@ export class RequestHandler extends EventEmitter {
 				headers: {
 					'Authorization': `Bearer ${this._key}`,
 					'Content-Type': 'application/json',
-					// Compression cuts player responses ~5x and the API's slow tail with them; deflate decodes cheapest.
-					'Accept-Encoding': 'deflate, gzip;q=0.5'
+					// Compression cuts player responses ~5x and the API's slow tail with them.
+					'Accept-Encoding': 'gzip, deflate'
 				}
 			});
 
