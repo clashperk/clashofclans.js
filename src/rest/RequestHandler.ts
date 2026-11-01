@@ -21,6 +21,16 @@ function readJson(raw: ArrayBuffer, encoding?: string | string[]): ResponseBody 
 	return JSON.parse((decode ? decode(buf) : buf).toString());
 }
 
+interface RawResponse {
+	status: number;
+	cacheControl: string | null;
+	json(): Promise<ResponseBody>;
+}
+
+// Bun replaces `undici` with a built-in stub whose Pool.request() is a no-op, so Bun goes through its native
+// fetch, which also decodes compressed bodies.
+const isBun = 'bun' in process.versions;
+
 const IP_REGEX = /\d{1,3}.\d{1,3}.\d{1,3}.\d{1,3}/g;
 
 export interface RequestHandler {
@@ -82,6 +92,7 @@ export class RequestHandler extends EventEmitter {
 	private readonly cached: Store<{ body: unknown; ttl: number; status: number }> | null;
 	private readonly onError?: (args: { path: string; status: number; body: unknown }) => unknown;
 
+	private readonly origin: string;
 	private readonly dispatcher: Pool;
 
 	public constructor(options?: RequestHandlerOptions) {
@@ -97,7 +108,8 @@ export class RequestHandler extends EventEmitter {
 		if (typeof options?.cache === 'object') this.cached = options.cache;
 		else this.cached = options?.cache === true ? new CacheStore() : null;
 
-		this.dispatcher = new Pool(new URL(this.baseURL).origin, {
+		this.origin = new URL(this.baseURL).origin;
+		this.dispatcher = new Pool(this.origin, {
 			connections: options?.connections ?? null,
 			pipelining: options?.pipelining ?? 1
 		});
@@ -160,10 +172,26 @@ export class RequestHandler extends EventEmitter {
 		return result as Result<T>;
 	}
 
+	private async send(
+		path: string,
+		init: { body?: string; method: string; signal: AbortSignal; headers: Record<string, string> }
+	): Promise<RawResponse> {
+		if (isBun) {
+			const res = await fetch(`${this.origin}/v1${path}`, init);
+			return { status: res.status, cacheControl: res.headers.get('cache-control'), json: () => res.json() };
+		}
+
+		const res = await this.dispatcher.request({ path: `/v1${path}`, ...init });
+		return {
+			status: res.statusCode,
+			cacheControl: (res.headers['cache-control'] as string | undefined) ?? null,
+			json: async () => readJson(await res.body.arrayBuffer(), res.headers['content-encoding'])
+		};
+	}
+
 	private async dispatch<T>(path: string, options: RequestOptions = {}, retries = 0): Promise<Result<T>> {
 		try {
-			const res = await this.dispatcher.request({
-				path: `/v1${path}`,
+			const res = await this.send(path, {
 				body: options.body,
 				method: options.method ?? 'GET',
 				signal: timeoutSignal(options.restRequestTimeout ?? this.restRequestTimeout),
@@ -175,14 +203,14 @@ export class RequestHandler extends EventEmitter {
 				}
 			});
 
-			if (res.statusCode === 504 && retries < (options.retryLimit ?? this.retryLimit)) {
+			if (res.status === 504 && retries < (options.retryLimit ?? this.retryLimit)) {
 				return await this.exec<T>(path, options, ++retries);
 			}
-			const body = readJson(await res.body.arrayBuffer(), res.headers['content-encoding']);
+			const body = await res.json();
 
 			if (
 				this.credentials &&
-				res.statusCode === 403 &&
+				res.status === 403 &&
 				body?.reason === 'accessDenied.invalidIp' &&
 				retries < (options.retryLimit ?? this.retryLimit)
 			) {
@@ -190,23 +218,23 @@ export class RequestHandler extends EventEmitter {
 				if (keys.length) return await this.exec<T>(path, options, ++retries);
 			}
 
-			const maxAge = Number((res.headers['cache-control'] as string | null)?.split('=')?.[1] ?? 0) * 1000;
+			const maxAge = Number(res.cacheControl?.split('=')?.[1] ?? 0) * 1000;
 
-			if (res.statusCode === 403 && !body?.message && this.rejectIfNotValid) {
-				throw new HttpError(PrivateWarLogError, res.statusCode, path, maxAge);
+			if (res.status === 403 && !body?.message && this.rejectIfNotValid) {
+				throw new HttpError(PrivateWarLogError, res.status, path, maxAge);
 			}
-			if (res.statusCode !== 200 && this.rejectIfNotValid) {
-				throw new HttpError(body, res.statusCode, path, maxAge, options.method);
+			if (res.status !== 200 && this.rejectIfNotValid) {
+				throw new HttpError(body, res.status, path, maxAge, options.method);
 			}
-			if (this.cached && maxAge > 0 && options.cache !== false && res.statusCode === 200) {
-				await this.cached.set(path, { body, ttl: Date.now() + maxAge, status: res.statusCode }, maxAge);
+			if (this.cached && maxAge > 0 && options.cache !== false && res.status === 200) {
+				await this.cached.set(path, { body, ttl: Date.now() + maxAge, status: res.status }, maxAge);
 			}
 			return {
 				body: body as T,
-				res: { maxAge, status: res.statusCode, path, ok: res.statusCode === 200 }
+				res: { maxAge, status: res.status, path, ok: res.status === 200 }
 			};
 		} catch (error: any) {
-			if (error.code === 'UND_ERR_ABORTED' && retries < (options.retryLimit ?? this.retryLimit)) {
+			if ((error.code === 'UND_ERR_ABORTED' || error.name === 'AbortError') && retries < (options.retryLimit ?? this.retryLimit)) {
 				return this.exec<T>(path, options, ++retries);
 			}
 			if (this.rejectIfNotValid) throw error;
