@@ -1,6 +1,5 @@
 import { EventEmitter } from 'node:events';
-import { promisify } from 'node:util';
-import { gunzip } from 'node:zlib';
+import { gunzipSync, inflateRawSync, inflateSync } from 'node:zlib';
 import { fetch, Pool } from 'undici';
 import { LoginOptions, RequestHandlerOptions, RequestOptions, Result, Store } from '../types';
 import { API_BASE_URL, DEV_SITE_API_BASE_URL } from '../util/Constants';
@@ -10,11 +9,16 @@ import { HttpError, PrivateWarLogError } from './HttpError';
 import { IRestEvents } from './RestManager';
 import { BatchThrottler, QueueThrottler } from './Throttler';
 
-const gunzipAsync = promisify(gunzip);
+// Sync on purpose: for ~4 KB bodies the async zlib call costs more CPU than the decompression itself.
+function decompress(buf: Buffer, encoding?: string | string[]): Buffer {
+	if (encoding === 'gzip') return gunzipSync(buf);
+	if (encoding !== 'deflate') return buf;
+	// "deflate" is meant to be zlib-wrapped, but some servers send raw deflate.
+	return buf[0] === 0x78 ? inflateSync(buf) : inflateRawSync(buf);
+}
 
-async function readJson(raw: ArrayBuffer, encoding?: string | string[]): Promise<ResponseBody> {
-	const buf = Buffer.from(raw);
-	return JSON.parse((encoding === 'gzip' ? await gunzipAsync(buf) : buf).toString());
+function readJson(raw: ArrayBuffer, encoding?: string | string[]): ResponseBody {
+	return JSON.parse(decompress(Buffer.from(raw), encoding).toString());
 }
 
 const IP_REGEX = /\d{1,3}.\d{1,3}.\d{1,3}.\d{1,3}/g;
@@ -166,15 +170,15 @@ export class RequestHandler extends EventEmitter {
 				headers: {
 					'Authorization': `Bearer ${this._key}`,
 					'Content-Type': 'application/json',
-					// Gzip cuts player responses ~5x and the API's slow tail with them.
-					'Accept-Encoding': 'gzip'
+					// Compression cuts player responses ~5x and the API's slow tail with them; deflate decodes cheapest.
+					'Accept-Encoding': 'deflate, gzip;q=0.5'
 				}
 			});
 
 			if (res.statusCode === 504 && retries < (options.retryLimit ?? this.retryLimit)) {
 				return await this.exec<T>(path, options, ++retries);
 			}
-			const body = await readJson(await res.body.arrayBuffer(), res.headers['content-encoding']);
+			const body = readJson(await res.body.arrayBuffer(), res.headers['content-encoding']);
 
 			if (
 				this.credentials &&
