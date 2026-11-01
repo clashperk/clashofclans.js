@@ -1,4 +1,6 @@
 import { EventEmitter } from 'node:events';
+import { promisify } from 'node:util';
+import { gunzip } from 'node:zlib';
 import { fetch, Pool } from 'undici';
 import { LoginOptions, RequestHandlerOptions, RequestOptions, Result, Store } from '../types';
 import { API_BASE_URL, DEV_SITE_API_BASE_URL } from '../util/Constants';
@@ -7,6 +9,13 @@ import { timeoutSignal } from '../util/Util';
 import { HttpError, PrivateWarLogError } from './HttpError';
 import { IRestEvents } from './RestManager';
 import { BatchThrottler, QueueThrottler } from './Throttler';
+
+const gunzipAsync = promisify(gunzip);
+
+async function readJson(encoding: string | string[] | undefined, raw: ArrayBuffer): Promise<ResponseBody> {
+	const buf = Buffer.from(raw);
+	return JSON.parse((encoding === 'gzip' ? await gunzipAsync(buf) : buf).toString());
+}
 
 const IP_REGEX = /\d{1,3}.\d{1,3}.\d{1,3}.\d{1,3}/g;
 
@@ -154,13 +163,18 @@ export class RequestHandler extends EventEmitter {
 				body: options.body,
 				method: options.method ?? 'GET',
 				signal: timeoutSignal(options.restRequestTimeout ?? this.restRequestTimeout),
-				headers: { 'Authorization': `Bearer ${this._key}`, 'Content-Type': 'application/json' }
+				headers: {
+					'Authorization': `Bearer ${this._key}`,
+					'Content-Type': 'application/json',
+					// Gzip cuts player responses ~5x and the API's slow tail with them.
+					'Accept-Encoding': 'gzip'
+				}
 			});
 
 			if (res.statusCode === 504 && retries < (options.retryLimit ?? this.retryLimit)) {
 				return await this.exec<T>(path, options, ++retries);
 			}
-			const body = (await res.body.json()) as ResponseBody;
+			const body = await readJson(res.headers['content-encoding'], await res.body.arrayBuffer());
 
 			if (
 				this.credentials &&
