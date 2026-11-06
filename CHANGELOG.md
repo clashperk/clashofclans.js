@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## 5.1.5
+
+### Changed
+
+- Static data synced from clash-asset-library 2026.11.06.1. Abilities are stored once in `UNITS_DATA.abilities` and units point at them by key: equipment has `main_abilities` / `extra_abilities` with `main_ability_levels` / `extra_ability_levels` per level, troops and Builder Base heroes have `special_abilities` with `special_abilities_level`, and spells `give_special_ability` with `given_special_ability_level`. Equipment levels no longer carry an `abilities` array.
+
+### Added
+
+- `StaticAbility` and the ability fields above on the static data types, plus `die_damage` on troop levels.
+
 ## 5.1.1
 
 ### Fixed

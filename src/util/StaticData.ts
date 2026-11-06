@@ -59,6 +59,10 @@ export interface StaticTroopLevel extends StaticLevelBase {
 	upgrade_time: number;
 	upgrade_cost: number;
 	required_lab_level: number | null;
+	/** Damage dealt when the unit dies, on the troops that have one. */
+	die_damage?: number;
+	/** Aligned with the troop's `special_abilities`; `null` where this level lacks that ability. */
+	special_abilities_level?: (number | null)[];
 }
 
 export interface StaticTroop extends StaticCombatUnit {
@@ -66,6 +70,8 @@ export interface StaticTroop extends StaticCombatUnit {
 	village_type: StaticVillageType;
 	is_seasonal?: boolean | null;
 	super_troop?: { original_id: number; min_original_level: number } | null;
+	/** Keys into `abilities`. */
+	special_abilities?: string[];
 	levels: StaticTroopLevel[];
 }
 
@@ -76,12 +82,16 @@ export interface StaticSpellLevel extends StaticLevelBase {
 	upgrade_time: number;
 	upgrade_cost: number;
 	required_lab_level: number | null;
+	/** Level of the spell's `give_special_ability` at this spell level. */
+	given_special_ability_level?: number;
 }
 
 export interface StaticSpell extends StaticUnitBase {
 	upgrade_resource: string;
 	housing_space: number;
 	is_seasonal?: boolean | null;
+	/** Key into `abilities` for the ability the spell gives the troops it hits. */
+	give_special_ability?: string;
 	levels: StaticSpellLevel[];
 }
 
@@ -91,10 +101,14 @@ export interface StaticHeroLevel extends StaticLevelBase {
 	upgrade_time: number;
 	upgrade_cost: number;
 	required_hero_tavern_level: number | null;
+	/** Builder Base heroes only, aligned with `special_abilities`; absent before the ability unlocks. */
+	special_abilities_level?: (number | null)[];
 }
 
 export interface StaticHero extends StaticCombatUnit {
 	village_type: StaticVillageType;
+	/** Builder Base heroes only: keys into `abilities`. Home heroes' abilities come from equipment. */
+	special_abilities?: string[];
 	levels: StaticHeroLevel[];
 }
 
@@ -116,14 +130,44 @@ export interface StaticEquipmentLevel extends StaticLevelBase {
 	heal_on_activation?: number;
 	required_blacksmith_level: number;
 	upgrade_cost: { shiny_ore: number; glowy_ore: number; starry_ore: number };
-	abilities?: Record<string, unknown>[];
+	/** Aligned with the item's `main_abilities` / `extra_abilities`. */
+	main_ability_levels?: number[];
+	extra_ability_levels?: number[];
 }
 
 export interface StaticEquipment extends StaticUnitBase {
 	production_building_tid: string;
 	rarity: 'Common' | 'Epic';
 	hero: string;
+	/** Keys into `abilities`; the first is the item's own ability. */
+	main_abilities: string[];
+	extra_abilities?: string[];
 	levels: StaticEquipmentLevel[];
+}
+
+export interface StaticAbilityLevel {
+	level: number;
+	/** Per-level game fields in snake_case, in the game's units (milliseconds, 1/100 tiles). */
+	[field: string]: unknown;
+}
+
+/** One ability, stored once; units point at it by `key` and a level. */
+export interface StaticAbility {
+	key: string;
+	/** `null` when the game gives the ability no name of its own. */
+	name: string | null;
+	info: string | null;
+	tid: string | null;
+	info_tid: string | null;
+	used_by: {
+		category: 'troops' | 'spells' | 'heroes' | 'equipment';
+		id: number;
+		name: string;
+		role: 'main' | 'extra' | 'special' | 'given';
+	}[];
+	levels: StaticAbilityLevel[];
+	/** The ability's fixed game fields in snake_case, e.g. `activation_cooldown`. */
+	[field: string]: unknown;
 }
 
 export interface StaticUnitsData {
@@ -134,6 +178,8 @@ export interface StaticUnitsData {
 	heroes: StaticHero[];
 	pets: StaticPet[];
 	equipment: StaticEquipment[];
+	/** The abilities these units use, keyed by `key`. */
+	abilities: StaticAbility[];
 }
 
 /** `units.json` from clash-asset-library, as published. Update with `npm run update:static`. */
