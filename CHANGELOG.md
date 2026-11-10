@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## 5.1.7
+
+### Fixed
+
+- Requests use HTTP/1.1 even when the server offers HTTP/2. undici offers both by default, and proxies such as Cloudflare choose HTTP/2, which puts every request on one connection. A reset on that connection then failed all requests in flight with `ECONNRESET`. Set the `allowH2` option to turn HTTP/2 back on.
+
 ## 5.1.6
 
 ### Changed
