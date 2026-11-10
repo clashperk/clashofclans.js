@@ -7,6 +7,18 @@ export interface Store<T = any> {
 	clear: () => void | Promise<void>;
 }
 
+/** Failures to retry, within `retryLimit`. */
+export interface RetryOn {
+	/** Response status codes to retry. Default: `[504]`. */
+	statusCodes?: number[];
+
+	/**
+	 * Error codes (or error names) to retry. Default: `ECONNRESET`, `EPIPE`, `UND_ERR_SOCKET`, `UND_ERR_ABORTED`
+	 * and `AbortError` (timeouts). Connection errors are only retried for GET requests.
+	 */
+	errorCodes?: string[];
+}
+
 /** Options for a {@link Client} */
 export interface ClientOptions {
 	/** Keys from Clash of Clans API developer site. */
@@ -16,9 +28,12 @@ export interface ClientOptions {
 	baseURL?: string;
 
 	/**
-	 * How many times to retry on 5XX errors.
+	 * How many times to retry a failed request. Which failures count is set by `retryOn`.
 	 */
 	retryLimit?: number;
+
+	/** Which failures are retried, within `retryLimit`. */
+	retryOn?: RetryOn;
 
 	/**
 	 * Whether enable or disable internal caching.
@@ -69,7 +84,8 @@ export interface RequestHandlerOptions extends ClientOptions {
 	/** Whether to negotiate HTTP/2 when the server offers it. Default: false. Ignored on Bun. */
 	allowH2?: boolean;
 
-	onError?: (args: { path: string; status: number; body: unknown }) => unknown;
+	/** Called once per request with the final result and how many retries it took. */
+	onError?: (args: { path: string; status: number; body: unknown; retries: number }) => unknown;
 }
 
 /** Search options for request. */
@@ -100,8 +116,11 @@ export interface OverrideOptions {
 	/** Whether to skip the cache check and request the API. */
 	force?: boolean;
 
-	/** How many times to retry on 5XX errors. */
+	/** How many times to retry a failed request. Which failures count is set by `retryOn`. */
 	retryLimit?: number;
+
+	/** Which failures are retried, within `retryLimit`. */
+	retryOn?: RetryOn;
 
 	/** Whether to ignore throttlers. */
 	ignoreRateLimit?: boolean;
