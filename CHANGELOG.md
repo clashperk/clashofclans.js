@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## 5.1.8
+
+### Fixed
+
+- A GET request that fails with a connection error (`ECONNRESET`, `EPIPE`, or undici's `UND_ERR_SOCKET`) is sent once more on a new connection, whatever `retryLimit` is. Behind an anycast proxy such as Cloudflare, a route change moves open connections to an edge server that doesn't know them, and it resets them mid-request.
+
 ## 5.1.7
 
 ### Fixed
