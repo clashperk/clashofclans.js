@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## 5.1.9
+
+### Added
+
+- `retryOn` option, on the client and per request, sets which failures `retryLimit` retries: `statusCodes` (default `[500, 504]`) and `errorCodes`, matched against an error's `code` or `name` (default `ECONNRESET`, `EPIPE`, `UND_ERR_SOCKET`, `UND_ERR_ABORTED`, `AbortError`). The defaults add 500 to the statuses retried before. Connection errors are still only retried for GET requests.
+- `onError` receives `retries`, the number of retries the request took.
+
+### Fixed
+
+- `onError` is called once per request with the final result. A retried request used to call it once per attempt.
+
 ## 5.1.8
 
 ### Fixed

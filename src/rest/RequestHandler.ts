@@ -1,7 +1,7 @@
 import { EventEmitter } from 'node:events';
 import { gunzipSync, inflateSync } from 'node:zlib';
 import { fetch, Pool } from 'undici';
-import { LoginOptions, RequestHandlerOptions, RequestOptions, Result, Store } from '../types';
+import { LoginOptions, RequestHandlerOptions, RequestOptions, Result, RetryOn, Store } from '../types';
 import { API_BASE_URL, DEV_SITE_API_BASE_URL } from '../util/Constants';
 import { CacheStore } from '../util/Store';
 import { timeoutSignal } from '../util/Util';
@@ -13,8 +13,12 @@ import { BatchThrottler, QueueThrottler } from './Throttler';
 const KEEP_ALIVE_TIMEOUT = 50_000;
 
 // Behind an anycast proxy such as Cloudflare, a route change moves open connections to an edge
-// server that doesn't know them, and it resets them. A GET is safe to send again on a new connection.
+// server that doesn't know them, and it resets them. Only a GET is safe to send again after one.
 const CONNECTION_ERRORS = new Set(['ECONNRESET', 'EPIPE', 'UND_ERR_SOCKET']);
+const DEFAULT_RETRY_ON: Required<RetryOn> = {
+	statusCodes: [500, 504],
+	errorCodes: [...CONNECTION_ERRORS, 'UND_ERR_ABORTED', 'AbortError']
+};
 
 // Sync on purpose: for ~4 KB bodies the async zlib call costs more CPU than the decompression itself.
 const decoders = new Map<string, (buf: Buffer) => Buffer>([
@@ -94,10 +98,11 @@ export class RequestHandler extends EventEmitter {
 	private readonly baseURL: string;
 	private readonly rejectIfNotValid: boolean;
 	private readonly retryLimit: number;
+	private readonly retryOn: Required<RetryOn>;
 	private readonly restRequestTimeout: number;
 	private readonly throttler?: QueueThrottler | BatchThrottler | null;
 	private readonly cached: Store<{ body: unknown; ttl: number; status: number }> | null;
-	private readonly onError?: (args: { path: string; status: number; body: unknown }) => unknown;
+	private readonly onError?: RequestHandlerOptions['onError'];
 
 	private readonly origin: string;
 	private readonly dispatcher: Pool;
@@ -108,6 +113,7 @@ export class RequestHandler extends EventEmitter {
 		this.onError = options?.onError;
 		this.keys = options?.keys ?? [];
 		this.retryLimit = options?.retryLimit ?? 0;
+		this.retryOn = { ...DEFAULT_RETRY_ON, ...options?.retryOn };
 		this.throttler = options?.throttler ?? null;
 		this.baseURL = options?.baseURL ?? API_BASE_URL;
 		this.restRequestTimeout = options?.restRequestTimeout ?? 0;
@@ -176,12 +182,20 @@ export class RequestHandler extends EventEmitter {
 		return result.body;
 	}
 
-	private async exec<T>(path: string, options: RequestOptions = {}, retries = 0): Promise<Result<T>> {
-		const result = await this.dispatch(path, options, retries);
+	private async exec<T>(path: string, options: RequestOptions = {}): Promise<Result<T>> {
+		const { result, retries } = await this.dispatch<T>(path, options);
 
-		this.onError?.({ path, status: result.res.status, body: result.body });
+		this.onError?.({ path, status: result.res.status, body: result.body, retries });
 
-		return result as Result<T>;
+		return result;
+	}
+
+	private canRetry(options: RequestOptions, retries: number) {
+		return retries < (options.retryLimit ?? this.retryLimit);
+	}
+
+	private retryOnFor(options: RequestOptions) {
+		return { ...this.retryOn, ...options.retryOn };
 	}
 
 	private async send(
@@ -201,7 +215,7 @@ export class RequestHandler extends EventEmitter {
 		};
 	}
 
-	private async dispatch<T>(path: string, options: RequestOptions = {}, retries = 0): Promise<Result<T>> {
+	private async dispatch<T>(path: string, options: RequestOptions = {}, retries = 0): Promise<{ result: Result<T>; retries: number }> {
 		try {
 			const res = await this.send(path, {
 				body: options.body,
@@ -215,19 +229,14 @@ export class RequestHandler extends EventEmitter {
 				}
 			});
 
-			if (res.status === 504 && retries < (options.retryLimit ?? this.retryLimit)) {
-				return await this.exec<T>(path, options, ++retries);
+			if (this.retryOnFor(options).statusCodes.includes(res.status) && this.canRetry(options, retries)) {
+				return this.dispatch<T>(path, options, retries + 1);
 			}
 			const body = await res.json();
 
-			if (
-				this.credentials &&
-				res.status === 403 &&
-				body?.reason === 'accessDenied.invalidIp' &&
-				retries < (options.retryLimit ?? this.retryLimit)
-			) {
+			if (this.credentials && res.status === 403 && body?.reason === 'accessDenied.invalidIp' && this.canRetry(options, retries)) {
 				const keys = await this.reValidateKeys().then(() => this.login());
-				if (keys.length) return await this.exec<T>(path, options, ++retries);
+				if (keys.length) return this.dispatch<T>(path, options, retries + 1);
 			}
 
 			const maxAge = Number(res.cacheControl?.split('=')?.[1] ?? 0) * 1000;
@@ -242,24 +251,23 @@ export class RequestHandler extends EventEmitter {
 				await this.cached.set(path, { body, ttl: Date.now() + maxAge, status: res.status }, maxAge);
 			}
 			return {
-				body: body as T,
-				res: { maxAge, status: res.status, path, ok: res.status === 200 }
+				result: { body: body as T, res: { maxAge, status: res.status, path, ok: res.status === 200 } },
+				retries
 			};
 		} catch (error: any) {
-			if (
-				CONNECTION_ERRORS.has(error.code) &&
-				(options.method ?? 'GET') === 'GET' &&
-				retries < (options.retryLimit ?? this.retryLimit)
-			) {
-				return this.exec<T>(path, options, ++retries);
-			}
-			if ((error.code === 'UND_ERR_ABORTED' || error.name === 'AbortError') && retries < (options.retryLimit ?? this.retryLimit)) {
-				return this.exec<T>(path, options, ++retries);
+			const codes = [error.code, error.name].filter((c): c is string => typeof c === 'string');
+			const unsafe = codes.some((c) => CONNECTION_ERRORS.has(c)) && (options.method ?? 'GET') !== 'GET';
+			const listed = codes.some((c) => this.retryOnFor(options).errorCodes.includes(c));
+			if (listed && !unsafe && this.canRetry(options, retries)) {
+				return this.dispatch<T>(path, options, retries + 1);
 			}
 			if (this.rejectIfNotValid) throw error;
 			return {
-				body: { message: error.message } as unknown as T,
-				res: { maxAge: 0, status: 500, path, ok: false }
+				result: {
+					body: { message: error.message } as unknown as T,
+					res: { maxAge: 0, status: 500, path, ok: false }
+				},
+				retries
 			};
 		}
 	}
