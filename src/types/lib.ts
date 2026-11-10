@@ -63,6 +63,9 @@ export interface RequestHandlerOptions extends ClientOptions {
 	/** The amount of concurrent requests to be sent over the single TCP/TLS connection according to RFC7230. Default: 1. Ignored on Bun. */
 	pipelining?: number;
 
+	/** How long an idle connection stays open, in milliseconds. Default: 50000, under the API's own idle limit of about a minute. Ignored on Bun. */
+	keepAliveTimeout?: number;
+
 	onError?: (args: { path: string; status: number; body: unknown }) => unknown;
 }
 
