@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## 5.1.6
+
+### Changed
+
+- Idle API connections stay open for 50 seconds instead of undici's default 4. Requests a few seconds apart reuse the connection instead of paying for a new TLS handshake each time. Set it with the `keepAliveTimeout` option.
+
 ## 5.1.5
 
 ### Changed

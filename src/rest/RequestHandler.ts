@@ -9,6 +9,9 @@ import { HttpError, PrivateWarLogError } from './HttpError';
 import { IRestEvents } from './RestManager';
 import { BatchThrottler, QueueThrottler } from './Throttler';
 
+// The API closes idle connections after about a minute. A new TLS connection costs more than the request itself.
+const KEEP_ALIVE_TIMEOUT = 50_000;
+
 // Sync on purpose: for ~4 KB bodies the async zlib call costs more CPU than the decompression itself.
 const decoders = new Map<string, (buf: Buffer) => Buffer>([
 	['gzip', gunzipSync],
@@ -109,9 +112,12 @@ export class RequestHandler extends EventEmitter {
 		else this.cached = options?.cache === true ? new CacheStore() : null;
 
 		this.origin = new URL(this.baseURL).origin;
+		const keepAlive = options?.keepAliveTimeout ?? KEEP_ALIVE_TIMEOUT;
 		this.dispatcher = new Pool(this.origin, {
 			connections: options?.connections ?? null,
-			pipelining: options?.pipelining ?? 1
+			pipelining: options?.pipelining ?? 1,
+			keepAliveTimeout: keepAlive,
+			keepAliveMaxTimeout: keepAlive
 		});
 	}
 
