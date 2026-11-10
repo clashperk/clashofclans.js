@@ -12,6 +12,10 @@ import { BatchThrottler, QueueThrottler } from './Throttler';
 // The API closes idle connections after about a minute. A new TLS connection costs more than the request itself.
 const KEEP_ALIVE_TIMEOUT = 50_000;
 
+// Behind an anycast proxy such as Cloudflare, a route change moves open connections to an edge
+// server that doesn't know them, and it resets them. A GET is safe to send again on a new connection.
+const CONNECTION_ERRORS = new Set(['ECONNRESET', 'EPIPE', 'UND_ERR_SOCKET']);
+
 // Sync on purpose: for ~4 KB bodies the async zlib call costs more CPU than the decompression itself.
 const decoders = new Map<string, (buf: Buffer) => Buffer>([
 	['gzip', gunzipSync],
@@ -242,6 +246,9 @@ export class RequestHandler extends EventEmitter {
 				res: { maxAge, status: res.status, path, ok: res.status === 200 }
 			};
 		} catch (error: any) {
+			if (CONNECTION_ERRORS.has(error.code) && (options.method ?? 'GET') === 'GET' && retries === 0) {
+				return this.exec<T>(path, options, ++retries);
+			}
 			if ((error.code === 'UND_ERR_ABORTED' || error.name === 'AbortError') && retries < (options.retryLimit ?? this.retryLimit)) {
 				return this.exec<T>(path, options, ++retries);
 			}
