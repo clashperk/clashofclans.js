@@ -16,7 +16,7 @@ const KEEP_ALIVE_TIMEOUT = 50_000;
 // server that doesn't know them, and it resets them. Only a GET is safe to send again after one.
 const CONNECTION_ERRORS = new Set(['ECONNRESET', 'EPIPE', 'UND_ERR_SOCKET']);
 const DEFAULT_RETRY_ON: Required<RetryOn> = {
-	statusCodes: [504],
+	statusCodes: [500, 504],
 	errorCodes: [...CONNECTION_ERRORS, 'UND_ERR_ABORTED', 'AbortError']
 };
 

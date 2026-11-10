@@ -9,7 +9,7 @@ export interface Store<T = any> {
 
 /** Failures to retry, within `retryLimit`. */
 export interface RetryOn {
-	/** Response status codes to retry. Default: `[504]`. */
+	/** Response status codes to retry. Default: `[500, 504]`. */
 	statusCodes?: number[];
 
 	/**
