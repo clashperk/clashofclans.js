@@ -66,6 +66,9 @@ export interface RequestHandlerOptions extends ClientOptions {
 	/** How long an idle connection stays open, in milliseconds. Default: 50000, under the API's own idle limit of about a minute. Ignored on Bun. */
 	keepAliveTimeout?: number;
 
+	/** Whether to negotiate HTTP/2 when the server offers it. Default: false. Ignored on Bun. */
+	allowH2?: boolean;
+
 	onError?: (args: { path: string; status: number; body: unknown }) => unknown;
 }
 
