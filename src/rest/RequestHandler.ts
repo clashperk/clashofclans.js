@@ -246,7 +246,11 @@ export class RequestHandler extends EventEmitter {
 				res: { maxAge, status: res.status, path, ok: res.status === 200 }
 			};
 		} catch (error: any) {
-			if (CONNECTION_ERRORS.has(error.code) && (options.method ?? 'GET') === 'GET' && retries === 0) {
+			if (
+				CONNECTION_ERRORS.has(error.code) &&
+				(options.method ?? 'GET') === 'GET' &&
+				retries < (options.retryLimit ?? this.retryLimit)
+			) {
 				return this.exec<T>(path, options, ++retries);
 			}
 			if ((error.code === 'UND_ERR_ABORTED' || error.name === 'AbortError') && retries < (options.retryLimit ?? this.retryLimit)) {
