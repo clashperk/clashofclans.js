@@ -38,6 +38,23 @@ describe('RequestHandler', () => {
 		expect(received['accept-encoding']).toBe('gzip, deflate');
 	});
 
+	it("keeps the runtime's default User-Agent unless one is set", async () => {
+		// Node's undici sends none, Bun's fetch sends `Bun/<version>`.
+		const bun = (globalThis as { Bun?: { version: string } }).Bun;
+		await handler().request('/players/%23PLAIN');
+		expect(received['user-agent']).toBe(bun ? `Bun/${bun.version}` : undefined);
+	});
+
+	it('sends the User-Agent, including one changed after construction', async () => {
+		const withAgent = new RequestHandler({ baseURL, keys: ['key'], rejectIfNotValid: false, userAgent: 'clashperk/1.0.0/0' });
+		await withAgent.request('/players/%23PLAIN');
+		expect(received['user-agent']).toBe('clashperk/1.0.0/0');
+
+		withAgent.userAgent = 'clashperk/1.0.0/0 (123)';
+		await withAgent.request('/players/%23PLAIN');
+		expect(received['user-agent']).toBe('clashperk/1.0.0/0 (123)');
+	});
+
 	it.each(Object.keys(encoders))('decodes a %s body', async (tag) => {
 		const { body, res } = await handler().request<{ tag: string }>(`/players/%23${tag}`);
 		expect(res.status).toBe(200);

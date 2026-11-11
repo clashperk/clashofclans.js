@@ -47,6 +47,9 @@ export interface ClientOptions {
 	/** Time to wait before cancelling a REST request, in milliseconds. */
 	restRequestTimeout?: number;
 
+	/** Sent as the `User-Agent` header with every API request. Change it later with `RequestHandler#userAgent`. */
+	userAgent?: string;
+
 	/**
 	 * Throttler class which handles rate-limit
 	 * @example
