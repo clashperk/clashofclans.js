@@ -38,9 +38,11 @@ describe('RequestHandler', () => {
 		expect(received['accept-encoding']).toBe('gzip, deflate');
 	});
 
-	it('sends no User-Agent unless one is set', async () => {
+	it("keeps the runtime's default User-Agent unless one is set", async () => {
+		// Node's undici sends none, Bun's fetch sends `Bun/<version>`.
+		const bun = (globalThis as { Bun?: { version: string } }).Bun;
 		await handler().request('/players/%23PLAIN');
-		expect(received['user-agent']).toBeUndefined();
+		expect(received['user-agent']).toBe(bun ? `Bun/${bun.version}` : undefined);
 	});
 
 	it('sends the User-Agent, including one changed after construction', async () => {

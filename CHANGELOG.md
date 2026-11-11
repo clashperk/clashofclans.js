@@ -6,7 +6,7 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
-- `userAgent` option, sent as the `User-Agent` header with every API request. `RequestHandler#userAgent` can be changed after construction, for details known only later (such as a Discord bot's application ID). No header is sent when it's unset, as before.
+- `userAgent` option, sent as the `User-Agent` header with every API request. `RequestHandler#userAgent` can be changed after construction, for details known only later (such as a Discord bot's application ID). When it's unset, requests keep the runtime's default as before: none on Node, `Bun/<version>` on Bun.
 
 ## 5.1.10
 
