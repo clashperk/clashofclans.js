@@ -104,6 +104,9 @@ export class RequestHandler extends EventEmitter {
 	private readonly cached: Store<{ body: unknown; ttl: number; status: number }> | null;
 	private readonly onError?: RequestHandlerOptions['onError'];
 
+	/** Sent as the `User-Agent` header with every API request. Settable after construction, for details known later. */
+	public userAgent?: string;
+
 	private readonly origin: string;
 	private readonly dispatcher: Pool;
 
@@ -111,6 +114,7 @@ export class RequestHandler extends EventEmitter {
 		super();
 
 		this.onError = options?.onError;
+		this.userAgent = options?.userAgent;
 		this.keys = options?.keys ?? [];
 		this.retryLimit = options?.retryLimit ?? 0;
 		this.retryOn = { ...DEFAULT_RETRY_ON, ...options?.retryOn };
@@ -227,7 +231,8 @@ export class RequestHandler extends EventEmitter {
 					'Authorization': `Bearer ${this._key}`,
 					'Content-Type': 'application/json',
 					// Compression cuts player responses ~5x and the API's slow tail with them.
-					'Accept-Encoding': 'gzip, deflate'
+					'Accept-Encoding': 'gzip, deflate',
+					...(this.userAgent && { 'User-Agent': this.userAgent })
 				}
 			});
 
