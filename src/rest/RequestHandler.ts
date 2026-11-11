@@ -183,9 +183,11 @@ export class RequestHandler extends EventEmitter {
 	}
 
 	private async exec<T>(path: string, options: RequestOptions = {}): Promise<Result<T>> {
+		const started = performance.now();
 		const { result, retries } = await this.dispatch<T>(path, options);
+		const elapsed = Math.round(performance.now() - started);
 
-		this.onError?.({ path, status: result.res.status, body: result.body, retries });
+		this.onError?.({ path, status: result.res.status, body: result.body, retries, elapsed });
 
 		return result;
 	}
