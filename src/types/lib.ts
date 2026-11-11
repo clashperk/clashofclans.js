@@ -84,8 +84,8 @@ export interface RequestHandlerOptions extends ClientOptions {
 	/** Whether to negotiate HTTP/2 when the server offers it. Default: false. Ignored on Bun. */
 	allowH2?: boolean;
 
-	/** Called once per request with the final result and how many retries it took. */
-	onError?: (args: { path: string; status: number; body: unknown; retries: number }) => unknown;
+	/** Called once per request with the final result, how many retries it took and the total time in milliseconds. */
+	onError?: (args: { path: string; status: number; body: unknown; retries: number; elapsed: number }) => unknown;
 }
 
 /** Search options for request. */

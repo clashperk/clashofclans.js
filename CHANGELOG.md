@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## 5.1.10
+
+### Added
+
+- `onError` receives `elapsed`: milliseconds from the first attempt to the final result, retries included. Time spent waiting in the throttler isn't counted.
+
 ## 5.1.9
 
 ### Added
