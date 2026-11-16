@@ -49,6 +49,6 @@ export default tseslint.config(
 		}
 	},
 	{
-		ignores: ['dist/**', 'docs/**', 'test/**', 'node_modules/**']
+		ignores: ['dist/**', 'docs/**', 'test/**', 'node_modules/**', '.claude/**']
 	}
 );
