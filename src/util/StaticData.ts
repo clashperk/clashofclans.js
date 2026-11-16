@@ -285,6 +285,12 @@ const HALL_LEVELS: Record<UnitVillage, number> = {
 	builderBase: findBuilding('Builder Hall', 'builderBase')!.levels.length
 };
 
+/** Highest Town Hall level in the static data. Follows the game when `units.json` is refreshed. */
+export const MAX_TOWN_HALL_LEVEL = HALL_LEVELS.home;
+
+/** Highest Builder Hall level in the static data. */
+export const MAX_BUILDER_HALL_LEVEL = HALL_LEVELS.builderBase;
+
 type StaticUnit = StaticTroop | StaticSpell | StaticHero | StaticPet | StaticEquipment;
 type StaticLevel = StaticUnit['levels'][number];
 
