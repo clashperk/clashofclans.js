@@ -5,6 +5,7 @@ import UNITS_JSON from './units.json';
 // Mirrors https://github.com/clashperk/clash-asset-library/blob/main/docs/schema.md (snake_case, as published).
 
 export type StaticVillageType = 'home' | 'builder_base';
+export type EquipmentRarity = 'Common' | 'Epic' | 'Legendary';
 
 export interface StaticBuildingLevel {
 	level: number;
@@ -70,6 +71,8 @@ export interface StaticTroop extends StaticCombatUnit {
 	village_type: StaticVillageType;
 	is_seasonal?: boolean | null;
 	super_troop?: { original_id: number; min_original_level: number } | null;
+	/** Squads only: the troops one squad deploys. */
+	squad?: { members: { id: number; name: string; count: number }[] } | null;
 	/** Keys into `abilities`. */
 	special_abilities?: string[];
 	levels: StaticTroopLevel[];
@@ -137,7 +140,7 @@ export interface StaticEquipmentLevel extends StaticLevelBase {
 
 export interface StaticEquipment extends StaticUnitBase {
 	production_building_tid: string;
-	rarity: 'Common' | 'Epic';
+	rarity: EquipmentRarity;
 	hero: string;
 	/** Keys into `abilities`; the first is the item's own ability. */
 	main_abilities: string[];
@@ -194,7 +197,7 @@ export const BUILDINGS_DATA = BUILDINGS_JSON as unknown as { fingerprint: string
 
 export type UnitVillage = 'home' | 'builderBase';
 export type UnitCategory = 'troop' | 'spell' | 'hero' | 'equipment';
-export type UnitSubCategory = 'troop' | 'siege' | 'pet' | 'spell' | 'hero' | 'equipment';
+export type UnitSubCategory = 'troop' | 'siege' | 'squad' | 'pet' | 'spell' | 'hero' | 'equipment';
 
 /** Town Hall level required to boost super troops. */
 export const SUPER_TROOP_MIN_TOWN_HALL_LEVEL = 11;
@@ -214,7 +217,7 @@ export interface RawUnit {
 	seasonal: boolean;
 	/** Hero this equipment belongs to; `null` for anything that is not hero equipment. */
 	hero: string | null;
-	rarity: 'Common' | 'Epic' | null;
+	rarity: EquipmentRarity | null;
 	superTroop: { originalId: number; originalName: string; minOriginalLevel: number } | null;
 	minLevel: number;
 	maxLevel: number;
@@ -262,6 +265,7 @@ const PRODUCTION_BUILDINGS = [
 	'Barracks',
 	'Dark Barracks',
 	'Workshop',
+	'Squad Barracks',
 	'Builder Barracks',
 	'Spell Factory',
 	'Dark Spell Factory',
@@ -293,7 +297,7 @@ interface BuildOptions {
 	housingSpace?: number;
 	seasonal?: boolean | null;
 	hero?: string;
-	rarity?: 'Common' | 'Epic';
+	rarity?: EquipmentRarity;
 	superTroop?: RawUnit['superTroop'];
 	unlock?: RawUnit['unlock'];
 }
@@ -382,13 +386,18 @@ const buildUnit = (options: BuildOptions): RawUnit => {
 	};
 };
 
+const troopSubCategory = (troop: StaticTroop): UnitSubCategory => {
+	if (troop.squad) return 'squad';
+	return troop.production_building === 'Workshop' ? 'siege' : 'troop';
+};
+
 const troops = UNITS_DATA.troops
 	.filter((troop) => !troop.super_troop)
 	.map((troop) =>
 		buildUnit({
 			unit: troop,
 			category: 'troop',
-			subCategory: troop.production_building === 'Workshop' ? 'siege' : 'troop',
+			subCategory: troopSubCategory(troop),
 			village: toVillage(troop.village_type),
 			upgradeResource: troop.upgrade_resource,
 			housingSpace: troop.housing_space,

@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## 5.1.13
+
+### Added
+
+- Town Hall 19 (19.32) static data: Squads, the Heroic Spell, Shield Brooch and Blizzard Axe.
+- Squads get their own `subCategory: 'squad'`, unlock from the Squad Barracks and sort after the siege machines. They stay `category: 'troop'`, as the API lists them under `troops`.
+- `SQUADS` constant and `Player#squads`. Squads are not part of `HOME_TROOPS` or `Player#homeTroops`.
+- `StaticTroop#squad` lists the troops one squad deploys.
+- Equipment `rarity` can be `'Legendary'`.
+
 ## 5.1.11
 
 ### Added

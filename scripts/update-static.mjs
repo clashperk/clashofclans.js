@@ -23,6 +23,7 @@ const BUILDINGS = [
 	'Spell Factory',
 	'Dark Spell Factory',
 	'Workshop',
+	'Squad Barracks',
 	'Pet House',
 	'Blacksmith',
 	'Hero Hall',

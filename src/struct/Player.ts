@@ -1,6 +1,6 @@
 import { Client } from '../client/Client';
 import { APIPlayer, APIPlayerHouse, OverrideOptions } from '../types';
-import { BUILDER_TROOPS, HERO_PETS, HOME_TROOPS, SIEGE_MACHINES, SUPER_TROOPS, UNRANKED_LEAGUE_DATA } from '../util/Constants';
+import { BUILDER_TROOPS, HERO_PETS, HOME_TROOPS, SIEGE_MACHINES, SQUADS, SUPER_TROOPS, UNRANKED_LEAGUE_DATA } from '../util/Constants';
 import { Enumerable } from '../util/Decorators';
 import { Achievement } from './Achievement';
 import { Label } from './Label';
@@ -197,6 +197,13 @@ export class Player {
 		return this.troops
 			.filter((entry) => entry.village === 'home' && SIEGE_MACHINES.includes(entry.name))
 			.sort((a, b) => SIEGE_MACHINES.indexOf(a.name) - SIEGE_MACHINES.indexOf(b.name));
+	}
+
+	/** An array of the player's squads. */
+	public get squads() {
+		return this.troops
+			.filter((entry) => entry.village === 'home' && SQUADS.includes(entry.name))
+			.sort((a, b) => SQUADS.indexOf(a.name) - SQUADS.indexOf(b.name));
 	}
 
 	/** Get player's formatted link to open player in-game. */
