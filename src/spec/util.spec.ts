@@ -384,4 +384,18 @@ describe('util', () => {
 			expect(months.map((month) => month.id)).toEqual(['2027-01', '2026-12', '2026-11']);
 		});
 	});
+
+	describe('tags', () => {
+		it('ignores whitespace around a tag', () => {
+			for (const tag of ['#PCCVQQG0 ', ' #PCCVQQG0', '\t#pccvqqgo\n', ' PCCVQQG0']) {
+				expect(Util.formatTag(tag)).toBe('#PCCVQQG0');
+				expect(Util.encodeURI(tag)).toBe('%23PCCVQQG0');
+				expect(Util.encodeTag(tag)).toBe('510915076');
+			}
+		});
+
+		it('refuses to encode a tag with a second hash', () => {
+			expect(() => Util.encodeTag('##PCCVQQG0')).toThrow(TypeError);
+		});
+	});
 });
