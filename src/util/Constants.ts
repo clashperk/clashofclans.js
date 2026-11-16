@@ -19,6 +19,8 @@ export const HOME_TROOPS = [...ELIXIR_TROOPS, ...DARK_ELIXIR_TROOPS];
 
 export const SIEGE_MACHINES = UNITS.filter((unit) => unit.subCategory === 'siege').map((unit) => unit.name);
 
+export const SQUADS = UNITS.filter((unit) => unit.subCategory === 'squad').map((unit) => unit.name);
+
 export const HERO_EQUIPMENT = UNITS.filter((unit) => unit.subCategory === 'equipment').map((unit) => unit.name);
 
 export const ELIXIR_SPELLS = UNITS.filter((unit) => unit.subCategory === 'spell' && unit.upgrade.resource === 'Elixir').map(
