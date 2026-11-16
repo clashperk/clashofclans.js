@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## 5.1.14
+
+### Fixed
+
+- `Util.formatTag`, `Util.encodeURI` and `Util.encodeTag` ignore leading whitespace. `' #PCCVQQG0'` no longer becomes `'##PCCVQQG0'` or encodes to a negative number (#271).
+- `Util.encodeTag` throws on a tag with a second `#` instead of returning a wrong id.
+
 ## 5.1.13
 
 ### Added
