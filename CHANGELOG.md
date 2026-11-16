@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## 5.1.15
+
+### Added
+
+- `MAX_TOWN_HALL_LEVEL` and `MAX_BUILDER_HALL_LEVEL`, read from the static data, so they follow each game update with the data.
+
 ## 5.1.14
 
 ### Fixed
