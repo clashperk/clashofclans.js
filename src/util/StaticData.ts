@@ -142,8 +142,6 @@ export interface StaticEquipment extends StaticUnitBase {
 	production_building_tid: string;
 	rarity: EquipmentRarity;
 	hero: string;
-	/** `false` for equipment the game data ships before it launches. */
-	released: boolean;
 	/** Keys into `abilities`; the first is the item's own ability. */
 	main_abilities: string[];
 	extra_abilities?: string[];
@@ -461,20 +459,17 @@ const pets = UNITS_DATA.pets.map((pet) =>
 	buildUnit({ unit: pet, category: 'troop', subCategory: 'pet', village: 'home', upgradeResource: pet.upgrade_resource })
 );
 
-const equipment = UNITS_DATA.equipment
-	// the game data ships equipment before it launches
-	.filter((item) => item.released)
-	.map((item) =>
-		buildUnit({
-			unit: item,
-			category: 'equipment',
-			subCategory: 'equipment',
-			village: 'home',
-			upgradeResource: 'Shiny Ore',
-			hero: item.hero,
-			rarity: item.rarity
-		})
-	);
+const equipment = UNITS_DATA.equipment.map((item) =>
+	buildUnit({
+		unit: item,
+		category: 'equipment',
+		subCategory: 'equipment',
+		village: 'home',
+		upgradeResource: 'Shiny Ore',
+		hero: item.hero,
+		rarity: item.rarity
+	})
+);
 
 const displayOrder = (unit: RawUnit) => PRODUCTION_BUILDINGS.indexOf(unit.unlock.building);
 
