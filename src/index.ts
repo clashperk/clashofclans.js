@@ -5,6 +5,7 @@ export * from './rest/RestManager';
 export * from './rest/Throttler';
 export * from './struct';
 export * from './types';
+export * from './util/ArmyLink';
 export * from './util/Constants';
 export * from './util/Helper';
 export * from './util/StaticData';

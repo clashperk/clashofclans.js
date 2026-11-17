@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## 5.1.17
+
+### Added
+
+- `parseArmyLink()` reads an in-game army share link (or its bare `army` code) into heroes with their pet and equipment, troops, spells and clan castle units, each resolved to its `RawUnit`. Ids the static data doesn't know yet are listed in `unknown`. `extractArmyCode()` returns just the code.
+
 ## 5.1.15
 
 ### Added
