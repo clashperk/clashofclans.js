@@ -254,6 +254,12 @@ export interface RawSuperUnit {
 	housingSpace: number;
 }
 
+/**
+ * Equipment the game data ships before it goes live. Left out of {@link RAW_UNITS}.
+ * Nothing in the data marks it, so remove a name once the item is out.
+ */
+export const UNRELEASED_EQUIPMENT: readonly string[] = ['Shield Brooch', 'Blizzard Axe'];
+
 const ORES = [
 	['shiny_ore', 'Shiny Ore'],
 	['glowy_ore', 'Glowy Ore'],
@@ -459,17 +465,19 @@ const pets = UNITS_DATA.pets.map((pet) =>
 	buildUnit({ unit: pet, category: 'troop', subCategory: 'pet', village: 'home', upgradeResource: pet.upgrade_resource })
 );
 
-const equipment = UNITS_DATA.equipment.map((item) =>
-	buildUnit({
-		unit: item,
-		category: 'equipment',
-		subCategory: 'equipment',
-		village: 'home',
-		upgradeResource: 'Shiny Ore',
-		hero: item.hero,
-		rarity: item.rarity
-	})
-);
+const equipment = UNITS_DATA.equipment
+	.filter((item) => !UNRELEASED_EQUIPMENT.includes(item.name))
+	.map((item) =>
+		buildUnit({
+			unit: item,
+			category: 'equipment',
+			subCategory: 'equipment',
+			village: 'home',
+			upgradeResource: 'Shiny Ore',
+			hero: item.hero,
+			rarity: item.rarity
+		})
+	);
 
 const displayOrder = (unit: RawUnit) => PRODUCTION_BUILDINGS.indexOf(unit.unlock.building);
 

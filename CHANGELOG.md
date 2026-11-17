@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## 5.1.18
+
+### Fixed
+
+- `RAW_UNITS` leaves out equipment the game data ships before it goes live (Shield Brooch, Blizzard Axe), so upgrade and rushed totals no longer count it. The list is exported as `UNRELEASED_EQUIPMENT`. Nothing in the data marks unreleased equipment, so names come off it by hand once an item launches.
+
 ## 5.1.17
 
 ### Added
