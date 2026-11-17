@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## 5.1.18
+
+### Fixed
+
+- `RAW_UNITS` leaves out equipment the game data ships before it launches (Shield Brooch and Blizzard Axe today), so upgrade and rushed totals no longer count it. `StaticEquipment.released` comes from clash-asset-library, which marks an item released once it has a Collection card in the game.
+
 ## 5.1.17
 
 ### Added
