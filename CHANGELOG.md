@@ -6,7 +6,7 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
-- `RAW_UNITS` leaves out equipment the game data ships before it goes live (Shield Brooch, Blizzard Axe), so upgrade and rushed totals no longer count it. The list is exported as `UNRELEASED_EQUIPMENT`. Nothing in the data marks unreleased equipment, so names come off it by hand once an item launches.
+- `RAW_UNITS` leaves out equipment the game data ships before it launches (Shield Brooch and Blizzard Axe today), so upgrade and rushed totals no longer count it. `StaticEquipment.released` comes from clash-asset-library, which marks an item released once it has a Collection card in the game.
 
 ## 5.1.17
 

@@ -142,6 +142,8 @@ export interface StaticEquipment extends StaticUnitBase {
 	production_building_tid: string;
 	rarity: EquipmentRarity;
 	hero: string;
+	/** `false` for equipment the game data ships before it launches. */
+	released: boolean;
 	/** Keys into `abilities`; the first is the item's own ability. */
 	main_abilities: string[];
 	extra_abilities?: string[];
@@ -253,12 +255,6 @@ export interface RawSuperUnit {
 	village: 'home';
 	housingSpace: number;
 }
-
-/**
- * Equipment the game data ships before it goes live. Left out of {@link RAW_UNITS}.
- * Nothing in the data marks it, so remove a name once the item is out.
- */
-export const UNRELEASED_EQUIPMENT: readonly string[] = ['Shield Brooch', 'Blizzard Axe'];
 
 const ORES = [
 	['shiny_ore', 'Shiny Ore'],
@@ -466,7 +462,8 @@ const pets = UNITS_DATA.pets.map((pet) =>
 );
 
 const equipment = UNITS_DATA.equipment
-	.filter((item) => !UNRELEASED_EQUIPMENT.includes(item.name))
+	// the game data ships equipment before it launches
+	.filter((item) => item.released)
 	.map((item) =>
 		buildUnit({
 			unit: item,
