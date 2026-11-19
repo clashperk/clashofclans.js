@@ -19,6 +19,7 @@
 - [Documentation](https://clashofclans.js.org/docs/)
 - [Clash of Clans Developer Website](https://developer.clashofclans.com/)
 - [Clash of Clans API Community Discord](https://discord.gg/Eaja7gJ)
+- [ClashPerk](https://clashperk.com), the Clash of Clans bot for Discord, built on this library
 - [Contributing Guidelines](CONTRIBUTING.md)
 - [Code of Conduct](CODE_OF_CONDUCT.md)
 
