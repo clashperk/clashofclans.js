@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## 5.1.21
+
+### Added
+
+- `connectTimeout` on `RequestHandler` sets how long a new connection (TCP and TLS) may take, 10 s by default. A stalled connection then fails with `UND_ERR_CONNECT_TIMEOUT` sooner. List that code in `retryOn.errorCodes` to retry it. Nothing was sent yet, so a retry is safe for any method.
+
 ## 5.1.19
 
 ### Fixed

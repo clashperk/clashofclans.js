@@ -87,6 +87,9 @@ export interface RequestHandlerOptions extends ClientOptions {
 	/** Whether to negotiate HTTP/2 when the server offers it. Default: false. Ignored on Bun. */
 	allowH2?: boolean;
 
+	/** How long to wait for a new connection (TCP and TLS), in milliseconds. Default: 10000. Fails with `UND_ERR_CONNECT_TIMEOUT`, which `retryOn` can list. Ignored on Bun. */
+	connectTimeout?: number;
+
 	/** Called once per request with the final result, how many retries it took and the total time in milliseconds. */
 	onError?: (args: { path: string; status: number; body: unknown; retries: number; elapsed: number }) => unknown;
 }

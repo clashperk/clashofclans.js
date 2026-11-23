@@ -133,7 +133,8 @@ export class RequestHandler extends EventEmitter {
 			keepAliveTimeout: keepAlive,
 			keepAliveMaxTimeout: keepAlive,
 			// Proxies such as Cloudflare pick HTTP/2, where one reset connection fails every request in flight.
-			allowH2: options?.allowH2 ?? false
+			allowH2: options?.allowH2 ?? false,
+			connectTimeout: options?.connectTimeout
 		});
 	}
 
